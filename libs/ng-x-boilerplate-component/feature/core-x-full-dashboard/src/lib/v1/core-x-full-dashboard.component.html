@@ -1,0 +1,76 @@
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Starter lib #1: Users                                                   -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #xUsersFeaTpl>
+  <x-x-users-fea-v1
+    #xUsersFea
+    [showErrors]="false"
+    (ready)="onUsersReady(); ready.emit()"
+    (hasError)="onError($event, 'users')"
+    (selectedUser)="onSelectedUser($event)"
+  ></x-x-users-fea-v1>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Lib: X Profile Image                                                    -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #xProfileImageFeaTpl>
+  <section class="col-span-1">
+    <x-x-profile-image-fea-v1
+      [userId]="selectedUserId"
+      [showErrors]="false"
+      (hasError)="onError($event, 'profileImage')"
+    >
+    </x-x-profile-image-fea-v1>
+  </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Lib: X Profile Info                                                     -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #xProfileInfoFeaTpl>
+  <section class="col-span-1">
+    <x-x-profile-info-fea-v1
+      [userId]="selectedUserId"
+      [showErrors]="false"
+      (hasError)="onError($event, 'profileInfo')"
+      [showBtnReadMore]="profileInfo_showBtnReadMore === 'true' ? true : false"
+      (clickedReadMore)="profileInfo_clickedReadMore.emit()"
+    >
+    </x-x-profile-info-fea-v1>
+  </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- PAGE MAIN STRUCTURE                                                     -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (isReadyToInitLib && userId) {
+<main>
+  <!-- Starter lib #1: Users -->
+  <section class="pt-6">
+    <div class="e-container">
+      <ng-container *ngTemplateOutlet="xUsersFeaTpl"></ng-container>
+    </div>
+  </section>
+
+  <section class="e-container mt-4">
+    @if (isReadyStarterLib1) {
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <!-- Lib: X Profile Image -->
+      @if (showProfileImage === 'true') {
+      <ng-container *ngTemplateOutlet="xProfileImageFeaTpl"></ng-container>
+      }
+
+      <!-- Lib: X Profile Info -->
+      @if (showProfileInfo === 'true') {
+      <ng-container *ngTemplateOutlet="xProfileInfoFeaTpl"></ng-container>
+      }
+    </div>
+    }
+  </section>
+</main>
+}

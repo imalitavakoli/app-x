@@ -1,0 +1,21 @@
+{
+  "name": "ng-x-boilerplate-component-map-config",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ng-x-boilerplate-component/map/config/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:map", "domain:ng-x-boilerplate-component"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/ng-x-boilerplate-component/map/config/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

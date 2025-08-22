@@ -1,0 +1,268 @@
+import { inject, Injectable, isDevMode } from '@angular/core';
+import { exhaustMap, filter, take } from 'rxjs';
+
+import { V2Config_MapDep, V2Config_MapFirebase } from '@x/shared-map-ng-config';
+import { V2ConfigFacade } from '@x/shared-api-data-access-ng-config';
+import { V1AuthFacade } from '@x/shared-api-data-access-ng-auth';
+import { V1HtmlEditorService } from '../html-editor-v1/html-editor.service';
+import { V1ApptentiveService } from '../apptentive-v1/apptentive.service';
+import { V1FirebaseService } from '../firebase-v1/firebase.service';
+
+import { TrackingType } from './tracking.interfaces';
+
+/**
+ * Tracking service is a Facade service that provides a single interface to
+ * interact with multiple user activity tracking services like Apptentive &
+ * Firebase.
+ *
+ * @export
+ * @class V1TrackingService
+ * @typedef {V1TrackingService}
+ */
+@Injectable({
+  providedIn: 'root',
+})
+export class V1TrackingService {
+  private readonly _configFacade = inject(V2ConfigFacade);
+  private readonly _authFacade = inject(V1AuthFacade);
+
+  readonly apptentiveService = inject(V1ApptentiveService);
+  readonly firebaseService = inject(V1FirebaseService);
+
+  isInitApptentive = false;
+  isInitFirebase = false;
+  isInitGoogleAnalytics = false;
+
+  private _dataConfigDep!: V2Config_MapDep;
+  private _dataConfigFirebase!: V2Config_MapFirebase;
+  private _userId!: number;
+
+  private _appVersion = '0.0.0';
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Methods                                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  /**
+   * Prepare the tracking service. This method itself will also call the
+   * `initOrUpdate` method.
+   *
+   * NOTE: MUST be called BEFORE calling `initOrUpdate`.
+   *
+   * NOTE: It will be called in `app.component.ts` of the app (after user logs in).
+   *
+   * NOTE: This method can be called multiple times!
+   *
+   * @param {string} appVersion
+   */
+  prepare(appVersion: string) {
+    // Save required data.
+    this._appVersion = appVersion;
+
+    // Get required data from DEP and Auth.
+    this._configFacade.configState$
+      .pipe(
+        take(1),
+        exhaustMap((state) => {
+          // Save required data.
+          if (state.dataConfigDep) {
+            this._dataConfigDep = state.dataConfigDep;
+          }
+          if (state.dataConfigFirebase) {
+            this._dataConfigFirebase = state.dataConfigFirebase;
+          }
+
+          // Switch to the `authState$` Observable.
+          return this._authFacade.authState$;
+        }),
+        take(1),
+        filter((state) => {
+          // Don't continue, if user was not logged in.
+          if (!state.datas?.getToken?.userId) {
+            console.log(
+              '@V1TrackingService/prepare: User MUST already be authenticated before calling this fun.',
+            );
+            return false;
+          }
+          return true;
+        }),
+      )
+      .subscribe((state) => {
+        // Save required data.
+        this._userId = state.datas.getToken?.userId as number;
+
+        // Now we have everything we need to init the tracking services.
+        this.initOrUpdate(['feedbacks', 'analytics']);
+      });
+  }
+
+  /**
+   * Initialize/Update the tracking services.
+   *
+   * NOTE: MUST be called BEFORE calling `logEvent`.
+   *
+   * NOTE: It will be called by the 'consent' lib's output handler in
+   * `app.component.ts` of the app (after user logs in), where the 'consent' lib
+   * is initialized actually.
+   *
+   * NOTE: This method can be called multiple times! First time, it initializes
+   * the tracking services, and the next times, it updates the tracking
+   * services... Mostly useful, when a user logs out, and another user logs in
+   * to the app (with another user ID) in the very same app session.
+   *
+   * @param {TrackingType[]} types
+   */
+  initOrUpdate(types: TrackingType[]) {
+    if (types.includes('feedbacks')) {
+      this._initApptentive();
+    }
+
+    if (types.includes('analytics')) {
+      this._initFirebase();
+      this._initGoogleAnalytics();
+    }
+  }
+
+  /**
+   * Log custom events to Apptentive & Firebase.
+   *
+   * NOTE: MUST be called AFTER calling `initOrUpdate`.
+   *
+   * NOTE: It will be called from the 'feature' libs most of the times.
+   *
+   * NOTE: Event name schema for libs: `lib-name_event-name`.
+   * e.g., `advisory-card_init`, `advisory-card_clicked-advice`.
+   *
+   * @example
+   * this._trackingService.logEvent('advisory-card_loaded-advice', { data: 'something' });
+   *
+   * @param {string} name
+   * @param {*} [data=undefined]
+   */
+  logEvent(name: string, data: any = undefined) {
+    if (this.isInitApptentive) {
+      this.apptentiveService.engage(name, data);
+    }
+
+    if (this.isInitFirebase) {
+      this.firebaseService.analyticsLogEvent(name, data);
+    }
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Funtions                                                                 */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  /* Apptentive ///////////////////////////////////////////////////////////// */
+
+  private _initApptentive() {
+    // Do not continue if NOT all requirements are set.
+    if (!this._dataConfigDep) return;
+    if (!this._dataConfigDep.fun.feat.apptentive?.projectId) return;
+
+    // Call update once, and do not continue if already initialized.
+    this._updateApptentive();
+    if (this.isInitApptentive) return;
+
+    // init...
+    this.apptentiveService.init(
+      this._dataConfigDep.fun.feat.apptentive.projectId,
+      isDevMode(),
+    );
+    this.apptentiveService.createConversation(this._appVersion);
+    this.apptentiveService.autoScreenTracking();
+
+    // Set init flag to true, and call update again (to do the rest of the work,
+    // if the first update call couldn't do its job as we were not initialized
+    // yet).
+    this.isInitApptentive = true;
+    this._updateApptentive();
+  }
+
+  private _updateApptentive() {
+    // Do not continue if already NOT initialized.
+    if (!this.isInitApptentive) return;
+
+    // Update...
+    this.apptentiveService.identifyPerson(this._userId);
+  }
+
+  /* Firebase /////////////////////////////////////////////////////////////// */
+
+  private _initFirebase() {
+    // Do not continue if NOT all requirements are set.
+    if (!this._dataConfigFirebase) return;
+
+    // Call update once, and do not continue if already initialized.
+    this._updateFirebase();
+    if (this.isInitFirebase) return;
+
+    // init...
+    this.firebaseService.init(this._dataConfigFirebase, isDevMode());
+    this.firebaseService.analyticsAutoScreenTracking();
+
+    // Set init flag to true, and call update again (to do the rest of the work,
+    // if the first update call couldn't do its job as we were not initialized
+    // yet).
+    this.isInitFirebase = true;
+    this._updateFirebase();
+  }
+
+  private _updateFirebase() {
+    // Do not continue if already NOT initialized.
+    if (!this.isInitFirebase) return;
+
+    // Update...
+    this.firebaseService.analyticsSetUserId(this._userId);
+  }
+
+  /* GoogleAnalytics //////////////////////////////////////////////////////// */
+
+  /**
+   * Initialize Google Analytics.
+   * Read more: https://developers.google.com/analytics/devguides/collection/ga4/events?client_type=gtag
+   *
+   * @private
+   */
+  private _initGoogleAnalytics() {
+    // Do not continue if NOT all requirements are set.
+    if (!this._dataConfigDep) return;
+    if (this._dataConfigDep.fun.configs.firebaseIntegration) return;
+    if (this._dataConfigDep.fun.configs.googleAnalyticsMeasurementId === '')
+      return;
+
+    // Call update once, and do not continue if already initialized.
+    this._updateGoogleAnalytics();
+    if (this.isInitGoogleAnalytics) return;
+
+    // init...
+    const measurementId =
+      this._dataConfigDep.fun.configs.googleAnalyticsMeasurementId;
+
+    V1HtmlEditorService.insertScript(
+      `https://www.googletagmanager.com/gtag/js?id=${measurementId}`,
+    );
+
+    V1HtmlEditorService.insertScript(
+      `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${measurementId}');
+      `,
+    );
+
+    // Set init flag to true, and call update again (to do the rest of the work,
+    // if the first update call couldn't do its job as we were not initialized
+    // yet).
+    this.isInitGoogleAnalytics = true;
+    this._updateGoogleAnalytics();
+  }
+
+  private _updateGoogleAnalytics() {
+    // Do not continue if already NOT initialized.
+    if (!this.isInitGoogleAnalytics) return;
+
+    // Update...
+  }
+}

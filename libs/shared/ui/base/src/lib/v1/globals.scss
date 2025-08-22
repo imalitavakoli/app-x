@@ -1,0 +1,60 @@
+// Base global styles for apps.
+//
+// NOTE: These styles depend on some root CSS variables that should be provided
+// in the app.
+//
+// Please provide the colors for variables in rgb (`255 115 179`) format.
+// e.g., `--e-neutral-color: 136 136 136;`.
+//
+// @example
+// <style>
+//  :root {
+//    --e-neutral-color: 136 136 136;
+//  }
+// </style>
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Basic                                                                      */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+html,
+body {
+  height: 100%; // Needed for '@angular/material' lib.
+}
+
+html {
+  // Prevent adjustments of font size after orientation changes in IE on Windows Phone and in iOS.
+  -webkit-text-size-adjust: 100%;
+  // Change the default tap highlight to be completely transparent in iOS.
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  line-height: 1.5; // Why defining line-height? Because Tailwindcss is setting this to `inherit` in `base.scss` file of the apps, and some old iOS devices had issues with it...
+}
+
+body {
+  margin: 0; // Needed for '@angular/material' lib.
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Typography                                                                 */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+::selection {
+  background: rgb(var(--e-neutral-color) / 0.2);
+  text-shadow: none;
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Remove all animations if it's the user's device preference                 */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+@media screen and (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0 !important;
+  }
+}

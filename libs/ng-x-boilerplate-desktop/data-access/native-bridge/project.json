@@ -1,0 +1,20 @@
+{
+  "name": "ng-x-boilerplate-desktop-data-access-native-bridge",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ng-x-boilerplate-desktop/data-access/native-bridge/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:data-access", "domain:ng-x-boilerplate-desktop"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/ng-x-boilerplate-desktop/data-access/native-bridge/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

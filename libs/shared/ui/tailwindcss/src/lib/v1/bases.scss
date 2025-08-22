@@ -1,0 +1,39 @@
+@layer base {
+  .h1 {
+    @apply mb-6 pt-12 text-6xl font-black;
+  }
+  .h2 {
+    @apply mb-5 pt-11 text-5xl font-black;
+  }
+  .h3 {
+    @apply mb-4 pt-10 text-4xl font-extrabold;
+  }
+  .h4 {
+    @apply mb-3 pt-9 text-3xl font-extrabold;
+  }
+  .h5 {
+    @apply mb-2 pt-8 text-2xl font-bold;
+  }
+  .h6 {
+    @apply mb-1 pt-7 text-xl font-bold;
+  }
+
+  .p {
+    @apply mb-4;
+  }
+
+  .code,
+  .kbd,
+  .pre,
+  .samp {
+    @apply font-mono;
+  }
+
+  .address {
+    @apply mb-4 not-italic;
+  }
+
+  .hr {
+    @apply border-eneutral/40 my-4 border-0 border-t;
+  }
+}

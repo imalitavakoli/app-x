@@ -1,0 +1,185 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@x/ng-x-boilerplate-component-feature-core-initializer": [
+        "libs/ng-x-boilerplate-component/feature/core-initializer/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-component-feature-core-x-full-dashboard": [
+        "libs/ng-x-boilerplate-component/feature/core-x-full-dashboard/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-component-feature-core-x-profile-image": [
+        "libs/ng-x-boilerplate-component/feature/core-x-profile-image/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-component-feature-core-x-profile-info": [
+        "libs/ng-x-boilerplate-component/feature/core-x-profile-info/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-component-map-config": [
+        "libs/ng-x-boilerplate-component/map/config/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-component-util-bases": [
+        "libs/ng-x-boilerplate-component/util/bases/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-desktop-data-access-native-bridge": [
+        "libs/ng-x-boilerplate-desktop/data-access/native-bridge/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-desktop-map-config": [
+        "libs/ng-x-boilerplate-desktop/map/config/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-desktop-map-native-bridge": [
+        "libs/ng-x-boilerplate-desktop/map/native-bridge/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-desktop-util-facade": [
+        "libs/ng-x-boilerplate-desktop/util/facade/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-mobile-map-config": [
+        "libs/ng-x-boilerplate-mobile/map/config/src/index.ts"
+      ],
+      "@x/ng-x-boilerplate-web-map-config": [
+        "libs/ng-x-boilerplate-web/map/config/src/index.ts"
+      ],
+      "@x/shared-api-data-access-ng-auth": [
+        "libs/shared/api/data-access-ng-auth/src/index.ts"
+      ],
+      "@x/shared-api-data-access-ng-config": [
+        "libs/shared/api/data-access-ng-config/src/index.ts"
+      ],
+      "@x/shared-api-data-access-ng-translations": [
+        "libs/shared/api/data-access-ng-translations/src/index.ts"
+      ],
+      "@x/shared-api-data-access-ng-x-credit": [
+        "libs/shared/api/data-access-ng-x-credit/src/index.ts"
+      ],
+      "@x/shared-api-feature-ng-x-users": [
+        "libs/shared/api/feature-ng-x-users/src/index.ts"
+      ],
+      "@x/shared-data-access-ng-auth": [
+        "libs/shared/data-access/ng-auth/src/index.ts"
+      ],
+      "@x/shared-data-access-ng-config": [
+        "libs/shared/data-access/ng-config/src/index.ts"
+      ],
+      "@x/shared-data-access-ng-translations": [
+        "libs/shared/data-access/ng-translations/src/index.ts"
+      ],
+      "@x/shared-data-access-ng-x-credit": [
+        "libs/shared/data-access/ng-x-credit/src/index.ts"
+      ],
+      "@x/shared-data-access-ng-x-profile-info": [
+        "libs/shared/data-access/ng-x-profile-info/src/index.ts"
+      ],
+      "@x/shared-data-access-ng-x-users": [
+        "libs/shared/data-access/ng-x-users/src/index.ts"
+      ],
+      "@x/shared-feature-ng-app-acc-sidebar": [
+        "libs/shared/feature/ng-app-acc-sidebar/src/index.ts"
+      ],
+      "@x/shared-feature-ng-app-footer": [
+        "libs/shared/feature/ng-app-footer/src/index.ts"
+      ],
+      "@x/shared-feature-ng-app-header": [
+        "libs/shared/feature/ng-app-header/src/index.ts"
+      ],
+      "@x/shared-feature-ng-translations": [
+        "libs/shared/feature/ng-translations/src/index.ts"
+      ],
+      "@x/shared-feature-ng-x-profile-image": [
+        "libs/shared/feature/ng-x-profile-image/src/index.ts"
+      ],
+      "@x/shared-feature-ng-x-profile-info": [
+        "libs/shared/feature/ng-x-profile-info/src/index.ts"
+      ],
+      "@x/shared-feature-ng-x-users": [
+        "libs/shared/feature/ng-x-users/src/index.ts"
+      ],
+      "@x/shared-map-ng-auth": ["libs/shared/map/ng-auth/src/index.ts"],
+      "@x/shared-map-ng-config": ["libs/shared/map/ng-config/src/index.ts"],
+      "@x/shared-map-ng-translations": [
+        "libs/shared/map/ng-translations/src/index.ts"
+      ],
+      "@x/shared-map-ng-x-credit": ["libs/shared/map/ng-x-credit/src/index.ts"],
+      "@x/shared-map-ng-x-profile-info": [
+        "libs/shared/map/ng-x-profile-info/src/index.ts"
+      ],
+      "@x/shared-map-ng-x-users": ["libs/shared/map/ng-x-users/src/index.ts"],
+      "@x/shared-page-ng-account": ["libs/shared/page/ng-account/src/index.ts"],
+      "@x/shared-page-ng-auth": ["libs/shared/page/ng-auth/src/index.ts"],
+      "@x/shared-page-ng-base": ["libs/shared/page/ng-base/src/index.ts"],
+      "@x/shared-page-ng-dashboard": [
+        "libs/shared/page/ng-dashboard/src/index.ts"
+      ],
+      "@x/shared-page-ng-not-found": [
+        "libs/shared/page/ng-not-found/src/index.ts"
+      ],
+      "@x/shared-page-ng-test": ["libs/shared/page/ng-test/src/index.ts"],
+      "@x/shared-page-ng-x-users": ["libs/shared/page/ng-x-users/src/index.ts"],
+      "@x/shared-ui-app-shell": ["libs/shared/ui/app-shell/src/index.ts"],
+      "@x/shared-ui-base": ["libs/shared/ui/base/src/index.ts"],
+      "@x/shared-ui-framework8-v1": [
+        "libs/shared/ui/framework8/src/lib/v1/index.ts"
+      ],
+      "@x/shared-ui-ng-animations": [
+        "libs/shared/ui/ng-animations/src/index.ts"
+      ],
+      "@x/shared-ui-ng-app-acc-sidebar": [
+        "libs/shared/ui/ng-app-acc-sidebar/src/index.ts"
+      ],
+      "@x/shared-ui-ng-app-footer": [
+        "libs/shared/ui/ng-app-footer/src/index.ts"
+      ],
+      "@x/shared-ui-ng-app-header": [
+        "libs/shared/ui/ng-app-header/src/index.ts"
+      ],
+      "@x/shared-ui-ng-daylight": ["libs/shared/ui/ng-daylight/src/index.ts"],
+      "@x/shared-ui-ng-directives": [
+        "libs/shared/ui/ng-directives/src/index.ts"
+      ],
+      "@x/shared-ui-ng-ionic": ["libs/shared/ui/ng-ionic/src/index.ts"],
+      "@x/shared-ui-ng-notifier": ["libs/shared/ui/ng-notifier/src/index.ts"],
+      "@x/shared-ui-ng-pipes": ["libs/shared/ui/ng-pipes/src/index.ts"],
+      "@x/shared-ui-ng-popup": ["libs/shared/ui/ng-popup/src/index.ts"],
+      "@x/shared-ui-ng-preloaders": [
+        "libs/shared/ui/ng-preloaders/src/index.ts"
+      ],
+      "@x/shared-ui-ng-translations": [
+        "libs/shared/ui/ng-translations/src/index.ts"
+      ],
+      "@x/shared-ui-ng-x-profile-image": [
+        "libs/shared/ui/ng-x-profile-image/src/index.ts"
+      ],
+      "@x/shared-ui-ng-x-profile-info": [
+        "libs/shared/ui/ng-x-profile-info/src/index.ts"
+      ],
+      "@x/shared-ui-ng-x-users": ["libs/shared/ui/ng-x-users/src/index.ts"],
+      "@x/shared-ui-tailwindcss": ["libs/shared/ui/tailwindcss/src/index.ts"],
+      "@x/shared-util-formatters": ["libs/shared/util/formatters/src/index.ts"],
+      "@x/shared-util-local-storage": [
+        "libs/shared/util/local-storage/src/index.ts"
+      ],
+      "@x/shared-util-ng-bases": ["libs/shared/util/ng-bases/src/index.ts"],
+      "@x/shared-util-ng-bases-model": [
+        "libs/shared/util/ng-bases-model/src/index.ts"
+      ],
+      "@x/shared-util-ng-capacitor": [
+        "libs/shared/util/ng-capacitor/src/index.ts"
+      ],
+      "@x/shared-util-ng-services": [
+        "libs/shared/util/ng-services/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

@@ -1,0 +1,204 @@
+{
+  "assets": {
+    "font_base": "./assets/fonts/E-Base.ttf",
+    "font_bold": "./assets/fonts/E-Bold.ttf",
+
+    "logo": "./assets/images/logo.webp",
+    "logo_in_day": "./assets/images/logo_in-day.webp",
+    "logo_in_night": "./assets/images/logo_in-night.webp",
+    "logo_in_desktop": "./assets/images/logo_in-desktop.webp",
+    "logo_in_mobile": "./assets/images/logo_in-mobile.webp",
+
+    "gfx_celebration": "./assets/images/anims/celebration.json",
+    "gfx_email": "./assets/images/anims/email.json",
+    "gfx_empty": "./assets/images/anims/empty.json",
+    "gfx_error": "./assets/images/anims/error.json",
+    "gfx_notfound": "./assets/images/anims/not-found.json",
+    "gfx_success": "./assets/images/anims/success.json",
+
+    "this_auth_img_bg": "./assets/images/this/auth/img-login-bg.jpg",
+
+    "lib_xprofileimage_img_avatar": "./assets/images/libs/x-profile-image/img-profile.jpg",
+    "lib_xprofileinfo_ico_info": "./assets/images/libs/shared/icon-info.svg"
+  },
+
+  "general": {
+    "environment": {
+      "environment": "APP_BUILD_PROD",
+      "items": {
+        "base_url": "/v1",
+        "client_id": "1234567890"
+      }
+    },
+    "app_name": "X"
+  },
+
+  "fun": {
+    "configs": {
+      "google_analytics_measurement_id": "",
+      "firebase_integration": false,
+      "default_lang": "en-GB",
+      "default_currency_code": "SEK"
+    },
+
+    "auth": [
+      {
+        "AUTH_METHOD_MAGIC_LINK": "Magic link"
+      },
+      {
+        "XAUTH_METHOD_BANK_ID": "Bank ID"
+      }
+    ],
+
+    "feat": [
+      {
+        "daylight_switch": "WEB_FEAT_DAYLIGHT"
+      },
+      {
+        "Xmarker_io": "WEB_FEAT_MARKER_IO_V1",
+        "items": {
+          "project_id": "123abc"
+        }
+      },
+      {
+        "Xapptentive": "WEB_FEAT_APPTENTIVE_V2",
+        "items": {
+          "signature": "",
+          "key": "",
+          "project_id": "123abc"
+        }
+      }
+    ]
+  },
+
+  "ui": {
+    "nav": [
+      {
+        "TABBAR_OPTIONS_DASHBOARD": "menu_options.dashboard",
+        "items": {
+          "link": "",
+          "browser_type": "BROWSER_TYPE_WEBVIEW",
+          "load_link_directly": false
+        }
+      },
+      {
+        "TABBAR_OPTIONS_X_USERS": "menu_options.x_users",
+        "items": {
+          "link": "",
+          "browser_type": "BROWSER_TYPE_WEBVIEW",
+          "load_link_directly": false
+        }
+      },
+      {
+        "TABBAR_OPTIONS_TEST": "menu_options.test",
+        "items": {
+          "link": "",
+          "browser_type": "BROWSER_TYPE_WEBVIEW",
+          "load_link_directly": false
+        }
+      },
+      {
+        "TABBAR_OPTIONS_ACCOUNT": "menu_options.account",
+        "items": {
+          "link": "",
+          "browser_type": "BROWSER_TYPE_WEBVIEW",
+          "load_link_directly": false
+        }
+      }
+    ],
+
+    "footer": {
+      "footer": "UI_FOOTER_STANDARD",
+      "items": {
+        "txt_company_name": "X",
+        "txt_company_site": "x.com",
+        "txt_company_site_link": "https://x.com",
+        "txt_copyright": "&copy; 2025 X",
+        "nav": [
+          {
+            "footer.privacy_policy": "https://x.com/privacy"
+          },
+          {
+            "footer.terms_and_condition": "https://x.com/terms"
+          }
+        ]
+      }
+    },
+
+    "welcome_screen": {
+      "type": {
+        "type": "WELCOME_SCREEN_SIMPLE",
+        "items": {
+          "client_phone": "555-1234-56-78",
+          "client_email": "something@site.com",
+          "client_address": "address, street, city."
+        }
+      }
+    },
+
+    "home_view": [
+      {
+        "HOME_WIDGET_X_PROFILE_IMAGE": "shared-feature-ng-x-profile-image"
+      },
+      {
+        "HOME_WIDGET_X_PROFILE_INFO": "shared-feature-ng-x-profile-info"
+      }
+    ],
+
+    "acc_view": [
+      {
+        "ITEM_HEADING": "settings_menu_options.my_account"
+      },
+      {
+        "ITEM_GENERAL": "settings_menu_options.general"
+      },
+
+      {
+        "ITEM_HEADING": "settings_menu_options.general_settings"
+      },
+      {
+        "ITEM_LANGUAGE": "settings_menu_options.language"
+      },
+      {
+        "ITEM_WITH_URL": "settings_menu_options.privacy_policy",
+        "items": {
+          "url": "https://www.x.com/privacy_policy/",
+          "browser_type": "BROWSER_TYPE_WEBVIEW"
+        }
+      },
+
+      {
+        "ITEM_HEADING": "settings_menu_options.customer_service"
+      },
+      {
+        "ITEM_WITH_URL": "settings_menu_options.faq",
+        "items": {
+          "url": "https://www.x.com/faq/",
+          "browser_type": "BROWSER_TYPE_WEBVIEW"
+        }
+      },
+
+      {
+        "ITEM_SPACE": "empty space"
+      },
+      {
+        "ITEM_LOGOUT": "settings_menu_options.logout"
+      },
+      {
+        "ITEM_APP_VERSION": "settings_menu_options.app_version"
+      }
+    ]
+  },
+
+  "libs": [
+    {
+      "X_PROFILE_INFO_1_1_0": "shared-feature-ng-x-profile-info",
+      "items": {
+        "show_info_icon": true,
+        "show_bg": true
+      }
+    }
+  ],
+
+  "extra": {}
+}

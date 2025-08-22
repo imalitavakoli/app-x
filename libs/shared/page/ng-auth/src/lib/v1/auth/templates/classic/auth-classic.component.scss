@@ -1,0 +1,17 @@
+.e-auth {
+  --e-auth--bg-color--gradient-a: var(--e-primary-color);
+  --e-auth--bg-color--gradient-b: var(--e-accent-color);
+
+  @media (min-width: 48rem) {
+    background-image: linear-gradient(
+      to bottom,
+      rgb(var(--e-auth--bg-color--gradient-a)),
+      rgb(var(--e-auth--bg-color--gradient-b))
+    );
+  }
+}
+
+.e-header {
+  z-index: 1;
+  padding-top: var(--ion-safe-area-top);
+}

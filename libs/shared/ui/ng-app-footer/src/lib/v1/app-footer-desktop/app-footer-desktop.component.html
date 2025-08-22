@@ -1,0 +1,36 @@
+<footer
+  *transloco="let t"
+  class="e-footer-desktop flex min-h-[60px] items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
+>
+  <div class="e-container py-8">
+    <span class="block">{{ txtCompanyName }}</span>
+
+    <a
+      class="e-link mt-3 inline-block decoration-[rgb(var(--e-footer-desktop--link-color)/0)] hover:decoration-[rgb(var(--e-footer-desktop--link-color)/1)]"
+      [href]="txtCompanySiteLink"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {{ txtCompanySite }}
+    </a>
+
+    @if (nav && nav.length > 0) {
+    <ul class="mt-3 flex flex-col flex-wrap gap-1 sm:flex-row sm:gap-4">
+      @for (item of nav; track item.link) {
+      <li>
+        <a
+          [href]="item.link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="e-link decoration-[rgb(var(--e-footer-desktop--link-color)/0)] hover:decoration-[rgb(var(--e-footer-desktop--link-color)/1)]"
+        >
+          {{ t(item.name) }}
+        </a>
+      </li>
+      }
+    </ul>
+    } @if (txtCopyright) {
+    <small class="mt-6 block" [innerHTML]="txtCopyright"></small>
+    }
+  </div>
+</footer>

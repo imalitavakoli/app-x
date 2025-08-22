@@ -1,0 +1,144 @@
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Nav - item                                                    -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #navItem let-data>
+  <li class="first:pl-4 last:pr-4" *transloco="let t">
+    <a
+      (click)="onClickedNavItem()"
+      [routerLink]="data.url"
+      routerLinkActive="e-footer-mobile__nav-link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="e-footer-mobile__nav-link"
+    >
+      <!-- Icons -->
+      @if(data.type === 'dashboard') {
+      <i class="bi bi-speedometer text-lg"></i>
+      } @else if(data.type === 'x-users') {
+      <i class="bi bi-people-fill text-lg"></i>
+      } @else if(data.type === 'test') {
+      <i class="bi bi-clipboard text-lg"></i>
+      } @if(data.type === 'account') {
+      <i class="bi bi-person-fill text-lg"></i>
+      }
+
+      <!-- Label -->
+      <span>{{ t(data.name) }}</span>
+    </a>
+  </li>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Nav                                                           -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #navigation>
+  <nav class="min-w-full" role="navigation">
+    <ul class="e-footer-mobile__nav">
+      @for (item of nav; track item.type) {
+      <!--
+      Although we're in a loop, but let's add the nav items by
+      checking them in a IF statment one by one. Why? Because some of
+      the items must be added in this first `<nav>` and some other
+      must be added in the second one.
+    -->
+      @if (item.type === 'account' && isAuthenticated) {
+      <!-- account ///////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              link: item.link,
+              browserType: item.browserType,
+              isLinkDirect: item.isLinkDirect,
+              url: '/account'
+            }
+          }
+        "
+      ></ng-container>
+      } @else if (item.type === 'dashboard' && isAuthenticated) {
+      <!-- dashboard /////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              link: item.link,
+              browserType: item.browserType,
+              isLinkDirect: item.isLinkDirect,
+              url: '/dashboard'
+            }
+          }
+        "
+      ></ng-container>
+      } @else if (item.type === 'x-users' && isAuthenticated) {
+      <!-- x-users ///////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              link: item.link,
+              browserType: item.browserType,
+              isLinkDirect: item.isLinkDirect,
+              url: '/x-users'
+            }
+          }
+        "
+      ></ng-container>
+      } @else if (item.type === 'test') {
+      <!-- test //////////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              link: item.link,
+              browserType: item.browserType,
+              isLinkDirect: item.isLinkDirect,
+              url: '/test'
+            }
+          }
+        "
+      ></ng-container>
+      }}
+    </ul>
+  </nav>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Footer                                                                  -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (nav && nav.length > 0) {
+<!--
+NOTE: In mobile we don't need to use fixed position CSS class to position the 
+element fixed! Why? Because we're using `<ion-footer>`, and the Ionic footer 
+itself has a fixed position.
+-->
+<ion-footer [ngClass]="{ 'relative -z-10': isPopOpened }" class="ion-no-border">
+  <footer
+    class="e-footer-mobile u8-pretty-scroll f8-bar border-eneutral/40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
+  >
+    <div class="f8-bar__perspective min-w-full">
+      <div class="f8-bar__head">
+        <!-- Nav -->
+        <ng-container *ngTemplateOutlet="navigation"></ng-container>
+      </div>
+    </div>
+  </footer>
+  <div
+    [ngClass]="{ 'e-footer-mobile__fader--hidden': !isPopOpened }"
+    class="e-footer-mobile__fader"
+  ></div>
+</ion-footer>
+}

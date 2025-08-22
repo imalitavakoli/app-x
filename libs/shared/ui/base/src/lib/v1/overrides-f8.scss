@@ -1,0 +1,88 @@
+// Override some styles for F8 framework that is being used in most of the apps.
+//
+// NOTE: These styles depend on some root CSS varialbes that should be provided
+// in the app.
+//
+// Please provide the colors for variables in rgb (`255 115 179`) format.
+// e.g., `--e-day-lighter-color: 255 255 255;`.
+//
+// @example
+// <style>
+//  :root {
+//    --e-day-lighter-color: 255 255 255;
+//    --e-day-color: 239 239 239;
+//    --e-day-darker-color: 220 220 220;
+//
+//    --e-night-lighter-color: 93 93 93;
+//    --e-night-color: 69 69 69;
+//    --e-night-darker-color: 0 0 0;
+//
+//    --e-informative-lighter-color: 208 218 236;
+//    --e-informative-color: 162 170 185;
+//    --e-informative-darker-color: 128 133 143;
+//
+//    --e-positive-lighter-color: 209 235 222;
+//    --e-positive-color: 162 185 174;
+//    --e-positive-darker-color: 130 145 138;
+//
+//    --e-negative-lighter-color: 234 210 219;
+//    --e-negative-color: 186 163 171;
+//    --e-negative-darker-color: 153 135 141;
+//
+//    --e-notice-lighter-color: 227 223 201;
+//    --e-notice-color: 185 181 162;
+//    --e-notice-darker-color: 153 150 135;
+//
+//    --e-primary-lighter-color: 208 218 236;
+//    --e-primary-color: 162 170 185;
+//    --e-primary-darker-color: 128 133 143;
+//
+//    --e-accent-lighter-color: 227 223 201;
+//    --e-accent-color: 185 181 162;
+//    --e-accent-darker-color: 153 150 135;
+//
+//    --e-neutral-color: 136 136 136;
+//  }
+// </style>
+
+@use 'libs/shared/ui/framework8/src/lib/v1' as framework8;
+
+:root {
+  --f8-blocks-whitish-color: rgb(var(--e-day-lighter-color));
+  --f8-blocks-blackish-color: rgb(var(--e-night-darker-color));
+  --f8-blocks-whitish-2-color: rgb(var(--e-day-color));
+  --f8-blocks-blackish-2-color: rgb(var(--e-night-color));
+  --f8-blocks-whitish-alpha-color: rgb(var(--e-day-color) / 0.25);
+  --f8-blocks-blackish-alpha-color: rgb(var(--e-night-color) / 0.25);
+
+  --f8-blocks-primary-color: rgb(var(--e-primary-color));
+  --f8-blocks-accent-color: rgb(var(--e-accent-color));
+  --f8-blocks-greenish-color: rgb(var(--e-positive-color));
+  --f8-blocks-reddish-color: rgb(var(--e-negative-color));
+  --f8-blocks-yellowish-color: rgb(var(--e-notice-color));
+  --f8-blocks-bluish-color: rgb(var(--e-informative-color));
+
+  --f8-blocks-primary-2-color: rgb(var(--e-primary-color));
+  --f8-blocks-accent-2-color: rgb(var(--e-accent-color));
+  --f8-blocks-greenish-2-color: rgb(var(--e-positive-darker-color));
+  --f8-blocks-reddish-2-color: rgb(var(--e-negative-darker-color));
+  --f8-blocks-yellowish-2-color: rgb(var(--e-notice-darker-color));
+  --f8-blocks-bluish-2-color: rgb(var(--e-informative-darker-color));
+
+  --f8-blocks-primary-alpha-color: rgb(var(--e-primary-color) / 0.3);
+  --f8-blocks-accent-alpha-color: rgb(var(--e-accent-color) / 0.3);
+  --f8-blocks-greenish-alpha-color: rgb(var(--e-positive-color) / 0.3);
+  --f8-blocks-reddish-alpha-color: rgb(var(--e-negative-color) / 0.3);
+  --f8-blocks-yellowish-alpha-color: rgb(var(--e-notice-color) / 0.3);
+  --f8-blocks-bluish-alpha-color: rgb(var(--e-informative-color) / 0.3);
+}
+
+.f8-switch-daylight {
+  --f8-switch-daylight-sky-day-color: #a4d4fc;
+  --f8-switch-daylight-sky-sun-color: #feddb5;
+  --f8-switch-daylight-sky-night-color: #4c5484;
+  --f8-switch-daylight-sky-moon-color: #feddb5;
+  --f8-switch-daylight-border-color: rgba(255, 255, 255, 0.2);
+
+  --f8-switch-daylight-height: 20;
+}

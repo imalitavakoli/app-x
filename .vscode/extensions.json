@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "nrwl.angular-console",
+    "esbenp.prettier-vscode",
+    "firsttris.vscode-jest-runner",
+    "dbaeumer.vscode-eslint",
+    "christian-kohler.path-intellisense",
+    "ban.spellright",
+    "val.vscode-continue-inline-comments",
+    "angular.ng-template",
+    "pkief.material-icon-theme",
+    "crystal-spider.jsdoc-generator",
+    "prabhakar.codeowner",
+    "bradlc.vscode-tailwindcss",
+    "stackbreak.comment-divider",
+    "Webnative.webnative"
+  ]
+}

@@ -1,0 +1,124 @@
+<aside class="e-acc-sidebar" *transloco="let t">
+  @if (nav && nav.length > 0) {
+  <nav role="navigation">
+    <ul class="e-acc-nav">
+      @for (item of nav; track $index) {
+      <!--
+        Although we're in a loop, but let's add the nav items manually by 
+        checking them in if statments one by one. Why? Because we treat each 
+        type differently.
+      -->
+
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- Headings                                                          -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      @if (item.type === 'heading') {
+      <li class="e-acc-nav__item e-acc-nav__item--heading">
+        {{ t(item.name) }}
+      </li>
+      }
+
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- State-loading buttons                                             -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      @if (item.type === 'itemGeneral') {
+      <!-- general ///////////////////////////////////////////////////////// -->
+      <li class="e-acc-nav__item e-acc-nav__item--btn">
+        <a
+          routerLink="/account"
+          [queryParams]="{ state: 'general' }"
+          [ngClass]="{
+            'e-acc-nav__link--active': state === 'general'
+          }"
+          class="e-acc-nav__link"
+          (click)="clickedInternalLink.emit()"
+        >
+          <i class="bi bi-gear-fill"></i>
+          <span>{{ t(item.name) }}</span>
+          <i class="e-acc-nav__link-ic bi bi-chevron-right md:hidden"></i>
+        </a>
+      </li>
+      } @else if (item.type === 'itemLanguage') {
+      <!-- language //////////////////////////////////////////////////////// -->
+      <li class="e-acc-nav__item e-acc-nav__item--btn">
+        <a
+          routerLink="/account"
+          [queryParams]="{ state: 'language' }"
+          [ngClass]="{
+            'e-acc-nav__link--active': state === 'language'
+          }"
+          class="e-acc-nav__link"
+          (click)="clickedInternalLink.emit()"
+        >
+          <i class="bi bi-translate"></i>
+          <span>{{ t(item.name) }}</span>
+          <i class="e-acc-nav__link-ic bi bi-chevron-right md:hidden"></i>
+        </a>
+      </li>
+      }
+
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- itemExternalLink                                                  -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      @if (item.type === 'itemExternalLink') {
+      <li class="e-acc-nav__item e-acc-nav__item--btn">
+        <a
+          class="e-acc-nav__link"
+          [title]="t(item.name)"
+          [href]="item.link"
+          target="_blank"
+        >
+          <i class="bi bi-box-arrow-up-right"></i>
+          {{ t(item.name) }}
+          <i class="e-acc-nav__link-ic bi bi-box-arrow-up-right"></i>
+        </a>
+      </li>
+      }
+
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- Spaces                                                            -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      @if (item.type === 'space') {
+      <li class="py-5"></li>
+      }
+
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- Logout                                                            -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      @if (item.type === 'logout') {
+      <li class="e-acc-nav__item e-acc-nav__item--btn">
+        <button
+          [title]="t(item.name)"
+          (click)="clickedLogout.emit()"
+          class="e-acc-nav__link"
+        >
+          <i class="bi bi-box-arrow-left"></i>
+          {{ t(item.name) }}
+        </button>
+      </li>
+      }
+
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- App version                                                       -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      @if (item.type === 'appVersion') {
+      <li class="e-acc-nav__item e-acc-nav__item--secondary">
+        <span>V{{ appVersion }}</span>
+        @if (buildId) { <span>BuildID: {{ buildId }}</span> }
+        <!-- Native app info -->
+        @if (nativeAppInfo) {
+        <span>App Version: {{ nativeAppInfo.version }}</span>
+        <!-- <span>App Build: {{ nativeAppInfo.build }}</span> -->
+        }
+      </li>
+      }}
+    </ul>
+  </nav>
+  }
+</aside>

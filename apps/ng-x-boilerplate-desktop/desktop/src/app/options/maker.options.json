@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../../../../node_modules/nx-electron/src/validation/maker.schema.json",
+  "appId": "com.x.studio",
+  "productName": "X-Studio",
+  "asar": true,
+  "directories": {
+    "output": "dist/apps/ng-x-boilerplate-desktop/executables",
+    "buildResources": "apps/ng-x-boilerplate-desktop/desktop/packaging-res"
+  },
+  "extraMetadata": {
+    "author": "X",
+    "description": "..."
+  },
+  "win": {
+    "target": "nsis",
+    "artifactName": "${productName}-${version}-win.${ext}",
+    "generateUpdatesFilesForAllChannels": false
+  },
+  "nsis": {
+    "oneClick": true,
+    "createDesktopShortcut": true
+  },
+  "mac": {
+    "target": ["dmg"],
+    "artifactName": "${productName}-${version}-mac.${ext}",
+    "generateUpdatesFilesForAllChannels": false,
+    "category": "public.app-category.developer-tools",
+    "entitlements": "apps/ng-x-boilerplate-desktop/desktop/packaging-res/Root.entitlements",
+    "entitlementsInherit": "apps/ng-x-boilerplate-desktop/desktop/packaging-res/Child.entitlements",
+    "hardenedRuntime": true,
+    "preAutoEntitlements": true,
+    "identity": "X",
+    "provisioningProfile": "apps/ng-x-boilerplate-desktop/desktop/packaging-res/prod.provisionprofile",
+    "gatekeeperAssess": true,
+    "notarize": true,
+    "additionalArguments": ["--deep"],
+    "forceCodeSigning": false
+  },
+  "dmg": {
+    "sign": true
+  }
+}

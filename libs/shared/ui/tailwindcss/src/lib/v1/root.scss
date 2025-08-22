@@ -1,0 +1,26 @@
+// App's CSS root variables with their default values.
+
+:root {
+  // The following variables are for the Daisy UI theme (its required theme
+  // colors). Here we should actually set them to our WL apps' CSS variables.
+  //
+  // NOTE: Daisy UI theme colors ONLY work fine, if our WL CSS variables are in
+  // `oklch` color format... Currently they are in `rgb` format, so that's why
+  // we are not setting them to our WL CSS variables at the moment.
+  // --p: var(--e-primary-color);
+  // --s: var(--e-night-darker-color);
+  // --a: var(--e-accent-color);
+  // --n: var(--e-neutral-color);
+  // --b1: var(--e-day-lighter-color);
+
+  // --fallback-p: var(--e-primary-color);
+  // --fallback-pc: var(--e-day-lighter-color);
+  // --fallback-s: var(--e-night-darker-color);
+  // --fallback-sc: var(--e-day-lighter-color);
+  // --fallback-a: var(--e-accent-color);
+  // --fallback-ac: var(--e-day-lighter-color);
+  // --fallback-n: var(--e-neutral-color);
+  // --fallback-nc: var(--e-day-lighter-color);
+  // --fallback-b1: var(--e-day-lighter-color);
+  // --fallback-bc: var(--e-night-color);
+}

@@ -1,0 +1,55 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+      "editor.formatOnSaveMode": "file"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+      "editor.formatOnSaveMode": "file"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+      "editor.formatOnSaveMode": "file"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+      "editor.formatOnSaveMode": "file"
+    },
+    "[markdown]": {
+      "files.trimTrailingWhitespace": false
+    },
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.rulers": [80],
+    "editor.quickSuggestions": {
+      "strings": "on"
+    },
+    "spellright.notificationClass": "hint",
+    "files.associations": {
+      "CODEOWNERS": "ignore",
+      "*.css": "tailwindcss"
+    },
+    "comment-divider.shouldLengthIncludeIndent": true,
+    "comment-divider.mainHeaderFiller": "/",
+    "comment-divider.subheaderFiller": "/",
+    "comment-divider.lineFiller": "/",
+    "comment-divider.mainHeaderAlign": "left",
+    "comment-divider.subheaderAlign": "left",
+    "comment-divider.mainHeaderHeight": "block",
+    "comment-divider.subheaderHeight": "line",
+    "comment-divider.length": 80,
+    "nxConsole.generateAiAgentRules": true
+  }
+}

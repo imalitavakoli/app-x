@@ -1,0 +1,53 @@
+@if (state === 'data') {
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Data                                                                    -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<section>
+  <div class="e-dropdown f8-dropdown w-full">
+    <button
+      xToggleMeV1
+      class="e-dropdown__btn e-btn"
+      [target]="dropdown"
+      [closer]="dropdownList"
+      [isOpen]="false"
+      targetOpenClass="f8-dropdown__container--state-open"
+      [title]="curr.name"
+    >
+      <span class="pointer-events-none truncate">
+        {{ curr.name }}
+      </span>
+      <i class="bi bi-chevron-down pointer-events-none"></i>
+    </button>
+    <div
+      #dropdown
+      class="e-dropdown__container u8-pretty-scroll f8-dropdown__container f8-dropdown__container--effect-zoomer"
+    >
+      <!-- List //////////////////////////////////////////////////////////// -->
+      <ul class="e-list" #dropdownList>
+        @for (entity of users; track $index) {
+        <li>
+          <input
+            [id]="entity.id"
+            type="radio"
+            name="entity"
+            role="combobox"
+            class="e-list__input"
+            [attr.aria-label]="entity.name"
+            [checked]="curr.id === entity.id"
+            (change)="onSelectedUser(entity)"
+          />
+          <label [for]="entity.id" class="e-list__btn">
+            {{ entity.name }}
+          </label>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+} @else if (state === 'loading') {
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Loading                                                                 -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<div class="skeleton h-4"></div>
+}

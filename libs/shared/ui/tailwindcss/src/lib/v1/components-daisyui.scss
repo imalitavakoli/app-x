@@ -1,0 +1,376 @@
+@layer components {
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* General                                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .badge-primary,
+  .alert-primary,
+  .chat-bubble-primary {
+    @apply bg-eprimary text-eday-lighter border-0;
+  }
+  .badge-accent,
+  .alert-accent,
+  .chat-bubble-accent {
+    @apply bg-eaccent text-eday-lighter border-0;
+  }
+  .badge-info,
+  .alert-info,
+  .chat-bubble-info {
+    @apply bg-einformative text-eday-lighter border-0;
+  }
+  .badge-success,
+  .alert-success,
+  .chat-bubble-success {
+    @apply bg-epositive text-eday-lighter border-0;
+  }
+  .badge-warning,
+  .alert-warning,
+  .chat-bubble-warning {
+    @apply bg-enotice text-eday-lighter border-0;
+  }
+  .badge-error,
+  .alert-error,
+  .chat-bubble-error {
+    @apply bg-enegative text-eday-lighter border-0;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Forms                                                                    */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .toggle {
+    @apply text-inherit [--tglbg:rgb(var(--e-day-lighter-color))] dark:[--tglbg:rgb(var(--e-night-color))];
+  }
+  .toggle-primary {
+    @apply bg-eday-lighter
+           border-eneutral
+           [--tglbg:rgb(var(--e-neutral-color))]
+           checked:[--tglbg:rgb(var(--e-primary-color))]
+           checked:border-eprimary
+           checked:bg-eday-lighter
+           hover:bg-eday-lighter;
+  }
+  .toggle-accent {
+    @apply checked:bg-eaccent;
+  }
+  .toggle-info {
+    @apply checked:bg-einformative;
+  }
+  .toggle-success {
+    @apply checked:bg-epositive;
+  }
+  .toggle-warning {
+    @apply checked:bg-enotice;
+  }
+  .toggle-error {
+    @apply checked:bg-enegative;
+  }
+
+  .checkbox {
+    @apply border-current [--chkfg:rgb(var(--e-day-lighter-color))] hover:border-current;
+  }
+  .checkbox-primary {
+    @apply checked:border-eprimary [--chkbg:rgb(var(--e-primary-color))];
+  }
+  .checkbox-accent {
+    @apply checked:border-eaccent [--chkbg:rgb(var(--e-accent-color))];
+  }
+  .checkbox-info {
+    @apply checked:border-einformative [--chkbg:rgb(var(--e-informative-color))];
+  }
+  .checkbox-success {
+    @apply checked:border-epositive [--chkbg:rgb(var(--e-positive-color))];
+  }
+  .checkbox-warning {
+    @apply checked:border-enotice [--chkbg:rgb(var(--e-notice-color))];
+  }
+  .checkbox-error {
+    @apply checked:border-enegative [--chkbg:rgb(var(--e-negative-color))];
+  }
+
+  .radio {
+    @apply border-current checked:border-current checked:shadow-[0_0_0_4px_rgb(var(--e-day-lighter-color))_inset] hover:border-current dark:checked:shadow-[0_0_0_4px_rgb(var(--e-night-color))_inset];
+  }
+  .radio-primary {
+    @apply checked:bg-eprimary checked:border-eprimary;
+  }
+  .radio-accent {
+    @apply checked:bg-eaccent checked:border-eaccent;
+  }
+  .radio-info {
+    @apply checked:bg-einformative checked:border-einformative;
+  }
+  .radio-success {
+    @apply checked:bg-epositive checked:border-epositive;
+  }
+  .radio-warning {
+    @apply checked:bg-enotice checked:border-enotice;
+  }
+  .radio-error {
+    @apply checked:bg-enegative checked:border-enegative;
+  }
+
+  .range {
+    &::-webkit-slider-thumb {
+      @apply bg-eday-lighter;
+    }
+    &::-moz-range-thumb {
+      @apply bg-eday-lighter;
+    }
+  }
+  .range-primary {
+    @apply [--range-shdw:rgb(var(--e-primary-color))];
+  }
+  .range-accent {
+    @apply [--range-shdw:rgb(var(--e-accent-color))];
+  }
+  .range-info {
+    @apply [--range-shdw:rgb(var(--e-informative-color))];
+  }
+  .range-success {
+    @apply [--range-shdw:rgb(var(--e-positive-color))];
+  }
+  .range-warning {
+    @apply [--range-shdw:rgb(var(--e-notice-color))];
+  }
+  .range-error {
+    @apply [--range-shdw:rgb(var(--e-negative-color))];
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Buttons                                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .btn {
+    &:not(.btn-outline):not(.btn-ghost):not(.btn-link) {
+      &.btn-primary,
+      &.btn-accent,
+      &.btn-info,
+      &.btn-success,
+      &.btn-warning,
+      &.btn-error {
+        @apply text-eday-lighter;
+      }
+    }
+  }
+  .btn-primary:not(.btn-outline) {
+    @apply bg-eprimary hover:bg-eprimary-lighter;
+  }
+  .btn-accent:not(.btn-outline) {
+    @apply bg-eaccent hover:bg-eaccent-lighter;
+  }
+  .btn-info:not(.btn-outline) {
+    @apply bg-einformative hover:bg-einformative-lighter;
+  }
+  .btn-success:not(.btn-outline) {
+    @apply bg-epositive hover:bg-epositive-lighter;
+  }
+  .btn-warning:not(.btn-outline) {
+    @apply bg-enotice hover:bg-enotice-lighter;
+  }
+  .btn-error:not(.btn-outline) {
+    @apply bg-enegative hover:bg-enegative-lighter;
+  }
+
+  .btn-outline.btn {
+    &.btn-primary,
+    &.btn-accent,
+    &.btn-info,
+    &.btn-success,
+    &.btn-warning,
+    &.btn-error {
+      @apply hover:text-eday-lighter;
+    }
+
+    @apply border-[1px] bg-transparent hover:border-transparent;
+  }
+  .btn-outline.btn-primary {
+    @apply hover:bg-eprimary-lighter text-eprimary border-eprimary;
+  }
+  .btn-outline.btn-accent {
+    @apply hover:bg-eaccent-lighter text-eaccent border-eaccent;
+  }
+  .btn-outline.btn-info {
+    @apply hover:bg-einformative-lighter text-einformative border-einformative;
+  }
+  .btn-outline.btn-success {
+    @apply hover:bg-epositive-lighter text-epositive border-epositive;
+  }
+  .btn-outline.btn-warning {
+    @apply hover:bg-enotice-lighter text-enotice border-enotice;
+  }
+  .btn-outline.btn-error {
+    @apply hover:bg-enegative-lighter text-enegative border-enegative;
+  }
+
+  .join .btn.join-item {
+    @apply checked:bg-eprimary checked:text-eday-lighter checked:hover:bg-eprimary;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Links                                                                    */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .link-primary {
+    @apply text-eprimary hover:text-eprimary-darker;
+  }
+  .link-accent {
+    @apply text-eaccent hover:text-eaccent-darker;
+  }
+  .link-info {
+    @apply text-einformative hover:text-einformative-darker;
+  }
+  .link-success {
+    @apply text-epositive hover:text-epositive-darker;
+  }
+  .link-warning {
+    @apply text-enotice hover:text-enotice-darker;
+  }
+  .link-error {
+    @apply text-enegative hover:text-enegative-darker;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Steps                                                                    */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .steps .step::before,
+  .steps .step::after {
+    @apply text-eday-lighter;
+  }
+  .steps .step.step-primary::before,
+  .steps .step.step-primary::after {
+    @apply bg-eprimary;
+  }
+  .steps .step.step-accent::before,
+  .steps .step.step-accent::after {
+    @apply bg-eaccent;
+  }
+  .steps .step.step-info::before,
+  .steps .step.step-info::after {
+    @apply bg-einformative;
+  }
+  .steps .step.step-success::before,
+  .steps .step.step-success::after {
+    @apply bg-epositive;
+  }
+  .steps .step.step-warning::before,
+  .steps .step.step-warning::after {
+    @apply bg-enotice;
+  }
+  .steps .step.step-error::before,
+  .steps .step.step-error::after {
+    @apply bg-enegative;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Tabs                                                                     */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .tab {
+    @apply text-base font-normal [--tab-bg:rgb(var(--e-accent-color))] [--tab-border-color:rgb(var(--e-accent-color))] [--tab-color:inherit];
+  }
+
+  .tabs.tabs-bordered {
+    > .tab {
+      @apply border-eneutral/30;
+    }
+
+    > .tab.tab-active,
+    > .tab:is(input:checked) {
+      @apply border-eprimary font-bold;
+    }
+  }
+
+  .tab-active,
+  .tab:is(input:checked) {
+    @apply text-eprimary border-eprimary font-bold;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Progresses                                                               */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .progress-primary {
+    &::-webkit-progress-value {
+      @apply bg-eprimary;
+    }
+    &::-moz-progress-bar {
+      @apply bg-eprimary;
+    }
+  }
+  .progress-accent {
+    &::-webkit-progress-value {
+      @apply bg-eaccent;
+    }
+    &::-moz-progress-bar {
+      @apply bg-eaccent;
+    }
+  }
+  .progress-info {
+    &::-webkit-progress-value {
+      @apply bg-einformative;
+    }
+    &::-moz-progress-bar {
+      @apply bg-einformative;
+    }
+  }
+  .progress-success {
+    &::-webkit-progress-value {
+      @apply bg-epositive;
+    }
+    &::-moz-progress-bar {
+      @apply bg-epositive;
+    }
+  }
+  .progress-warning {
+    &::-webkit-progress-value {
+      @apply bg-enotice;
+    }
+    &::-moz-progress-bar {
+      @apply bg-enotice;
+    }
+  }
+  .progress-error {
+    &::-webkit-progress-value {
+      @apply bg-enegative;
+    }
+    &::-moz-progress-bar {
+      @apply bg-enegative;
+    }
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Tooltips                                                                 */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .tooltip {
+    @apply [--tooltip-text-color:rgb(var(--e-day-lighter-color))];
+  }
+  .tooltip-primary {
+    @apply [--tooltip-color:rgb(var(--e-primary-color))];
+  }
+  .tooltip-accent {
+    @apply [--tooltip-color:rgb(var(--e-accent-color))];
+  }
+  .tooltip-info {
+    @apply [--tooltip-color:rgb(var(--e-informative-color))];
+  }
+  .tooltip-success {
+    @apply [--tooltip-color:rgb(var(--e-positive-color))];
+  }
+  .tooltip-warning {
+    @apply [--tooltip-color:rgb(var(--e-notice-color))];
+  }
+  .tooltip-error {
+    @apply [--tooltip-color:rgb(var(--e-negative-color))];
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Skeleton                                                                 */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .skeleton {
+    @apply bg-eneutral opacity-20 [--b1:62.68%_0_0];
+  }
+}

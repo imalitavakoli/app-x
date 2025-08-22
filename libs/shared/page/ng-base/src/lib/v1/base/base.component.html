@@ -1,0 +1,37 @@
+@if (capacitorCoreSerivce.getPlatform() === 'desktop') {
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Desktop                                                                 -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<main class="flex min-h-screen flex-col justify-between">
+  <x-app-header-fea-v1 [isAuthenticated]="true"></x-app-header-fea-v1>
+
+  <article class="mb-8 grow pt-[120px] sm:pt-[80px]">
+    <router-outlet></router-outlet>
+  </article>
+
+  <x-app-footer-fea-v1 [isAuthenticated]="true"></x-app-footer-fea-v1>
+</main>
+} @else {
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Mobile                                                                  -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<x-app-header-fea-v1
+  [isAuthenticated]="true"
+  (changedPageOnMobile)="onChangedPageOnMobile($event)"
+></x-app-header-fea-v1>
+
+<ion-content [attr.scroll-y]="true">
+  <article
+    class="mb-8"
+    [ngClass]="{
+      'mt-[calc(40px+(var(--ion-safe-area-top)))]': currPageName === 'dashboard'
+    }"
+  >
+    <router-outlet></router-outlet>
+  </article>
+</ion-content>
+
+<x-app-footer-fea-v1 [isAuthenticated]="true"></x-app-footer-fea-v1>
+}

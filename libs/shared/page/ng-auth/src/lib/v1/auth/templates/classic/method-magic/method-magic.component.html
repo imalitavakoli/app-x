@@ -1,0 +1,39 @@
+<div *transloco="let t" class="text-left">
+  <form (ngSubmit)="onSubmitLogin(loginForm)" #loginForm="ngForm">
+    <div class="mb-4">
+      <!-- General Label /////////////////////////////////////////////////// -->
+
+      <label class="e-form-label e-form-label--required" for="input">
+        Enter your email address
+      </label>
+
+      <!-- Input field ///////////////////////////////////////////////////// -->
+
+      <input
+        class="form-input e-form-control"
+        id="input"
+        type="email"
+        placeholder="something@site.com"
+        required
+        [email]="true"
+        ngModel
+        name="input"
+      />
+    </div>
+
+    <!-- Button //////////////////////////////////////////////////////////// -->
+
+    <button
+      [disabled]="!loginForm.valid"
+      class="e-btn e-btn--base w-full py-[6px]"
+      type="submit"
+    >
+      @if ( (authFacade.loadedLatest$| async)?.magicSendLoginLink === false ) {
+      <x-preloaders-v1
+        preset="rings"
+        class="flex scale-90 justify-center fill-current"
+      ></x-preloaders-v1>
+      } @else { Sign in }
+    </button>
+  </form>
+</div>

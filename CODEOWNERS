@@ -1,0 +1,102 @@
+# CODEOWNERS file defines individuals or teams that are expert in a specific
+# code area of a repo and are interested that the code quality stays great.
+# To take full advantage of this file, please read more:
+# https://marketplace.atlassian.com/apps/1218598/code-owners-for-bitbucket
+
+
+# //////////////////////////////////////////////////////////////////////////// #
+# Groups                                                                       #
+# //////////////////////////////////////////////////////////////////////////// #
+
+#@@@Ali @"Ali"
+
+# //////////////////////////////////////////////////////////////////////////// #
+# Directories & files owned by "Ali" as a first owner                          #
+# //////////////////////////////////////////////////////////////////////////// #
+
+/_OBS/ali/ @Ali
+
+/apps/ng-x-boilerplate-component/ @Ali
+/apps/ng-x-boilerplate-desktop/ @Ali
+/apps/ng-x-boilerplate-mobile/ @Ali
+/apps/ng-x-boilerplate-web/ @Ali
+
+/docs/ @Ali
+
+/libs/ng-x-boilerplate-component/ @Ali
+/libs/ng-x-boilerplate-desktop/ @Ali
+/libs/ng-x-boilerplate-mobile/ @Ali
+/libs/ng-x-boilerplate-web/ @Ali
+
+/libs/shared/api/ @Ali
+
+/libs/shared/data-access/ng-auth/ @Ali
+/libs/shared/data-access/ng-config/ @Ali
+/libs/shared/data-access/ng-translations/ @Ali
+/libs/shared/data-access/ng-x-credit/ @Ali
+/libs/shared/data-access/ng-x-profile-info/ @Ali
+/libs/shared/data-access/ng-x-users/ @Ali
+
+/libs/shared/feature/ng-app-acc-sidebar/ @Ali
+/libs/shared/feature/ng-app-footer/ @Ali
+/libs/shared/feature/ng-app-header/ @Ali
+/libs/shared/feature/ng-translations/ @Ali
+/libs/shared/feature/ng-x-profile-image/ @Ali
+/libs/shared/feature/ng-x-profile-info/ @Ali
+/libs/shared/feature/ng-x-users/ @Ali
+
+/libs/shared/map/ng-auth/ @Ali
+/libs/shared/map/ng-config/ @Ali
+/libs/shared/map/ng-translations/ @Ali
+/libs/shared/map/ng-x-credit/ @Ali
+/libs/shared/map/ng-x-profile-info/ @Ali
+/libs/shared/map/ng-x-users/ @Ali
+
+/libs/shared/page/ng-account/ @Ali
+/libs/shared/page/ng-auth/ @Ali
+/libs/shared/page/ng-base/ @Ali
+/libs/shared/page/ng-dashboard/ @Ali
+/libs/shared/page/ng-not-found/ @Ali
+/libs/shared/page/ng-test/ @Ali
+/libs/shared/page/ng-x-users/ @Ali
+
+/libs/shared/ui/app-shell/ @Ali
+/libs/shared/ui/base/ @Ali
+/libs/shared/ui/framework8/ @Ali
+/libs/shared/ui/ng-animations/src/lib/fade-v1/ @Ali
+/libs/shared/ui/ng-app-acc-sidebar/ @Ali
+/libs/shared/ui/ng-app-footer/ @Ali
+/libs/shared/ui/ng-app-header/ @Ali
+/libs/shared/ui/ng-daylight/ @Ali
+/libs/shared/ui/ng-directives/src/lib/long-press-me-v1/ @Ali
+/libs/shared/ui/ng-directives/src/lib/toggle-me-v1/ @Ali
+/libs/shared/ui/ng-ionic/ @Ali
+/libs/shared/ui/ng-notifier/ @Ali
+/libs/shared/ui/ng-pipes/src/lib/currency-v1/ @Ali
+/libs/shared/ui/ng-popup/ @Ali
+/libs/shared/ui/ng-preloaders/ @Ali
+/libs/shared/ui/ng-translations/ @Ali
+/libs/shared/ui/ng-x-profile-image/ @Ali
+/libs/shared/ui/ng-x-profile-info/ @Ali
+/libs/shared/ui/ng-x-users/ @Ali
+/libs/shared/ui/tailwindcss/ @Ali
+
+/libs/shared/util/formatters/src/lib/date-v1/ @Ali
+/libs/shared/util/formatters/src/lib/language-v1/ @Ali
+/libs/shared/util/formatters/src/lib/misc-v1/ @Ali
+/libs/shared/util/formatters/src/lib/number-v1/ @Ali
+/libs/shared/util/local-storage/ @Ali
+/libs/shared/util/ng-bases/ @Ali
+/libs/shared/util/ng-bases-model/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-att-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-browser-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-core-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-notification-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/apptentive-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/auth-auto-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/communication-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/firebase-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/formatter-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/html-editor-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/service-worker-v1/ @Ali
+/libs/shared/util/ng-services/src/lib/tracking-v1/ @Ali

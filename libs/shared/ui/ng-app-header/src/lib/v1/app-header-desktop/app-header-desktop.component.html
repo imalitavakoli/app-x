@@ -1,0 +1,249 @@
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Brand                                                         -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #brand>
+  <a routerLink="/">
+    <img
+      class="!h-[80px] !min-w-[60px] !max-w-[160px] object-contain p-1"
+      alt=""
+      [src]="imgLogo"
+    />
+  </a>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Utilities                                                     -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #utils>
+  <ul class="flex gap-2">
+    <li class="felx items-center p-1">
+      <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px">
+        <button
+          xToggleMeV1
+          [target]="notificationDropdown"
+          [isOpen]="false"
+          targetOpenClass="f8-dropdown__container--state-open"
+          class="relative block opacity-60 transition hover:opacity-100"
+          title="My Notifications"
+        >
+          <div class="e-badge bg-enegative text-eday-lighter">99</div>
+          <i class="bi bi-bell-fill pointer-events-none px-1 text-lg"></i>
+        </button>
+        <div
+          #notificationDropdown
+          class="f8-dropdown__container f8-dropdown__container--effect-zoomer f8-dropdown__container--pos-sm-bottom-right bg-eday-lighter dark:bg-enight text-enight dark:text-eday-lighter rounded p-4"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </div>
+      </div>
+    </li>
+    <!-- <li class="felx items-center p-1">
+      <a
+        routerLink="/account"
+        routerLinkActive="!opacity-100"
+        class="block opacity-60 transition hover:opacity-100"
+        title="My Account"
+      >
+        <i class="bi bi-person-fill px-1 text-lg"></i>
+      </a>
+    </li> -->
+  </ul>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Nav - item                                                    -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #navItem let-data>
+  <li *transloco="let t" class="e-header-desktop__nav-item">
+    <a
+      [routerLink]="data.url"
+      [queryParams]="data.type === 'account' ? { state: 'general' } : null"
+      routerLinkActive="e-header-desktop__nav-link--active"
+      [routerLinkActiveOptions]="{
+        exact: data.type === 'account' ? false : true
+      }"
+      class="e-header-desktop__nav-link"
+    >
+      <!-- Icons -->
+      @if(data.type === 'dashboard') {
+      <i class="bi bi-speedometer text-lg"></i>
+      } @else if(data.type === 'x-users') {
+      <i class="bi bi-people-fill text-lg"></i>
+      } @else if(data.type === 'test') {
+      <i class="bi bi-clipboard text-lg"></i>
+      } @if(data.type === 'account') {
+      <i class="bi bi-person-fill text-lg"></i>
+      }
+
+      <!-- Label -->
+      <span [ngClass]="{ 'md:hidden': data.noLabel }">
+        {{ t(data.name) }}
+      </span>
+    </a>
+  </li>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Nav 01                                                        -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #nav1>
+  <nav class="flex flex-grow md:justify-center" role="navigation">
+    <ul class="e-header-desktop__nav md:mx-4">
+      @for (item of nav; track item.type) {
+      <!--
+      Although we're in a loop, but let's add the nav items by
+      checking them in a IF statment one by one. Why? Because some of
+      the items must be added in this first `<nav>` and some other
+      must be added in the second one.
+    -->
+      @if (item.type === 'dashboard' && isAuthenticated) {
+      <!-- dashboard /////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              link: item.link,
+              browserType: item.browserType,
+              isLinkDirect: item.isLinkDirect,
+              url: '/dashboard'
+            }
+          }
+        "
+      ></ng-container>
+      } @else if (item.type === 'x-users' && isAuthenticated) {
+      <!-- x-users ///////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              link: item.link,
+              browserType: item.browserType,
+              isLinkDirect: item.isLinkDirect,
+              url: '/x-users'
+            }
+          }
+        "
+      ></ng-container>
+      } @else if (item.type === 'test') {
+      <!-- test //////////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              link: item.link,
+              browserType: item.browserType,
+              isLinkDirect: item.isLinkDirect,
+              url: '/test'
+            }
+          }
+        "
+      ></ng-container>
+      }}
+    </ul>
+  </nav>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Nav 02                                                        -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #nav2>
+  <nav class="md:w-[160px]" role="navigation">
+    <ul class="e-header-desktop__nav justify-end">
+      @for (item of nav; track item.type) {
+      <!--
+        Check nav items in the loop one by one, and only add the ones
+        that we want, in this second `<nav>` element.
+      -->
+      @if (item.type === 'account' && isAuthenticated) {
+      <!-- account ///////////////////////////////////////////////////////// -->
+      <ng-container
+        *ngTemplateOutlet="
+          navItem;
+          context: {
+            $implicit: {
+              type: item.type,
+              name: item.name,
+              url: '/account',
+              noLabel: true
+            }
+          }
+        "
+      ></ng-container>
+      } }
+    </ul>
+  </nav>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Header                                                                  -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<header
+  class="e-header-desktop f8-bar f8-bar--pos-fixed-top-left border-eneutral/40 shadow-md"
+>
+  <div class="f8-bar__perspective">
+    <div class="f8-bar__head !min-h-[80px]">
+      <!-- Brand -->
+      <figure
+        class="f8-bar__brand !m-0 flex w-[160px] justify-center sm:justify-start"
+      >
+        <ng-container *ngTemplateOutlet="brand"></ng-container>
+      </figure>
+
+      <!-- Collapse -->
+      <div
+        class="f8-bar__collapse u8-pretty-scroll !border-eday-darker/40 !hidden"
+        style="--f8-blocks-def-hr-color: rgba(255, 255, 255, 0.4)"
+        #collapse
+      >
+        @if (nav && nav.length > 0) {
+        <div class="flex flex-col justify-between md:flex-row">
+          <!-- Nav 01 -->
+          <ng-container *ngTemplateOutlet="nav1"></ng-container>
+
+          <!-- Nav 02 -->
+          <ng-container *ngTemplateOutlet="nav2"></ng-container>
+        </div>
+        }
+      </div>
+
+      <!-- Utilities -->
+      @if (isAuthenticated) {
+      <div class="f8-bar__utilities gap-2">
+        <ng-container *ngTemplateOutlet="utils"></ng-container>
+      </div>
+      }
+
+      <!-- Toggle -->
+      @if (nav && nav.length > 0) {
+      <div class="f8-bar__toggle">
+        <button
+          xToggleMeV1
+          [target]="collapse"
+          [isOpen]="false"
+          targetCloseClass="!hidden"
+          class="opacity-60 transition hover:opacity-100"
+          title="Toggle Menu"
+        >
+          <i class="bi bi-list pointer-events-none text-2xl"></i>
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</header>

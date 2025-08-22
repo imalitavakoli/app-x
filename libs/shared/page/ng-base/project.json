@@ -1,0 +1,20 @@
+{
+  "name": "shared-page-ng-base",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/page/ng-base/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:page", "domain:shared"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/shared/page/ng-base/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- PAGE MAIN STRUCTURE                                                     -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<main *transloco="let t" class="e-container">
+  <!-- Title ///////////////////////////////////////////////////////////// -->
+  @if (capacitorCoreSerivce.getPlatform() === 'desktop') {
+  <header class="relative flex items-center justify-between pt-[32px]">
+    @if(isStateViewActive) {
+    <button
+      class="hover:bg-eneutral/10 absolute left-0 rounded-md md:hidden"
+      (click)="onClickedBack()"
+    >
+      <i class="bi bi-chevron-left text-2xl"></i>
+    </button>
+    }
+
+    <h1 class="m-0 mx-auto p-0 text-[1.625rem] font-bold">
+      {{ t('menu_options.account') }}
+    </h1>
+  </header>
+  }
+
+  <section
+    class="relative mt-8 grid grid-cols-1 gap-y-8 md:grid-cols-3 md:gap-x-8"
+  >
+    <!-- Sidebar ///////////////////////////////////////////////////////// -->
+    <x-app-acc-sidebar-fea-v1
+      class="w-full md:relative md:block"
+      [ngClass]="{
+        'e-acc-ani-hide absolute': isStateViewActive,
+        'e-acc-ani-show': !isStateViewActive
+      }"
+      [state]="state"
+      [appVersion]="appVersion"
+      (clickedInternalLink)="isStateViewActive = true; onStateViewActive()"
+      (clickedLogout)="showPopupLogout = true"
+    ></x-app-acc-sidebar-fea-v1>
+
+    <!-- Settings //////////////////////////////////////////////////////// -->
+
+    <div
+      class="md:e-card col-span-2 w-full p-4 md:relative md:block"
+      [ngClass]="{
+        'e-acc-ani-show': isStateViewActive,
+        'e-acc-ani-hide absolute': !isStateViewActive,
+        hidden: !isStateViewActive
+      }"
+    >
+      @if (state === 'general') {
+      <!-- general -->
+      <x-state-general
+        [isDaylightSwitchEnabled]="
+          (configFacade.dataConfigDep$ | async)?.fun?.feat?.daylightSwitch
+        "
+      ></x-state-general>
+      } @else if (state === 'language') {
+      <!-- language -->
+      <x-state-language></x-state-language>
+      }
+    </div>
+  </section>
+</main>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Logout popup                                                            -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<x-popup-v1
+  *transloco="let t"
+  [isOpen]="showPopupLogout"
+  [isHeadEnable]="true"
+  [isFootEnable]="true"
+  (closed)="showPopupLogout = false"
+>
+  <ng-container slot="head">
+    <span class="font-semibold">Logout</span>
+  </ng-container>
+
+  <ng-container slot="body">
+    <p class="p m-0">Are you sure you want to logout?</p>
+  </ng-container>
+
+  <ng-container slot="foot">
+    <button (click)="onLogoutConfirmed()" class="e-btn e-btn--base m-1">
+      Yes, logout
+    </button>
+    <button
+      (click)="showPopupLogout = false"
+      class="e-btn e-btn--secondary m-1"
+    >
+      Cancel
+    </button>
+  </ng-container>
+</x-popup-v1>

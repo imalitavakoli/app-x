@@ -1,0 +1,22 @@
+@if (platform === 'desktop') {
+<x-app-footer-desktop-v1
+  [txtCompanyName]="
+    $any((configFacade.dataConfigDep$ | async)?.ui?.footer?.txtCompanyName)
+  "
+  [txtCompanySite]="
+    $any((configFacade.dataConfigDep$ | async)?.ui?.footer?.txtCompanySite)
+  "
+  [txtCompanySiteLink]="
+    $any((configFacade.dataConfigDep$ | async)?.ui?.footer?.txtCompanySiteLink)
+  "
+  [txtCopyright]="
+    $any((configFacade.dataConfigDep$ | async)?.ui?.footer?.txtCopyright)
+  "
+  [nav]="(configFacade.dataConfigDep$ | async)?.ui?.footer?.nav"
+></x-app-footer-desktop-v1>
+} @else {
+<x-app-footer-mobile-v1
+  [isAuthenticated]="isAuthenticated"
+  [nav]="(configFacade.dataConfigDep$ | async)?.ui?.nav"
+></x-app-footer-mobile-v1>
+}

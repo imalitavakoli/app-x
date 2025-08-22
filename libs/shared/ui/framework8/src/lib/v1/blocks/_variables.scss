@@ -1,0 +1,208 @@
+// Variables - Blocks' basic settings.
+// @copyright 2022 MyThemeIsReady. All Rights Reserved.
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Color
+
+// Var Sets
+$f8-color-fff:                                        #fff !default;
+$f8-color-000:                                        #000 !default;
+$f8-color-white:                                      #ddd !default;
+$f8-color-black:                                      #333 !default;
+
+$f8-color-grey:                                       #bdbdbd !default;
+$f8-color-indigo:                                     #5c6bc0 !default;
+$f8-color-blue:                                       #42a5f5 !default;
+$f8-color-cyan:                                       #26c6da !default;
+$f8-color-teal:                                       #26a69a !default;
+$f8-color-green:                                      #66bb6a !default;
+$f8-color-yellow:                                     #ffa726 !default; // Orange 400
+$f8-color-orange:                                     #ff7043 !default; // Deep Orange 400
+$f8-color-red:                                        #ef5350 !default;
+$f8-color-pink:                                       #f06292 !default;
+$f8-color-purple:                                     #7e57c2 !default;
+$f8-color-brown:                                      #8d6e63 !default;
+
+$f8-color-neutral:                                    #888 !default;
+$f8-color-neutral-bg:                                 rgba(136, 136, 136, 0.2) !default;
+$f8-color-neutral-hr:                                 rgba(136, 136, 136, 0.4) !default;
+
+
+// Root Bases
+$f8-blocks-def-text-color-base:                       $f8-color-black !default;
+$f8-blocks-def-bg-color-base:                         $f8-color-neutral-bg !default;
+$f8-blocks-def-hr-color-base:                         $f8-color-neutral-hr !default;
+
+$f8-blocks-whitish-color-base:                        $f8-color-fff !default;
+$f8-blocks-blackish-color-base:                       $f8-color-000 !default;
+$f8-blocks-whitish-2-color-base:                      $f8-color-white !default;
+$f8-blocks-blackish-2-color-base:                     $f8-color-black !default;
+$f8-blocks-whitish-alpha-color-base:                  rgba($f8-color-white, .25) !default;
+$f8-blocks-blackish-alpha-color-base:                 rgba($f8-color-black, .25) !default;
+
+$f8-blocks-primary-color-base:                        $f8-color-indigo !default;
+$f8-blocks-accent-color-base:                         $f8-color-yellow !default;
+$f8-blocks-greenish-color-base:                       $f8-color-green !default;
+$f8-blocks-reddish-color-base:                        $f8-color-red !default;
+$f8-blocks-yellowish-color-base:                      $f8-color-orange !default;
+$f8-blocks-bluish-color-base:                         $f8-color-blue !default;
+
+$f8-blocks-primary-2-color-base:                      darken($f8-color-indigo, 15%) !default;
+$f8-blocks-accent-2-color-base:                       darken($f8-color-yellow, 15%) !default;
+$f8-blocks-greenish-2-color-base:                     darken($f8-color-green, 15%) !default;
+$f8-blocks-reddish-2-color-base:                      darken($f8-color-red, 15%) !default;
+$f8-blocks-yellowish-2-color-base:                    darken($f8-color-orange, 15%) !default;
+$f8-blocks-bluish-2-color-base:                       darken($f8-color-blue, 15%) !default;
+
+$f8-blocks-primary-alpha-color-base:                  rgba($f8-color-indigo, .3) !default;
+$f8-blocks-accent-alpha-color-base:                   rgba($f8-color-yellow, .3) !default;
+$f8-blocks-greenish-alpha-color-base:                 rgba($f8-color-green, .3) !default;
+$f8-blocks-reddish-alpha-color-base:                  rgba($f8-color-red, .3) !default;
+$f8-blocks-yellowish-alpha-color-base:                rgba($f8-color-orange, .3) !default;
+$f8-blocks-bluish-alpha-color-base:                   rgba($f8-color-blue, .3) !default;
+
+
+// Usefuls
+$f8-blocks-def-text-color:                            var(--f8-blocks-def-text-color) !default;
+$f8-blocks-def-bg-color:                              var(--f8-blocks-def-bg-color) !default;
+$f8-blocks-def-hr-color:                              var(--f8-blocks-def-hr-color) !default;
+
+$f8-blocks-whitish-color:                             var(--f8-blocks-whitish-color) !default;
+$f8-blocks-blackish-color:                            var(--f8-blocks-blackish-color) !default;
+$f8-blocks-whitish-2-color:                           var(--f8-blocks-whitish-2-color) !default;
+$f8-blocks-blackish-2-color:                          var(--f8-blocks-blackish-2-color) !default;
+$f8-blocks-whitish-alpha-color:                       var(--f8-blocks-whitish-alpha-color) !default;
+$f8-blocks-blackish-alpha-color:                      var(--f8-blocks-blackish-alpha-color) !default;
+
+$f8-blocks-primary-color:                             var(--f8-blocks-primary-color) !default;
+$f8-blocks-accent-color:                              var(--f8-blocks-accent-color) !default;
+$f8-blocks-greenish-color:                            var(--f8-blocks-greenish-color) !default;
+$f8-blocks-reddish-color:                             var(--f8-blocks-reddish-color) !default;
+$f8-blocks-yellowish-color:                           var(--f8-blocks-yellowish-color) !default;
+$f8-blocks-bluish-color:                              var(--f8-blocks-bluish-color) !default;
+
+$f8-blocks-primary-2-color:                           var(--f8-blocks-primary-2-color) !default;
+$f8-blocks-accent-2-color:                            var(--f8-blocks-accent-2-color) !default;
+$f8-blocks-greenish-2-color:                          var(--f8-blocks-greenish-2-color) !default;
+$f8-blocks-reddish-2-color:                           var(--f8-blocks-reddish-2-color) !default;
+$f8-blocks-yellowish-2-color:                         var(--f8-blocks-yellowish-2-color) !default;
+$f8-blocks-bluish-2-color:                            var(--f8-blocks-bluish-2-color) !default;
+
+$f8-blocks-primary-alpha-color:                       var(--f8-blocks-primary-alpha-color) !default;
+$f8-blocks-accent-alpha-color:                        var(--f8-blocks-accent-alpha-color) !default;
+$f8-blocks-greenish-alpha-color:                      var(--f8-blocks-greenish-alpha-color) !default;
+$f8-blocks-reddish-alpha-color:                       var(--f8-blocks-reddish-alpha-color) !default;
+$f8-blocks-yellowish-alpha-color:                     var(--f8-blocks-yellowish-alpha-color) !default;
+$f8-blocks-bluish-alpha-color:                        var(--f8-blocks-bluish-alpha-color) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Typography
+
+// Var Sets
+$f8-line-height:                                      1.5 !default; // 20/14
+$f8-line-height-lg:                                   1.3333333 !default; // extra decimals for Win 8.1 Chrome
+$f8-line-height-sm:                                   1.7 !default;
+
+
+// Root Bases
+$f8-blocks-font-size-base:                            1rem !default; // Assumes the browser default, typically `16px`
+
+
+// Usefuls
+$f8-blocks-font-size-sm:                              calc(var(--f8-blocks-font-size) * .75) !default; // ~12px
+$f8-blocks-font-size:                                 var(--f8-blocks-font-size) !default;
+$f8-blocks-font-size-lg:                              calc(var(--f8-blocks-font-size) * 1.5) !default; // ~24px
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Spacing
+
+// Root Bases
+$f8-blocks-spacer-base:                               1rem !default;
+
+
+// Usefuls
+$f8-blocks-spacer-xs:                                 calc(var(--f8-blocks-spacer) * .25) !default;
+$f8-blocks-spacer-sm:                                 calc(var(--f8-blocks-spacer) * .5) !default;
+$f8-blocks-spacer:                                    var(--f8-blocks-spacer) !default;
+$f8-blocks-spacer-lg:                                 calc(var(--f8-blocks-spacer) * 1.5) !default;
+$f8-blocks-spacer-xl:                                 calc(var(--f8-blocks-spacer) * 2) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Misc
+
+// Var Sets
+$f8-transition-duration:                              .3s !default;
+
+$f8-opacity:                                          .5 !default;
+$f8-opacity-disabled:                                 .3 !default;
+
+
+// Root Bases
+$f8-blocks-border-width-base:                         2px !default;
+$f8-blocks-border-radius-base:                        4px !default;
+
+
+// Usefuls
+$f8-blocks-border-width:                              var(--f8-blocks-border-width) !default;
+$f8-blocks-border-radius:                             var(--f8-blocks-border-radius) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// SVG
+
+// Characters which are escaped by the escape-svg function
+$f8-escaped-characters: (
+  ("<", "%3c"),
+  (">", "%3e"),
+  ("#", "%23"),
+  ("(", "%28"),
+  (")", "%29"),
+) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Media queries breakpoints
+
+// Var Sets
+$f8-screen-sm-min:                                    576px !default;
+$f8-screen-md-min:                                    768px !default;
+$f8-screen-lg-min:                                    992px !default;
+$f8-screen-xl-min:                                    1200px !default;
+
+$f8-screen-sm-max:                                    ($f8-screen-md-min - 1) !default;
+$f8-screen-md-max:                                    ($f8-screen-lg-min - 1) !default;
+$f8-screen-lg-max:                                    ($f8-screen-xl-min - 1) !default;

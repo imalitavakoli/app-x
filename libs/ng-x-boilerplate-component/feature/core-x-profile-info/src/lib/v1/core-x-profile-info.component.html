@@ -1,0 +1,11 @@
+@if(isReadyToInitLib) {
+<x-x-profile-info-fea-v1
+  [userId]="+userId"
+  [showBtnReadMore]="showBtnReadMore === 'true' ? true : false"
+  (clickedReadMore)="clickedReadMore.emit()"
+  [showErrors]="false"
+  (hasError)="onError($event)"
+  (ready)="ready.emit()"
+>
+</x-x-profile-info-fea-v1>
+}

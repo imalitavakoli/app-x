@@ -1,0 +1,65 @@
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Layout - Base                                                 -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #layoutBase>
+  <section class="flex w-full items-center justify-between gap-1 py-3">
+    @if (!isPageDashboard) {
+    <h1 class="flex-grow text-center text-base">{{ title }}</h1>
+    }
+  </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Layout - Inner                                                -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #layoutInner>
+  <section class="flex w-full items-center justify-between gap-1 py-3">
+    <button (click)="clickedGoBack.emit()" class="p-2">
+      <i class="bi bi-chevron-left block h-5 w-5"></i>
+    </button>
+    <h1 class="flex-grow text-center text-base">{{ title }}</h1>
+    <!-- Why an empty item in the flex-box? To keep heading at the center. -->
+    <i class="m-2 h-5 w-5"></i>
+  </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Header                                                                  -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<!--
+NOTE: In mobile we don't need to use fixed position CSS class to
+position the element fixed! Why? Because we're using `<ion-header>`, and the 
+Ionic header itself has a fixed position.
+-->
+<ion-header
+  [ngClass]="{ 'relative -z-10': isPopOpened }"
+  class="ion-no-border relative"
+>
+  <header
+    class="e-header-mobile f8-bar border-eneutral/40 !min-h-[60px]"
+    [ngClass]="{ 'shadow-md': !isPageDashboard }"
+    [style.background-image]="isPageDashboard ? 'none' : null"
+    [style.position]="isPageDashboard ? 'fixed' : null"
+  >
+    <div class="f8-bar__perspective e-container">
+      <div class="f8-bar__head">
+        <!-- Layout - Base -->
+        @if (layout === 'base') {
+        <ng-container *ngTemplateOutlet="layoutBase"></ng-container>
+        }
+
+        <!-- Layout - Inner -->
+        @if (layout === 'inner') {
+        <ng-container *ngTemplateOutlet="layoutInner"></ng-container>
+        }
+      </div>
+    </div>
+  </header>
+  <div
+    [ngClass]="{ 'e-header-mobile__fader--hidden': !isPopOpened }"
+    class="e-header-mobile__fader"
+  ></div>
+</ion-header>

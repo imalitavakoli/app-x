@@ -1,0 +1,8 @@
+{
+  "/v1/**": {
+    "target": "https://client-x-api.x.com",
+    "secure": true,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

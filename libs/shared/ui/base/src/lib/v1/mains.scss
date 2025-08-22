@@ -1,0 +1,90 @@
+// Styles for the `.e-main` element! This element is usually the `body` tag.
+//
+// NOTE: These styles depend on some root CSS varialbes that should be provided
+// in the app.
+//
+// Please provide the colors for variables in rgb (`255 115 179`) format.
+// e.g., `--e-day-lighter-color: 255 255 255;`.
+//
+// @example
+// <style>
+//  :root {
+//    --e-day-lighter-color: 255 255 255;
+//    --e-night-color: 69 69 69;
+//  }
+// </style>
+
+.e-main {
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Bases                                                                    */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  background-color: rgb(var(--e-day-lighter-color));
+  color: rgb(var(--e-night-color));
+
+  line-height: 1.5; // Why defining line-height? Because Tailwindcss is setting this to `inherit` in `base.scss` file of the apps, and some old iOS devices had issues with it...
+
+  &.e-dark,
+  .e-dark & {
+    background-color: rgb(var(--e-night-color));
+    color: rgb(var(--e-day-lighter-color));
+  }
+
+  *,
+  *::before,
+  *::after {
+    // Change from `box-sizing: content-box` so that `width` is not affected by `padding` or `border`.
+    box-sizing: border-box;
+  }
+
+  // Let's define some default styles for the direct <svg> element that is
+  // loaded in <svg-icon> components.
+  // NOTE: The component should have the class `.e-svg` to apply these styles.
+  .e-svg {
+    > svg {
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Animations                                                               */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  // .e-acc-ani-show {
+  //   @media (max-width: 768px) {
+  //     animation: eAniShow 0.6s forwards;
+  //   }
+  // }
+  //
+  // .e-acc-ani-hide {
+  //   @media (max-width: 768px) {
+  //     animation: eAniHide 0.3s forwards;
+  //   }
+  // }
+  @keyframes eAniShow {
+    0% {
+      display: block;
+      visibility: visible;
+      opacity: 0;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes eAniHide {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+}

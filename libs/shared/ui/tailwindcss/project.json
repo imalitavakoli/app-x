@@ -1,0 +1,8 @@
+{
+  "name": "shared-ui-tailwindcss",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/ui/tailwindcss/src",
+  "projectType": "library",
+  "tags": ["type:ui", "domain:shared"],
+  "implicitDependencies": ["shared-ui-framework8"]
+}

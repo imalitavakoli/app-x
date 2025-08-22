@@ -1,0 +1,46 @@
+// Root - Root CSS variables
+// @copyright 2022 MyThemeIsReady. All Rights Reserved.
+
+
+
+
+:root {
+  --f8-blocks-def-text-color:         #{$f8-blocks-def-text-color-base};
+  --f8-blocks-def-bg-color:           #{$f8-blocks-def-bg-color-base};
+  --f8-blocks-def-hr-color:           #{$f8-blocks-def-hr-color-base};
+
+  --f8-blocks-whitish-color:          #{$f8-blocks-whitish-color-base};
+  --f8-blocks-blackish-color:         #{$f8-blocks-blackish-color-base};
+  --f8-blocks-whitish-2-color:        #{$f8-blocks-whitish-2-color-base};
+  --f8-blocks-blackish-2-color:       #{$f8-blocks-blackish-2-color-base};
+  --f8-blocks-whitish-alpha-color:    #{$f8-blocks-whitish-alpha-color-base};
+  --f8-blocks-blackish-alpha-color:   #{$f8-blocks-blackish-alpha-color-base};
+
+  --f8-blocks-primary-color:          #{$f8-blocks-primary-color-base};
+  --f8-blocks-accent-color:           #{$f8-blocks-accent-color-base};
+  --f8-blocks-greenish-color:         #{$f8-blocks-greenish-color-base};
+  --f8-blocks-reddish-color:          #{$f8-blocks-reddish-color-base};
+  --f8-blocks-yellowish-color:        #{$f8-blocks-yellowish-color-base};
+  --f8-blocks-bluish-color:           #{$f8-blocks-bluish-color-base};
+
+  --f8-blocks-primary-2-color:        #{$f8-blocks-primary-2-color-base};
+  --f8-blocks-accent-2-color:         #{$f8-blocks-accent-2-color-base};
+  --f8-blocks-greenish-2-color:       #{$f8-blocks-greenish-2-color-base};
+  --f8-blocks-reddish-2-color:        #{$f8-blocks-reddish-2-color-base};
+  --f8-blocks-yellowish-2-color:      #{$f8-blocks-yellowish-2-color-base};
+  --f8-blocks-bluish-2-color:         #{$f8-blocks-bluish-2-color-base};
+
+  --f8-blocks-primary-alpha-color:    #{$f8-blocks-primary-alpha-color-base};
+  --f8-blocks-accent-alpha-color:     #{$f8-blocks-accent-alpha-color-base};
+  --f8-blocks-greenish-alpha-color:   #{$f8-blocks-greenish-alpha-color-base};
+  --f8-blocks-reddish-alpha-color:    #{$f8-blocks-reddish-alpha-color-base};
+  --f8-blocks-yellowish-alpha-color:  #{$f8-blocks-yellowish-alpha-color-base};
+  --f8-blocks-bluish-alpha-color:     #{$f8-blocks-bluish-alpha-color-base};
+
+  --f8-blocks-font-size:              #{$f8-blocks-font-size-base};  // Base of font sizes. Other font sizes (such as font sizes for small or large sized blocks) will be set according to this.
+
+  --f8-blocks-spacer:                 #{$f8-blocks-spacer-base};     // Base of margins & paddings. Other spaces (such as spaces for small or large sized blocks) will be set according to this.
+
+  --f8-blocks-border-width:           #{$f8-blocks-border-width-base};
+  --f8-blocks-border-radius:          #{$f8-blocks-border-radius-base};
+}

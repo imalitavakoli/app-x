@@ -1,0 +1,162 @@
+{
+  "name": "ng-x-boilerplate-component",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "x",
+  "sourceRoot": "apps/ng-x-boilerplate-component/src",
+  "tags": ["type:app"],
+  "implicitDependencies": [
+    "shared-ui-base",
+    "shared-ui-app-shell",
+    "shared-ui-tailwindcss"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular-builders/custom-webpack:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "polyfills": ["zone.js"],
+        "styles": [
+          {
+            "input": "node_modules/highcharts/css/highcharts.css",
+            "bundleName": "x-core"
+          },
+          {
+            "input": "node_modules/bootstrap-icons/font/bootstrap-icons.scss",
+            "bundleName": "bootstrap-icons"
+          },
+          {
+            "input": "apps/ng-x-boilerplate-component/src/styles.scss",
+            "bundleName": "x-core"
+          }
+        ],
+        "scripts": ["node_modules/jquery/dist/jquery.js"],
+        "allowedCommonJsDependencies": [
+          "jquery",
+          "highcharts",
+          "highcharts/modules/accessibility",
+          "lottie-web/build/player/lottie_svg"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": []
+        },
+        "customWebpackConfig": {
+          "path": "apps/ng-x-boilerplate-component/webpack.custom.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputPath": "dist/apps/ng-x-boilerplate-component/browser",
+          "index": "apps/ng-x-boilerplate-component/src/index.html",
+          "main": "apps/ng-x-boilerplate-component/src/main.ts",
+          "tsConfig": "apps/ng-x-boilerplate-component/tsconfig.app.json",
+          "assets": [
+            "apps/ng-x-boilerplate-component/src/favicon.ico",
+            "apps/ng-x-boilerplate-component/src/x-assets"
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "8kb",
+              "maximumError": "16kb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            },
+            "fonts": true
+          }
+        },
+        "webcom-v1": {
+          "outputPath": "dist/apps/ng-x-boilerplate-component/webcom-v1",
+          "index": "apps/ng-x-boilerplate-component/src/index.webcom-v1.html",
+          "main": "apps/ng-x-boilerplate-component/src/main.webcom-v1.ts",
+          "tsConfig": "apps/ng-x-boilerplate-component/tsconfig.webcom-v1.json",
+          "assets": ["apps/ng-x-boilerplate-component/src/x-assets"],
+          "outputHashing": "none",
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-x-boilerplate-component/src/environments/environment.ts",
+              "with": "apps/ng-x-boilerplate-component/src/environments/environment.webcom.ts"
+            }
+          ]
+        },
+        "development": {
+          "outputPath": "dist/apps/ng-x-boilerplate-component/browser",
+          "index": "apps/ng-x-boilerplate-component/src/index.html",
+          "main": "apps/ng-x-boilerplate-component/src/main.ts",
+          "tsConfig": "apps/ng-x-boilerplate-component/tsconfig.app.json",
+          "assets": [
+            "apps/ng-x-boilerplate-component/src/favicon.ico",
+            "apps/ng-x-boilerplate-component/src/x-assets"
+          ],
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-x-boilerplate-component/src/environments/environment.ts",
+              "with": "apps/ng-x-boilerplate-component/src/environments/environment.development.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "proxyConfig": "apps/ng-x-boilerplate-component/src/proxy.conf.json",
+          "buildTarget": "ng-x-boilerplate-component:build:production"
+        },
+        "development": {
+          "proxyConfig": "apps/ng-x-boilerplate-component/src/proxy.conf.json",
+          "buildTarget": "ng-x-boilerplate-component:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "ng-x-boilerplate-component:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/ng-x-boilerplate-component/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "ng-x-boilerplate-component:build"
+      }
+    },
+    "webcom": {
+      "command": "node apps/ng-x-boilerplate-component/web-component-prepare.js --trace-deprecation"
+    },
+    "transloco-extract": {
+      "command": "npx transloco-keys-manager extract --sort --project=apps/ng-x-boilerplate-component/project.json --output=apps/ng-x-boilerplate-component/src/x-assets/i18n --langs=extracted"
+    }
+  }
+}

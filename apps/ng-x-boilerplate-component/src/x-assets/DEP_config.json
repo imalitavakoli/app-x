@@ -1,0 +1,51 @@
+{
+  "__COMMENT__assets": "This node ('assets') is used to specify the file path to all different assets being used by different components. TIP: Usually, you don't need to modify any of these paths.",
+  "assets": {
+    "font_base": "./x-assets/fonts/E-Base.ttf",
+    "font_bold": "./x-assets/fonts/E-Bold.ttf",
+
+    "gfx_celebration": "./x-assets/images/anims/celebration.json",
+    "gfx_email": "./x-assets/images/anims/email.json",
+    "gfx_empty": "./x-assets/images/anims/empty.json",
+    "gfx_error": "./x-assets/images/anims/error.json",
+    "gfx_notfound": "./x-assets/images/anims/not-found.json",
+    "gfx_success": "./x-assets/images/anims/success.json",
+
+    "lib_xprofileimage_img_avatar": "./x-assets/images/libs/x-profile-image/img-profile.jpg",
+    "lib_xprofileinfo_ico_info": "./x-assets/images/libs/shared/icon-info.svg"
+  },
+
+  "general": {
+    "environment": {
+      "environment": "APP_BUILD_PROD",
+      "items": {
+        "__COMMENT__url": "This is your unique base URL and all API calls will be made using it.",
+        "base_url": "https://client-x-api.x.com/v1",
+
+        "__COMMENT__cid": "This is your unique client ID.",
+        "client_id": "1234567890"
+      }
+    }
+  },
+
+  "fun": {
+    "configs": {
+      "__COMMENT__firebase": "Optional! Default: false. If this is true, and in your 'initializer' component you also pass 'track-activity' input as true, then 'firebase_config.json' file will also be loaded and components will track user's activities and send them to the Firebase analytics. Activities such as what button is clicked or what view is visited. Each component (based on its UI) has its own set of activities that can be tracked. These activity events can be added/removed/modified as we continue developing more components or release new versions. NOTE: Like to learn more about what events are available for the components? Please contact our tech support.",
+      "firebase_integration": false,
+
+      "default_lang": "en-GB",
+      "default_currency_code": "EUR"
+    }
+  },
+
+  "__COMMENT__libs": "This is an Array containing configurations for every individual component. TIP: It is possible that a component is simple enough that may not have any specific configuration. Like the CO2 component.",
+  "libs": [
+    {
+      "X_PROFILE_INFO_1_1_0": "shared-feature-ng-x-profile-info",
+      "items": {
+        "show_info_icon": true,
+        "show_bg": true
+      }
+    }
+  ]
+}

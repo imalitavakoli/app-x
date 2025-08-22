@@ -1,0 +1,50 @@
+<div
+  #popup
+  class="f8-bar f8-bar--visual-fullscreen f8-bar--effect-hide-to-fade"
+>
+  <div
+    xToggleMeV1
+    [target]="popup"
+    [isOpen]="isShown"
+    [isSelfToggleEnable]="isBgClosingEnabled"
+    [isDocCloseEnable]="false"
+    targetCloseClass="f8-bar--effect-hide-to-fade"
+    (statusChanged)="onStatusChanged($event)"
+    style="transform: scale(1, 1)"
+    class="f8-bar__perspective bg-eneutral/80 items-center justify-center"
+  >
+    <div
+      [ngClass]="holderClasses"
+      class="bg-eday-lighter dark:bg-enight m-6 flex max-h-[calc(100vh-((280px)+(var(--ion-safe-area-top)*0.5)+(var(--ion-safe-area-bottom)*0.5)))] min-w-[320px] max-w-4xl flex-col rounded-lg text-center shadow-[0px_0px_16px_0px_rgba(0,0,0,0.25)]"
+    >
+      @if (!isClassicEnable) {
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- A more sophisticated popup with header, body, and footer          -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      @if (isHeadEnable) {
+      <header class="p-4">
+        <ng-content select="[slot=head]"></ng-content>
+      </header>
+      }
+
+      <section class="u8-pretty-scroll flex-auto overflow-auto p-4">
+        <ng-content select="[slot=body]"></ng-content>
+      </section>
+
+      @if (isFootEnable) {
+      <footer class="flex flex-col items-center p-4">
+        <ng-content select="[slot=foot]"></ng-content>
+      </footer>
+      } } @else {
+      <!-- ///////////////////////////////////////////////////////////////// -->
+      <!-- A simple popup                                                    -->
+      <!-- ///////////////////////////////////////////////////////////////// -->
+
+      <section>
+        <ng-content select="[slot=classic]"></ng-content>
+      </section>
+      }
+    </div>
+  </div>
+</div>

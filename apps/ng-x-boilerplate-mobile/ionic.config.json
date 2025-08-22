@@ -1,0 +1,7 @@
+{
+  "name": "ng-x-boilerplate-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

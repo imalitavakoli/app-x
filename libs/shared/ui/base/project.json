@@ -1,0 +1,8 @@
+{
+  "name": "shared-ui-base",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/ui/base/src",
+  "projectType": "library",
+  "tags": ["type:ui", "domain:shared"],
+  "implicitDependencies": ["shared-ui-framework8"]
+}

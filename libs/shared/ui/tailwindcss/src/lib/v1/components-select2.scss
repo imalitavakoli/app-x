@@ -1,0 +1,276 @@
+@layer components {
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Select2                                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .e-form-select2.nostyle {
+    // Label
+    .select2-required {
+      @apply hidden;
+    }
+    .select2-label {
+      @apply text-inherit;
+    }
+
+    // Dropdown
+    .select2-container.select2-container--default .select2-dropdown {
+      @apply border-eneutral bg-eday-lighter dark:bg-enight border shadow-md;
+    }
+    .select2-container.select2-container--default
+      .select2-dropdown.select2-dropdown--above {
+      @apply bottom-[42px];
+    }
+    .select2-container.select2-container--default
+      .select2-results
+      > .select2-results__options {
+      @apply u8-pretty-scroll;
+    }
+    .select2-results__option {
+      @apply text-inherit;
+    }
+    .select2-container.select2-container--default
+      .select2-results__option--highlighted[aria-selected] {
+      @apply bg-eneutral/30 text-inherit;
+    }
+    .select2-container.select2-container--default
+      .select2-results__option[aria-selected='true'] {
+      @apply bg-eprimary text-eday-lighter;
+    }
+
+    // Search Box
+    .select2-container.select2-container--default
+      .select2-search.select2-search--dropdown {
+      @apply border-eneutral/30 p-4;
+    }
+    .select2-container.select2-container--default
+      .select2-dropdown.select2-dropdown--below
+      .select2-search.select2-search--dropdown {
+      @apply border-b;
+    }
+    .select2-container.select2-container--default
+      .select2-dropdown.select2-dropdown--above
+      .select2-search.select2-search--dropdown {
+      @apply border-t;
+    }
+    .select2-container.select2-container--default
+      .select2-search.select2-search--dropdown
+      .select2-search__field {
+      @apply placeholder-eneutral/50 border-eneutral/50 focus:border-eneutral focus:ring-eneutral block w-full rounded-md bg-transparent shadow-sm transition focus:ring focus:ring-opacity-30 focus-visible:outline-transparent;
+    }
+
+    // Chips
+    .select2-container.select2-container--default
+      .select2-selection.select2-selection--multiple
+      .select2-selection__rendered {
+      @apply gap-2;
+    }
+    .select2-container.select2-container--default
+      .select2-selection.select2-selection--multiple
+      .select2-selection__choice {
+      @apply bg-eneutral/30 hover:bg-eneutral/50 max-w-[150px] truncate rounded-full border-0 py-[0.13rem] pl-0 pr-3 text-inherit transition;
+    }
+    .select2-container.select2-container--default
+      .select2-selection.select2-selection--multiple
+      .select2-selection__choice__remove {
+      @apply text-eneutral m-0 px-3 transition hover:text-inherit;
+    }
+
+    // Select Itself
+    .select2-container.select2-container--default
+      .selection
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--default
+      .selection
+      .select2-selection.select2-selection--multiple {
+      @apply border-eneutral/50 relative mt-3 block min-h-[42px] w-full rounded-md border bg-transparent px-2 py-[0.4rem] shadow-sm transition;
+    }
+
+    // Select Itself: Disabled
+    .select2-container.select2-container--default.select2-container--disabled
+      .selection
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--default.select2-container--disabled
+      .selection
+      .select2-selection.select2-selection--multiple {
+      @apply bg-eneutral/5 text-eneutral/80 placeholder-eneutral/40 border-eneutral/20 shadow-none;
+    }
+
+    // Select Itself: Focused
+    .select2-container.select2-container--default.select2-container--open
+      .selection
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--default.select2-container--open
+      .selection
+      .select2-selection.select2-selection--multiple,
+    .select2-container.select2-container--default.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--default.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--multiple {
+      @apply border-eneutral ring-eneutral border-b-eneutral/30 ring ring-opacity-30;
+    }
+    .select2-container.select2-container--below.select2-container--open
+      .selection
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--below.select2-container--open
+      .selection
+      .select2-selection.select2-selection--multiple,
+    .select2-container.select2-container--below.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--below.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--multiple {
+      @apply rounded-b-none;
+    }
+    .select2-container.select2-container--above.select2-container--open
+      .selection
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--above.select2-container--open
+      .selection
+      .select2-selection.select2-selection--multiple,
+    .select2-container.select2-container--above.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--above.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--multiple {
+      @apply rounded-t-none;
+    }
+
+    // Select Itself: Focused without dropdown being opened
+    .select2-container.select2-container--default.select2-container--focus:not(
+        .select2-container--open
+      )
+      .selection.select2-focused
+      .select2-selection.select2-selection--single,
+    .select2-container.select2-container--default.select2-container--focus:not(
+        .select2-container--open
+      )
+      .selection.select2-focused
+      .select2-selection.select2-selection--multiple {
+      @apply border-eneutral rounded-b-md rounded-t-md;
+    }
+
+    // Select Itself: Invalid
+    &.ng-invalid
+      .select2-container.select2-container--default
+      .selection
+      .select2-selection.select2-selection--single,
+    &.ng-invalid
+      .select2-container.select2-container--default
+      .selection
+      .select2-selection.select2-selection--multiple {
+      @apply border-enegative;
+    }
+    // Select Itself: Invalid & Focused
+    &.ng-invalid
+      .select2-container.select2-container--default.select2-container--open
+      .selection
+      .select2-selection.select2-selection--single,
+    &.ng-invalid
+      .select2-container.select2-container--default.select2-container--open
+      .selection
+      .select2-selection.select2-selection--multiple,
+    &.ng-invalid
+      .select2-container.select2-container--default.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--single,
+    &.ng-invalid
+      .select2-container.select2-container--default.select2-container--focus
+      .selection.select2-focused
+      .select2-selection.select2-selection--multiple {
+      @apply border-enegative ring-enegative ring-opacity-30;
+    }
+    // Select Itself: Invalid & Focused without dropdown being opened
+    &.ng-invalid
+      .select2-container.select2-container--default.select2-container--focus:not(
+        .select2-container--open
+      )
+      .selection.select2-focused
+      .select2-selection.select2-selection--single,
+    &.ng-invalid
+      .select2-container.select2-container--default.select2-container--focus:not(
+        .select2-container--open
+      )
+      .selection.select2-focused
+      .select2-selection.select2-selection--multiple {
+      @apply border-enegative rounded-b-md;
+    }
+
+    // Select Itself: Placeholder
+    .select2-container.select2-container--default
+      .select2-selection.select2-selection--single
+      .select2-selection__placeholder,
+    .select2-container.select2-container--default
+      .select2-selection.select2-selection--multiple
+      .select2-selection__placeholder {
+      @apply text-eneutral/50 mt-0;
+    }
+
+    // Select Itself: Single typed elements only
+    .select2-container.select2-container--default
+      .select2-selection.select2-selection--single
+      .select2-selection__rendered {
+      @apply text-inherit;
+    }
+    .select2-container.select2-container--default
+      .select2-selection.select2-selection--single
+      .select2-selection__arrow {
+      @apply absolute right-2 top-[calc(50%-2px)];
+    }
+  }
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Global: Select2                                                            */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.cdk-overlay-container {
+  // Dropdown
+  .select2-container.select2-container--default .select2-dropdown {
+    @apply border-eneutral bg-eday-lighter dark:bg-enight border shadow-md;
+  }
+  .select2-container.select2-container--default
+    .select2-results
+    > .select2-results__options {
+    @apply u8-pretty-scroll;
+  }
+  .select2-results__options .select2-results__option {
+    @apply text-inherit;
+  }
+  .select2-container.select2-container--default
+    .select2-results__options
+    .select2-results__option--highlighted[aria-selected] {
+    @apply bg-eneutral/30 text-inherit;
+  }
+  .select2-container.select2-container--default
+    .select2-results__options
+    .select2-results__option[aria-selected='true'] {
+    @apply bg-eprimary text-eday-lighter;
+  }
+
+  // Search Box
+  .select2-container.select2-container--default
+    .select2-dropdown
+    .select2-search.select2-search--dropdown {
+    @apply border-eneutral/30 p-4;
+  }
+  .select2-container.select2-container--default
+    .select2-dropdown.select2-dropdown--below
+    .select2-search.select2-search--dropdown {
+    @apply border-b;
+  }
+  .select2-container.select2-container--default
+    .select2-dropdown.select2-dropdown--above
+    .select2-search.select2-search--dropdown {
+    @apply border-t;
+  }
+  .select2-container.select2-container--default
+    .select2-dropdown
+    .select2-search.select2-search--dropdown
+    .select2-search__field {
+    @apply placeholder-eneutral/50 border-eneutral/50 focus:border-eneutral focus:ring-eneutral block w-full rounded-md bg-transparent shadow-sm transition focus:ring focus:ring-opacity-30 focus-visible:outline-transparent;
+  }
+}

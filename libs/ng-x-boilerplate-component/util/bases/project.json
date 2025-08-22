@@ -1,0 +1,20 @@
+{
+  "name": "ng-x-boilerplate-component-util-bases",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ng-x-boilerplate-component/util/bases/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:util", "domain:ng-x-boilerplate-component"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/ng-x-boilerplate-component/util/bases/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

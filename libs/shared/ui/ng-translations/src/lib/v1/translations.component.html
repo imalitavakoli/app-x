@@ -1,0 +1,16 @@
+<ul>
+  @for (item of langs; track item.id) {
+  <li class="flex items-center py-2">
+    <input
+      class="form-radio e-form-check mr-2 rounded-full"
+      [checked]="default === item.id ? true : false"
+      (change)="selected.emit(item.id)"
+      type="radio"
+      name="language"
+      [id]="item.id"
+      [value]="item.id"
+    />
+    <label [for]="item.id"> {{ getLanguageName(item.id) }} </label>
+  </li>
+  }
+</ul>

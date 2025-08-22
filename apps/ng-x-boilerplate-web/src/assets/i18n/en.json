@@ -1,0 +1,31 @@
+{
+  "hello": "Hello World!",
+  "greetings": {
+    "greetings_name": "Hello {{name}}!"
+  },
+  "common": {
+    "error": "Error",
+    "error_desc": "Oops! Something went wrong."
+  },
+  "menu_options": {
+    "dashboard": "Dashboard",
+    "x_users": "Users",
+    "test": "Test",
+    "account": "Account"
+  },
+  "settings_menu_options": {
+    "my_account": "My Account",
+    "general": "General",
+    "general_settings": "General Settings",
+    "language": "Language",
+    "privacy_policy": "Privacy Policy",
+    "customer_service": "Customer Service",
+    "faq": "FAQ",
+    "logout": "Logout",
+    "app_version": "App Version"
+  },
+  "footer": {
+    "privacy_policy": "Privacy Policy",
+    "terms_and_condition": "Terms and Conditions"
+  }
+}

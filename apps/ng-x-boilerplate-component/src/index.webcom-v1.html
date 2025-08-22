@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>webcom V1</title>
+    <base href="./" />
+    <meta charset="utf-8" />
+
+    <!-- No cache -->
+    <meta
+      http-equiv="Cache-control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!-- Mobile -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no"
+    />
+
+    <!-- More -->
+    <link rel="stylesheet" href="x-assets/DEP_style.css" />
+  </head>
+
+  <body>
+    <main>
+      <!-- Description ///////////////////////////////////////////////////// -->
+      <h1>Web-component usage example</h1>
+      <section>
+        Prerequisites before testing the example:
+        <ol>
+          <li>
+            Use our API to receive a `ticket-id` with `status = 'completed'`.
+          </li>
+          <li>
+            Then edit this HTML file to update the `TICKET_ID` constant value to
+            provide the received `ticket-id` to the 'initializer-v1' component.
+          </li>
+          <li>
+            Run the server and open this HTML file in the browser.
+            <br />
+            <strong>Note!</strong> We should have already let our API (Base URL)
+            to be accessible from where you're deploying this HTML file (origin)
+            to prevent `CORS Policy` error. So if you're seeing such error,
+            please contact our support.
+          </li>
+          <li>
+            First click `Init Initializer` button to initialize the
+            'initializer-v1' component! Then click any other button to
+            initialize other components.
+            <br />
+            <strong>Important!</strong> Whenever you like to initialize a
+            component, you MUST always first initialize the 'initializer-v1'
+            component, and then your desired component. Because 'initializer-v1'
+            prepares the environment for all of the other components to get
+            loaded successfully and show data to the user.
+            <br />
+            <strong>Important!</strong> In a real-world scenario (in your sites
+            or apps), most of the components, require some inputs that you
+            already need to know their valid values, otherwise you cannot load
+            them successfully. For example, to load the 'x-profile-info'
+            component, you need to provide it with some inputs such as
+            `user-id`.So to satisfy such components' required inputs, first you
+            need to use our API to gather some information about your users data
+            (e.g., by calling `GET {url}/v1/users` API endpoint), and then load
+            the components. Only after that, you can initialize most of the
+            components and provide their required inputs with valid values.
+          </li>
+        </ol>
+      </section>
+
+      <!-- x-core-initializer-v1 /////////////////////////////////////////// -->
+      <button onclick="initInitializer(); this.disabled = true">
+        Init Initializer
+      </button>
+      <br />
+      <br />
+      <!-- NOTE: Web-components can be initialized just like normal HTML elements. -->
+      <!-- <x-core-initializer-v1 id="xInitializer"></x-core-initializer-v1> -->
+
+      <!-- x-core-x-profile-image-v1 /////////////////////////////////////// -->
+      <button onclick="initXProfileImage(); this.disabled = true">
+        Init X Profile Image
+      </button>
+      <button onclick="updateXProfileImage(); this.disabled = true">
+        Update X Profile Image
+      </button>
+      <br />
+      <br />
+
+      <!-- x-core-x-profile-info-v1 //////////////////////////////////////// -->
+      <button onclick="initXProfileInfo(); this.disabled = true">
+        Init X Profile Info
+      </button>
+      <button onclick="updateXProfileInfo(); this.disabled = true">
+        Update X Profile Info
+      </button>
+      <br />
+      <br />
+
+      <!-- x-core-x-full-dashboard-v1 ////////////////////////////////////// -->
+      <button onclick="initXFullDashboard(); this.disabled = true">
+        Init X Full Dashboard
+      </button>
+      <button onclick="updateXFullDashboard(); this.disabled = true">
+        Update X Full Dashboard
+      </button>
+      <br />
+      <br />
+
+      <!-- Web-components' container /////////////////////////////////////// -->
+      <div id="x-container"></div>
+    </main>
+
+    <script>
+      const TICKET_ID = ''; // Provide the ticketId here.
+
+      /* //////////////////////////////////////////////////////////////////// */
+      /* x-core-initializer-v1                                                */
+      /* //////////////////////////////////////////////////////////////////// */
+
+      /**
+       * Initialize `x-core-initializer-v1` web-component.
+       * This component itself doesn't present anything, it just sets up all
+       * prerequisites of all the other components. Such as authenticating,
+       * changing the components' language, showing errors, and tracking user
+       * activities (if you already have your users' consent).
+       *
+       * NOTE (specifically for web-component usage): For updating other
+       * components, you should re-initialize them with new data. But for this
+       * component, you can simply update it by changing its attributes whenever
+       * you want. For example you already initialized this component, but like
+       * to change the language? Simply change the value of `lang` attribute.
+       *
+       * NOTE (specifically for web-component usage): `ticket-id` input is
+       * optional... So you can basically initialize this component and listen
+       * to its `authenticated` event to know whether the user is authenticated
+       * or not. If the user is not authenticated, then you can provide the
+       * `ticket-id` input to re-authenticate the user.
+       */
+      function initInitializer() {
+        // Let's create the web-component element.
+        const webcom = document.createElement('x-core-initializer-v1');
+        const webcomId = 'xInitializer';
+        webcom.id = webcomId;
+
+        // The CSS class hat MUST be defined for the web-component to have
+        // the correct styling.
+        webcom.className = 'e-main';
+
+        // OPTIONAL INPUTS.
+        // NOTE: ALL of this component's inputs are optional.
+
+        // Default: `null`.
+        // `ticket-id` should be provided by you via the API, then you can
+        // provide it to this component to authenticate the user.
+        //
+        // Rather than providing the received `ticket-id`, you can also do the
+        // following in regards to the `ticket-id` input:
+        // - Don't define it at all: If you do so, then other loaded
+        //   components (alongside of the Initializer) try to read the
+        //   access-token from local storage (`eAuth_token` key). If they don't
+        //   find it, they will not be shown at all!
+        // - Define it to `undefined`: If you do so, then Initializer will
+        //   clear the access-token from local storage... In other words, it
+        //   will log out the user.
+        webcom.setAttribute('ticket-id', TICKET_ID);
+
+        // Default: `undefined`.
+        // You can do the following in regards to the `lang` input:
+        // - Don't define it at all: If you do so, then all loaded components
+        //   will be in the language that is defined as the logged in user's
+        //   desired language in DataBase.
+        // - Define it to a culture code (e.g., 'en-GB'): If you do so, then
+        //   you're actually changing the logged in user's desired language in
+        //   DataBase and force all loadec components to be shown in that
+        //   lanugage.
+        webcom.setAttribute('lang', 'en-GB');
+
+        // Default: 'true'. Valid values: 'true' | 'false'.
+        // Other components may throw errors if something goes wrong. If you
+        // want to show those errors to the user, set this input to `true`. How
+        // this component shows the errors? A popup gets opened which contains
+        // the error message(s).
+        webcom.setAttribute('show-errors', 'true');
+
+        // Default: 'false'. Valid values: 'true' | 'false'
+        // If you already have your users' consent, then by this input, you can
+        // track the user's activity (like clicks, etc.) in all of the other
+        // loaded components.
+        //
+        // NOTE: This input can be defined only once (i.e., when this component
+        // is initialized). Changing it later won't have any effect.
+        webcom.setAttribute('track-activity', 'false');
+
+        // OUTPUTS.
+        webcom.addEventListener('hasError', (event) => {
+          console.log(`${webcomId} "hasError" emitted:`, event.detail);
+        });
+        webcom.addEventListener('authenticated', (event) => {
+          console.log(`${webcomId} "authenticated" emitted:`, event.detail);
+        });
+        webcom.addEventListener('langChanged', (event) => {
+          console.log(`${webcomId} "langChanged" emitted:`, event.detail);
+        });
+
+        // Insert the web-component into the DOM.
+        document.querySelector('#x-container').appendChild(webcom);
+      }
+
+      /* //////////////////////////////////////////////////////////////////// */
+      /* x-core-x-profile-image-v1                                            */
+      /* //////////////////////////////////////////////////////////////////// */
+
+      /**
+       * Initialize `x-core-x-profile-image-v1` web-component.
+       * It shows user's profile image.
+       */
+      function initXProfileImage() {
+        // Let's create the web-component element.
+        const webcom = document.createElement('x-core-x-profile-image-v1');
+        const webcomId = 'xProfileImage';
+        webcom.id = webcomId;
+        webcom.className = 'e-main';
+
+        // REQUIRED INPUTS.
+        webcom.setAttribute('user-id', '123');
+
+        // OUTPUTS.
+        webcom.addEventListener('hasError', (event) => {
+          console.log(`${webcomId} "hasError" emitted:`, event.detail);
+        });
+        webcom.addEventListener('ready', () => {
+          console.log(`${webcomId} "ready" emitted`);
+        });
+
+        // Insert the web-component into the DOM.
+        document.querySelector('#x-container').appendChild(webcom);
+      }
+
+      /**
+       * Update the `x-core-x-profile-image-v1` web-component with new data.
+       */
+      function updateXProfileImage() {
+        // Let's remove the old web-component element.
+        const oldWebcom = document.querySelector('x-core-x-profile-image-v1');
+        document.querySelector('#x-container').removeChild(oldWebcom);
+
+        // Create the new web-component element.
+        const webcom = document.createElement('x-core-x-profile-image-v1');
+        const webcomId = 'xProfileImage';
+        webcom.id = webcomId;
+        webcom.className = 'e-main';
+
+        // REQUIRED INPUTS.
+        webcom.setAttribute('user-id', '456');
+
+        // Insert the web-component into the DOM.
+        document.querySelector('#x-container').appendChild(webcom);
+      }
+
+      /* //////////////////////////////////////////////////////////////////// */
+      /* x-core-x-profile-info-v1                                             */
+      /* //////////////////////////////////////////////////////////////////// */
+
+      /**
+       * Initialize `x-core-x-profile-info-v1` web-component.
+       * It shows user's profile information.
+       */
+      function initXProfileInfo() {
+        // Let's create the web-component element.
+        const webcom = document.createElement('x-core-x-profile-info-v1');
+        const webcomId = 'xProfileInfo';
+        webcom.id = webcomId;
+        webcom.className = 'e-main';
+
+        // REQUIRED INPUTS.
+        webcom.setAttribute('user-id', '123');
+
+        // OPTIONAL INPUTS.
+        webcom.setAttribute('show-btn-read-more', 'false'); // Default: 'false'. Valid values: 'true' | 'false'. NOTE: If 'true', then it shows 'Read More' button.
+
+        // OUTPUTS.
+        webcom.addEventListener('hasError', (event) => {
+          console.log(`${webcomId} "hasError" emitted:`, event.detail);
+        });
+        webcom.addEventListener('ready', () => {
+          console.log(`${webcomId} "ready" emitted`);
+        });
+        webcom.addEventListener('clickedReadMore', () => {
+          console.log(`${webcomId} "clickedReadMore" emitted`); // Emitted when 'Read More' is clicked.
+        });
+
+        // Insert the web-component into the DOM.
+        document.querySelector('#x-container').appendChild(webcom);
+      }
+
+      /**
+       * Update the `x-core-x-profile-info-v1` web-component with new data.
+       */
+      function updateXProfileInfo() {
+        // Let's remove the old web-component element.
+        const oldWebcom = document.querySelector('x-core-x-profile-info-v1');
+        document.querySelector('#x-container').removeChild(oldWebcom);
+
+        // Create the new web-component element.
+        const webcom = document.createElement('x-core-x-profile-info-v1');
+        const webcomId = 'xProfileInfo';
+        webcom.id = webcomId;
+        webcom.className = 'e-main';
+
+        // REQUIRED INPUTS.
+        webcom.setAttribute('user-id', '456');
+
+        // Insert the web-component into the DOM.
+        document.querySelector('#x-container').appendChild(webcom);
+      }
+
+      /* //////////////////////////////////////////////////////////////////// */
+      /* x-core-x-full-dashboard-v1                                           */
+      /* //////////////////////////////////////////////////////////////////// */
+
+      /**
+       * Initialize `x-core-x-full-dashboard-v1` web-component.
+       * It's our full dashboard solution. It provides a controller (that has a
+       * user dropdown, and shows user's profile image, info, and etc.).
+       */
+      function initXFullDashboard() {
+        // Let's create the web-component element.
+        const webcom = document.createElement('x-core-x-full-dashboard-v1');
+        const webcomId = 'xFullDashboard';
+        webcom.id = webcomId;
+        webcom.className = 'e-main';
+
+        // OPTIONAL INPUTS.
+        // NOTE: ALL of this component's inputs are optional.
+
+        webcom.setAttribute('user-id', '123'); // Default: `undefined`. NOTE: If not provided, then it will use the first user that is fetched from API.
+        webcom.setAttribute('show-profile-image', 'true'); // Default: 'true'. Valid values: 'true' | 'false'.
+        webcom.setAttribute('show-profile-info', 'true'); // Default: 'true'. Valid values: 'true' | 'false'.
+
+        // OPTIONAL INPUTS (specifically for inner profile-info component).
+        webcom.setAttribute('profile-info_show-btn-read-more', 'false'); // Default: 'false'. Valid values: 'true' | 'false'. NOTE: If 'true', then it shows 'Read More' button.
+
+        // OUTPUTS.
+        webcom.addEventListener('hasError', (event) => {
+          console.log(`${webcomId} "hasError" emitted:`, event.detail);
+        });
+        webcom.addEventListener('ready', () => {
+          console.log(`${webcomId} "ready" emitted`);
+        });
+
+        // OUTPUTS (specifically for inner profile-info component).
+        webcom.addEventListener('profileInfo_clickedReadMore', () => {
+          console.log(`${webcomId} "profileInfo_clickedReadMore" emitted`); // Emitted when 'Read More' is clicked.
+        });
+
+        // Insert the web-component into the DOM.
+        document.querySelector('#x-container').appendChild(webcom);
+      }
+
+      /**
+       * Update the `x-core-x-full-dashboard-v1` web-component with new data.
+       */
+      function updateXFullDashboard() {
+        // Let's remove the old web-component element.
+        const oldWebcom = document.querySelector('x-core-x-full-dashboard-v1');
+        document.querySelector('#x-container').removeChild(oldWebcom);
+
+        // Create the new web-component element.
+        const webcom = document.createElement('x-core-x-full-dashboard-v1');
+        const webcomId = 'xFullDashboard';
+        webcom.id = webcomId;
+        webcom.className = 'e-main';
+
+        // OPTIONAL INPUTS.
+        // NOTE: ALL of this component's inputs are optional.
+
+        webcom.setAttribute('user-id', '456');
+
+        // Insert the web-component into the DOM.
+        document.querySelector('#x-container').appendChild(webcom);
+      }
+    </script>
+
+    <noscript>
+      Please enable JavaScript to continue using this application.
+    </noscript>
+  </body>
+</html>

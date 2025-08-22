@@ -1,0 +1,12 @@
+<div
+  class="f8-bar f8-bar--pos-fixed-bottom-left min-w-[260px] max-w-sm"
+  [ngClass]="{ 'f8-bar--effect-hide-to-fade': !isOpen }"
+>
+  <div class="f8-bar__perspective">
+    <div
+      class="bg-eday-darker/90 dark:bg-enight-darker/80 text-enight dark:text-eday-lighter m-6 rounded p-4 font-semibold"
+    >
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

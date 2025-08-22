@@ -1,0 +1,1945 @@
+// f8-bar - Framework8 bar block
+// @copyright 2022 MyThemeIsReady. All Rights Reserved.
+//
+// Cool bar styles! This block can be a header, footer, fullscreen and side
+// widget, and etc... It is flexible and rich featured, with lots of cool styles
+// and effects :)
+//
+// NOTE: This block needs the global `box-sizing` value to be `border-box`. If
+// it's going to be used in a project that this is not the case, then make sure
+// to set the `box-sizing` for all of the elements inside of the block (and also
+// the elements that are not inside of the block itself, if there's any elements
+// like so) to `border-box`.
+//
+//
+// Requirements:
+// - Root Custom Props:       ../_root.scss
+// - Variables:               ../_variables.scss
+//
+// Goes well with:
+// - Utils:                   ../utils/_utils.scss
+// - Grid:                    ../grid/_grid.scss
+// - Icon:                    ../icon/_icon.scss
+// - Link:                    ../link/_link.scss
+// - Button:                  ../button/_button.scss
+// - List:                    ../list/_list.scss
+// - Dropdown:                ../dropdown/_dropdown.scss
+// - Form:                    ../form/_form.scss
+// - Nav:                     ../nav/_nav.scss
+// - Toggle:                  ../toggle/toggle.js
+// - Smooth-Scrolling:        ../smooth-scrolling/smooth-scrolling.js
+// - waypoints version ^4.0.0 (https://github.com/imakewebthings/waypoints/)
+//
+//
+//
+//
+// @example
+// <!-- CSS custom properties to modify the block styles
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!--
+// <style>
+// .f8-bar {
+//   --f8-bar-visual-side-width: 300px;
+//
+//   --f8-bar-margin-bottom: var(--f8-blocks-spacer);
+//   --f8-bar-items-margin: 4px;
+//   --f8-bar-visual-shrinked-margin: calc(var(--f8-blocks-spacer) * 1.5);
+//
+//   /* By default `overflow-y` of head, foot, and overlay elements inside of a
+//   fullscreen/sidebar bar, and `overflow-y` of collapse element, will become
+//   `visible` from `auto` in medium screen and above...
+//   Why is that? Because if you're going to use a navigation block or something
+//   that its content must get out of the boundaries of the bar block, it can
+//   simply happen. Now modifying this variable will change this default
+//   behaviour. e.g., you can set it to `auto` in order to force the elements to
+//   always have a scrollbar for their large content at any screen sizes.
+//   NOTE: Let me also mention that the cool thing about CSS variables like
+//   this, is that they support descending elements! I mean you can modify this
+//   variable only for one of these specific elements and not the whole bar
+//   block. Cheers! */
+//   --f8-bar-holders-overflow-at-md: visible;
+//
+//   /* By default `align-content` and `align-items` of head, foot, and overlay
+//   elements inside of a fullscreen/sidebar bar are `flex-start`. By modifying
+//   this variable you can change that.
+//   NOTE: Though `align-content` and `align-items` of head, foot, and overlay
+//   elements inside of ONLY a fullscreen bar will become `center` at medium
+//   screen and above, no matter what value you enter for this variable. */
+//   --f8-bar-holders-flex-alignment: flex-start;
+// }
+//
+// .f8-bar__push {
+//   --f8-bar-push-state-pushed-amount: 300px;
+// }
+//
+// .f8-bar__fader {
+//   --f8-bar-fader-bg-color: var(--f8-blocks-def-bg-color);
+// }
+// </style>
+// -->
+//
+//
+//
+//
+// <!-- Simple bar
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <div class="f8-bar u8-bg-color-blackish u8-text-color-whitish ">
+//   <div class="f8-bar__perspective">
+//     <div class="u8-m">Anything can be inside a Bar Block!</div>
+//   </div>
+// </div>
+//
+//
+//
+//
+// <!-- Now let's build a comprehensive bar with the help of Utils block
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <header class="f8-bar u8-bg-color-blackish-2 u8-text-color-whitish ">
+//  <div class="f8-bar__perspective g8-container">
+//
+//    <div class="f8-bar__head">
+//      <div class="f8-bar__brand u8-my-0">
+//        <div class="u8-text-center u8-text-sm-start">
+//          <a href="#">Brand</a>
+//        </div>
+//      </div>
+//      <div class="f8-bar__collapse" id="collapse">
+//        <nav role="navigation">
+//           <ul class="f8-nav sm f8-nav--color-blackish">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a>
+//               <ul class="f8-nav__sub">
+//                 <li class="f8-nav__sub-item"><a class="f8-nav__sub-link" href="#">Introduction</a></li>
+//                 <li class="f8-nav__sub-item"><a class="f8-nav__sub-link" href="#">Team</a></li>
+//               </ul>
+//             </li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//      </div>
+//      <div class="f8-bar__social u8-my-0">
+//        <ul class="f8-list f8-list--visual-inline u8-mx-0">
+//          <li class="f8-list__item"><a href="#" class="f8-link f8-link--color-whitish f8-link--effect-alpha f8-icon fab fa-facebook f8-icon--size-xs" role="button"></a></li>
+//          <li class="f8-list__item"><a href="#" class="f8-link f8-link--color-whitish f8-link--effect-alpha f8-icon fab fa-twitter f8-icon--size-xs" role="button"></a></li>
+//        </ul>
+//      </div>
+//      <div class="f8-bar__toggle u8-my-0">
+//        <button data-f8-target="#collapse" class="f8-js-toggle f8-button f8-button--color-blackish u8-box-shadow-none"><i class="fa fa-bars"></i></button>
+//      </div>
+//    </div>
+//
+//  </div>
+// </header>
+//
+//
+//
+//
+// <!-- Position modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+//<!-- <!-- .f8-bar--pos-fixed-{top-left,top-right,bottom-left,bottom-right} -->
+//
+// <div class="f8-bar f8-bar--pos-fixed-top-left u8-bg-color-blackish u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//     <div class="u8-m">Anything can be inside a Bar Block!</div>
+//   </div>
+// </div>
+//
+// <div class="f8-bar f8-bar--pos-fixed-bottom-left u8-bg-color-blackish u8-text-color-whitish " style="width: 200px;">
+//   <div class="f8-bar__perspective"><div class="u8-m">Anything can be inside a Bar Block!</div></div>
+// </div>
+//
+//
+//
+//
+// <!-- Visual modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-bar--visual-footer: Puts the default margin bottom of the block to the top, so that it can be used as a footer at the bottom of the page -->
+// <!-- .f8-bar--visual-fullscreen: Makes a fullscreen bar -->
+// <!-- .f8-bar--visual-side: Makes a side bar -->
+// <!-- .f8-bar--visual-shrinked: Adds margins around the bar to shrink it -->
+// <!-- .f8-bar--visual-rotated: Rotates the Foot element of the Bar block -->
+//
+//
+// <header class="f8-bar f8-bar--visual-fullscreen u8-text-color-whitish ">
+//  <div class="f8-bar__perspective">
+//    <div class="f8-bar__head u8-bg-color-blackish-2">
+//      <div class="f8-bar__brand u8-text-center">
+//        <a href="#">Brand</a>
+//      </div>
+//      <div class="f8-bar__collapse">
+//        <nav role="navigation" class="u8-text-center">
+//          <ul class="f8-nav sm f8-nav--color-blackish f8-nav--visual-minified">
+//            <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//            <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a></li>
+//            <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//          </ul>
+//        </nav>
+//      </div>
+//      <div class="f8-bar__social u8-w-100 u8-text-center">
+//        <ul class="f8-list f8-list--visual-inline u8-d-inline-flex">
+//          <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-facebook f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//          <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-twitter f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//          <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-dribbble f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//        </ul>
+//      </div>
+//    </div>
+//
+//    <!-- NOTE: Head and Foot elements are not only flex containers
+//    themselves, but they're also flex items of the Perspective element while
+//    you're applying .f8-bar--visual-fullscreen or .f8-bar--visual-side
+//    modifiers to the block. So if you like them to have a fixed height in
+//    such cases, you can define the 'flex' property for them with your
+//    desire height. Just like what we did below. We've set the Foot element's
+//    height to 48px. -->
+//    <div class="f8-bar__foot u8-bg-color-blackish-2" style="flex: 0 0 55px;">
+//      <div class="u8-font-size-sm u8-text-center u8-w-100 u8-m">
+//        Copyright &copy; 2017 - Proudly made with <a title="Framework8" href="#" class="f8-icon f8-icon--size-xs f8-icon--ic-framework8 f8-icon--color-accent f8-link f8-link--effect-alpha"></a>
+//      </div>
+//    </div>
+//  </div>
+// </header>
+//
+//
+// <header class="f8-bar f8-bar--visual-side u8-text-color-whitish ">
+//  <div class="f8-bar__perspective">
+//    <div class="f8-bar__head u8-bg-color-blackish-2 u8-chrome-pretty-scroll">
+//      <div class="f8-bar__brand u8-text-center">
+//        <a href="#">Brand</a>
+//      </div>
+//      <div class="f8-bar__collapse">
+//        <nav role="navigation" class="u8-text-center">
+//           <ul class="f8-nav sm sm-vertical f8-nav--color-blackish">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//      </div>
+//    </div>
+//
+//    <div class="f8-bar__foot u8-bg-color-blackish-2 u8-chrome-pretty-scroll" style="flex: 0 0 100px; --f8-bar-holders-flex-alignment:center;">
+//      <div class="f8-bar__social u8-w-100 u8-text-center">
+//        <ul class="f8-list f8-list--visual-inline u8-d-inline-flex">
+//          <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-facebook f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//          <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-twitter f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//          <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-dribbble f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//        </ul>
+//      </div>
+//      <div class="f8-bar__utilities u8-w-100 u8-text-center u8-mt-0">
+//        <div class="u8-font-size-sm">
+//          Copyright &copy; 2017 - Proudly made with F8
+//        </div>
+//      </div>
+//    </div>
+//  </div>
+// </header>
+//
+//
+// <div class="f8-bar f8-bar--visual-shrinked">
+//   <div class="f8-bar__perspective">
+//     <div class="u8-bg-color-blackish u8-text-color-whitish u8-p">Anything can be inside a Bar Block!</div>
+//   </div>
+// </div>
+//
+//
+// <div class="f8-bar f8-bar--visual-rotated u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Head:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <!-- Foot has been rotated and hidden -->
+//     <div class="f8-bar__foot u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Foot:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </div>
+//
+//
+//
+//
+// <!-- Effect modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-bar--effect-{hide-to-top,hide-to-bottom,hide-to-left,
+// hide-to-right,hide-to-fade,rotate,head-hide,foot-hide,overlay-show,
+// brand-hide,brand-scale} -->
+//
+// <div class="f8-bar f8-bar--effect-hide-to-top">
+//   <div class="f8-bar__perspective">
+//     <div class="u8-bg-color-blackish u8-text-color-whitish u8-p">Anything can be inside a Bar Block!</div>
+//   </div>
+// </div>
+//
+// <div class="f8-bar f8-bar--effect-foot-hide u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Head:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <div class="f8-bar__foot u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Foot:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </div>
+//
+//
+// <!-- NOTE: .f8-bar--effect-head-hide works as expected ONLY IF
+// .f8-bar--visual-footer or bottom fixed position modifiers
+// (.f8-bar--pos-fixed-{bottom-left,bottom-right}) are also applied to the
+// block. Because these modifiers put Head under Foot by z-index CSS rule. -->
+//
+// <div class="f8-bar f8-bar--visual-footer f8-bar--effect-head-hide u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Head:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <div class="f8-bar__foot u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Foot:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </div>
+//
+//
+// <!-- NOTE: .f8-bar--effect-rotate ONLY works as expected when
+// .f8-bar--visual-rotated modifier is also applied to the block. -->
+//
+// <div class="f8-bar f8-bar--visual-rotated f8-bar--effect-rotate u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Head:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <div class="f8-bar__foot u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Foot:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </div>
+//
+//
+// <div class="f8-bar f8-bar--visual-fullscreen f8-bar--effect-hide-to-fade">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish u8-text-color-whitish">
+//       <div class="u8-w-100 u8-text-center u8-m">Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </div>
+//
+//
+// <!-- .f8-bar--effect-overlay-show shows the overlay element, as it's hidden
+// by default. -->
+//
+// <div class="f8-bar f8-bar--effect-overlay-show u8-text-color-whitish ">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Head:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <div class="f8-bar__foot u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Foot:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <div class="f8-bar__overlay u8-bg-color-bluish">
+//       <div class="u8-p"><strong>Overlay:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </div>
+//
+//
+// <!-- .f8-bar--effect-brand-{hide,scale} modifiers effect the <a> tag inside
+// of the Brand element. They are mostly be used with the JavaScript options. -->
+//
+// <header class="f8-bar f8-bar--pos-fixed-top-left f8-bar--visual-shrinked u8-bg-color-blackish u8-text-color-whitish"
+// data-f8-threshold data-f8-threshold-down-class="f8-bar--effect-brand-scale" data-f8-threshold-up-class="f8-bar--visual-shrinked">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head">
+//       <div class="f8-bar__brand f8-bar__brand--visual-image" style="flex: 0 1 auto;">
+//         <div style="max-width: 50px;">
+//           <a href="#"><img alt="Framework8" src="images/f8.png"></a>
+//         </div>
+//       </div>
+//       <div class="f8-bar__utilities f8-bar__utilities--visual-wide">
+//         Lorem ipsum dolor sit amet.
+//       </div>
+//     </div>
+//   </div>
+// </header>
+//
+//
+//
+//
+// <!-- State modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-bar--state-{pulled-over-x,pulled-over-y} -->
+//
+//
+// <!-- .f8-bar--state-pulled-over-y is the opposite of
+// .f8-bar--effect-hide-to-{top,bottom} modifiers. And
+// .f8-bar--state-pulled-over-x is the opposite of
+// .f8-bar--effect-hide-to-{left,right} modifiers. -->
+//
+// <div class="f8-bar f8-bar--effect-hide-to-top f8-bar--state-pulled-over-y">
+//   <div class="f8-bar__perspective">
+//     <div class="u8-bg-color-blackish u8-text-color-whitish u8-p">Anything can be inside a Bar Block!</div>
+//   </div>
+// </div>
+//
+//
+//
+//
+// <!-- Perspective
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- Perspective element is the necessary element of the bar block. -->
+//
+// <div class="f8-bar">
+//   <div class="f8-bar__perspective">
+//     <div class="u8-bg-color-blackish u8-text-color-whitish u8-p">Anything can be inside a Bar Block!</div>
+//   </div>
+// </div>
+//
+//
+//
+//
+// <!-- Head, Foot, Overlay
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- Head, Foot, Overlay elements are flexbox elements that can hold anything
+// inside of themselves. -->
+//
+// <div class="f8-bar u8-text-color-whitish ">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Head:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <div class="f8-bar__foot u8-bg-color-blackish">
+//       <div class="u8-p"><strong>Foot:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//     <!-- Overlay element is hidden by default and can be shown by .f8-bar--effect-overlay-show modifier. -->
+//     <div class="f8-bar__overlay u8-bg-color-bluish">
+//       <div class="u8-p"><strong>Overlay:</strong> Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </div>
+//
+//
+//
+//
+// <!-- Head, Foot, Overlay: Visual modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-bar__{head,foot,overlay}--visual-brand-focus: If brand and collapse
+// elements exist in head, foot, or overlay, then the brand focus modifiers swap
+// the location of brand and collapse elements in large screen. -->
+//
+//
+// <header class="f8-bar u8-bg-color-blackish-2 u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//
+//     <!-- .f8-bar__head--visual-brand-focus swapped the brand and collapse elements' location in large screen. -->
+//     <div class="f8-bar__head f8-bar__head--visual-brand-focus">
+//       <div class="f8-bar__brand u8-text-center u8-text-sm-start u8-text-md-center u8-my-0">
+//           <a href="#">Brand</a>
+//       </div>
+//       <div class="f8-bar__collapse" id="nav01">
+//         <nav role="navigation">
+//           <ul class="f8-nav sm f8-nav--color-blackish">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//       </div>
+//       <div class="f8-bar__social u8-my-0">
+//         <ul class="f8-list f8-list--visual-inline u8-mx-0">
+//           <li class="f8-list__item"><a class="f8-button" href="#" role="button"><i class="f8-button__icon fab fa-facebook"></i></a></li>
+//           <li class="f8-list__item"><a class="f8-button" href="#" role="button"><i class="f8-button__icon fab fa-twitter"></i></a></li>
+//         </ul>
+//       </div>
+//       <div class="f8-bar__toggle u8-my-0">
+//         <button data-f8-target="#nav01" class="f8-js-toggle f8-button"><i class="f8-button__icon fa fa-bars"></i></button>
+//       </div>
+//     </div>
+//
+//   </div>
+// </header>
+//
+//
+//
+//
+// <!-- Brand, Actions, Social, Utilities, Toggle
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- Brand: Holds your company logo/name. It has 100% width in mobile screens, fullscreen, and side bar blocks. -->
+// <!-- Actions: Holds any action buttons. It has 100% width in mobile screens, fullscreen, and side bar blocks. -->
+// <!-- Social: Holds social icons. -->
+// <!-- Utilities: Holds any utility such as toggle button, shop, search, or anything else. -->
+// <!-- Toggle: It can be used inside of the Actions, Social, and Utilities elements as the toggle button itself, or be used at the level of those elements which holds the toggle button inside of itself. Either way, its display will be none in large screen. -->
+//
+// <header class="f8-bar f8-bar--visual-fullscreen u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//
+//     <div class="f8-bar__head u8-bg-color-blackish-2">
+//
+//       <div class="f8-bar__actions u8-text-center">
+//         <button class="f8-button u8-curved"><i class="f8-icon f8-icon--size-xs f8-icon--color-inherit fa fa-times"></i></button>
+//       </div>
+//
+//       <div class="f8-bar__brand u8-text-center">
+//         <a href="#"><img style="max-width: 50px;" alt="Framework8" src="images/f8.png"></a>
+//       </div>
+//
+//       <div class="f8-bar__collapse" id="nav02">
+//         <nav role="navigation" class="u8-text-center">
+//           <ul class="f8-nav sm f8-nav--color-blackish f8-nav--visual-minified">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//       </div>
+//
+//       <div class="f8-bar__utilities u8-w-100">
+//         <form class="f8-form">
+//           <div class="g8-row">
+//             <div class="g8-col-md u8-mb-sm">
+//               <label class="u8-sr-only" for="email">Email</label>
+//               <input class="f8-form__control u8-curved" id="email" type="email" placeholder="Email">
+//             </div>
+//             <div class="g8-col-md u8-mb-sm">
+//               <label class="u8-sr-only" for="pass">Password</label>
+//               <input class="f8-form__control u8-curved" id="pass" type="password" placeholder="Password">
+//             </div>
+//             <div class="g8-col-md-auto f8-form__check u8-mb-sm">
+//               <input type="checkbox" id="remember">
+//               <label for="remember">Remember me</label>
+//             </div>
+//             <div class="g8-col-md-auto">
+//               <button type="submit" class="f8-button u8-curved">Sign in</button>
+//             </div>
+//           </div>
+//         </form>
+//       </div>
+//
+//       <div class="f8-bar__social f8-bar__social--visual-wide u8-text-md-center">
+//         <ul class="f8-list f8-list--visual-inline u8-d-inline-flex u8-mx-0">
+//           <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-facebook f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//           <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-twitter f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//           <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-dribbble f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//         </ul>
+//       </div>
+//
+//       <div class="f8-bar__toggle">
+//         <button data-f8-target="#nav02" class="f8-js-toggle f8-button u8-curved" data-f8-open-by-default><i class="f8-icon f8-icon--size-xs f8-icon--color-inherit fa fa-bars"></i></button>
+//       </div>
+//
+//     </div>
+//
+//     <!-- NOTE: Of course foot and overlay elements can also hold all of the Brand, Actions, Social, Utilities, and Toggle elements. -->
+//     <div class="f8-bar__foot u8-bg-color-blackish-2" style="flex: 0 0 60px; --f8-bar-holders-flex-alignment: center;">
+//       <div class="u8-font-size-sm u8-text-center u8-w-100">
+//         Copyright &copy; 2017 - Proudly made with F8
+//       </div>
+//     </div>
+//
+//   </div>
+// </header>
+//
+//
+//
+//
+// <!-- Brand, Actions, Social, Utilities, Toggle: Visual modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-bar__{actions,social,utilities}--visual-wide: makes the elements to
+// have 100% width but also let next elements sit gently beside them. -->
+//
+// <header class="f8-bar f8-bar--visual-fullscreen u8-text-color-whitish">
+//   <div class="f8-bar__perspective">
+//
+//     <div class="f8-bar__head u8-bg-color-blackish-2">
+//
+//       <div class="f8-bar__brand u8-text-center">
+//         <a href="#"><img style="max-width: 50px;" alt="Framework8" src="images/f8.png"></a>
+//       </div>
+//
+//       <div class="f8-bar__collapse" id="nav03">
+//         <nav role="navigation" class="u8-text-center">
+//           <ul class="f8-nav sm f8-nav--color-blackish f8-nav--visual-minified">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//       </div>
+//
+//       <!-- .f8-bar__social--visual-wide helped the social element to cover all the available space and also sit gently beside the utilities element. -->
+//       <div class="f8-bar__social f8-bar__social--visual-wide u8-text-md-end">
+//         <ul class="f8-list f8-list--visual-inline u8-d-inline-flex u8-mx-0">
+//           <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-facebook f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//           <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-twitter f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//           <li class="f8-list__item"><a class="f8-icon f8-icon--size-xs fab fa-dribbble f8-link f8-link--color-accent f8-link--effect-alpha" href="#"></a></li>
+//         </ul>
+//       </div>
+//
+//       <!-- .f8-bar__utilities--visual-wide helped the utilities element to cover all the available space and also sit gently beside the social element. -->
+//       <div class="f8-bar__utilities f8-bar__utilities--visual-wide u8-text-end u8-text-md-start">
+//         <ul class="f8-list f8-list--visual-inline u8-d-inline-flex u8-mx-0">
+//
+//           <li class="f8-list__item">
+//             <div class="f8-dropdown">
+//               <a class="f8-js-toggle f8-icon f8-icon--size-xs fa fa-search f8-link f8-link--color-accent f8-link--effect-alpha" href="#"
+//               data-f8-toggle-by-my-own data-f8-target="#search" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body"></a>
+//               <div id="search" class="f8-dropdown__container f8-dropdown__container--pos-bottom-right u8-curved u8-bg-color-blackish u8-p" style="width: 240px; margin-top: 13px;">
+//                 <form class="f8-form">
+//                   <div class="f8-form__input-group u8-curved">
+//                     <input type="text" class="f8-form__control f8-form__control--size-sm u8-box-shadow-none" placeholder="Search for...">
+//                     <button class="f8-button f8-button--size-sm u8-box-shadow-none" type="submit">
+//                       <i class="f8-icon f8-icon--color-inherit f8-icon--size-xs fa fa-search"></i>
+//                     </button>
+//                   </div>
+//                 </form>
+//               </div>
+//             </div>
+//           </li>
+//
+//           <!-- As you can see the Toggle element, .f8-bar__toggle, can also be used inside of the Actions, Social, and Utilities elements. -->
+//           <li class="f8-list__item f8-bar__toggle">
+//             <a data-f8-target="#nav03" class="f8-js-toggle f8-icon f8-icon--size-xs fa fa-bars f8-link f8-link--color-accent f8-link--effect-alpha" href="#" data-f8-open-by-default></a>
+//           </li>
+//         </ul>
+//       </div>
+//
+//     </div>
+//
+//   </div>
+// </header>
+//
+//
+//
+//
+// <!-- Brand: Visual modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-bar__brand--visual-image: This modifier can be only useful when you
+// like to put your company logo in the bar block instead of writing your
+// company name. It will remove the extra margin around the brand element and
+// also sets the `line-height` to `0` to remove any extra space below the brand. -->
+//
+// <header class="f8-bar">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish u8-text-color-whitish">
+//       <div class="f8-bar__brand f8-bar__brand--visual-image">
+//         <div style="max-width: 50px;">
+//           <a href="#"><img alt="Framework8" src="images/f8.png"></a>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// </header>
+//
+//
+//
+//
+// <!-- Collapse
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- A collapse can hold anything but usually holds a Nav block. In mobile
+// screen its flex order will be 99 so that it can sit under all of the other
+// elements. It's `display` is `block` by default, but it can be changed by the
+// JavaScript toggle block, if you like to use that block and set collapse as
+// its target in order to toggle the collapse. -->
+//
+// <header class="f8-bar">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish-2 u8-text-color-whitish">
+//       <div class="f8-bar__collapse" id="nav04">
+//         <nav role="navigation">
+//           <ul class="f8-nav sm f8-nav--color-blackish">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//       </div>
+//       <div class="f8-bar__toggle">
+//         <button data-f8-target="#nav04" class="f8-js-toggle f8-button u8-curved"><i class="fa fa-bars"></i></button>
+//       </div>
+//     </div>
+//   </div>
+// </header>
+//
+//
+//
+//
+// <!-- Push, Fader: State modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- A push/fader element is a little bit different than the other elements
+// that we've explained so far. It is actually something outside of the block
+// itself which is going to be effected by the block. So if you're going to
+// create side bar which pushes your page content to the side and fades the
+// background content of your page a little bit when it gets opened, then the
+// push/fader element is something that you need to learn about. -->
+//
+// <!-- A push element is usually a huge element that holds anything but the Bar
+// block inside itself. A fader element is an empty element that comes right
+// after the Bar block.
+// NOTE: Push/fader element's only usage is when we're using .f8-bar--visual-side
+// modifier to have a side bar block.
+// So we can put the content of our page inside of the push element, so that
+// when the side bar block is open, it can push away everything else. And we can
+// also put the empty fader element right after side bar, so that when the block
+// is open, it can effect the fade element to fade the background content a
+// little bit. -->
+//
+// <!-- .f8-bar__push--state-pushed-to-{right,left,top,bottom}: Pushes the element on the specific direction. -->
+// <!-- .f8-bar__fader--state-blur: Blurs the fader element. -->
+//
+// <!-- Our side header with its 'data-is-pusher' JavaScript property to true. -->
+// <header class="f8-bar f8-bar--visual-side u8-text-color-whitish" style="width: 400px;" data-f8-is-pusher>
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-h-100 u8-bg-color-blackish">
+//       <div class="u8-w-100 u8-text-center u8-m">Anything can be inside a Bar Block!</div>
+//     </div>
+//   </div>
+// </header>
+//
+// <!-- .f8-bar__fader element is just an empty element. -->
+// <div class="f8-bar__fader"></div>
+//
+// <!-- .f8-bar__push element is anything else that is on our page. -->
+// <div class="f8-bar__push g8-container" style="--f8-bar-push-state-pushed-amount: 400px;">
+//   <div class="g8-row">
+//     <div class="g8-col">
+//       <h1>Page Content</h1>
+//       <p>
+//         Click the button below to open the bar block!<br>
+//
+//         <!-- And yep, The toggle JavaScript block toggles the header to be
+//         opened and closed. Its 'data-overlay-blur-class' JavaScript option
+//         defines that when the target (I mean our header) is going to be
+//         opened, then .f8-bar__push--state-pushed-to-right and
+//         .f8-bar__push--state-blur modifiers should be added to the push
+//         element. So that it can be pushed and also blurred. -->
+//         <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-closer="body"
+//         data-f8-target=".f8-bar" data-f8-target-close-class="f8-bar--effect-hide-to-left"
+//         data-f8-overlay=".f8-bar__push, .f8-bar__fader" data-f8-overlay-blur-class="f8-bar__push--state-pushed-to-right f8-bar__fader--state-blur">
+//           Open Bar
+//         </button>
+//
+//       </p>
+//       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+//       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+//     </div>
+//   </div>
+// </div>
+//
+//
+// <!-- NOTE: For creating a fullscreen modal, we don't need to use Push/fader
+// elements! To blur the background of the modal, we can simply use the
+// Perspective element of the block itself, and make it a toggle button... So
+// user can interact with the inner contents of the Perspective element, but if
+// she clicks the element itself, the modal gets closed. Cheers! -->
+// <div id="dialogfull" class="f8-bar f8-bar--visual-fullscreen f8-bar--effect-hide-to-fade">
+//  <div style="transform: scale(1, 1);" class="f8-bar__perspective f8-js-toggle g8-justify-content-center g8-align-items-center u8-bg-color-neutral"
+//  data-f8-toggle-by-my-own data-f8-toggle-only-on-element-itself data-f8-target="#dialogfull" data-f8-target-close-class="f8-bar--effect-hide-to-fade">
+//    <div class="u8-bg-color-whitish u8-curved u8-p u8-m">
+//      You can interact with me! If you click on me, the modal won't get closed! But if you click outsode of me, the modal gets closed as expected :)
+//    </div>
+//  </div>
+// </div>
+//
+// <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-target="#dialogfull" data-f8-target-close-class="f8-bar--effect-hide-to-fade">Open Bar</button>
+//
+//
+//
+//
+// <!-- Ok, let's enjoy building different bars as headers, footers, or sidebar
+// widgets with the help of other blocks: Grid, Icon, Link, Button, List,
+// Dropdown, Form, Nav, Toggle
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <header class="f8-bar">
+//   <div class="f8-bar__perspective">
+//
+//     <div class="f8-bar__head u8-bg-color-whitish-2 u8-text-color-blackish">
+//
+//       <div class="f8-bar__brand f8-bar__brand--visual-image u8-text-center u8-text-sm-start">
+//         <div class="u8-d-inline-block" style="max-width: 50px;">
+//           <a href="#"><img alt="Framework8" src="images/f8.png"></a>
+//         </div>
+//       </div>
+//
+//       <div class="f8-bar__collapse" id="nav">
+//         <nav role="navigation">
+//           <ul class="f8-nav sm f8-nav--color-whitish u8-curved u8-p-xs" data-f8-main-menu-sub-offset-y="15" style="--f8-nav-items-space-between: 4px; height: 60px;">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a>
+//               <ul class="f8-nav__sub">
+//                 <li class="f8-nav__sub-item"><a class="f8-nav__sub-link" href="#">Introduction</a></li>
+//                 <li class="f8-nav__sub-item"><a class="f8-nav__sub-link" href="#">Team</a></li>
+//               </ul>
+//             </li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//       </div>
+//
+//       <div class="f8-bar__social">
+//         <ul class="f8-list f8-list--visual-inline u8-mx-0">
+//           <li class="f8-list__item"><a class="f8-button u8-curved" href="#" role="button"><i class="fab fa-facebook"></i></a></li>
+//           <li class="f8-list__item"><a class="f8-button u8-curved" href="#" role="button"><i class="fab fa-twitter"></i></a></li>
+//         </ul>
+//       </div>
+//
+//       <div class="f8-bar__utilities">
+//         <ul class="f8-list f8-list--visual-inline u8-mx-0">
+//
+//           <li class="f8-list__item">
+//             <div class="f8-dropdown">
+//               <button class="f8-js-toggle f8-button u8-curved"
+//               data-f8-toggle-by-my-own data-f8-target="#searchBox" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">
+//                 <i class="fa fa-search"></i>
+//               </button>
+//               <div id="searchBox" class="f8-dropdown__container f8-dropdown__container--pos-bottom-right u8-bg-color-whitish u8-curved u8-p" style="width: 240px; margin-top: 28px;">
+//                 <form class="f8-form">
+//                   <div class="f8-form__input-group u8-curved">
+//                     <input type="text" class="f8-form__control f8-form__control--size-sm u8-box-shadow-none" placeholder="Search for...">
+//                     <button class="f8-button f8-button--size-sm u8-box-shadow-none" type="submit">
+//                       <i class="f8-icon f8-icon--color-inherit f8-icon--size-xs fa fa-search"></i>
+//                     </button>
+//                   </div>
+//                 </form>
+//               </div>
+//             </div>
+//           </li>
+//
+//           <li class="f8-list__item f8-bar__toggle">
+//             <button data-f8-target="#nav" class="f8-js-toggle f8-button u8-curved"><i class="fa fa-bars"></i></button>
+//           </li>
+//         </ul>
+//       </div>
+//     </div>
+//
+//   </div>
+// </header>
+//
+//
+// <header class="f8-bar u8-text-color-whitish" id="header">
+//   <div class="f8-bar__perspective">
+//     <div class="f8-bar__head u8-bg-color-blackish-2">
+//       <div class="f8-bar__brand">
+//         <div style="max-width: 80px;">
+//           <a href="#">Brand</a>
+//         </div>
+//       </div>
+//       <div class="f8-bar__collapse" id="nav05">
+//         <nav role="navigation">
+//           <ul class="f8-nav sm f8-nav--color-blackish">
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Home</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">About</a></li>
+//             <li class="f8-nav__item"><a class="f8-nav__link" href="#">Contact</a></li>
+//           </ul>
+//         </nav>
+//       </div>
+//       <div class="f8-bar__social">
+//         <ul class="f8-list f8-list--visual-inline u8-mx-0">
+//           <li class="f8-list__item"><a class="f8-button" href="#" role="button"><i class="fab fa-facebook"></i></a></li>
+//           <li class="f8-list__item"><a class="f8-button" href="#" role="button"><i class="fab fa-twitter"></i></a></li>
+//         </ul>
+//       </div>
+//       <div class="f8-bar__utilities">
+//         <ul class="f8-list f8-list--visual-inline u8-mx-0">
+//           <li class="f8-list__item"><a class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-target="#header" data-f8-target-open-class="f8-bar--effect-overlay-show" href="#"><i class="fa fa-search"></i></a></li>
+//           <li class="f8-list__item f8-bar__toggle"><button class="f8-js-toggle f8-button" data-f8-closer="body" data-f8-target="#nav05"><i class="fa fa-bars"></i></button></li>
+//         </ul>
+//       </div>
+//     </div>
+//
+//     <div class="f8-bar__overlay u8-bg-color-bluish">
+//       <form class="f8-form u8-m-sm u8-w-100">
+//         <div class="f8-form__input-group">
+//           <input type="text" class="f8-form__control f8-form__control--color-whitish f8-form__control--effect-simple u8-box-shadow-none" placeholder="Search...">
+//           <button class="f8-js-toggle f8-button f8-button--color-bluish u8-box-shadow-none" type="button" data-f8-toggle-by-my-own data-f8-target="#header" data-f8-target-open-class="f8-bar--effect-overlay-show">
+//             <i class="fa fa-times"></i>
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   </div>
+// </header>
+//
+//
+// <footer class="f8-bar f8-bar--visual-footer u8-bg-color-blackish u8-text-color-whitish-2 u8-py">
+//   <div class="f8-bar__perspective g8-container">
+//     <div class="g8-row">
+//       <div class="g8-col">
+//         <h4 class="u8-text-color-whitish">Framework8</h4>
+//         <p class="u8-py">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+//       </div>
+//
+//       <div class="g8-col">
+//         <h4 class="u8-text-color-whitish">Blog</h4>
+//         <ul class="f8-list f8-list--visual-custom u8-mt-0">
+//           <li class="f8-list__item u8-px-0">
+//             <div class="f8-list__addon">
+//               <i class="f8-icon f8-icon--size-xs f8-icon--color-inherit fa fa-angle-right"></i>
+//             </div>
+//             <div class="f8-list__main f8-list__main--pos-middle">
+//               <a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Documentation</a>
+//             </div>
+//           </li>
+//           <li class="f8-list__item u8-px-0">
+//             <div class="f8-list__addon">
+//               <i class="f8-icon f8-icon--size-xs f8-icon--color-inherit fa fa-angle-right"></i>
+//             </div>
+//             <div class="f8-list__main f8-list__main--pos-middle">
+//               <a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Feedback</a>
+//             </div>
+//           </li>
+//         </ul>
+//       </div>
+//
+//       <div class="g8-col">
+//         <h4 class="u8-text-color-whitish">Recent Posts</h4>
+//         <ul class="f8-list f8-list--visual-custom f8-list--visual-expanded u8-mt-0">
+//           <li class="f8-list__item u8-px-0">
+//             <h5 class="u8-mt-0"><a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Lorem ipsum dolor sit amet, consectetur</a></h5>
+//             <small class="u8-opacity-60">10th Dec 2016</small>
+//           </li>
+//           <li class="f8-list__item u8-px-0">
+//             <h5 class="u8-mt-0"><a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Lorem ipsum dolor sit amet</a></h5>
+//             <small class="u8-opacity-60">10th Dec 2016</small>
+//           </li>
+//         </ul>
+//       </div>
+//
+//       <div class="g8-col">
+//         <p class="u8-pt"><strong class="u8-text-color-whitish">Subscribe</strong> to be notified about our important updates, contests, freebies, and tutorials!</p>
+//         <form class="f8-form">
+//           <div class="f8-form__input-group u8-curved u8-font-size-sm">
+//            <input type="text" class="f8-form__control u8-box-shadow-none" placeholder="Your Email">
+//            <button class="f8-button u8-box-shadow-none" type="submit">
+//              <i class="fas fa-paper-plane"></i>
+//            </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   </div>
+// </footer>
+//
+//
+// <footer class="f8-bar f8-bar--visual-footer u8-text-color-whitish-2">
+//   <div class="f8-bar__perspective">
+//
+//     <div class="f8-bar__head u8-bg-color-blackish u8-p">
+//       <div class="g8-container">
+//         <form class="f8-form">
+//           <div class="f8-form__input-group u8-curved u8-font-size-sm">
+//            <input type="text" class="f8-form__control u8-box-shadow-none" placeholder="Your Email">
+//            <button class="f8-button u8-box-shadow-none" type="submit">
+//              <i class="fas fa-paper-plane"></i>
+//            </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//
+//     <div class="f8-bar__foot u8-bg-color-blackish u8-py">
+//       <div class="g8-container">
+//         <div class="g8-row">
+//           <div class="g8-col">
+//             <h4 class="u8-text-color-whitish">Framework8</h4>
+//             <p class="u8-py">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+//           </div>
+//
+//           <div class="g8-col">
+//             <h4 class="u8-text-color-whitish">Blog</h4>
+//             <ul class="f8-list f8-list--visual-custom u8-mt-0">
+//               <li class="f8-list__item u8-px-0">
+//                 <div class="f8-list__addon">
+//                   <i class="f8-icon f8-icon--size-xs f8-icon--color-inherit fa fa-angle-right"></i>
+//                 </div>
+//                 <div class="f8-list__main f8-list__main--pos-middle">
+//                   <a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Documentation</a>
+//                 </div>
+//               </li>
+//               <li class="f8-list__item u8-px-0">
+//                 <div class="f8-list__addon">
+//                   <i class="f8-icon f8-icon--size-xs f8-icon--color-inherit fa fa-angle-right"></i>
+//                 </div>
+//                 <div class="f8-list__main f8-list__main--pos-middle">
+//                   <a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Feedback</a>
+//                 </div>
+//               </li>
+//             </ul>
+//           </div>
+//
+//           <div class="g8-col">
+//             <h4 class="u8-text-color-whitish">Recent Posts</h4>
+//             <ul class="f8-list f8-list--visual-custom f8-list--visual-expanded u8-mt-0">
+//               <li class="f8-list__item u8-px-0">
+//                 <h5 class="u8-mt-0"><a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Lorem ipsum dolor sit amet, consectetur</a></h5>
+//                 <small class="u8-opacity-60">10th Dec 2016</small>
+//               </li>
+//               <li class="f8-list__item u8-px-0">
+//                 <h5 class="u8-mt-0"><a class="f8-link f8-link--color-accent f8-link--effect-underscore-x" href="#">Lorem ipsum dolor sit amet</a></h5>
+//                 <small class="u8-opacity-60">10th Dec 2016</small>
+//               </li>
+//             </ul>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// </footer>
+//
+//
+// <!-- Make a 'Go to Top' button by using the Smooth-Scrolling block and the
+// Bar's JavaScript options. -->
+//
+// <div class="f8-bar f8-bar--pos-fixed-bottom-right f8-bar--effect-hide-to-fade u8-m" style="width: 35px;"
+// data-f8-threshold data-f8-threshold-up-class="f8-bar--effect-hide-to-fade">
+//   <div class="f8-bar__perspective">
+//     <a class="f8-js-smooth-scrolling f8-button f8-button--color-blackish u8-curved" href="#" role="button" data-f8-go-up data-f8-duration="1000" data-f8-easing="easeInOutExpo">
+//       <i class="fas fa-chevron-up"></i>
+//     </a>
+//   </div>
+// </div>
+
+@import 'variables';
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Custom Properties
+
+.f8-bar {
+  --f8-bar-visual-side-width: #{$f8-bar-visual-side-width-base};
+
+  --f8-bar-margin-bottom: #{$f8-bar-margin-bottom-base};
+  --f8-bar-items-margin: #{$f8-bar-items-margin-base};
+  --f8-bar-visual-shrinked-margin: #{$f8-bar-visual-shrinked-margin-base};
+
+  --f8-bar-holders-overflow-at-md: #{$f8-bar-holders-overflow-at-md-base};
+  --f8-bar-holders-flex-alignment: #{$f8-bar-holders-flex-alignment-base};
+}
+
+
+// NOTE: We need to set the push/fader element's variables for itself. Why?
+// Because the push/fader element is not the block's descending child, so
+// block's variables won't be defined for this element.
+
+.f8-bar__push {
+  --f8-bar-push-state-pushed-amount: #{$f8-bar-push-state-pushed-amount-base};
+}
+
+.f8-bar__fader {
+  --f8-bar-fader-bg-color: #{$f8-bar-fader-bg-color-base};
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Block
+
+.f8-bar {
+  position: relative;
+  width: 100%;
+  min-height: $f8-bar-height-min;
+  margin-bottom: $f8-bar-margin-bottom;
+
+  transition: all $f8-bar-transition-duration;
+  transition-timing-function: $f8-bar-transition-timing-fun;
+
+  // Because of the perspective rule for the Perspective element, we should give
+  // our block a high z-index value, so that the nav block inside of it won't go
+  // under other elements on our page.
+  z-index: $f8-bar-zindex;
+
+  // Clearfix hack. Why do we need it? When .f8-bar--visual-footer is
+  // applied, as our block is going to be known as a footer actually, then
+  // margin of the contents inside of our block such as <p> tags, prevent the
+  // footer to gently stick to the end of the page. So we need clearfix to fix
+  // this issue.
+  &::before,
+  &::after {
+    content: '';
+    display: table;
+  }
+  &::after {
+    clear: both;
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Position
+
+.f8-bar--pos-fixed-top-left,
+.f8-bar--pos-fixed-top-right,
+.f8-bar--pos-fixed-bottom-left,
+.f8-bar--pos-fixed-bottom-right {
+  position: fixed;
+  margin-bottom: 0; // Override .f8-bar defaults
+  z-index: $f8-bar-zindex-fixed;
+}
+
+.f8-bar--pos-fixed-top-left {
+  top: 0;
+  left: 0 #{"/*!rtl:ignore*/"};
+}
+
+.f8-bar--pos-fixed-top-right {
+  top: 0;
+  right: 0 #{"/*!rtl:ignore*/"};
+}
+
+
+.f8-bar--pos-fixed-bottom-left,
+.f8-bar--pos-fixed-bottom-right {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  // NOTE: Why to exchange the Head and Foot z-index? Because when the
+  // bottom position modifiers are going to be used, then if we apply the
+  // .f8-bar__head--effect-hide modifier too, Head can easily go and
+  // hide behind the Foot.
+	.f8-bar__head {
+    z-index: 1;
+  }
+
+  .f8-bar__foot {
+    z-index: 2;
+  }
+}
+
+.f8-bar--pos-fixed-bottom-left {
+  bottom: 0;
+  left: 0 #{"/*!rtl:ignore*/"};
+}
+
+.f8-bar--pos-fixed-bottom-right {
+  bottom: 0;
+  right: 0 #{"/*!rtl:ignore*/"};
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Visual
+
+.f8-bar--visual-footer {
+  margin-top: $f8-bar-margin-bottom;
+  margin-bottom: 0;
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  // Exchange the Head and Foot z-index because of the same reason that
+  // we've explaiend for the bottom position modifiers.
+	.f8-bar__head {
+    z-index: 1;
+  }
+
+  .f8-bar__foot {
+    z-index: 2;
+  }
+}
+
+
+.f8-bar--visual-fullscreen,
+.f8-bar--visual-side {
+  position: fixed;
+  height: 100vh;
+  margin-bottom: 0;
+
+  // If there's no position modifier that is applied to the block, then set it's
+  // default fixed position.
+  &:not([class*="f8-bar--pos"]) {
+    top: 0;
+    left: 0;
+  }
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    width: 100%;
+    height: 100%;
+
+    // We also set its display to flex, so that if there's any element inside of
+    // the perspective, such as the head or foot element, it can simply cover
+    // the whole perspective.
+    display: flex;
+    flex-flow: column nowrap;
+  }
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  .f8-bar__head,
+  .f8-bar__foot,
+  .f8-bar__overlay {
+    // Set align-content to flex-start so that the contents go all the way to
+    // the top of our element. Because nav block may be so long in mobile view
+    // and our content may be put in scrollbar. So if align-content would be
+    // center, then the scrollbar doesn't scroll our content completely. This is
+    // a problem in flex while using the align-content center.
+    align-content: $f8-bar-holders-flex-alignment;
+    align-items: $f8-bar-holders-flex-alignment;
+
+    // We also set the flex property as follow... Because although head, foot,
+    // and overlay are flex containers, but they are also a flex item of the
+    // perspective while .f8-bar--visual-fullscreen or .f8-bar--visual-side
+    // modifiers are applied to the block.
+    flex: 1 1 auto;
+
+    overflow-x: hidden; // So that the horizontal scrollbar won't be shown no matter what!
+    overflow-y: auto;
+
+    // Change overflow to visible maybe! Why? In order to prevent the sub menus
+    // in nav block to go under the scrollbar.
+    @media (min-width: $f8-screen-md-min) {
+      overflow-y: $f8-bar-holders-overflow-at-md;
+    }
+  }
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Brand, Actions, Social, Utilities, Toggle
+
+  .f8-bar__brand,
+  .f8-bar__actions {
+    flex: 1 100%;
+  }
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Collapse
+
+  .f8-bar__collapse {
+    flex: 1 100%;
+  }
+}
+
+.f8-bar--visual-fullscreen {
+
+  z-index: $f8-bar-zindex-fullscreen;
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  .f8-bar__head,
+  .f8-bar__foot,
+  .f8-bar__overlay {
+    @media (min-width: $f8-screen-md-min) {
+      align-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.f8-bar--visual-side {
+  width: $f8-bar-visual-side-width;
+  z-index: $f8-bar-zindex-fixed;
+}
+
+
+.f8-bar--visual-shrinked {
+  padding: $f8-bar-visual-shrinked-margin;
+}
+
+.f8-bar--visual-rotated {
+	@extend .f8-bar--visual-shrinked;
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  .f8-bar__foot {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    transform: rotateX(-90deg);
+    pointer-events: none;
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Effect
+
+.f8-bar--effect-hide-to-top,
+.f8-bar--effect-hide-to-bottom,
+.f8-bar--effect-hide-to-left,
+.f8-bar--effect-hide-to-right {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.f8-bar--effect-hide-to-top,
+.f8-bar--effect-hide-to-bottom {
+  // Remove top and bottom padding too. Why? Because if
+  // .f8-bar--visual-shrinked modifier is also applied, the padding that it
+  // gives to the block, prevents the block to completely go out of the screen.
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.f8-bar--effect-hide-to-left,
+.f8-bar--effect-hide-to-right {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+.f8-bar--effect-hide-to-top {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    transform: translateY(-100%);
+  }
+}
+
+.f8-bar--effect-hide-to-bottom {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    transform: translateY(100%);
+  }
+}
+
+.f8-bar--effect-hide-to-left {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    transform: translateX(-100%) #{"/*!rtl:ignore*/"};
+  }
+}
+
+.f8-bar--effect-hide-to-right {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    transform: translateX(100%) #{"/*!rtl:ignore*/"};
+  }
+}
+
+
+.f8-bar--effect-hide-to-fade {
+  pointer-events: none;
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    transform: scale(.9, .9);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.f8-bar--effect-rotate {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  .f8-bar__head {
+    transform: translateY(-100%) rotateX(90deg) #{"/*!rtl:ignore*/"};
+    pointer-events: none;
+  }
+
+  .f8-bar__foot {
+    top: 0;
+    transform: rotateX(0deg) #{"/*!rtl:ignore*/"};
+    pointer-events: auto;
+  }
+}
+
+
+// NOTE: Why should we put the Head/Foot/Overlay hide/show effects here for the
+// block itself? Well, so that they can work with the 'hideAndSeek' JavaScript
+// option of the block.
+.f8-bar--effect-head-hide {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  .f8-bar__head {
+    transform: translateY(100%);
+    transition: all $f8-bar-transition-duration, opacity .2s $f8-bar-transition-duration;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
+
+.f8-bar--effect-foot-hide {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  .f8-bar__foot {
+    // Foot's position should be absolute unlike Head! Why? Because we
+    // want its dimensions to not to be counted when it's hidden anymore... But we
+    // have no such concern for Head; because in what situation we're actually
+    // going to use this effect? Well, most of the times when
+    // .f8-bar--pos-fixed-bottom-{left,right} modifier is applied to the block
+    // and in this situation if position of Head be absolute, then it will jump
+    // to the Foot's position and then hides and that's obviously an effect
+    // that we don't like!
+    position: absolute;
+
+    transform: translateY(-100%);
+    transition: all $f8-bar-transition-duration, opacity .2s $f8-bar-transition-duration;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
+
+.f8-bar--effect-overlay-show {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Head, Foot, Overlay
+
+  .f8-bar__overlay {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+  }
+}
+
+
+.f8-bar--effect-brand-hide {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Brand
+
+  .f8-bar__brand {
+    a {
+      transform: translateY(100%);
+      pointer-events: none;
+    }
+  }
+}
+
+.f8-bar--effect-brand-scale {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Brand
+
+  .f8-bar__brand {
+    a {
+      transform: scale(.8, .8);
+    }
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: State
+
+.f8-bar--state-pulled-over-x,
+.f8-bar--state-pulled-over-y {
+  overflow: visible;
+  pointer-events: auto;
+}
+
+.f8-bar--state-pulled-over-x {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    transform: translateX(0) #{"/*!rtl:ignore*/"};
+  }
+}
+
+.f8-bar--state-pulled-over-y {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Perspective
+
+  .f8-bar__perspective {
+    transform: translateY(0);
+  }
+}
+
+
+// NOTE: Block's state modifiers will be added by the block JavaScript codes when 'f8HideAndSeek' option is defined.
+// .f8-bar--state-scrolled-down {}
+// .f8-bar--state-scrolled-up {}
+
+// NOTE: Block's state modifiers will be added by the block JavaScript codes when 'f8Threshold' option is defined.
+// .f8-bar--state-threshold-scrolled-down {}
+// .f8-bar--state-threshold-scrolled-up {}
+
+// NOTE: Block's state modifiers will be added by the block JavaScript codes when 'f8Target' option is defined.
+// .f8-bar--state-target-reached-by-scroll-down {}
+// .f8-bar--state-target-reached-by-scroll-up {}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Perspective
+
+.f8-bar__perspective {
+  position: relative;
+  // width: 100%;
+	// height: 100%;
+	perspective: $f8-screen-xl-min;
+	perspective-origin: 50% 0;
+
+  transition: all $f8-bar-transition-duration;
+  transition-timing-function: $f8-bar-transition-timing-fun;
+  will-change: transform;
+  // transform-style: preserve-3d;
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Head, Foot, Overlay
+
+.f8-bar__head,
+.f8-bar__foot,
+.f8-bar__overlay {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+
+  width: 100%;
+  transition: all $f8-bar-transition-duration;
+  backface-visibility: hidden;
+}
+
+.f8-bar__head {
+  position: relative;
+  transform-origin: 50% 100%;
+  z-index: 2;
+}
+
+.f8-bar__foot {
+  position: relative;
+  transform-origin: 50% 0;
+  z-index: 1;
+}
+
+.f8-bar__overlay {
+  position: absolute;
+  top: 0;
+  min-height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: 3;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Visual
+
+.f8-bar__head--visual-brand-focus,
+.f8-bar__foot--visual-brand-focus,
+.f8-bar__overlay--visual-brand-focus {
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Brand
+
+  .f8-bar__brand {
+    @media (min-width: $f8-screen-md-min) {
+      flex: 1 auto;
+    }
+  }
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// Element(s): Collapse
+
+  .f8-bar__collapse {
+    @media (min-width: $f8-screen-md-min) {
+      order: -1;
+      flex: 0 1 auto;
+    }
+  }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Brand, Actions, Social, Utilities, Toggle
+
+.f8-bar__brand,
+.f8-bar__actions,
+.f8-bar__social,
+.f8-bar__utilities,
+.f8-bar__toggle {
+  // Set margins for these selected elements. Because as we know, they are being
+  // displayed as flex items beside eachother, so we give them just a little bit
+  // margin so that they won't stick together. That's it.
+  // Why not to select collapse? Because it's going to be toggled by the Toggle
+  // JavaScript block! And margins or paddings to it, causes the toggle's block
+  // animation to jerk when its animating our collapse height. Instead we've
+  // given margins to the nav block inside of the .f8-bar__collapse element.
+  margin: $f8-bar-items-margin;
+
+  transition: all $f8-bar-transition-duration;
+}
+
+.f8-bar__toggle {
+  @media (min-width: $f8-screen-md-min) {
+    &,
+    &.f8-list__item { // Block Specific Styles: List
+      display: none;
+    }
+  }
+
+  // Modifier Specific Styles: .f8-bar__actions, .f8-bar__social, .f8-bar__utilities
+  .f8-bar__actions &,
+  .f8-bar__social &,
+  .f8-bar__utilities & {
+    // Remove the toggle margin if it's going to be part of the Actions, Social,
+    // or Utilities elements.
+    margin: 0;
+  }
+
+   // Block Specific Styles: List
+  .f8-list--visual-inline > &.f8-list__item {
+    margin: 0;
+    margin-left: -4px;
+  }
+}
+
+.f8-bar__actions {
+  flex: 1 100%;
+
+  @media (min-width: $f8-screen-md-min) {
+    flex: 0 1 auto; // Reset to defaults
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Visual
+
+.f8-bar__actions--visual-wide,
+.f8-bar__social--visual-wide,
+.f8-bar__utilities--visual-wide {
+  // Set basis to auto so the element can push other flex items to side and
+  // also let them sit beside it if there's enough space.
+  flex: 1 auto;
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Brand
+
+.f8-bar__brand {
+  flex: 1 100%; // Set basis to 100% so it can fill all the remaining space
+
+  font-size: $f8-blocks-font-size-lg;
+  line-height: $f8-line-height-lg;
+  overflow: hidden;
+
+  a {
+    // Useful when .f8-bar--effect-brand-hide and .f8-bar--effect-brand-scale
+    // modifiers are applied to the block.
+    display: inline-block;
+    transition: transform $f8-bar-transition-duration;
+
+    &:link,
+    &:visited,
+    &:hover,
+    &:active,
+    &:focus {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+
+    // If Bootstrap is also loaded in the page with our own styles, then it
+    // actually sets the vertical-align for 'img' tags to 'middle' in its
+    // scaffolding styles... This causes our img here to not sit at the middle
+    // of the header exactly, so we override this style.
+    vertical-align: initial;
+  }
+
+  @media (min-width: $f8-screen-sm-min) {
+    // Set basis to auto so the brand can push other flex items to the right
+    // and also let them sit beside it if there's enough space.
+    flex: 1 auto;
+
+    // NOTE: This rule could also push other elements to the right, but it
+    // didn't stretch the element's background itself.
+    // margin-right: auto;
+  }
+
+  @media (min-width: $f8-screen-md-min) {
+    flex: 0 1 auto; // Reset to defaults
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Visual
+
+.f8-bar__brand--visual-image {
+  // Override margin to 0. Because logo desginers give enough margin themselves
+  // for the logo image itself, so we don't need to set an extra margin here
+  // too.
+  margin: 0;
+
+  // Override line-height to 0 so that it cannot effect the <img> tag inside of
+  // our brand and put an unnecessary space at the bottom of it.
+  line-height: 0;
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Collapse
+
+.f8-bar__collapse {
+  // The toggle block itself sets its display to none if we have used it for our
+  // collapse... So we don't need to set it to none here.
+  display: block;
+
+  flex: 1 100%;
+  order: 99;
+
+  border-top: 1px solid $f8-blocks-def-hr-color;
+
+  @media (min-width: $f8-screen-md-min) {
+    // NOTE: In large screen, we set display and height by the !important flag,
+    // because we like the collapse be shown no matter what! So why do we need
+    // to set them by the !important flag? Well, because collapse is the target
+    // of the JavaScript toggle block and as we know, the toggle block sets
+    // forcing inline styles for its target (The target that has the default
+    // JavaScript animation)... And our collapse animation is the default
+    // JavaScript animation, so it would have inline styles. Therefore, the
+    // !important flag will override those forcing inline styles and it's needed.
+    display: block !important;
+    height: auto !important;
+
+    flex: 2 0;
+    order: 0; // Reset order to default
+
+    border-top: 0;
+  }
+
+  // Modifier Specific Styles: .f8-bar--pos-fixed-{top,bottom}-{left,right}
+  // Set a max height ONLY IF we have set a fixed position for .f8-bar,
+  // because as we know if height of a fixed element exceeds the view's height,
+  // scrollbar won't appear... So in this case, we set a max height to make sure
+  // our element's height is not going to exceed the view's height in most of
+  // the times...
+  .f8-bar--pos-fixed-top-left &,
+  .f8-bar--pos-fixed-top-right &,
+  .f8-bar--pos-fixed-bottom-left &,
+  .f8-bar--pos-fixed-bottom-right & {
+    max-height: $f8-bar-collapse-height-max;
+    overflow-y: auto !important; // Set overflow to auto because in a fixed positioned bar, we have max-height limitation.
+
+    @media (max-device-width: $f8-screen-sm-min) and (orientation: landscape) {
+      max-height: 200px;
+    }
+  }
+
+  @media (min-width: $f8-screen-md-min) {
+    // Generally in large screen with OR without the fixed postioned
+    // modifiers... Change overflow to visible maybe! Why? In order to prevent
+    // the sub menus in nav block to go under the scrollbar.
+    // NOTE: Now we have already set this when our bar is fullscreen/sidebar, so
+    // why should we do this for the collapse element as well? Because for the
+    // times that our bar is NOT fullscreen/sidebar, in mobile devices it MUST
+    // have a max height and auto overflow, so that its content doesn't go over
+    // the user's screen when the collapse gets opened...
+    &,
+    .f8-bar--pos-fixed-top-left &,
+    .f8-bar--pos-fixed-top-right &,
+    .f8-bar--pos-fixed-bottom-left &,
+    .f8-bar--pos-fixed-bottom-right & {
+      overflow-y: $f8-bar-holders-overflow-at-md !important;
+    }
+  }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Push, Fader
+
+.f8-bar__push {
+  transition: transform $f8-bar-transition-duration cubic-bezier(.09, .68, 0, .99);
+}
+
+.f8-bar__fader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $f8-bar-fader-bg-color;
+  transition: all $f8-bar-transition-duration;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: State
+
+.f8-bar__push--state-pushed-to-right {
+  transform: translateX(#{$f8-bar-push-state-pushed-amount}) #{"/*!rtl:ignore*/"};
+}
+
+.f8-bar__push--state-pushed-to-left {
+  transform: translateX(calc(#{$f8-bar-push-state-pushed-amount} * -1)) #{"/*!rtl:ignore*/"};
+}
+
+.f8-bar__push--state-pushed-to-top {
+  transform: translateY(calc(#{$f8-bar-push-state-pushed-amount} * -1));
+}
+
+.f8-bar__push--state-pushed-to-bottom {
+  transform: translateY(#{$f8-bar-push-state-pushed-amount});
+}
+
+
+.f8-bar__fader--state-blur {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Target
+
+// NOTE: Target element will be added by the block JavaScript codes when 'target' option is defined.
+// .f8-bar__target {}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: State
+
+// NOTE: Target element's state modifiers will be added by the block JavaScript codes when 'target' option is defined.
+// .f8-bar__target--state-scrolled-down {}
+// .f8-bar__target--state-scrolled-up {}

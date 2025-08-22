@@ -1,0 +1,144 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nx"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "type:api",
+                "onlyDependOnLibsWithTags": [
+                  "type:map",
+                  "type:data-access",
+                  "type:ui",
+                  "type:feature",
+                  "type:page"
+                ]
+              },
+              {
+                "sourceTag": "type:util",
+                "onlyDependOnLibsWithTags": [
+                  "type:util",
+                  "type:map",
+                  "type:api"
+                ]
+              },
+              {
+                "sourceTag": "type:map",
+                "onlyDependOnLibsWithTags": ["type:util", "type:map"]
+              },
+              {
+                "sourceTag": "type:data-access",
+                "onlyDependOnLibsWithTags": [
+                  "type:util",
+                  "type:map",
+                  "type:data-access"
+                ]
+              },
+              {
+                "sourceTag": "type:ui",
+                "onlyDependOnLibsWithTags": ["type:util", "type:map", "type:ui"]
+              },
+              {
+                "sourceTag": "type:feature",
+                "onlyDependOnLibsWithTags": [
+                  "type:util",
+                  "type:map",
+                  "type:data-access",
+                  "type:ui",
+                  "type:feature"
+                ]
+              },
+              {
+                "sourceTag": "type:page",
+                "onlyDependOnLibsWithTags": [
+                  "type:util",
+                  "type:map",
+                  "type:data-access",
+                  "type:ui",
+                  "type:feature",
+                  "type:page"
+                ]
+              },
+              {
+                "sourceTag": "type:app",
+                "onlyDependOnLibsWithTags": [
+                  "type:util",
+                  "type:map",
+                  "type:data-access",
+                  "type:ui",
+                  "type:feature",
+                  "type:page"
+                ]
+              },
+
+              {
+                "sourceTag": "domain:shared",
+                "onlyDependOnLibsWithTags": ["domain:shared"]
+              },
+              {
+                "sourceTag": "domain:ng-x-boilerplate-component",
+                "onlyDependOnLibsWithTags": [
+                  "domain:shared",
+                  "domain:ng-x-boilerplate-component"
+                ]
+              },
+              {
+                "sourceTag": "domain:ng-x-boilerplate-desktop",
+                "onlyDependOnLibsWithTags": [
+                  "domain:shared",
+                  "domain:ng-x-boilerplate-desktop"
+                ]
+              },
+              {
+                "sourceTag": "domain:ng-x-boilerplate-mobile",
+                "onlyDependOnLibsWithTags": [
+                  "domain:shared",
+                  "domain:ng-x-boilerplate-mobile"
+                ]
+              },
+              {
+                "sourceTag": "domain:ng-x-boilerplate-web",
+                "onlyDependOnLibsWithTags": [
+                  "domain:shared",
+                  "domain:ng-x-boilerplate-web"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
+      }
+    },
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {}
+    }
+  ]
+}

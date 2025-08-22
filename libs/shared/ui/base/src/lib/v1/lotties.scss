@@ -1,0 +1,137 @@
+// The Lottie animation files global classes
+//
+// NOTE: These styles depend on some root CSS varialbes that should be provided
+// in the app.
+//
+// Please provide the colors for variables in rgb (`255 115 179`) format.
+// e.g., `--e-day-lighter-color: 255 255 255;`.
+//
+// @example
+// <style>
+//  :root {
+//    --e-day-lighter-color: 255 255 255;
+//    --e-day-color: 239 239 239;
+//    --e-day-darker-color: 220 220 220;
+//
+//    --e-night-lighter-color: 93 93 93;
+//    --e-night-color: 69 69 69;
+//    --e-night-darker-color: 0 0 0;
+//
+//    --e-informative-lighter-color: 208 218 236;
+//    --e-informative-color: 162 170 185;
+//    --e-informative-darker-color: 128 133 143;
+//
+//    --e-positive-lighter-color: 209 235 222;
+//    --e-positive-color: 162 185 174;
+//    --e-positive-darker-color: 130 145 138;
+//
+//    --e-negative-lighter-color: 234 210 219;
+//    --e-negative-color: 186 163 171;
+//    --e-negative-darker-color: 153 135 141;
+//
+//    --e-notice-lighter-color: 227 223 201;
+//    --e-notice-color: 185 181 162;
+//    --e-notice-darker-color: 153 150 135;
+//
+//    --e-primary-lighter-color: 208 218 236;
+//    --e-primary-color: 162 170 185;
+//    --e-primary-darker-color: 128 133 143;
+//
+//    --e-accent-lighter-color: 227 223 201;
+//    --e-accent-color: 185 181 162;
+//    --e-accent-darker-color: 153 150 135;
+//
+//    --e-neutral-color: 136 136 136;
+//  }
+// </style>
+
+.e-ani {
+  .e-ani-alpha {
+    path,
+    rect,
+    circle,
+    polygon {
+      opacity: 0.4;
+    }
+  }
+
+  .e-ani-adaptive-stroke {
+    path,
+    rect,
+    circle,
+    polygon {
+      stroke: rgb(var(--e-day-lighter-color));
+
+      .e-dark & {
+        stroke: rgb(var(--e-night-darker-color));
+      }
+    }
+  }
+  .e-ani-adaptive-fill {
+    path,
+    rect,
+    circle,
+    polygon {
+      fill: rgb(var(--e-day-lighter-color));
+
+      .e-dark & {
+        fill: rgb(var(--e-night-darker-color));
+      }
+    }
+  }
+
+  .e-ani-primary {
+    path,
+    rect,
+    circle,
+    polygon {
+      stroke: rgb(var(--e-primary-color));
+      fill: rgb(var(--e-primary-color));
+    }
+  }
+  .e-ani-accent {
+    path,
+    rect,
+    circle,
+    polygon {
+      stroke: rgb(var(--e-accent-color));
+      fill: rgb(var(--e-accent-color));
+    }
+  }
+  .e-ani-informative {
+    path,
+    rect,
+    circle,
+    polygon {
+      stroke: rgb(var(--e-informative-color));
+      fill: rgb(var(--e-informative-color));
+    }
+  }
+  .e-ani-positive {
+    path,
+    rect,
+    circle,
+    polygon {
+      stroke: rgb(var(--e-positive-color));
+      fill: rgb(var(--e-positive-color));
+    }
+  }
+  .e-ani-negative {
+    path,
+    rect,
+    circle,
+    polygon {
+      stroke: rgb(var(--e-negative-color));
+      fill: rgb(var(--e-negative-color));
+    }
+  }
+  .e-ani-notice {
+    path,
+    rect,
+    circle,
+    polygon {
+      stroke: rgb(var(--e-notice-color));
+      fill: rgb(var(--e-notice-color));
+    }
+  }
+}

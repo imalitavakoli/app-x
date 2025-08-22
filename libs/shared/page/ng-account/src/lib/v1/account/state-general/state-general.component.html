@@ -1,0 +1,32 @@
+<section *transloco="let t; prefix: 'settings_menu_options'">
+  <h2 class="h2 e-h-usual truncate pt-0">{{ t('general_settings') }}</h2>
+  <p class="p">Here you can set some general settings.</p>
+
+  <hr class="hr" />
+
+  <!-- /////////////////////////////////////////////////////////////////// -->
+  <!-- App mode                                                            -->
+  <!-- /////////////////////////////////////////////////////////////////// -->
+
+  @if (isDaylightSwitchEnabled) {
+  <h3 class="h3 p-0 text-xl">App mode</h3>
+  <p class="p">Define your app's light/dark mode.</p>
+  <div class="mb-4 flex items-center">
+    <input
+      class="form-checkbox e-form-check mr-2"
+      [(ngModel)]="isModeSysDef"
+      (change)="onReadModeSysChange($event)"
+      type="checkbox"
+      id="readSysMode"
+    />
+    <label for="readSysMode"> Read system's default mode </label>
+  </div>
+  <x-daylight-v1
+    #daylight
+    [ngClass]="{ 'pointer-events-none opacity-50': isModeSysDef }"
+    checkboxId="ssd"
+    [isCustomStyle]="false"
+    [isHidden]="false"
+  ></x-daylight-v1>
+  }
+</section>

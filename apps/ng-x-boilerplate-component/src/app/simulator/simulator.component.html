@@ -1,0 +1,76 @@
+<main class="bg-einformative-lighter p-4">
+  <h1 class="h1 pt-0">Simulator Section</h1>
+  <p class="p">
+    Here we prepare the data that our core component(s) require as an input.
+    <br />
+    Required input(s): <code>ticket-id</code>.
+  </p>
+
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <!-- Steps to prepare input(s) for core(s)                                 -->
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+
+  <section class="flex flex-col gap-2 text-sm">
+    <div>
+      <input
+        class="form-input e-form-control inline-block w-48"
+        type="email"
+        placeholder="you@x.com"
+        email
+        [(ngModel)]="sampleUserEmail"
+      />
+      <code class="code m-2">
+        Your email address:
+        {{ sampleUserEmail }}
+      </code>
+    </div>
+    <div>
+      <button
+        class="e-btn text-eday-lighter bg-eprimary hover:bg-eprimary-darker"
+        (click)="onSendLoginLink()"
+      >
+        Send login link
+      </button>
+      <code class="code m-2">
+        Received Ticket ID:
+        {{
+          (authFacade.datas$ | async)?.magicSendLoginLink?.ticketId ||
+            'Undefined'
+        }}
+      </code>
+    </div>
+    <div>
+      <button
+        [disabled]="!(authFacade.datas$ | async)?.magicSendLoginLink"
+        class="e-btn text-eday-lighter bg-eprimary hover:bg-eprimary-darker disabled:hover:bg-eprimary"
+        (click)="onCheckIfLinkSeen()"
+      >
+        Check if Link seen
+      </button>
+      <code class="code m-2">
+        Ticket ID Status:
+        {{
+          (authFacade.datas$ | async)?.checkIfLinkSeen?.ticketStatus ||
+            'Undefined'
+        }}
+      </code>
+    </div>
+  </section>
+
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <!-- Error messages                                                        -->
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+
+  <div
+    *ngIf="authFacade.hasError$ | async"
+    class="bg-enegative text-eday-lighter mt-4 rounded p-4 text-sm"
+  >
+    <strong>Error!</strong>
+    <!-- magicSendLoginLink -->
+    @if ((authFacade.errors$ | async)?.magicSendLoginLink) { In
+    magicSendLoginLink, something went wrong. }
+    <!-- checkIfLinkSeen -->
+    @if ((authFacade.errors$ | async)?.checkIfLinkSeen) { In checkIfLinkSeen,
+    something went wrong. }
+  </div>
+</main>

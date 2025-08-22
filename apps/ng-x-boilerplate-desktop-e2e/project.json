@@ -1,0 +1,30 @@
+{
+  "name": "ng-x-boilerplate-desktop-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ng-x-boilerplate-desktop-e2e/src",
+  "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["ng-x-boilerplate-desktop"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/ng-x-boilerplate-desktop-e2e/cypress.config.ts",
+        "devServerTarget": "ng-x-boilerplate-desktop:serve:development",
+        "testingType": "e2e"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "ng-x-boilerplate-desktop:serve:production"
+        },
+        "ci": {
+          "devServerTarget": "ng-x-boilerplate-desktop:serve-static"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

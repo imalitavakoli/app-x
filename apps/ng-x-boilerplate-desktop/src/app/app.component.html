@@ -1,0 +1,15 @@
+@if (platform === 'desktop') {
+<main role="main">
+  <router-outlet></router-outlet>
+</main>
+} @else {
+<x-ionic-app-holder-v1> </x-ionic-app-holder-v1>
+}
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Daylight Lib                                                            -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if ((configFacade.dataConfigDep$ | async)?.fun?.feat?.daylightSwitch) {
+<x-daylight-v1></x-daylight-v1>
+}

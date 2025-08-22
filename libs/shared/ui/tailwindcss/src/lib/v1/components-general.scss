@@ -1,0 +1,143 @@
+@layer components {
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* General                                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .e-container {
+    @apply container mx-auto px-4 xl:max-w-[1200px];
+  }
+
+  .e-ecode {
+    @apply text-eneutral bg-eneutral/10 mx-1 rounded p-1 font-mono text-xs;
+  }
+
+  .e-badge {
+    @apply pointer-events-none absolute -right-1 -top-1 flex h-[1.15rem] w-[1.15rem] items-center justify-center overflow-hidden truncate rounded-full text-xs;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Typography                                                               */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .e-h-usual {
+    @apply mb-3 pt-9 text-xl font-extrabold;
+  }
+
+  .e-h-colorful {
+    @apply from-eprimary to-eaccent inline-block bg-gradient-to-r bg-clip-text pb-3 font-black text-transparent;
+  }
+
+  .e-link {
+    // Vars: Define light/dark default values,
+    --e-link--color--light: var(--e-primary-darker-color);
+    --e-link--color--dark: var(--e-primary-color);
+
+    // Vars: Define default values based on light/dark variables.
+    --e-link--color: var(--e-link--color--light);
+    ::ng-deep .e-dark & {
+      --e-link--color: var(--e-link--color--dark);
+    }
+
+    // Define styling rules.
+    color: rgb(var(--e-link--color));
+
+    // Apply Tailind CSS classes.
+    @apply font-bold decoration-2 transition hover:underline;
+  }
+
+  .e-notrans {
+    @apply bg-eneutral/20;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Cards                                                                    */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .e-card {
+    @apply block rounded-xl px-4 py-8 shadow-[0_4px_12px_0_rgba(0,0,0,0.15)] transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .e-card--hover {
+    @apply hover:shadow-lg disabled:hover:shadow-md;
+  }
+
+  /* Children /////////////////////////////////////////////////////////////// */
+
+  .e-card__icon {
+    @apply block h-10 w-auto max-w-10;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Buttons                                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .e-btn {
+    @apply ring-eneutral inline-block min-w-[150px] rounded-full px-10 py-3 text-base font-semibold shadow ring-opacity-30 transition focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .e-btn--base {
+    // Vars: Define default values.
+    --e-btn--base--bg-color: var(--e-primary-color);
+    --e-btn--base--color: var(--e-day-lighter-color);
+    --e-btn--base--border-color: var(--e-primary-color);
+    --e-btn--base--border-width: 2px;
+
+    background-color: rgb(var(--e-btn--base--bg-color));
+    color: rgb(var(--e-btn--base--color));
+    border-color: rgb(var(--e-btn--base--border-color));
+    border-width: var(--e-btn--base--border-width);
+
+    &:hover {
+      // After careful consideration we have decided that it makes sense to have
+      // a 10% darker button color for the hover state, rather than introducing
+      // yet another custom variable.
+      background-color: hsl(
+        from rgb(var(--e-btn--base--bg-color)) h s calc(l * 0.9)
+      );
+      border-color: hsl(
+        from rgb(var(--e-btn--base--border-color)) h s calc(l * 0.9)
+      );
+    }
+    &:disabled:hover {
+      background-color: rgb(var(--e-btn--base--bg-color));
+      border-color: rgb(var(--e-btn--base--border-color));
+    }
+  }
+
+  .e-btn--secondary {
+    // Vars: Define default values.
+    --e-btn--secondary--bg-color: var(--e-day-lighter-color);
+    --e-btn--secondary--color: var(--e-primary-color);
+    --e-btn--secondary--border-color: var(--e-primary-color);
+    --e-btn--secondary--border-width: 2px;
+
+    background-color: rgb(var(--e-btn--secondary--bg-color));
+    color: rgb(var(--e-btn--secondary--color));
+    border-color: rgb(var(--e-btn--secondary--border-color));
+    border-width: var(--e-btn--secondary--border-width);
+  }
+
+  .e-fab {
+    @apply fixed bottom-0 right-0 m-6 flex h-12 w-12 items-center justify-center rounded-full p-2 text-3xl shadow-md transition hover:shadow-lg;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Forms                                                                    */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  .e-form-label {
+    @apply mt-3 block text-sm font-semibold;
+  }
+
+  .e-form-label--required {
+    @apply after:text-enegative after:ml-0.5 after:content-['*'];
+  }
+
+  .e-form-control {
+    @apply placeholder-eneutral/50 border-eneutral/50 focus:border-eneutral focus:ring-eneutral disabled:bg-eneutral/5 disabled:text-eneutral/80 disabled:placeholder-eneutral/40 disabled:border-eneutral/20 invalid:border-enegative invalid:focus:border-enegative invalid:focus:ring-enegative mt-3 block w-full rounded-md bg-transparent shadow-sm transition focus:ring focus:ring-opacity-30 invalid:focus:ring-opacity-30 disabled:shadow-none;
+  }
+
+  .e-form-check {
+    @apply border-eneutral/40 text-eprimary focus:border-eneutral focus:ring-eneutral disabled:bg-eneutral/5 disabled:text-eneutral/80 disabled:checked:bg-eneutral/30 disabled:checked:hover:bg-eneutral/30 disabled:border-eneutral/10 rounded bg-transparent shadow-sm transition focus:ring focus:ring-opacity-30 focus:ring-offset-0 disabled:shadow-none;
+  }
+}

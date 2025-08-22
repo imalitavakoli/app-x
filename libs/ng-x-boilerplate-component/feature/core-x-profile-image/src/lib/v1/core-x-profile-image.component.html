@@ -1,0 +1,9 @@
+@if(isReadyToInitLib) {
+<x-x-profile-image-fea-v1
+  [userId]="+userId"
+  [showErrors]="false"
+  (hasError)="onError($event)"
+  (ready)="ready.emit()"
+>
+</x-x-profile-image-fea-v1>
+}

@@ -1,0 +1,50 @@
+.e-footer-desktop {
+  // Light/Dark colors
+  --e-footer-desktop--bg-color--gradient-a--light: var(--e-primary-color);
+  --e-footer-desktop--bg-color--gradient-b--light: var(--e-accent-color);
+  --e-footer-desktop--bg-color--gradient-a--dark: var(--e-primary-color);
+  --e-footer-desktop--bg-color--gradient-b--dark: var(--e-accent-color);
+
+  --e-footer-desktop--color--light: var(--e-day-lighter-color);
+  --e-footer-desktop--color--dark: var(--e-day-lighter-color);
+
+  --e-footer-desktop--link-color--light: var(--e-day-color);
+  --e-footer-desktop--link-color--dark: var(--e-day-color);
+
+  // Default color (override if element is child of a dark mode parent)
+  --e-footer-desktop--bg-color--gradient-a: var(
+    --e-footer-desktop--bg-color--gradient-a--light
+  );
+  --e-footer-desktop--bg-color--gradient-b: var(
+    --e-footer-desktop--bg-color--gradient-b--light
+  );
+
+  --e-footer-desktop--color: var(--e-footer-desktop--color--light);
+
+  --e-footer-desktop--link-color: var(--e-footer-desktop--link-color--light);
+
+  ::ng-deep .e-dark & {
+    --e-footer-desktop--bg-color--gradient-a: var(
+      --e-footer-desktop--bg-color--gradient-a--dark
+    );
+    --e-footer-desktop--bg-color--gradient-b: var(
+      --e-footer-desktop--bg-color--gradient-b--dark
+    );
+
+    --e-footer-desktop--color: var(--e-footer-desktop--color--dark);
+
+    --e-footer-desktop--link-color: var(--e-footer-desktop--link-color--dark);
+  }
+
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--e-footer-desktop--bg-color--gradient-a)),
+    rgb(var(--e-footer-desktop--bg-color--gradient-b))
+  );
+
+  color: rgb(var(--e-footer-desktop--color));
+
+  a {
+    color: rgb(var(--e-footer-desktop--link-color));
+  }
+}

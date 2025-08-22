@@ -1,0 +1,355 @@
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Welcome                                                       -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<!--
+NOTE: This whole template is hidden by CSS when `contentCurrIndex > 0`! Why by 
+CSS and not by `ngIf`? Because we want to keep it in the DOM to be able to keep 
+listening to its listeners.
+-->
+<ng-template #welcome>
+  <article
+    *transloco="let t"
+    class="e-auth bg-eday-lighter flex min-h-screen w-full flex-col md:flex-row md:gap-4"
+    [ngClass]="{
+      hidden: contentCurrIndex > 0
+    }"
+  >
+    <!-- Logo -->
+    <img
+      class="e-auth__logo absolute left-1/2 mt-[var(--ion-safe-area-top)] max-h-[80px] -translate-x-1/2 object-contain p-1 md:left-auto md:right-[80px] md:top-[53px] md:translate-x-0"
+      alt="logo"
+      [src]="
+        platform === 'desktop'
+          ? (configFacade.dataConfigDep$ | async)?.assets?.logoInDesktop
+          : (configFacade.dataConfigDep$ | async)?.assets?.logoInMobile
+      "
+    />
+
+    <!-- Bg -->
+    <section
+      class="flex min-h-full grow flex-col items-center justify-center bg-cover bg-center text-center md:h-auto md:w-1/2 md:flex-initial md:px-0"
+      [style]="{
+        'background-image':
+          'url(' +
+          (configFacade.dataConfigDep$ | async)?.assets?.thisAuthImgBg +
+          ')'
+      }"
+    ></section>
+
+    <!-- Auth Methods -->
+    <section
+      class="right-0 top-0 md:fixed md:flex md:h-screen md:w-[calc(50%-1rem)] md:justify-center"
+    >
+      <div
+        class="md:e-card bg-eday-lighter flex flex-col justify-center self-center !p-6 md:min-w-[350px]"
+      >
+        <div class="mb-[26px] hidden md:block">
+          <h2 class="pb-1 text-3xl font-semibold">Welcome</h2>
+
+          <p class="p-0">Enter your details below to log in</p>
+        </div>
+
+        <!-- Auth Method: Magic -->
+        @if (hasAuthMagic) {
+        <x-method-magic [hasAuthMagic]="hasAuthMagic"></x-method-magic>
+        }
+
+        <!-- 'or' text -->
+        @if (hasAuthBankid) { @if (hasAuthMagic) {
+        <div class="text-eneutral-darker my-2 text-center">or</div>
+        } }
+
+        <!-- Auth Method: Bankid -->
+        @if (hasAuthBankid) {
+        <x-method-bankid [isSecondaryAuth]="hasAuthMagic"></x-method-bankid>
+        }
+
+        <!-- 'Trouble logging in' button -->
+        <div class="mb-[var(--ion-safe-area-bottom)] mt-8 text-center">
+          <a class="e-link" href="#" (click)="showPopupTroubleLogin = true">
+            Having trouble logging in?
+          </a>
+        </div>
+      </div>
+    </section>
+  </article>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Header                                                        -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #header>
+  <header
+    class="e-header bg-eday-lighter dark:bg-enight fixed left-0 top-0 flex min-h-[60px] w-full shadow"
+  >
+    <button (click)="onClickBack()" class="m-4">
+      <i class="bi bi-chevron-left text-xl"></i>
+    </button>
+  </header>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Waiting                                                       -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<!--
+NOTE: When 'login' button is pressed in the `welcome` template, this 
+template will be shown! Now based on the available Auth method in DEP config, 
+there are different 'login' buttons which are available in the `welcome` 
+template... So based on what 'login' button is pressed, this template decides 
+to show what `waiting` template!
+-->
+<ng-template #waiting>
+  <section>
+    @if (contentWaitingType === 'email') {
+    <ng-container *ngTemplateOutlet="waitingEmail"></ng-container>
+    } @else if (contentWaitingType === 'bankid') {
+    <ng-container *ngTemplateOutlet="waitingBankid"></ng-container>
+    }
+  </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Waiting: Email                                                -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #waitingEmail>
+  <section *transloco="let t" class="max-w-sm">
+    <!-- 'Email checking' message -->
+    <ng-lottie
+      width="100%"
+      height="140px"
+      containerClass="e-ani pb-6 pt-3"
+      [options]="{
+        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxEmail,
+        loop: true
+      }"
+    ></ng-lottie>
+
+    <h2 class="e-h-usual text-lg">Check your inbox</h2>
+    <p class="p">Please open your email inbox</p>
+
+    <hr class="hr" />
+
+    <!-- 'Trouble logging in' message -->
+    <div>
+      <p class="p">
+        Please check that the following email address is correct:
+        {{ whatUserEntered }}
+      </p>
+      <button
+        (click)="contentTo(0); onClickBack()"
+        class="e-btn e-btn--base mt-2"
+      >
+        Send email again
+      </button>
+    </div>
+
+    <!--
+    NOTE: Instead of having the above 'Trouble logging in' message, we could 
+    navigate to he next view (#contact referenced element)...
+    -->
+    <!-- <a class="e-link" href="#" (click)="contentToNext()">
+      {{ t('sign_in_verify_magic_link.having_trouble_logging_in') }}
+    </a> -->
+  </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Waiting: Bankid                                               -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #waitingBankid>
+  <section *transloco="let t" class="max-w-sm">
+    <div>
+      <x-preloaders-v1
+        preset="bars"
+        svgClass="scale-[3]"
+        class="fill-eprimary flex justify-center"
+      ></x-preloaders-v1>
+    </div>
+
+    <p class="p mb-8 mt-16">
+      Please wait a moment while we gather your information.
+    </p>
+
+    <!-- 
+    NOTE: Why we have the 'Open Website' button ONLY for iOS platform? Because
+    on other platforms, we can open a webpage on blank browswer tab by code, but 
+    iOS security doesn't allow that! So we need to ask user to open the website 
+    manually.
+    -->
+    @if (platform === 'ios') {
+    <a
+      *transloco="let t"
+      class="e-btn e-btn--base py-[6px]"
+      [href]="whatUrlToRedirect"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Open BankID to login
+    </a>
+    }
+  </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Template: Contact                                                       -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<!--
+NOTE: Any of the 'Waiting' screens can call `contentToNext()` to show this view 
+(as we have defined in the IF statment under 'MAIN STRUCTURE' section)... But
+currently we have don't have need it in our design... Maybe in future we may 
+have it :)
+-->
+<ng-template #contact> </ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- 'Trouble logging in' popup                                              -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<x-popup-v1
+  *transloco="let t"
+  [isOpen]="showPopupTroubleLogin"
+  (closed)="showPopupTroubleLogin = false"
+>
+  <div slot="body" class="max-w-[440px]">
+    <div class="pb-2">
+      <button
+        title="Info"
+        (click)="showPopupTroubleLogin = false"
+        class="float-right"
+      >
+        <i class="bi bi-x h-3 w-3 cursor-pointer text-2xl"></i>
+      </button>
+    </div>
+    <div class="p-6 text-center">
+      <!-- Popup message -->
+      <h2
+        class="h2 e-h-usual"
+        xLongPressMeV1
+        [longPressDur]="1000"
+        (longPress)="onTroubleTitleLongPress()"
+      >
+        Having trouble logging in?
+      </h2>
+      <p class="p">Contact our customer service:</p>
+
+      @if ((configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail) {
+      <a
+        class="e-link mb-4 block"
+        [href]="
+          'mailto:' +
+          (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail
+        "
+      >
+        {{ (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail }}
+      </a>
+      } @if ((configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone)
+      {
+      <a
+        class="e-link mb-4 block"
+        [href]="
+          'tel:' +
+          (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone
+        "
+      >
+        {{ (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone }}
+      </a>
+      }
+
+      <!-- App version text -->
+      <div class="text-eneutral-darker mt-6 text-sm">
+        <span>V{{ appVersion }}</span>
+        <br />
+        @if ($any(configFacade.dataDataBuild$ | async)?.buildId) {
+        <span>
+          BuildID:
+          {{ $any(configFacade.dataDataBuild$ | async)?.buildId }}
+        </span>
+        }
+        <!-- Native app info -->
+        @if (nativeAppInfo) {
+        <div>
+          <div>App Version: {{ nativeAppInfo.version }}</div>
+          <!-- <div>App Build: {{ nativeAppInfo.build }}</div> -->
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</x-popup-v1>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- MAIN STRUCTURE                                                          -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<!--
+NOTE: Initially `contentCurrIndex` is set to 0, so ONLY the `welcome` template 
+is shown! As soon as user presses the 'login' button in the `welcome`, then We 
+hide `welcome` and show `header` and `waiting` templates.
+
+NOTE: Why we didn't use `ngIf` to show/hide `welcome` template? Because we want 
+to keep the `welcome` template in the DOM to be able to keep listening to its 
+listeners when user is seeing other templates.
+-->
+<main *transloco="let t">
+  <ng-container *ngTemplateOutlet="welcome"></ng-container>
+
+  @if (contentCurrIndex > 0) {
+  <article
+    class="bg-eday-lighter dark:bg-enight absolute left-0 top-0 min-h-screen w-full"
+  >
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+
+    <section
+      class="flex min-h-[calc(100vh-60px)] items-center justify-center p-8 pt-[calc(var(--ion-safe-area-top)+60px)] text-center"
+    >
+      @if (contentCurrIndex === 1) {
+      <ng-container *ngTemplateOutlet="waiting"></ng-container>
+      } @else if (contentCurrIndex === 2) {
+      <ng-container *ngTemplateOutlet="contact"></ng-container>
+      }
+    </section>
+  </article>
+  }
+</main>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Show errors                                                             -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (tplErrors && tplErrors.length > 0) {
+<x-popup-v1
+  *transloco="let t"
+  [isHeadEnable]="true"
+  [isOpen]="true"
+  (closed)="tplErrors = []"
+>
+  <div slot="head">
+    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+    <span class="font-semibold">{{ t('common.error') }}</span>
+  </div>
+
+  <div slot="body">
+    <ng-lottie
+      width="100%"
+      height="180px"
+      containerClass="e-ani"
+      [options]="{
+        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+        loop: false
+      }"
+    ></ng-lottie>
+    <p class="p m-6 text-center">
+      {{ t('common.error_desc') }}
+
+      @for (error of tplErrors; track $index) {
+      <small class="e-ecode">{{ error.lib }}, {{ error.key }}</small> }
+    </p>
+  </div>
+</x-popup-v1>
+}

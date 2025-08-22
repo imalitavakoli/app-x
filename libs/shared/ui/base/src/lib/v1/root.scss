@@ -1,0 +1,69 @@
+// App's CSS root variables with their default values.
+//
+// Wanna choose a different color palette? Here's the tool to do it easily:
+// https://uicolors.app/create
+//
+// Please provide the colors for variables in rgb (`255 115 179`) format.
+// e.g., `--e-day-lighter-color: 255 255 255;`.
+// Read more: https://tailwindcss.com/docs/customizing-colors#using-css-variables
+
+:root {
+  /* #ffffff */
+  --e-day-lighter-color: 255 255 255;
+  /* #efefef */
+  --e-day-color: 239 239 239;
+  /* #dcdcdc */
+  --e-day-darker-color: 220 220 220;
+
+  /* #5d5d5d */
+  --e-night-lighter-color: 93 93 93;
+  /* #454545 */
+  --e-night-color: 69 69 69;
+  /* #000000 */
+  --e-night-darker-color: 0 0 0;
+
+  /* #dee3e7 */
+  --e-informative-lighter-color: 222 227 231;
+  /* #a2aab9 */
+  --e-informative-color: 162 170 185;
+  /* #7f8590 */
+  --e-informative-darker-color: 128 133 143;
+
+  /* #e1eae4 */
+  --e-positive-lighter-color: 225 234 228;
+  /* #a2b9ae */
+  --e-positive-color: 162 185 174;
+  /* #81928a */
+  --e-positive-darker-color: 130 145 138;
+
+  /* #ead1da */
+  --e-negative-lighter-color: 234 210 219;
+  /* #b9a2aa */
+  --e-negative-color: 186 163 171;
+  /* #98868c */
+  --e-negative-darker-color: 153 135 141;
+
+  /* #e2deca */
+  --e-notice-lighter-color: 227 223 201;
+  /* #b9b5a2 */
+  --e-notice-color: 185 181 162;
+  /* #989586 */
+  --e-notice-darker-color: 153 150 135;
+
+  /* #d1d1d1 */
+  --e-neutral-lighter-color: 209 209 209;
+  /* #888888 */
+  --e-neutral-color: 136 136 136;
+  /* #5d5d5d */
+  --e-neutral-darker-color: 93 93 93;
+
+  /* from informative colors */
+  --e-primary-lighter-color: 208 218 236;
+  --e-primary-color: 162 170 185;
+  --e-primary-darker-color: 128 133 143;
+
+  /* from notice colors */
+  --e-accent-lighter-color: 227 223 201;
+  --e-accent-color: 185 181 162;
+  --e-accent-darker-color: 153 150 135;
+}

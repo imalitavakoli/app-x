@@ -1,0 +1,50 @@
+// Preloader
+// @copyright 2023 MyThemeIsReady. All Rights Reserved.
+//
+// Please provide the colors for variables in rgb (`255 115 179`) format.
+// e.g., `--e-preloader--bg-color: 255 255 255;`.
+//
+// @example
+// <div class="e-preloader">
+//   <div class="e-preloader__bar e-preloader__bar--size-lg e-preloader__bar--visual-bold">
+//     Loading...
+//   </div>
+// </div>
+//
+// <style>
+//   .e-preloader { --e-preloader--bg-color: 136 136 136; }
+//   .e-preloader__bar { --e-preloader__bar--color: 255 255 255; }
+// </style>
+
+.e-preloader {
+  --e-preloader--bg-color: 136 136 136;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 100vw;
+  height: 100vh;
+  padding: 2rem;
+  background-color: rgb(var(--e-preloader--bg-color)) !important;
+}
+
+.e-preloader__bar {
+  --e-preloader__bar--color: 255 255 255;
+
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  color: rgb(var(--e-preloader__bar--color)) !important;
+}
+.e-preloader__bar--size-lg {
+  transform: scale(2);
+}
+.e-preloader__bar--visual-bold {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}

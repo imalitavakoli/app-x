@@ -1,0 +1,93 @@
+// Variables - Basic settings.
+// @copyright 2022 MyThemeIsReady. All Rights Reserved.
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Color
+
+// Root Bases
+$f8-bar-fader-bg-color-base:                          $f8-blocks-def-bg-color !default;
+
+
+// Usefuls
+$f8-bar-fader-bg-color:                               var(--f8-bar-fader-bg-color) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Size
+
+// Var Sets
+$f8-bar-height-min:                                   24px !default;
+$f8-bar-collapse-height-max:                          340px !default;
+
+
+// Root Bases
+$f8-bar-visual-side-width-base:                       300px !default;
+$f8-bar-push-state-pushed-amount-base:                300px !default;
+
+
+// Usefuls
+$f8-bar-visual-side-width:                            var(--f8-bar-visual-side-width) !default;
+$f8-bar-push-state-pushed-amount:                     var(--f8-bar-push-state-pushed-amount) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Spacing
+
+// Var Sets
+$f8-bar-margin-bottom:                                $f8-blocks-spacer !default;
+$f8-bar-items-margin:                                 $f8-blocks-spacer-xs !default;
+
+
+// Root Bases
+$f8-bar-margin-bottom-base:                           $f8-blocks-spacer !default;
+$f8-bar-items-margin-base:                            4px !default;
+$f8-bar-visual-shrinked-margin-base:                  $f8-blocks-spacer-lg !default;
+
+
+// Usefuls
+$f8-bar-margin-bottom:                                var(--f8-bar-margin-bottom) !default;
+$f8-bar-items-margin:                                 var(--f8-bar-items-margin) !default;
+$f8-bar-visual-shrinked-margin:                       var(--f8-bar-visual-shrinked-margin) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Misc
+
+// Var Sets
+$f8-bar-zindex:                                       2000 !default;
+$f8-bar-zindex-fixed:                                 2010 !default;
+$f8-bar-zindex-fullscreen:                            2011 !default;
+
+$f8-bar-transition-duration:                          .5s !default;
+$f8-bar-transition-timing-fun:                        cubic-bezier(.09, .68, 0, .99) !default;
+
+
+// Root Bases
+$f8-bar-holders-overflow-at-md-base:                  visible !default;
+$f8-bar-holders-flex-alignment-base:                  flex-start !default;
+
+
+// Usefuls
+$f8-bar-holders-overflow-at-md:                       var(--f8-bar-holders-overflow-at-md) !default;
+$f8-bar-holders-flex-alignment:                       var(--f8-bar-holders-flex-alignment) !default;

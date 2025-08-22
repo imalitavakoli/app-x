@@ -1,0 +1,19 @@
+@if (showErrors === 'true' && errors && errors.length > 0) {
+<x-popup-v1 [isHeadEnable]="true" [isOpen]="true" (closed)="this.errors = []">
+  <div slot="head">
+    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+    <span class="font-semibold">Error</span>
+  </div>
+
+  <div slot="body" class="p-4">
+    <p class="p">Something went wrong! List of errors:</p>
+    <ul class="list-inside list-disc">
+      @for (error of errors; track error.key) {
+      <li>
+        {{ error.value }} <small class="e-ecode">{{ error.key }}</small>
+      </li>
+      }
+    </ul>
+  </div>
+</x-popup-v1>
+}

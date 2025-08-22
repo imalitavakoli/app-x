@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>iframe V1</title>
+    <base href="./" />
+    <meta charset="utf-8" />
+
+    <!-- No cache -->
+    <meta
+      http-equiv="Cache-control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!-- Mobile -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no"
+    />
+
+    <!-- More -->
+    <style>
+      iframe {
+        width: 100%;
+        height: 400px;
+        border: none;
+      }
+      .iframe-container {
+        display: flex;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- Description ///////////////////////////////////////////////////// -->
+      <h1>iframe usage example</h1>
+      <section>
+        Prerequisites before testing the example:
+        <ol>
+          <li>
+            Use our API to receive a `ticket-id` with `status = 'completed'`.
+          </li>
+          <li>
+            Then edit this HTML file to (1) update the `TICKET_ID` constant
+            value to provide the received `ticket-id` to the 'initializer-v1'
+            component of our web-app (i.e., the web-app which you're loading
+            inside of an iframe window); (2) update the `IFRAME_DOMAIN` constant
+            value to point to where our web-app is hosted.
+          </li>
+          <li>
+            Run the server and open this HTML file in the browser.
+            <br />
+            <strong>Note!</strong> We should have already let our web-app to get
+            embedded from where you're deploying this HTML file (origin) to
+            prevent `X-Frame-Options` error. So if you're seeing such error,
+            please contact our support.
+          </li>
+          <li>
+            First click `Init Initializer` button to load our web-app in an
+            iframe window, while it's initializing 'initializer-v1' component (
+            to authenticate the user)! Then click any other button to load the
+            web-app and show your desired components inside of it (now that the
+            user is already authenticated).
+            <br />
+            <strong>Important!</strong> In a real-world scenario (in your sites
+            or apps) after receiving a `ticket-id`, Whenever you like to load
+            our web-app in your iframe windows, you MUST always load it with the
+            'initializer-v1' component + your desired component (i.e., the
+            iframe `src` value should be something like
+            `http://ourapp.com/?com=initializer-v1,x-full-dashboard-v1&ticket-id=xxx&user-id=123`
+            ), because 'initializer-v1' prepares the environment for other
+            components to get loaded successfully and show data in the web-app.
+            <br />
+            <strong>Important!</strong> In a real-world scenario (in your sites
+            or apps), most of the components, require some inputs that you
+            already need to know their valid values, otherwise you cannot load
+            them successfully. For example, to load the 'x-profile-info'
+            component, you need to provide it with some inputs such as
+            `user-id`.So to satisfy such components' required inputs, first you
+            need to use our API to gather some information about your users data
+            (e.g., by calling `GET {url}/v1/users` API endpoint), and then load
+            the components. Only after that, you can initialize most of the
+            components and provide their required inputs with valid values.
+          </li>
+        </ol>
+      </section>
+
+      <!-- Buttons to load iframe ////////////////////////////////////////// -->
+      <button onclick="initInitializer()">Init Initializer</button>
+      <button onclick="initXProfileImage()">Init X Profile Image</button>
+      <button onclick="initXProfileInfo()">Init X Profile Info</button>
+      <button onclick="initXFullDashboard()">Init X Full Dashboard</button>
+
+      <!-- iframe container //////////////////////////////////////////////// -->
+      <div class="iframe-container">
+        <iframe id="x-iframe"></iframe>
+      </div>
+    </main>
+
+    <script>
+      // NOTE: iframe domain should point to where our web-app is hosted.
+      const IFRAME_DOMAIN = 'https://client-x-uat.azurewebsites.net/';
+      const IFRAME_REF = document.getElementById('x-iframe');
+      const TICKET_ID = ''; // Provide the ticketId here.
+
+      // Now if you load the web-app with different URL Query Parameters, you
+      // can initialize different components in it.
+      // e.g., `{url}/?com=initializer-v1,x-full-dashboard-v1&ticket-id=xxx&user-id=123`
+      // will initialize `initializer-v1` and `x-full-dashboard-v1` components in
+      // the web-app.
+
+      // Initialize the iframe with `initializer-v1` component.
+      // This component itself doesn't present anything, it just sets up all
+      // prerequisites of all the other components. Such as authenticating,
+      // changing the components' language, showing errors, and tracking user
+      // activities (if you already have your users' consent).
+      //
+      // NOTE (specifically for iframe usage): Because this component sets up
+      // all prerequisites of all the other components, in our examples, you're
+      // seeing that whenever we load the web-app in our iframe window, we're
+      // always mentioning `initializer-v1` component.
+      //
+      // NOTE (specifically for iframe usage): You can always load our
+      // web-app with the `initializer-v1` component, but WITHOUT providing it
+      // with a `ticket-id` (through URL Query Parameters). So if you already
+      // know that you have authenticated the user before, you can forget about
+      // `ticket-id`! Although, you can always provide it to re-authenticate the
+      // user with a new `ticket-id`.
+      //
+      // INPUT `ticket-id`:
+      // -----------------------------------------------------------------------
+      // `ticket-id` should be provided by you via the API, then you can
+      // provide it to this component to authenticate the user.
+      //
+      // Rather than providing the received `ticket-id`, you can also do the
+      // following in regards to the `ticket-id` input:
+      // - Don't define it at all: If you do so, then other loaded
+      //   components (alongside of the Initializer) try to read the
+      //   access-token from local storage (`eAuth_token` key). If they don't
+      //   find it, they will not be shown at all!
+      // - Define it to `undefined`: If you do so, then Initializer will
+      //   clear the access-token from local storage... In other words, it
+      //   will log out the user.
+      //
+      // INPUT `lang`:
+      // -----------------------------------------------------------------------
+      // You can do the following in regards to the `lang` input:
+      // - Don't define it at all: If you do so, then all loaded components
+      //   will be in the language that is defined as the logged in user's
+      //   desired language in DataBase.
+      // - Define it to a culture code (e.g., 'en-GB'): If you do so, then
+      //   you're actually changing the logged in user's desired language in
+      //   DataBase and force all loadec components to be shown in that
+      //   lanugage.
+      //
+      // INPUT `show-errors`:
+      // -----------------------------------------------------------------------
+      // Other components may throw errors if something goes wrong. If you
+      // want to show those errors to the user, set this input to `true`. How
+      // this component shows the errors? A popup gets opened which contains
+      // the error message(s).
+      //
+      // INPUT `track-activity`:
+      // -----------------------------------------------------------------------
+      // If you already have your users' consent, then by this input, you can
+      // track the user's activity (like clicks, etc.) in all of the other
+      // loaded components.
+      //
+      // NOTE: This input can be defined only once (i.e., when this component
+      // is initialized). Changing it later won't have any effect.
+      function initInitializer() {
+        IFRAME_REF.src = `${IFRAME_DOMAIN}?${new URLSearchParams({
+          com: 'initializer-v1',
+          // OPTIONAL INPUTS.
+          'ticket-id': TICKET_ID, // Default: `null`.
+          lang: 'en-GB', // Default: `undefined`.
+          'show-errors': 'true', // Default: 'true'. Valid values: 'true' | 'false'
+          'track-activity': 'false', // Default: 'false'. Valid values: 'true' | 'false'
+        }).toString()}`;
+      }
+
+      // Initialize the iframe with `initializer-v1` & `x-profile-image-v1` components.
+      // It shows user's profile image.
+      function initXProfileImage() {
+        IFRAME_REF.src = `${IFRAME_DOMAIN}?${new URLSearchParams({
+          com: 'initializer-v1,x-profile-image-v1',
+          // REQUIRED INPUTS.
+          'user-id': '123',
+        }).toString()}`;
+      }
+
+      // Initialize the iframe with `initializer-v1` & `x-profile-info-v1` components.
+      // It shows user's profile information.
+      function initXProfileInfo() {
+        IFRAME_REF.src = `${IFRAME_DOMAIN}?${new URLSearchParams({
+          com: 'initializer-v1,x-profile-info-v1',
+          // REQUIRED INPUTS.
+          'user-id': '123',
+          // OPTIONAL INPUTS.
+          // 'show-btn-read-more': 'false', // NOTE: This input is NOT available in the iframe approach.
+        }).toString()}`;
+      }
+
+      // Initialize the iframe with `initializer-v1` & `x-full-dashboard-v1` components.
+      // It's our full dashboard solution. It provides a controller (that has a
+      // user dropdown, and shows user's profile image, info, and etc.).
+      function initXFullDashboard() {
+        IFRAME_REF.src = `${IFRAME_DOMAIN}?${new URLSearchParams({
+          com: 'initializer-v1,x-full-dashboard-v1',
+          // OPTIONAL INPUTS.
+          // NOTE: ALL of this component's inputs are optional.
+          'user-id': '123', // Default: `undefined`. NOTE: If not provided, then it will use the first user that is fetched from API.
+          'show-profile-image': 'true', // Default: 'true'. Valid values: 'true' | 'false'.
+          'show-profile-info': 'true', // Default: 'true'. Valid values: 'true' | 'false'.
+          // OPTIONAL INPUTS (specifically for inner Credit component).
+          // 'profile-info_show-btn-read-more': 'false', // NOTE: This input is NOT available in the iframe approach.
+        }).toString()}`;
+      }
+    </script>
+
+    <noscript>
+      Please enable JavaScript to continue using this application.
+    </noscript>
+  </body>
+</html>

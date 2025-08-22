@@ -1,0 +1,20 @@
+{
+  "name": "ng-x-boilerplate-desktop-util-facade",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ng-x-boilerplate-desktop/util/facade/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:util", "domain:ng-x-boilerplate-desktop"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/ng-x-boilerplate-desktop/util/facade/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

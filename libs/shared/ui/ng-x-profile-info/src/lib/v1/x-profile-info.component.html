@@ -1,0 +1,57 @@
+@if (state === 'data') {
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Data                                                                    -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<section
+  [ngClass]="{
+    'rounded-md': style === 'rounded',
+    'rounded-none': style === 'sharp'
+  }"
+  class="bg-einformative-lighter p-4"
+>
+  <svg-icon
+    class="e-svg fill-eprimary text-eprimary block h-5 w-5"
+    [src]="icoInfo"
+  ></svg-icon>
+  <h2>{{ data.fullName }}</h2>
+  <span>{{ data.dateOfBirth }}</span>
+  <!-- country -->
+  @if(data.country) { <span> {{ data.country }} </span> }
+  <!-- Bio -->
+  @if(data.bio) {
+  <p>{{ data.bio }}</p>
+  }
+
+  <hr />
+
+  <span>
+    {{
+      creditDetail.balance
+        | currencyV1: creditDetail.balanceCurrency : langCultureCode
+    }}
+  </span>
+
+  <hr />
+
+  <button
+    (click)="onClickedStyle()"
+    class="e-btn bg-eprimary hover:bg-eprimary-lighter"
+  >
+    <i class="bi bi-circle-square"></i>
+  </button>
+
+  @if(showBtnReadMore) {
+  <button
+    (click)="clickedReadMore.emit()"
+    class="e-btn bg-eprimary hover:bg-eprimary-lighter"
+  >
+    <i class="bi bi-book"></i>
+  </button>
+  }
+</section>
+} @else if (state === 'loading') {
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Loading                                                                 -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<div class="skeleton h-12"></div>
+}

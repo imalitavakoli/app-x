@@ -1,0 +1,128 @@
+// Override some styles for Ionic framework that is being used in most of the
+// apps.
+// For information on how to create our own theme, please see:
+// http://ionicframework.com/docs/theming
+// https://ionicframework.com/docs/theming/themes
+// https://ionicframework.com/docs/theming/colors#modifying-colors
+//
+// NOTE: These styles depend on some root CSS varialbes that should be provided
+// in the app.
+//
+// Please provide the colors for variables in rgb (`255 115 179`) format.
+// e.g., `--e-day-lighter-color: 255 255 255;`.
+//
+// @example
+// <style>
+//  :root {
+//    --e-day-lighter-color: 255 255 255;
+//
+//    --e-night-color: 69 69 69;
+//
+//    --e-informative-lighter-color: 208 218 236;
+//    --e-informative-color: 162 170 185;
+//    --e-informative-darker-color: 128 133 143;
+//
+//    --e-positive-lighter-color: 209 235 222;
+//    --e-positive-color: 162 185 174;
+//    --e-positive-darker-color: 130 145 138;
+//
+//    --e-negative-lighter-color: 234 210 219;
+//    --e-negative-color: 186 163 171;
+//    --e-negative-darker-color: 153 135 141;
+//
+//    --e-notice-lighter-color: 227 223 201;
+//    --e-notice-color: 185 181 162;
+//    --e-notice-darker-color: 153 150 135;
+//
+//    --e-primary-lighter-color: 208 218 236;
+//    --e-primary-color: 162 170 185;
+//    --e-primary-darker-color: 128 133 143;
+//
+//    --e-accent-lighter-color: 227 223 201;
+//    --e-accent-color: 185 181 162;
+//    --e-accent-darker-color: 153 150 135;
+//  }
+// </style>
+
+:root {
+  // General styles
+  --ion-font-family: inherit;
+
+  // General colors
+  --ion-background-color: rgb(var(--e-day-lighter-color));
+  --ion-background-color-rgb: var(--e-day-lighter-color);
+  --ion-text-color: rgb(var(--e-night-color));
+  --ion-text-color-rgb: var(--e-night-color);
+
+  // Semantic colors
+  --ion-color-primary: rgb(var(--e-primary-color));
+  --ion-color-primary-rgb: var(--e-primary-color);
+  --ion-color-primary-contrast: rgb(var(--e-day-lighter-color));
+  --ion-color-primary-contrast-rgb: var(--e-day-lighter-color);
+  --ion-color-primary-shade: rgb(var(--e-primary-darker-color));
+  --ion-color-primary-tint: rgb(var(--e-primary-lighter-color));
+
+  --ion-color-secondary: rgb(var(--e-accent-color));
+  --ion-color-secondary-rgb: var(--e-accent-color);
+  --ion-color-secondary-contrast: rgb(var(--e-day-lighter-color));
+  --ion-color-secondary-contrast-rgb: var(--e-day-lighter-color);
+  --ion-color-secondary-shade: rgb(var(--e-accent-darker-color));
+  --ion-color-secondary-tint: rgb(var(--e-accent-lighter-color));
+
+  --ion-color-success: rgb(var(--e-positive-color));
+  --ion-color-success-rgb: var(--e-positive-color);
+  --ion-color-success-contrast: rgb(var(--e-day-lighter-color));
+  --ion-color-success-contrast-rgb: var(--e-day-lighter-color);
+  --ion-color-success-shade: rgb(var(--e-positive-darker-color));
+  --ion-color-success-tint: rgb(var(--e-positive-lighter-color));
+
+  --ion-color-danger: rgb(var(--e-negative-color));
+  --ion-color-danger-rgb: var(--e-negative-color);
+  --ion-color-danger-contrast: rgb(var(--e-day-lighter-color));
+  --ion-color-danger-contrast-rgb: var(--e-day-lighter-color);
+  --ion-color-danger-shade: rgb(var(--e-negative-darker-color));
+  --ion-color-danger-tint: rgb(var(--e-negative-lighter-color));
+
+  --ion-color-warning: rgb(var(--e-notice-color));
+  --ion-color-warning-rgb: var(--e-notice-color);
+  --ion-color-warning-contrast: rgb(var(--e-day-lighter-color));
+  --ion-color-warning-contrast-rgb: var(--e-day-lighter-color);
+  --ion-color-warning-shade: rgb(var(--e-notice-darker-color));
+  --ion-color-warning-tint: rgb(var(--e-notice-lighter-color));
+
+  --ion-color-tertiary: rgb(var(--e-informative-color));
+  --ion-color-tertiary-rgb: var(--e-informative-color);
+  --ion-color-tertiary-contrast: rgb(var(--e-day-lighter-color));
+  --ion-color-tertiary-contrast-rgb: var(--e-day-lighter-color);
+  --ion-color-tertiary-shade: rgb(var(--e-informative-darker-color));
+  --ion-color-tertiary-tint: rgb(var(--e-informative-lighter-color));
+}
+
+// NOTE: Why still forcing Ionic CSS variables to use white colors even in
+// `prefers-color-scheme: dark`? Because we have our own dark mode controller
+// lib (daylight)! So we don't let Ionic to change into dark mode
+// automatically... Instead we define its CSS variables to use black colors,
+// ONLY IF they are under `e-dark` class.
+@media (prefers-color-scheme: dark) {
+  :root.ios,
+  :root.md {
+    --ion-background-color: rgb(var(--e-day-lighter-color));
+    --ion-background-color-rgb: var(--e-day-lighter-color);
+    --ion-text-color: rgb(var(--e-night-color));
+    --ion-text-color-rgb: var(--e-night-color);
+  }
+}
+.e-dark {
+  --ion-background-color: rgb(var(--e-night-color));
+  --ion-background-color-rgb: var(--e-night-color);
+  --ion-text-color: rgb(var(--e-day-lighter-color));
+  --ion-text-color-rgb: var(--e-day-lighter-color);
+}
+
+// Typography & Dynamic Font Scaling
+// Read more: https://ionicframework.com/docs/layout/dynamic-font-scaling#using-dynamic-font-scaling
+@supports (-webkit-touch-callout: none) {
+  html {
+    font: var(--ion-dynamic-font, 16px var(--ion-font-family));
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
+      "cache": true
+    },
+    "serve": {
+      "dependsOn": ["^serve"],
+      "inputs": ["development", "^development"],
+      "cache": false
+    },
+    "e2e": {
+      "inputs": ["default", "^production"],
+      "cache": true
+    },
+    "app-shell": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "@nx/jest:jest": {
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "cache": true,
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "@nx/eslint:lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore"
+      ],
+      "cache": true
+    },
+    "@angular-devkit/build-angular:application": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/.eslintrc.json"
+    ],
+    "development": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)"
+    ],
+    "sharedGlobals": []
+  },
+  "generators": {
+    "@nx/angular:application": {
+      "e2eTestRunner": "cypress",
+      "linter": "eslint",
+      "style": "scss",
+      "unitTestRunner": "jest",
+      "prefix": "x",
+      "addTailwind": "true",
+      "ssr": "false",
+      "bundler": "esbuild"
+    },
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "prefix": "x",
+      "style": "scss"
+    },
+    "@nx/angular:component": {
+      "style": "scss"
+    },
+    "@nx/js:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "simpleName": "true",
+      "bundler": "none"
+    }
+  },
+  "useInferencePlugins": false,
+  "useLegacyCache": true
+}

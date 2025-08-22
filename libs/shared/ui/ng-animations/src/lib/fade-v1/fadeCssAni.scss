@@ -1,0 +1,50 @@
+// FadeCssAni
+// @copyright 2023 MyThemeIsReady. All Rights Reserved.
+//
+// Provide colors for variables in rgb format.
+// e.g., `--e-fader--bg-color--light: 255 255 255;`.
+//
+// @example
+// <main class="e-fader" role="main"
+// [@fadeCssAni]="o.isActivated ? o.activatedRoute : ''"
+// (@fadeCssAni.start)="isOutletAnimating = true"
+// (@fadeCssAni.done)="isOutletAnimating = false"
+// [ngClass]="{ 'e-fader--fade': isOutletAnimating }">
+//   <router-outlet #o="outlet"></router-outlet>
+// </main>
+//
+// <style>
+//   .theme-dark .e-fader { --e-fader--bg-color: var(--e-fader--bg-color--dark); }
+// </style>
+
+.e-fader {
+  // Light/Dark colors
+  --e-fader--bg-color--light: 255 255 255;
+  --e-fader--bg-color--dark: 69 69 69;
+
+  // Default color (override if element is child of a dark mode parent)
+  --e-fader--bg-color: var(--e-fader--bg-color--light);
+
+  .e-dark & {
+    --e-fader--bg-color: var(--e-fader--bg-color--dark);
+  }
+
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10002;
+    pointer-events: none;
+    background-color: rgb(var(--e-fader--bg-color)) !important;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  &.e-fader--fade::after {
+    opacity: 1;
+  }
+}

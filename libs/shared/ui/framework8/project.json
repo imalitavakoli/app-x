@@ -1,0 +1,20 @@
+{
+  "name": "shared-ui-framework8",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/ui/framework8/src",
+  "projectType": "library",
+  "tags": ["type:ui", "domain:shared"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/shared/ui/framework8/jest.config.ts"
+      }
+    }
+  }
+}

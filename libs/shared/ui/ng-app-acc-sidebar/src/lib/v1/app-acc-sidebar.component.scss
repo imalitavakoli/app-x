@@ -1,0 +1,52 @@
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Sidebar                                                                    */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-acc-sidebar {
+  --e-acc-sidebar--bg-color--light: var(--e-day-color);
+  --e-acc-sidebar--bg-color--dark: var(--e-night-darker-color);
+
+  --e-acc-sidebar--bg-color: var(--e-acc-sidebar--bg-color--light);
+
+  ::ng-deep .e-dark & {
+    --e-acc-sidebar--bg-color: var(--e-acc-sidebar--bg-color--dark);
+  }
+
+  background-color: rgb(var(--e-acc-sidebar--bg-color));
+}
+
+.e-acc-sidebar {
+  @apply h-full overflow-hidden rounded-xl;
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Item (all nav items)                                                       */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-acc-nav__item {
+  @apply break-words;
+}
+
+.e-acc-nav__item--heading {
+  @apply text-eneutral-darker m-2 mt-10 text-sm font-semibold first:mt-2;
+}
+
+.e-acc-nav__item--secondary {
+  @apply text-eneutral-darker m-2 mt-10 flex flex-col text-center text-sm first:mt-2;
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Link (external or non-external links)                                      */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-acc-nav__link {
+  @apply hover:bg-eprimary/10 border-eneutral/20 flex w-full items-center gap-3 border-b px-2 py-4 transition-colors;
+}
+
+.e-acc-nav__link--active {
+  @apply md:bg-eprimary/10 md:font-bold;
+}
+
+.e-acc-nav__link-ic {
+  @apply grow text-end;
+}

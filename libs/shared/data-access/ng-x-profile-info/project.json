@@ -1,0 +1,20 @@
+{
+  "name": "shared-data-access-ng-x-profile-info",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/data-access/ng-x-profile-info/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:data-access", "domain:shared"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/shared/data-access/ng-x-profile-info/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+@if (platform === 'desktop') {
+<x-app-header-desktop-v1
+  [isAuthenticated]="isAuthenticated"
+  [imgLogo]="$any((configFacade.dataConfigDep$ | async)?.assets?.logo)"
+  [nav]="(configFacade.dataConfigDep$ | async)?.ui?.nav"
+></x-app-header-desktop-v1>
+} @else {
+<x-app-header-mobile-v1
+  [isAuthenticated]="isAuthenticated"
+  [pageRouteName]="currPageRouteName"
+  [(layout)]="mobileLayout"
+  [nav]="(configFacade.dataConfigDep$ | async)?.ui?.nav"
+  (clickedGoBack)="onClickedGoBack()"
+></x-app-header-mobile-v1>
+}

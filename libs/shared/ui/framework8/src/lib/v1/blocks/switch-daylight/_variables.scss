@@ -1,0 +1,42 @@
+// Variables - Basic settings.
+// @copyright 2022 MyThemeIsReady. All Rights Reserved.
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Color
+
+// Root Bases
+$f8-switch-daylight-sky-day-color-base:               lighten($f8-color-blue, 15%) !default;
+$f8-switch-daylight-sky-sun-color-base:               #feddb5 !default;
+$f8-switch-daylight-sky-night-color-base:             darken($f8-color-indigo, 15%) !default;
+$f8-switch-daylight-sky-moon-color-base:              #ffdd9e !default;
+$f8-switch-daylight-border-color-base:                transparent !default;
+
+
+// Usefuls
+$f8-switch-daylight-sky-day-color:                    var(--f8-switch-daylight-sky-day-color) !default;
+$f8-switch-daylight-sky-sun-color:                    var(--f8-switch-daylight-sky-sun-color) !default;
+$f8-switch-daylight-sky-night-color:                  var(--f8-switch-daylight-sky-night-color) !default;
+$f8-switch-daylight-sky-moon-color:                   var(--f8-switch-daylight-sky-moon-color) !default;
+$f8-switch-daylight-border-color:                     var(--f8-switch-daylight-border-color) !default;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Size
+
+// Root Bases
+$f8-switch-daylight-height-base:                      16 !default;
+
+
+// Usefuls
+$f8-switch-daylight-height:                           var(--f8-switch-daylight-height) !default;

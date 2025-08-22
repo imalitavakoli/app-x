@@ -1,0 +1,11 @@
+.e-acc-ani-show {
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.e-acc-ani-hide {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}

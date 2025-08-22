@@ -1,0 +1,10 @@
+<div
+  [ngStyle]="isHidden ? { display: 'none' } : null"
+  class="f8-switch-daylight"
+  [attr.data-f8-custom-style]="isCustomStyle"
+  data-f8-target="body"
+  [attr.data-f8-target-dark-class]="darkClass"
+  data-f8-life-of-manually-defined-theme="0"
+>
+  <input type="checkbox" [id]="checkboxId" />
+</div>

@@ -1,0 +1,9 @@
+# Add files here to ignore them from prettier formatting
+/dist
+/coverage
+.angular
+/_OBS/**/__*
+/libs/shared/ui/framework8/src/lib
+
+/.nx/cache
+/.nx/workspace-data

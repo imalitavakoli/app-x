@@ -1,0 +1,30 @@
+{
+  "name": "ng-x-boilerplate-web-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ng-x-boilerplate-web-e2e/src",
+  "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["ng-x-boilerplate-web"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/ng-x-boilerplate-web-e2e/cypress.config.ts",
+        "devServerTarget": "ng-x-boilerplate-web:serve:development",
+        "testingType": "e2e"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "ng-x-boilerplate-web:serve:production"
+        },
+        "ci": {
+          "devServerTarget": "ng-x-boilerplate-web:serve-static"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

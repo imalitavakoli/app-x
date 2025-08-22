@@ -1,0 +1,55 @@
+<x-x-profile-info-v1
+  [data]="$any((xProfileInfoFacade.datas$ | async)?.data)"
+  [creditDetail]="$any((xCreditFacade.entityDatas$(comName) | async)?.detail)"
+  [icoInfo]="
+    $any((configFacade.dataConfigDep$ | async)?.assets?.libXprofileInfoIcoInfo)
+  "
+  [langCultureCode]="
+    $any(translationsFacade.lastLoadedLangCultureCode$ | async)
+  "
+  [defaultStyle]="$any(xCreditFacade.lastSetStyle$ | async)"
+  [showBtnReadMore]="showBtnReadMore"
+  (clickedReadMore)="clickedReadMore.emit()"
+  (clickedStyle)="xCreditFacade.setStyle($event); clickedStyle.emit($event)"
+></x-x-profile-info-v1>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Show an error if something happens in the 'data-access' lib             -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (showErrors && ((xCreditFacade.entityHasError$(comName) | async) ||
+(xProfileInfoFacade.hasError$ | async))) {
+<x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
+  <div slot="head">
+    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+    <span class="font-semibold">{{ t('common.error') }}</span>
+  </div>
+
+  <div slot="body">
+    <ng-lottie
+      width="100%"
+      height="180px"
+      containerClass="e-ani"
+      [options]="{
+        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+        loop: false
+      }"
+    ></ng-lottie>
+    <p class="p m-6 text-center">
+      {{ t('common.error_desc') }}
+
+      <!-- xCreditFacade /////////////////////////////////////////////////// -->
+
+      @if ((xCreditFacade.entityErrors$(comName) | async)?.detail) {
+      <small class="e-ecode"> V1XCreditFacade({{ comName }})/detail </small>
+      }
+
+      <!-- xProfileInfoFacade ////////////////////////////////////////////// -->
+
+      @if ((xProfileInfoFacade.errors$ | async)?.data) {
+      <small class="e-ecode"> V1XProfileInfoFacade/data </small>
+      }
+    </p>
+  </div>
+</x-popup-v1>
+}

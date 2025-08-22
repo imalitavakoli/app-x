@@ -1,0 +1,41 @@
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Dropdown                                                                   */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-dropdown {
+  @apply relative;
+}
+
+.e-dropdown__btn {
+  @apply border-eneutral/30 flex w-full justify-between gap-1 border-2 border-solid px-3 py-2 text-sm shadow-none hover:shadow-none;
+}
+
+.e-dropdown__container {
+  @apply bg-eday-lighter dark:bg-enight mt-1 max-h-60 w-full rounded text-inherit;
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* List                                                                       */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-list {
+  @apply divide-eneutral/20 divide-y;
+}
+
+.e-list-sub {
+  .e-list__btn {
+    @apply pl-9;
+  }
+}
+
+.e-list__input {
+  @apply hidden;
+
+  &:checked + .e-list__btn {
+    @apply bg-eprimary/10;
+  }
+}
+
+.e-list__btn {
+  @apply hover:bg-eprimary/10 block w-full cursor-pointer break-words p-2 text-left transition-colors;
+}

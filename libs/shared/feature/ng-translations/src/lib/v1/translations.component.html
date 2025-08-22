@@ -1,0 +1,43 @@
+<x-translations-v1
+  [default]="(translationsFacade.datas$ | async)?.selectedLang?.id"
+  [langs]="(translationsFacade.datas$ | async)?.allLangs?.codes"
+  (selected)="onLangChange($event)"
+>
+</x-translations-v1>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Show an error if something happens in the 'data-access' lib             -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (showErrors && (translationsFacade.hasError$| async)) {
+<x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
+  <div slot="head">
+    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+    <span class="font-semibold">{{ t('common.error') }}</span>
+  </div>
+
+  <div slot="body">
+    <ng-lottie
+      width="100%"
+      height="180px"
+      containerClass="e-ani"
+      [options]="{
+        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+        loop: false
+      }"
+    ></ng-lottie>
+    <p class="p m-6 text-center">
+      {{ t('common.general_error') }}
+
+      <!-- What is the exact error code? /////////////////////////////////// -->
+      @if ((translationsFacade.errors$ | async)?.translations) {
+      <small class="e-ecode">V1TranslationsFacade/translations</small>
+      } @if ((translationsFacade.errors$ | async)?.allLangs) {
+      <small class="e-ecode">V1TranslationsFacade/allLangs</small>
+      } @if ((translationsFacade.errors$ | async)?.selectedLang) {
+      <small class="e-ecode">V1TranslationsFacade/selectedLang</small>
+      }
+    </p>
+  </div>
+</x-popup-v1>
+}

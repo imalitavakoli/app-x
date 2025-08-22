@@ -1,0 +1,9 @@
+<x-app-acc-sidebar-v1
+  [nav]="(configFacade.dataConfigDep$ | async)?.ui?.accountNav"
+  [state]="state"
+  [appVersion]="appVersion"
+  [nativeAppInfo]="nativeAppInfo"
+  [buildId]="$any(configFacade.dataDataBuild$ | async)?.buildId"
+  (clickedInternalLink)="clickedInternalLink.emit()"
+  (clickedLogout)="clickedLogout.emit()"
+></x-app-acc-sidebar-v1>

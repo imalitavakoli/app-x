@@ -1,0 +1,21 @@
+{
+  "name": "shared-ui-ng-x-users",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/ui/ng-x-users/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:ui", "domain:shared"],
+  "implicitDependencies": ["shared-ui-tailwindcss"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/shared/ui/ng-x-users/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

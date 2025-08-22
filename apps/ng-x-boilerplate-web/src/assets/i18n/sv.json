@@ -1,0 +1,31 @@
+{
+  "hello": "Hej världen!",
+  "greetings": {
+    "greetings_name": "Hej {{name}}!"
+  },
+  "common": {
+    "error": "Fel",
+    "error_desc": "Oj! Något gick fel."
+  },
+  "menu_options": {
+    "dashboard": "Instrumentbräda",
+    "x_users": "Användare",
+    "test": "Test",
+    "account": "Konto"
+  },
+  "settings_menu_options": {
+    "my_account": "Mitt konto",
+    "general": "Allmänt",
+    "general_settings": "Allmänna inställningar",
+    "language": "Språk",
+    "privacy_policy": "Integritetspolicy",
+    "customer_service": "Kundtjänst",
+    "faq": "FAQ",
+    "logout": "Logga ut",
+    "app_version": "App-version"
+  },
+  "footer": {
+    "privacy_policy": "Integritetspolicy",
+    "terms_and_condition": "Användarvillkor"
+  }
+}

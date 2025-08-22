@@ -1,0 +1,62 @@
+{
+  "assets": {
+    "font_base": "./x-assets/fonts/E-Base.ttf",
+    "font_bold": "./x-assets/fonts/E-Bold.ttf",
+
+    "gfx_celebration": "./x-assets/images/anims/celebration.json",
+    "gfx_email": "./x-assets/images/anims/email.json",
+    "gfx_empty": "./x-assets/images/anims/empty.json",
+    "gfx_error": "./x-assets/images/anims/error.json",
+    "gfx_notfound": "./x-assets/images/anims/not-found.json",
+    "gfx_success": "./x-assets/images/anims/success.json",
+
+    "lib_xprofileimage_img_avatar": "./x-assets/images/libs/x-profile-image/img-profile.jpg",
+    "lib_xprofileinfo_ico_info": "./x-assets/images/libs/shared/icon-info.svg"
+  },
+
+  "general": {
+    "environment": {
+      "environment": "APP_BUILD_PROD",
+      "items": {
+        "base_url": "/v1",
+        "client_id": "1234567890"
+      }
+    }
+  },
+
+  "fun": {
+    "configs": {
+      "google_analytics_measurement_id": "G-XXXXXXXXXX",
+      "firebase_integration": false,
+      "default_lang": "en-GB",
+      "default_currency_code": "EUR"
+    },
+
+    "feat": [
+      {
+        "Xmarker_io": "WEB_FEAT_MARKER_IO_V1",
+        "items": {
+          "project_id": "123abc"
+        }
+      },
+      {
+        "Xapptentive": "WEB_FEAT_APPTENTIVE_V2",
+        "items": {
+          "signature": "",
+          "key": "",
+          "project_id": "123abc"
+        }
+      }
+    ]
+  },
+
+  "libs": [
+    {
+      "X_PROFILE_INFO_1_1_0": "shared-feature-ng-x-profile-info",
+      "items": {
+        "show_info_icon": true,
+        "show_bg": true
+      }
+    }
+  ]
+}

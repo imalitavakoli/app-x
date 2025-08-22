@@ -1,0 +1,181 @@
+{
+  "name": "ng-x-boilerplate-desktop",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "x",
+  "sourceRoot": "apps/ng-x-boilerplate-desktop/src",
+  "tags": ["type:app"],
+  "implicitDependencies": [
+    "shared-ui-base",
+    "shared-ui-app-shell",
+    "shared-ui-tailwindcss"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/ng-x-boilerplate-desktop/browser",
+        "index": "apps/ng-x-boilerplate-desktop/src/index.html",
+        "main": "apps/ng-x-boilerplate-desktop/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/ng-x-boilerplate-desktop/tsconfig.app.json",
+        "assets": [
+          "apps/ng-x-boilerplate-desktop/src/favicon.ico",
+          "apps/ng-x-boilerplate-desktop/src/assets",
+          "apps/ng-x-boilerplate-desktop/src/manifest.webmanifest"
+        ],
+        "styles": [
+          "node_modules/highcharts/css/highcharts.css",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.scss",
+          "node_modules/@ionic/angular/css/core.css",
+          "node_modules/@ionic/angular/css/display.css",
+          "node_modules/@ionic/angular/css/padding.css",
+          "node_modules/@ionic/angular/css/float-elements.css",
+          "node_modules/@ionic/angular/css/text-alignment.css",
+          "node_modules/@ionic/angular/css/text-transformation.css",
+          "node_modules/@ionic/angular/css/flex-utils.css",
+          "node_modules/@ionic/angular/css/palettes/dark.system.css",
+          "apps/ng-x-boilerplate-desktop/src/styles.scss"
+        ],
+        "scripts": ["node_modules/jquery/dist/jquery.js"],
+        "allowedCommonJsDependencies": [
+          "jquery",
+          "highcharts",
+          "highcharts/modules/accessibility",
+          "lottie-web/build/player/lottie_svg"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": []
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "8kb",
+              "maximumError": "16kb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            },
+            "fonts": true
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-x-boilerplate-desktop/src/environments/environment.ts",
+              "with": "apps/ng-x-boilerplate-desktop/src/environments/environment.development.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "proxyConfig": "apps/ng-x-boilerplate-desktop/src/proxy.conf.json",
+          "buildTarget": "ng-x-boilerplate-desktop:build:production"
+        },
+        "development": {
+          "proxyConfig": "apps/ng-x-boilerplate-desktop/src/proxy.conf.json",
+          "buildTarget": "ng-x-boilerplate-desktop:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/ng-x-boilerplate-desktop/proxy.conf.json"
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "ng-x-boilerplate-desktop:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/ng-x-boilerplate-desktop/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "ng-x-boilerplate-desktop:build"
+      }
+    },
+    "server": {
+      "executor": "@angular-devkit/build-angular:server",
+      "options": {
+        "outputPath": "dist/apps/ng-x-boilerplate-desktop/server",
+        "main": "apps/ng-x-boilerplate-desktop/src/main.server.ts",
+        "tsConfig": "apps/ng-x-boilerplate-desktop/tsconfig.server.json"
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-x-boilerplate-desktop/src/environments/environment.ts",
+              "with": "apps/ng-x-boilerplate-desktop/src/environments/environment.development.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "app-shell": {
+      "executor": "@angular-devkit/build-angular:app-shell",
+      "defaultConfiguration": "production",
+      "options": {
+        "route": "shell"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "ng-x-boilerplate-desktop:build:production",
+          "serverTarget": "ng-x-boilerplate-desktop:server:production"
+        },
+        "development": {
+          "browserTarget": "ng-x-boilerplate-desktop:build:development",
+          "serverTarget": "ng-x-boilerplate-desktop:server:development"
+        }
+      }
+    },
+    "transloco-extract": {
+      "command": "npx transloco-keys-manager extract --sort --project=apps/ng-x-boilerplate-desktop/project.json --output=apps/ng-x-boilerplate-desktop/src/assets/i18n --langs=extracted"
+    }
+  }
+}

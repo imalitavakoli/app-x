@@ -1,0 +1,82 @@
+.e-footer-mobile {
+  // Light/Dark colors
+  --e-footer-mobile--bg-color--gradient-a--light: var(--e-day-lighter-color);
+  --e-footer-mobile--bg-color--gradient-b--light: var(--e-day-color);
+  --e-footer-mobile--bg-color--gradient-a--dark: var(--e-night-lighter-color);
+  --e-footer-mobile--bg-color--gradient-b--dark: var(--e-night-color);
+
+  --e-footer-mobile--color--light: var(--e-night-color);
+  --e-footer-mobile--color--dark: var(--e-day-color);
+
+  --e-footer-mobile--active-color--light: var(--e-primary-color);
+  --e-footer-mobile--active-color--dark: var(--e-primary-color);
+
+  // Default color (override if element is child of a dark mode parent)
+  --e-footer-mobile--bg-color--gradient-a: var(
+    --e-footer-mobile--bg-color--gradient-a--light
+  );
+  --e-footer-mobile--bg-color--gradient-b: var(
+    --e-footer-mobile--bg-color--gradient-b--light
+  );
+
+  --e-footer-mobile--color: var(--e-footer-mobile--color--light);
+
+  --e-footer-mobile--active-color: var(--e-footer-mobile--active-color--light);
+
+  ::ng-deep .e-dark & {
+    --e-footer-mobile--bg-color--gradient-a: var(
+      --e-footer-mobile--bg-color--gradient-a--dark
+    );
+    --e-footer-mobile--bg-color--gradient-b: var(
+      --e-footer-mobile--bg-color--gradient-b--dark
+    );
+
+    --e-footer-mobile--color: var(--e-footer-mobile--color--dark);
+
+    --e-footer-mobile--active-color: var(--e-footer-mobile--active-color--dark);
+  }
+
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--e-footer-mobile--bg-color--gradient-a)),
+    rgb(var(--e-footer-mobile--bg-color--gradient-b))
+  );
+
+  color: rgb(var(--e-footer-mobile--color));
+}
+
+.e-footer-mobile {
+  padding-bottom: var(--ion-safe-area-bottom);
+  @apply mb-0 flex items-center overflow-x-auto;
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Nav                                                                        */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-footer-mobile__nav {
+  @apply flex justify-between gap-3 py-3;
+}
+.e-footer-mobile__nav-link {
+  @apply flex flex-col items-center gap-1 whitespace-nowrap text-center text-sm transition;
+}
+
+.e-footer-mobile__nav-link--active {
+  color: rgb(var(--e-footer-mobile--active-color));
+
+  @apply font-bold hover:opacity-100;
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Fader                                                                      */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-footer-mobile__fader {
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0.09, 0.68, 0, 0.99);
+  @apply bg-eneutral/80 absolute left-0 top-0 z-[10000] h-full w-full transition-opacity;
+}
+
+.e-footer-mobile__fader--hidden {
+  @apply pointer-events-none opacity-0;
+}

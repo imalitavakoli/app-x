@@ -1,0 +1,169 @@
+<ng-container [ngSwitch]="preset">
+  <!-- Bars //////////////////////////////////////////////////////////////// -->
+  <svg
+    *ngSwitchCase="'bars'"
+    [ngClass]="svgClass"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect x="1" y="6" width="2.8" height="12">
+      <animate
+        id="spinner_CcmT"
+        begin="0;spinner_IzZB.end-0.1s"
+        attributeName="y"
+        calcMode="spline"
+        dur="0.6s"
+        values="6;1;6"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+      <animate
+        begin="0;spinner_IzZB.end-0.1s"
+        attributeName="height"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;22;12"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+    </rect>
+    <rect x="5.8" y="6" width="2.8" height="12">
+      <animate
+        begin="spinner_CcmT.begin+0.1s"
+        attributeName="y"
+        calcMode="spline"
+        dur="0.6s"
+        values="6;1;6"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+      <animate
+        begin="spinner_CcmT.begin+0.1s"
+        attributeName="height"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;22;12"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+    </rect>
+    <rect x="10.6" y="6" width="2.8" height="12">
+      <animate
+        begin="spinner_CcmT.begin+0.2s"
+        attributeName="y"
+        calcMode="spline"
+        dur="0.6s"
+        values="6;1;6"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+      <animate
+        begin="spinner_CcmT.begin+0.2s"
+        attributeName="height"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;22;12"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+    </rect>
+    <rect x="15.4" y="6" width="2.8" height="12">
+      <animate
+        begin="spinner_CcmT.begin+0.3s"
+        attributeName="y"
+        calcMode="spline"
+        dur="0.6s"
+        values="6;1;6"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+      <animate
+        begin="spinner_CcmT.begin+0.3s"
+        attributeName="height"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;22;12"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+    </rect>
+    <rect x="20.2" y="6" width="2.8" height="12">
+      <animate
+        id="spinner_IzZB"
+        begin="spinner_CcmT.begin+0.4s"
+        attributeName="y"
+        calcMode="spline"
+        dur="0.6s"
+        values="6;1;6"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+      <animate
+        begin="spinner_CcmT.begin+0.4s"
+        attributeName="height"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;22;12"
+        keySplines=".36,.61,.3,.98;.36,.61,.3,.98"
+      />
+    </rect>
+  </svg>
+
+  <!-- Rings /////////////////////////////////////////////////////////////// -->
+  <svg
+    *ngSwitchCase="'rings'"
+    [ngClass]="svgClass"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+    >
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        dur="0.75s"
+        values="0 12 12;360 12 12"
+        repeatCount="indefinite"
+      />
+    </path>
+  </svg>
+
+  <!-- Dots //////////////////////////////////////////////////////////////// -->
+  <svg
+    *ngSwitchCase="'dots'"
+    [ngClass]="svgClass"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="4" cy="12" r="3">
+      <animate
+        id="spinner_qFRN"
+        begin="0;spinner_OcgL.end+0.25s"
+        attributeName="cy"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;6;12"
+        keySplines=".33,.66,.66,1;.33,0,.66,.33"
+      />
+    </circle>
+    <circle cx="12" cy="12" r="3">
+      <animate
+        begin="spinner_qFRN.begin+0.1s"
+        attributeName="cy"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;6;12"
+        keySplines=".33,.66,.66,1;.33,0,.66,.33"
+      />
+    </circle>
+    <circle cx="20" cy="12" r="3">
+      <animate
+        id="spinner_OcgL"
+        begin="spinner_qFRN.begin+0.2s"
+        attributeName="cy"
+        calcMode="spline"
+        dur="0.6s"
+        values="12;6;12"
+        keySplines=".33,.66,.66,1;.33,0,.66,.33"
+      />
+    </circle>
+  </svg>
+</ng-container>

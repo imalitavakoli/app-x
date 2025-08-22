@@ -1,0 +1,92 @@
+.e-header-desktop {
+  // Light/Dark colors
+  --e-header-desktop--bg-color--gradient-a--light: var(--e-primary-color);
+  --e-header-desktop--bg-color--gradient-b--light: var(--e-accent-color);
+  --e-header-desktop--bg-color--gradient-a--dark: var(--e-primary-color);
+  --e-header-desktop--bg-color--gradient-b--dark: var(--e-accent-color);
+
+  --e-header-desktop--color--light: var(--e-day-lighter-color);
+  --e-header-desktop--color--dark: var(--e-day-lighter-color);
+
+  // Default color (override if element is child of a dark mode parent)
+  --e-header-desktop--bg-color--gradient-a: var(
+    --e-header-desktop--bg-color--gradient-a--light
+  );
+  --e-header-desktop--bg-color--gradient-b: var(
+    --e-header-desktop--bg-color--gradient-b--light
+  );
+
+  --e-header-desktop--color: var(--e-header-desktop--color--light);
+
+  ::ng-deep .e-dark & {
+    --e-header-desktop--bg-color--gradient-a: var(
+      --e-header-desktop--bg-color--gradient-a--dark
+    );
+    --e-header-desktop--bg-color--gradient-b: var(
+      --e-header-desktop--bg-color--gradient-b--dark
+    );
+
+    --e-header-desktop--color: var(--e-header-desktop--color--dark);
+  }
+
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--e-header-desktop--bg-color--gradient-a)),
+    rgb(var(--e-header-desktop--bg-color--gradient-b))
+  );
+
+  color: rgb(var(--e-header-desktop--color));
+}
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Nav                                                                        */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-header-desktop__nav {
+  @apply w-full md:flex md:min-h-[80px] md:w-auto;
+}
+.e-header-desktop__nav-item {
+  @apply flex items-center;
+}
+.e-header-desktop__nav-link {
+  @apply hover:bg-enight-darker/10 flex h-full w-full items-center gap-1 p-2 text-center text-sm text-inherit transition md:flex-col md:justify-center;
+}
+
+.e-header-desktop__nav-link--active {
+  @apply hover:bg-enight-darker/20 font-bold;
+
+  --e-header-desktop__nav-link--active--bg-color--gradient-a--light: var(
+      --e-night-darker-color
+    ) / 0.2;
+  --e-header-desktop__nav-link--active--bg-color--gradient-b--light: var(
+      --e-night-lighter-color
+    ) / 0.2;
+  --e-header-desktop__nav-link--active--bg-color--gradient-a--dark: var(
+      --e-night-darker-color
+    ) / 0.2;
+  --e-header-desktop__nav-link--active--bg-color--gradient-b--dark: var(
+      --e-night-darker-color
+    ) / 0.2;
+
+  --e-header-desktop__nav-link--active--bg-color--gradient-a: var(
+    --e-header-desktop__nav-link--active--bg-color--gradient-a--light
+  );
+  --e-header-desktop__nav-link--active--bg-color--gradient-b: var(
+    --e-header-desktop__nav-link--active--bg-color--gradient-b--light
+  );
+
+  ::ng-deep .e-dark & {
+    --e-header-desktop__nav-link--active--bg-color--gradient-a: var(
+      --e-header-desktop__nav-link--active--bg-color--gradient-a--dark
+    );
+    --e-header-desktop__nav-link--active--bg-color--gradient-b: var(
+      --e-header-desktop__nav-link--active--bg-color--gradient-b--dark
+    );
+  }
+
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--e-header-desktop__nav-link--active--bg-color--gradient-a)),
+    rgb(var(--e-header-desktop__nav-link--active--bg-color--gradient-b))
+  );
+}

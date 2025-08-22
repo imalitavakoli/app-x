@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>x-initializer-v1</title>
+    <base href="./" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="x-assets/DEP_style.css" />
+  </head>
+
+  <body>
+    <!-- /////////////////////////////////////////////////////////////////// -->
+    <!-- Let's use the `x-initializer-v1` web-component                   -->
+    <!-- /////////////////////////////////////////////////////////////////// -->
+
+    <!--
+    Attributes explanation:
+
+    - `class`: The CSS class hat MUST be defined for the web-component to have 
+      the correct styling.
+
+    - `ticket-id`: It should be provided by you via our API.
+      If you don't define it AT ALL, the web-component tries to read the 
+      access-token from local storage (`eAuth_token` key). If it doesn't 
+      find it, all web-components won't be shown as they are not authenticated 
+      yet.
+      Now if you define it to `undefined`, the web-component will clear the 
+      access-token from local storage. In other words, it will log out the user.
+
+    - `lang`: The language code that should be loaded for all web-components.
+
+    - `show-errors`: show/hide errors that may happen in all web-components.
+      Default is 'true'.
+
+    - `track-activity`: Track the user's activity (like clicks, etc.) in the 
+      web-components. NOTE: This input can be defined only once and when the 
+      web-component is initialized. Changing it later won't have any effect.
+      Default is 'false'.
+    -->
+    <x-core-initializer-v1
+      id="xInitializer"
+      class="e-main"
+      ticket-id=""
+      lang="en-GB"
+      show-errors="true"
+      track-activity="true"
+    ></x-core-initializer-v1>
+
+    <script>
+      // Define the required inputs of `x-initializer-v1` web-component.
+      // Important! Only `string` values are supported.
+      // document.getElementById('xInitializer').setAttribute('ticket-id', '');
+
+      // Listen to the outputs of `x-initializer-v1` web-component.
+      document
+        .getElementById('xInitializer')
+        .addEventListener('hasError', (event) => {
+          console.log('xInitializer "hasError" emitted:', event.detail);
+        });
+      document
+        .getElementById('xInitializer')
+        .addEventListener('authenticated', (event) => {
+          console.log('xInitializer "authenticated" emitted.', event.detail);
+        });
+      document
+        .getElementById('xInitializer')
+        .addEventListener('langChanged', (event) => {
+          console.log('xInitializer "langChanged" emitted:', event.detail);
+        });
+    </script>
+
+    <noscript>
+      Please enable JavaScript to continue using this application.
+    </noscript>
+  </body>
+</html>

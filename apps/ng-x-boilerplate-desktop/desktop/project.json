@@ -1,0 +1,106 @@
+{
+  "name": "ng-x-boilerplate-desktop-desktop",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ng-x-boilerplate-desktop/desktop/src",
+  "projectType": "application",
+  "targets": {
+    "sync-version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./tools/automations/ng-x-boilerplate-desktop-pre-build/sync-version.js"
+      }
+    },
+    "turn-signing-off": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./tools/automations/ng-x-boilerplate-desktop-pre-build/turn-signing-off.js"
+      }
+    },
+    "turn-signing-on": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./tools/automations/ng-x-boilerplate-desktop-pre-build/turn-signing-on.js"
+      }
+    },
+    "build": {
+      "executor": "nx-electron:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/ng-x-boilerplate-desktop/desktop",
+        "main": "apps/ng-x-boilerplate-desktop/desktop/src/main.ts",
+        "tsConfig": "apps/ng-x-boilerplate-desktop/desktop/tsconfig.app.json",
+        "assets": ["apps/ng-x-boilerplate-desktop/desktop/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "sourceMap": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-x-boilerplate-desktop/desktop/src/environments/environment.ts",
+              "with": "apps/ng-x-boilerplate-desktop/desktop/src/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "inspect": true,
+          "sourceMap": true
+        }
+      },
+      "dependsOn": ["sync-version"]
+    },
+    "serve": {
+      "executor": "nx-electron:execute",
+      "options": {
+        "buildTarget": "ng-x-boilerplate-desktop-desktop:build:development",
+        "inspect": false,
+        "args": ["--remote-debugging-port=9222"]
+      }
+    },
+    "package": {
+      "executor": "nx-electron:package",
+      "options": {
+        "name": "desktop",
+        "frontendProject": "browser",
+        "sourcePath": "dist/apps/ng-x-boilerplate-desktop",
+        "outputPath": "dist/apps/ng-x-boilerplate-desktop/packages",
+        "prepackageOnly": true
+      },
+      "dependsOn": ["build", "turn-signing-off"]
+    },
+    "make": {
+      "executor": "nx-electron:make",
+      "options": {
+        "name": "desktop",
+        "frontendProject": "browser",
+        "sourcePath": "dist/apps/ng-x-boilerplate-desktop",
+        "outputPath": "dist/apps/ng-x-boilerplate-desktop/executables"
+      },
+      "dependsOn": ["build", "turn-signing-on"]
+    },
+    "asar-extract-X-Studio.app-to-desktop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node -e \"const { join } = require('path'); const { homedir } = require('os'); const desktopDir = join(homedir(), 'Desktop', 'X-Studio-asar'); require('fs').mkdirSync(desktopDir, { recursive: true }); try { require('child_process').execSync('node -v', { stdio: 'inherit' }); } catch (error) { throw new Error('Node.js is not installed. Please install Node.js to proceed.'); } try { require('child_process').execSync('asar --version', { stdio: 'inherit' }); } catch (error) { console.error('\\x1b[31mThe asar CLI is not installed globally. You can install it with the following command:\\x1b[0m'); console.error('\\x1b[31mnpm install -g asar\\x1b[0m'); throw new Error('asar CLI is not installed.'); } require('child_process').execSync('asar e dist/apps/ng-x-boilerplate-desktop/packages/mac-arm64/X-Studio.app/Contents/Resources/app.asar ' + desktopDir, { stdio: 'inherit' });\""
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/ng-x-boilerplate-desktop/desktop/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/ng-x-boilerplate-desktop/desktop/jest.config.ts"
+      }
+    }
+  }
+}

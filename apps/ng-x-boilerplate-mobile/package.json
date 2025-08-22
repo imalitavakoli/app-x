@@ -1,0 +1,34 @@
+{
+  "name": "ng-x-boilerplate-mobile",
+  "dependencies": {
+    "@capacitor/android": "../../node_modules/@capacitor/android",
+    "@capacitor/app": "../../node_modules/@capacitor/app",
+    "@capacitor/app-launcher": "../../node_modules/@capacitor/app-launcher",
+    "@capacitor/browser": "../../node_modules/@capacitor/browser",
+    "@capacitor/core": "../../node_modules/@capacitor/core",
+    "@capacitor/device": "../../node_modules/@capacitor/device",
+    "@capacitor/filesystem": "../../node_modules/@capacitor/filesystem",
+    "@capacitor/haptics": "../../node_modules/@capacitor/haptics",
+    "@capacitor/ios": "../../node_modules/@capacitor/ios",
+    "@capacitor/keyboard": "../../node_modules/@capacitor/keyboard",
+    "@capacitor/preferences": "../../node_modules/@capacitor/preferences",
+    "@capacitor/push-notifications": "../../node_modules/@capacitor/push-notifications",
+    "@capacitor/share": "../../node_modules/@capacitor/share",
+    "@capacitor/status-bar": "../../node_modules/@capacitor/status-bar",
+    "@capacitor-firebase/analytics": "../../node_modules/@capacitor-firebase/analytics",
+    "@capacitor-firebase/remote-config": "../../node_modules/@capacitor-firebase/remote-config",
+    "capacitor-plugin-app-tracking-transparency": "../../node_modules/capacitor-plugin-app-tracking-transparency"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "../../node_modules/@capacitor/cli"
+  },
+  "browserslist": [
+    "Chrome >=61",
+    "ChromeAndroid >=61",
+    "Firefox >=63",
+    "Firefox ESR",
+    "Edge >=79",
+    "Safari >=13",
+    "iOS >=13"
+  ]
+}

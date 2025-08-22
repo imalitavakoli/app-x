@@ -1,0 +1,19 @@
+/* You can import other style files to this file globally */
+
+@use './base';
+
+@use '../../../libs/shared/ui/tailwindcss/src/lib/v1/root' as tailwindcss-root;
+@use '../../../libs/shared/ui/tailwindcss/src/lib/v1/globals' as
+  tailwindcss-globals;
+@use '../../../libs/shared/ui/tailwindcss/src/lib/v1/bases' as tailwindcss-bases;
+@use '../../../libs/shared/ui/tailwindcss/src/lib/v1/components-general' as
+  tailwindcss-cgeneral;
+@use '../../../libs/shared/ui/tailwindcss/src/lib/v1/components-daisyui' as
+  tailwindcss-cdaisyui;
+
+@use '../../../libs/shared/ui/base/src/lib/v1/root' as base-root;
+@use '../../../libs/shared/ui/base/src/lib/v1/mains' as base-mains;
+@use '../../../libs/shared/ui/base/src/lib/v1/lotties' as base-lotties;
+@use '../../../libs/shared/ui/base/src/lib/v1/overrides-f8' as base-overrides-f8;
+@use '../../../libs/shared/ui/base/src/lib/v1/overrides-mat' as
+  base-overrides-mat;

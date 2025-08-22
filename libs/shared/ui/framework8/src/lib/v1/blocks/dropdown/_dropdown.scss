@@ -1,0 +1,536 @@
+// f8-dropdown - Framework8 dropdown block
+// @copyright 2022 MyThemeIsReady. All Rights Reserved.
+//
+// A dropdown menu which can be added to almost any element... Such as buttons,
+// links, tabs, and etc...
+//
+// NOTE: This block needs the global `box-sizing` value to be `border-box`. If
+// it's going to be used in a project that this is not the case, then make sure
+// to set the `box-sizing` for all of the elements inside of the block (and also
+// the elements that are not inside of the block itself, if there's any elements
+// like so) to `border-box`.
+//
+//
+// Requirements:
+// - Root Custom Props:       ../_root.scss
+// - Variables:               ../_variables.scss
+// - Toggle:                  ../toggle/toggle.js
+//
+// Goes well with:
+// - Utils:                   ../utils/_utils.scss
+// - Link:                    ../link/_link.scss
+// - Button:                  ../button/_button.scss
+// - Card:                    ../card/_card.scss
+// - List:                    ../list/_list.scss
+// - Form:                    ../form/_form.scss
+//
+//
+// NOTE: For more straightforward sizing in CSS, we switch the global
+// `box-sizing` value from `content-box` to `border-box`. It can cause problems
+// with some third party software. On the rare occasion you need to override it,
+// use something like the following:
+// .selector-for-some-widget { -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; }
+//
+//
+//
+//
+// @example
+// <!-- CSS custom properties to modify the block styles
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!--
+// <style>
+// .f8-dropdown {
+//   --f8-dropdown-container-width: auto;
+// }
+// </style>
+// -->
+//
+//
+//
+//
+// <!-- Simple dropdown using Button or Link blocks to toggle it
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- We use the Toggle block to open/close the dropdown. -->
+//
+// <!-- NOTE: As you can see in the examples, the toggle button's
+// 'data-f8-target-open-class' option MUST be
+// 'f8-dropdown__container--state-open' so that the dropdown can be toggled
+// successfully. -->
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-target="#container1" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">
+//     Dropdown <i class="fa fa-caret-down u8-mx-xs"></i>
+//   </button>
+//   <div id="container1" class="f8-dropdown__container u8-bg-color-whitish">
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+//   </div>
+// </div>
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <a class="f8-js-toggle f8-link f8-link--effect-alpha" href="#" data-f8-toggle-by-my-own data-f8-target="#container2" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">
+//     Dropdown <i class="fa fa-caret-down"></i>
+//   </a>
+//   <div id="container2" class="f8-dropdown__container u8-bg-color-whitish">
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+//   </div>
+// </div>
+// <br><br>
+//
+//
+//
+//
+// <!-- Container: Size modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-dropdown__container--size-{xs,sm,lg} -->
+//
+// <!-- NOTE: If you do not define a size modifier for container, then its width
+// will be auto (according to the block width). And of course you can use
+// `--f8-dropdown-container-width` custom CSS property do define a custom width
+// for your dropdown. -->
+//
+// <div class="f8-dropdown">
+//   <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-target="#scontainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">Dropdown xs</button>
+//   <div id="scontainer" class="f8-dropdown__container f8-dropdown__container--size-xs u8-bg-color-whitish">
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+//   </div>
+// </div>
+// <br><br>
+//
+//
+//
+//
+// <!-- Container: Position modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-dropdown__container--pos-{bottom-left,bottom-right,bottom-center,top-left,top-right,top-center} -->
+// <!-- .f8-dropdown__container--pos-{sm,md,lg,xl}-{bottom-left,bottom-right,bottom-center,top-left,top-right,top-center} -->
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-target="#pcontainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">Dropdown bottom right</button>
+//   <div id="pcontainer" class="f8-dropdown__container f8-dropdown__container--pos-bottom-right u8-bg-color-whitish">
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+//   </div>
+// </div>
+// <br><br>
+//
+//
+//
+//
+// <!-- Container: Effect modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- .f8-dropdown__container--effect-{mover,zoomer} -->
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-target="#econtainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">Dropdown zoomer</button>
+//   <div id="econtainer" class="f8-dropdown__container f8-dropdown__container--effect-zoomer u8-bg-color-whitish">
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+//   </div>
+// </div>
+// <br><br>
+//
+//
+//
+//
+// <!-- Container: State modifiers
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <!-- NOTE: As you know to make a dropdown be open by default, you should
+// define the 'data-f8-open-by-default' option of the Toggle JavaScript block. -->
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-open-by-default data-f8-target="#stcontainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">Dropdown open by default</button>
+//   <div id="stcontainer" class="f8-dropdown__container u8-bg-color-whitish">
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+//   </div>
+// </div>
+// <br><br>
+//
+//
+//
+//
+// <!-- Let's combine the block with others: Utils, Card, List, Form
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////// -->
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <button class="f8-js-toggle f8-button" data-f8-toggle-by-my-own data-f8-target="#lcontainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">Dropdown</button>
+//   <div id="lcontainer" class="f8-dropdown__container u8-bg-color-whitish u8-curved u8-chrome-pretty-scroll" style="max-height: 200px;">
+//     <ul class="f8-list f8-list--visual-custom f8-list--visual-expanded f8-list--effect-bg-hover u8-my-0">
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item One</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Two</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Three</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Four</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Five</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Six</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Seven</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Eight</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Nine</a></li>
+//       <li class="f8-list__item"><a class="f8-list__link" href="#">Item Ten</a></li>
+//     </ul>
+//   </div>
+// </div>
+//
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <button class="f8-js-toggle f8-button"
+//   data-f8-toggle-by-my-own data-f8-target="#cacontainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">
+//     Card
+//   </button>
+//   <div id="cacontainer" class="f8-dropdown__container u8-bg-color-whitish u8-curved u8-mt">
+//     <section class="f8-card f8-card--color-whitish">
+//       <header class="f8-card__head">
+//         <h4 class="u8-m-0">Title</h4>
+//       </header>
+//       <div class="f8-card__body u8-chrome-pretty-scroll u8-overflow-y-scroll" style="max-height: 200px;">
+//         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+//       </div>
+//       <footer class="f8-card__foot">
+//         Footer
+//       </footer>
+//     </section>
+//   </div>
+// </div>
+//
+//
+// <div class="f8-dropdown" style="--f8-dropdown-container-width: 250px;">
+//   <button class="f8-js-toggle f8-button"
+//   data-f8-toggle-by-my-own data-f8-target="#fcontainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-closer="body">
+//     <i class="f8-button__icon fa fa-search"></i>
+//   </button>
+//   <div id="fcontainer" class="f8-dropdown__container f8-dropdown__container--pos-bottom-right u8-bg-color-whitish u8-curved u8-p">
+//     <form class="f8-form">
+//       <div class="f8-form__input-group u8-curved">
+//         <input type="text" class="f8-form__control f8-form__control--size-sm u8-box-shadow-none" placeholder="Search for...">
+//         <button class="f8-button f8-button--color-blackish" type="submit"><i class="f8-button__icon fa fa-search"></i></button>
+//       </div>
+//     </form>
+//   </div>
+// </div>
+//
+//
+// <span class="f8-dropdown">
+//   <a class="f8-js-toggle f8-link f8-link--effect-underline" href="#" title="Oh yea!" data-f8-toggle-by-my-own data-f8-target="#tcontainer" data-f8-target-open-class="f8-dropdown__container--state-open" data-f8-toggle-on-mouse-over data-f8-closer="body">
+//     Toggle a tooltip
+//   </a>
+//   <span id="tcontainer" class="f8-dropdown__container f8-dropdown__container--size-xs f8-dropdown__container--pos-top-center f8-dropdown__container--effect-zoomer u8-curved u8-text-color-whitish u8-bg-color-blackish u8-mb u8-p u8-font-size-sm u8-text-center">
+//     Oh yea!
+//   </span>
+// </span>
+
+@import 'variables';
+@import 'mixins';
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Custom Properties
+
+.f8-dropdown {
+  --f8-dropdown-container-width: #{$f8-dropdown-container-width-base};
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Block
+
+.f8-dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Element(s): Container
+
+.f8-dropdown__container {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  height: auto;
+  transition: all $f8-transition-duration;
+  overflow: hidden;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+  opacity: 0; // 0 by default, but 1 when .f8-dropdown__container--state-open modifier is applied
+  visibility: hidden;
+  pointer-events: none;
+  z-index: $f8-dropdown-container-zindex;
+
+  @include f8-dropdown-container-size($f8-dropdown-container-width);
+
+
+  // Block Specific Styles: Bar
+  .f8-bar--effect-hide-to-top &,
+  .f8-bar--effect-hide-to-bottom &,
+  .f8-bar--effect-hide-to-left &,
+  .f8-bar--effect-hide-to-right & {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Size
+
+.f8-dropdown__container--size-xs {
+  --f8-dropdown-container-width: 100px;
+}
+
+.f8-dropdown__container--size-sm {
+  --f8-dropdown-container-width: 200px;
+}
+
+.f8-dropdown__container--size-lg {
+  --f8-dropdown-container-width: 400px;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Position
+
+// NOTE: We don't need to define these rules again, as they have been set for the container element by default.
+// .f8-dropdown__container--pos-sm-bottom-left,
+// .f8-dropdown__container--pos-sm-bottom-right,
+// .f8-dropdown__container--pos-sm-bottom-center {
+//   top: 100%;
+//   bottom: auto;
+// }
+
+.f8-dropdown__container--pos-sm-top-left,
+.f8-dropdown__container--pos-sm-top-right,
+.f8-dropdown__container--pos-sm-top-center {
+  top: auto;
+  bottom: 100%;
+}
+
+.f8-dropdown__container--pos-bottom-left,
+.f8-dropdown__container--pos-top-left {
+  left: 0 #{"/*!rtl:ignore*/"};
+  right: auto #{"/*!rtl:ignore*/"};
+}
+
+.f8-dropdown__container--pos-bottom-right,
+.f8-dropdown__container--pos-top-right {
+  left: auto #{"/*!rtl:ignore*/"};
+  right: 0 #{"/*!rtl:ignore*/"};
+}
+
+.f8-dropdown__container--pos-bottom-center,
+.f8-dropdown__container--pos-top-center {
+  left: 50% #{"/*!rtl:ignore*/"};
+  right: auto #{"/*!rtl:ignore*/"};
+}
+
+
+@media (min-width: $f8-screen-sm-min) {
+  .f8-dropdown__container--pos-sm-bottom-left,
+  .f8-dropdown__container--pos-sm-bottom-right,
+  .f8-dropdown__container--pos-sm-bottom-center {
+    top: 100%;
+    bottom: auto;
+  }
+
+  .f8-dropdown__container--pos-sm-top-left,
+  .f8-dropdown__container--pos-sm-top-right,
+  .f8-dropdown__container--pos-sm-top-center {
+    top: auto;
+    bottom: 100%;
+  }
+
+  .f8-dropdown__container--pos-sm-bottom-left,
+  .f8-dropdown__container--pos-sm-top-left {
+    left: 0 #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-sm-bottom-right,
+  .f8-dropdown__container--pos-sm-top-right {
+    left: auto #{"/*!rtl:ignore*/"};
+    right: 0 #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-sm-bottom-center,
+  .f8-dropdown__container--pos-sm-top-center {
+    left: 50% #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+}
+
+@media (min-width: $f8-screen-md-min) {
+  .f8-dropdown__container--pos-md-bottom-left,
+  .f8-dropdown__container--pos-md-bottom-right,
+  .f8-dropdown__container--pos-md-bottom-center {
+    top: 100%;
+    bottom: auto;
+  }
+
+  .f8-dropdown__container--pos-md-top-left,
+  .f8-dropdown__container--pos-md-top-right,
+  .f8-dropdown__container--pos-md-top-center {
+    top: auto;
+    bottom: 100%;
+  }
+
+  .f8-dropdown__container--pos-md-bottom-left,
+  .f8-dropdown__container--pos-md-top-left {
+    left: 0 #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-md-bottom-right,
+  .f8-dropdown__container--pos-md-top-right {
+    left: auto #{"/*!rtl:ignore*/"};
+    right: 0 #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-md-bottom-center,
+  .f8-dropdown__container--pos-md-top-center {
+    left: 50% #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+}
+
+@media (min-width: $f8-screen-lg-min) {
+  .f8-dropdown__container--pos-lg-bottom-left,
+  .f8-dropdown__container--pos-lg-bottom-right,
+  .f8-dropdown__container--pos-lg-bottom-center {
+    top: 100%;
+    bottom: auto;
+  }
+
+  .f8-dropdown__container--pos-lg-top-left,
+  .f8-dropdown__container--pos-lg-top-right,
+  .f8-dropdown__container--pos-lg-top-center {
+    top: auto;
+    bottom: 100%;
+  }
+
+  .f8-dropdown__container--pos-lg-bottom-left,
+  .f8-dropdown__container--pos-lg-top-left {
+    left: 0 #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-lg-bottom-right,
+  .f8-dropdown__container--pos-lg-top-right {
+    left: auto #{"/*!rtl:ignore*/"};
+    right: 0 #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-lg-bottom-center,
+  .f8-dropdown__container--pos-lg-top-center {
+    left: 50% #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+}
+
+@media (min-width: $f8-screen-xl-min) {
+  .f8-dropdown__container--pos-xl-bottom-left,
+  .f8-dropdown__container--pos-xl-bottom-right,
+  .f8-dropdown__container--pos-xl-bottom-center {
+    top: 100%;
+    bottom: auto;
+  }
+
+  .f8-dropdown__container--pos-xl-top-left,
+  .f8-dropdown__container--pos-xl-top-right,
+  .f8-dropdown__container--pos-xl-top-center {
+    top: auto;
+    bottom: 100%;
+  }
+
+  .f8-dropdown__container--pos-xl-bottom-left,
+  .f8-dropdown__container--pos-xl-top-left {
+    left: 0 #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-xl-bottom-right,
+  .f8-dropdown__container--pos-xl-top-right {
+    left: auto #{"/*!rtl:ignore*/"};
+    right: 0 #{"/*!rtl:ignore*/"};
+  }
+
+  .f8-dropdown__container--pos-xl-bottom-center,
+  .f8-dropdown__container--pos-xl-top-center {
+    left: 50% #{"/*!rtl:ignore*/"};
+    right: auto #{"/*!rtl:ignore*/"};
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: Effect
+
+.f8-dropdown__container--effect-mover {
+  transform: translateY(4px);
+}
+
+.f8-dropdown__container--effect-zoomer {
+  transform: scale(.98, .98);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/// Modifiers: State
+
+.f8-dropdown__container--state-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+
+  // Modifier Specific Styles: .f8-dropdown__container--effect-mover
+  &.f8-dropdown__container--effect-mover {
+    transform: translateY(0);
+  }
+
+  // Modifier Specific Styles: .f8-dropdown__container--effect-zoomer
+  &.f8-dropdown__container--effect-zoomer {
+    transform: scale(1, 1);
+  }
+}
