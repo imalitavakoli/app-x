@@ -27,7 +27,7 @@ import { V1XProfileInfoFeaComponent } from '@x/shared-feature-ng-x-profile-info'
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
-export class TestComponent implements OnInit {
+export class V1TestPageComponent {
   readonly configFacade = inject(V2ConfigFacade);
 
   /* //////////////////////////////////////////////////////////////////////// */

@@ -76,7 +76,7 @@ export class V1XProfileImageFeaComponent extends V1BaseFeatureExtXCreditComponen
 
   protected override _xDataFetch(): void {
     // LIB: XCredit (main)
-    this.xCreditFacade.getSummary(this._baseUrl, this.userId, this.comName);
     this._xCreditRequestedData_main.push('summary');
+    this.xCreditFacade.getSummary(this._baseUrl, this.userId, this.comName);
   }
 }

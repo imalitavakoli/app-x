@@ -26,7 +26,7 @@ import { V1XUsersFeaComponent } from '@x/shared-feature-ng-x-users';
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
-export class TestComponent implements OnInit {
+export class V1TestPageComponent {
   readonly configFacade = inject(V2ConfigFacade);
   @ViewChild('xUsersFea') xUsersFeaCom!: V1XUsersFeaComponent;
 

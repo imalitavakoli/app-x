@@ -89,6 +89,11 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   /* X Lifecycle                                                              */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  protected override _xInitPreBeforeDom(): void {
+    // LIB: XCredit (main)
+    this.xCreditFacade.createIfNotExists(this.comName);
+  }
+
   protected override _xInitOrUpdateAfterAllDataReady() {
     super._xInitOrUpdateAfterAllDataReady();
 
@@ -223,7 +228,6 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main = [];
     this.xCreditFacade.reset(this.comName);
-    this.xCreditFacade.createIfNotExists(this.comName);
 
     // LIB: XProfileInfo
     this._xProfileInfoRequestedData = [];
@@ -232,11 +236,11 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
 
   protected override _xDataFetch(): void {
     // LIB: XCredit (main)
-    this.xCreditFacade.getDetail(this._baseUrl, this.userId, this.comName);
     this._xCreditRequestedData_main.push('detail');
+    this.xCreditFacade.getDetail(this._baseUrl, this.userId, this.comName);
 
     // LIB: XProfileInfo
-    this.xProfileInfoFacade.getData(this._baseUrl, this.userId);
     this._xProfileInfoRequestedData.push('data');
+    this.xProfileInfoFacade.getData(this._baseUrl, this.userId);
   }
 }

@@ -89,11 +89,13 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
     });
 
     // Check URL Query Params inputs
-    let defUserId: number | undefined = undefined;
     const queryParams = this._route.snapshot.queryParams;
+
+    // Try finding the following URL Query Param input: 'user-id'
+    let defUserId: number | undefined = undefined;
     if (queryParams['user-id']) defUserId = Number(queryParams['user-id']);
 
-    // Try finding the default selected user in the entities array.
+    // Try setting the following URL Query Param input: 'user-id'
     if (defUserId && xUsers) {
       xUsers = xUsers as V1XUsers_MapUser[];
       this.defaultSelectedUser = xUsers.find((user) => user.id === defUserId);
