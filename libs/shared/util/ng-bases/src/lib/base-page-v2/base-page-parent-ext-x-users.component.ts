@@ -40,22 +40,25 @@ import { V2BasePageParentComponent } from './base-page-parent.component';
  * easier choice.
  *
  * Here's how the inherited classes use this (in most cases):
- * 01. Override `_xHasRequiredInputs`.
- * 02. Override `_xInitOtherLibs`.
- * 03. Override `_xUpdateOtherLibs`.
- * 04. In HTML, use `isReadyStarterLib1` to init any other 'feature' lib as soon
+ * 01. Define `starterLib1_xUsersFeaCom` as a `ViewChild`:
+ *     `@ViewChild('xUsersFea', { static: false })
+ *     override starterLib1_xUsersFeaCom!: V1XUsersFeaComponent;`
+ * 02. Override `_xHasRequiredInputs`.
+ * 03. Override `_xInitOtherLibs`.
+ * 04. Override `_xUpdateOtherLibs`.
+ * 05. In HTML, use `isReadyStarterLib1` to init any other 'feature' lib as soon
  *     as this flag is set to true.
- * 05. In HTML, use `onReadyStarterLib1` as the starter lib #1 `isReady` output
+ * 06. In HTML, use `onReadyStarterLib1` as the starter lib #1 `isReady` output
  *     callback, and use `onXUsersSelectedUser` as its `selectedUser`
  *     output callback.
- * 06. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
+ * 07. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
  *     it may throw (by its `hasError` output): `xOnError({page: 'parent', lib: 'blahblah', error: $event})`.
- * 07. In HTML, use `errors` array to show the errors that 'feature' libs may
+ * 08. In HTML, use `errors` array to show the errors that 'feature' libs may
  *     emit (e.g., in a popup), and also reset the array (e.g., when the user
  *     closes the popup).
- * 08. Optional! In HTML, you can use `hasRequiredInputs`.
- * 09. Optional! In HTML, you can use `appVersion`.
- * 10. Optional! In HTML, you can use `selectedUserId`, and `selectedUser` for
+ * 09. Optional! In HTML, you can use `hasRequiredInputs`.
+ * 10. Optional! In HTML, you can use `appVersion`.
+ * 11. Optional! In HTML, you can use `selectedUserId`, and `selectedUser` for
  *     any other 'feature' lib inputs.
  *
  * IMPORTANT: In HTML, where you wanna initialize the child routes, you should
@@ -115,7 +118,6 @@ export class V2BasePageParentExtXUsersComponent
 
   /* Starter lib #1: X Users //////////////////////////////////////////////// */
 
-  @ViewChild('xUsersFea', { static: false })
   starterLib1_xUsersFeaCom!: V1XUsersFeaComponent;
 
   isReadyStarterLib1 = false;

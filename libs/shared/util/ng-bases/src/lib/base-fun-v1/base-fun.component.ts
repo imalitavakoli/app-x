@@ -16,10 +16,11 @@ import {
  * Base class for 'ui' & 'feature' components (functionalities).
  *
  * Here's how the inherited classes use this (in most cases):
- * 01. Override `_xHasRequiredInputs`.
- * 02. Override `_xInitPre` (with super call right at the beginning).
- * 03. Override `_xInit` (with super call right at the beginning).
- * 04. Override `_xUpdate` (with super call right at the beginning). You may use
+ * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 02. Override `_xHasRequiredInputs`.
+ * 03. Override `_xInitPre` (with super call right at the beginning).
+ * 04. Override `_xInit` (with super call right at the beginning).
+ * 05. Override `_xUpdate` (with super call right at the beginning). You may use
  *     `_xIsInputChanged` inside of this function.
  *
  * @export
@@ -33,7 +34,7 @@ import {
   standalone: true,
   template: '',
 })
-export class V1BaseFunComponent implements AfterViewInit, OnChanges {
+export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
   /* General //////////////////////////////////////////////////////////////// */
 
   protected readonly _destroyRef = inject(DestroyRef);
@@ -44,21 +45,36 @@ export class V1BaseFunComponent implements AfterViewInit, OnChanges {
   /* Lifecycle                                                                */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  ngOnInit(): void {
+    this._xInitPreBeforeDom();
+  }
+
   ngAfterViewInit(): void {
-    this._isNgAfterViewInit = true; // Set as initialized.
+    // NOTE: We use `ngAfterViewInit` instead of `ngOnInit`, because we like to
+    // make sure that we already have access to the DOM, before starting the TS
+    // logic. Now in such case, because the DOM is already initialzed with the
+    // inital value of the inputs, then if the component that is going to use
+    // this component, provide another value for the inputs just immediatly
+    // after the view init, we may receive Angular's
+    // `ExpressionChangedAfterItHasBeenCheckedError` error. To prevent that,
+    // we use a timeout to ensure the view is already stable, and then we can
+    // safely define new values for our inputs.
+    setTimeout(() => {
+      this._isNgAfterViewInit = true; // Set as initialized.
 
-    // Preparation (subscribe to events, etc.).
-    this._xInitPre();
+      // Preparation (subscribe to events, etc.).
+      this._xInitPre();
 
-    // Continue ONLY IF all requirements are defined.
-    if (!this._xHasRequiredInputs()) return;
+      // Continue ONLY IF all requirements are defined.
+      if (!this._xHasRequiredInputs()) return;
 
-    // We will be here ONLY IF all required inputs are already defined! So init.
-    // NOTE: Why we also check if `_isXInit` is false? Because the child classes
-    // we may have already called `_xInit` in their own `ngOnInit`,
-    // `ngAfterViewInit`, or `_xInitPre` functions, so we don't want to call it
-    // again.
-    if (!this._isXInit) this._xInit();
+      // We will be here ONLY IF all required inputs are already defined! So init.
+      // NOTE: Why we also check if `_isXInit` is false? Because the child classes
+      // we may have already called `_xInit` in their own `ngOnInit`,
+      // `ngAfterViewInit`, or `_xInitPre` functions, so we don't want to call it
+      // again.
+      if (!this._isXInit) this._xInit();
+    });
   }
 
   ngOnChanges(changes?: SimpleChanges): void {
@@ -79,12 +95,29 @@ export class V1BaseFunComponent implements AfterViewInit, OnChanges {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
+   * A callback method that is invoked before DOM is ready & before all
+   * required inputs are defined.
+   *
+   * **Who calls it?** Angular `ngOnInit`.
+   *
+   * **Useful for?** Preparations that are required to happen before the DOM is
+   * ready, because some HTML elements may require them. e.g., Setting default
+   * values for inputs in 'ui' libs, or preparing facades (creating new state
+   * object instances) in 'feature' libs.
+   *
+   * @protected
+   */
+  protected _xInitPreBeforeDom(): void {
+    // ...
+  }
+
+  /**
    * A callback method that is invoked once DOM is ready.
    *
    * **Who calls it?** Angular `ngAfterViewInit`.
    *
-   * **Useful for?** Preparation... i.e., Subscribing to events & route changes,
-   * before doing anything else.
+   * **Useful for?** Preparations... i.e., Subscribing to events & route
+   * changes, before doing anything else.
    *
    * @protected
    */

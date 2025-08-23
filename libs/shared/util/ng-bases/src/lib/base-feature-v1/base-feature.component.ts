@@ -21,38 +21,40 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * Base class for all 'feature' components.
  *
  * Here's a way (#1) that the inherited classes use this:
- * 01. Override `_xHasRequiredInputs`.
- * 02. Override `_xInitPre` (with super call right at the beginning).
- * 03. Override `_xFacadesPre`.
- * 04. Override `_xFacadesLoadesValidation`.
- * 05. Override `_xFacadesAddErrorListeners`. You may use `_xOnError` inside of
+ * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 02. Override `_xHasRequiredInputs`.
+ * 03. Override `_xInitPre` (with super call right at the beginning).
+ * 04. Override `_xFacadesPre`.
+ * 05. Override `_xFacadesLoadesValidation`.
+ * 06. Override `_xFacadesAddErrorListeners`. You may use `_xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
- * 06. Override `_xInit` (with super call right at the beginning).
- * 07. Override `_xUpdate` (with super call right at the beginning). You may use
+ * 07. Override `_xInit` (with super call right at the beginning).
+ * 08. Override `_xUpdate` (with super call right at the beginning). You may use
  *     `_xIsInputChanged` inside of this function.
- * 08. Override `_xDataPre`.
- * 09. Override `_xDataReset`. Here's the place, where You may set the 'ui'
+ * 09. Override `_xDataPre`.
+ * 10. Override `_xDataReset`. Here's the place, where You may set the 'ui'
  *     lib's `state` input to 'loading'.
- * 10. Override `_xDataFetch`.
- * 11. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
+ * 11. Override `_xDataFetch`.
+ * 12. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
  *     beginning). Here's the place, where You may set the 'ui' lib's `state`
  *     input to to other states, according to the fetched data. You may also
  *     change its `dataType` input to the type that explains the fetched data
  *     the best.
  *
  * Here's also another way (#2) that the inherited classes use this (in most cases):
- * 01. Override `_xHasRequiredInputs`.
- * 02. Override `_xFacadesPre`.
- * 03. Override `_xFacadesLoadesValidation`.
- * 04. Override `_xFacadesAddErrorListeners`. You may use `_xOnError` inside of
+ * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 02. Override `_xHasRequiredInputs`.
+ * 03. Override `_xFacadesPre`.
+ * 04. Override `_xFacadesLoadesValidation`.
+ * 05. Override `_xFacadesAddErrorListeners`. You may use `_xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
- * 05. Override `_xDataPre`.
- * 06. Override `_xDataReset`. Here's the place, where You may set the 'ui'
+ * 06. Override `_xDataPre`.
+ * 07. Override `_xDataReset`. Here's the place, where You may set the 'ui'
  *     lib's `state` input to 'loading'.
- * 07. Override `_xDataFetch`.
- * 08. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
+ * 08. Override `_xDataFetch`.
+ * 09. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
  *     beginning). Here's the place, where You may set the 'ui' lib's `state`
  *     input to to other states, according to the fetched data. You may also
  *     change its `dataType` input to the type that explains the fetched data
@@ -116,6 +118,9 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   /* X lifecycle                                                              */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  // Introduced in the Base.
+  // protected  _xInitPreBeforeDom(): void {}
+
   /**
    * Prepare the component's `_isAllDataReady$` Observable to start subscribing
    * to it and see if all data is ready... If all data is ready, then
@@ -167,12 +172,31 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
 
         this._xInitOrUpdateAfterAllDataReady();
 
-        if (!this._isReadyEmitted) {
-          this.ready.emit();
-          this._isReadyEmitted = true;
-        }
-
-        this.allDataIsReady.emit();
+        // Why setTimeout? Because in most cases, we like the 'feature' lib to
+        // do its stuff in `_xInitOrUpdateAfterAllDataReady` function first
+        // (such as manipulating its fetched data and then providing it to the
+        // UI), and then emit `ready` in the next Angular tick (i.e., after that
+        // the 'ui' lib in the 'feature' lib's HTML is already updated with the
+        // new input values).
+        //
+        // In this way, other libs (which are mostly 'page' libs) that use this
+        // 'feature' lib to listen to its `ready` event, will be notified after
+        // that the 'feature' lib has manipulated its fetched data and the 'ui'
+        // lib in there is also already updated with the new input values.
+        //
+        // How it can be useful? In the times that the 'page' lib likes to
+        // access the 'feature' lib in the DOM via `ViewChild` to call some of
+        // its methods, while the methods are also depending on the inner 'ui'
+        // lib! So in such case, the 'ui' lib should already has its own
+        // required inputs and be in a ready stable state (i.e., it should be in
+        // any state rather than 'loading').
+        setTimeout(() => {
+          if (!this._isReadyEmitted) {
+            this.ready.emit();
+            this._isReadyEmitted = true;
+          }
+          this.allDataIsReady.emit();
+        });
       });
 
     // Start listening to see: If any of 'data-access' lib calls throw an error.
@@ -484,9 +508,11 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * **Who calls it?** `_xInit`  & `_xUpdate` right before calling `_xDataFetch`.
    *
    * **Useful for?** Resetting all 'requested API calls arrays' (if they are
-   * defined), resetting any probable old data of a 'data-access' lib, and
-   * creating a new instance for the 'data-access' lib (if it is a
-   * multi-instance one) before fetching new data.
+   * defined), resetting any probable old data of a 'data-access' lib.
+   *
+   * NOTE: Creating a new instance for the 'data-access' lib (if it is a
+   * multi-instance one) MUST happen in `ngOnInit` or `_xInitPreBeforeDom`
+   * functions BEFORE the DOM is initialized.
    *
    * @example
    * ```ts
@@ -499,7 +525,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *   if (this._insightsRequestedData_main) {
    *     this._insightsRequestedData_main = [];
    *     this._insightsFacade.reset('V1BaseFeatureComponent_main');
-   *     this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main');
+   *     // this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main'); This should have been done BEFORE the DOM is initialized.
    *   }
    * }
    * ```
@@ -530,10 +556,11 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[] = [];
    *
    * private _callInsights_getLocations(instance: string) {
-   *   this._insightsFacade.getLocations(this._baseUrl, this._userId, instance);
+   *   // If `instance` is main, then main 'requested API calls array' should also be already defined.
    *   if (this._insightsRequestedData_main) {
    *     this._insightsRequestedData_main.push('locations');
    *   }
+   *   this._insightsFacade.getLocations(this._baseUrl, this._userId, instance);
    * }
    *
    * // Here's an example of how to override this function in a child class.

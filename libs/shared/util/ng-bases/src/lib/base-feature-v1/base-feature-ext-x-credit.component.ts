@@ -100,6 +100,19 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
   readonly comName: string = 'V1BaseFeatureExtXCreditComponent_main';
 
   /* //////////////////////////////////////////////////////////////////////// */
+  /* X lifecycle                                                              */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  /**
+   * @inheritdoc
+   * @protected
+   */
+  protected override _xInitPreBeforeDom(): void {
+    // LIB: XCredit (main)
+    this.xCreditFacade.createIfNotExists(this.comName);
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
   /* X facades functions                                                      */
   /* //////////////////////////////////////////////////////////////////////// */
 
@@ -194,6 +207,5 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
     // LIB: XCredit (main)
     this._xCreditRequestedData_main = [];
     this.xCreditFacade.reset(this.comName);
-    this.xCreditFacade.createIfNotExists(this.comName);
   }
 }
