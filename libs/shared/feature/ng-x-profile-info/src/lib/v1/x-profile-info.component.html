@@ -8,6 +8,14 @@
     $any(translationsFacade.lastLoadedLangCultureCode$ | async)
   "
   [defaultStyle]="$any(xCreditFacade.lastSetStyle$ | async)"
+  [showIcoInfo]="
+    $any(
+      (configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasInfoIcon
+    )
+  "
+  [showBg]="
+    $any((configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasBg)
+  "
   [showBtnReadMore]="showBtnReadMore"
   (clickedReadMore)="clickedReadMore.emit()"
   (clickedStyle)="xCreditFacade.setStyle($event); clickedStyle.emit($event)"
