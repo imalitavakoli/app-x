@@ -13,7 +13,9 @@ import { XUsersActions } from './x-users.actions';
 import * as reducer from './x-users.reducer';
 import * as selectors from './x-users.selectors';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class V1XUsersFacade {
   private readonly _store = inject(Store);
 
