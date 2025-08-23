@@ -24,7 +24,7 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
-export class TestComponent {
+export class V1TestPageComponent {
   readonly configFacade = inject(V2ConfigFacade);
   @ViewChild('xUsers') xUsersCom!: V1XUsersComponent;
 
@@ -42,6 +42,10 @@ export class TestComponent {
     console.log('onSelectedUser:', user);
   }
 
+  // `state` input of the lib is a 2-way binding input. So we could actually
+  // use the 'banana-in-a-box' syntax (`[(state)]="parentState"`) instead of
+  // listening to `stateChange` output.
+  // NOTE: Angular automatically wires `stateChange` whenever you use `[(state)]`.
   onStateChange(state: V1BaseUi_State) {
     console.log('onStateChange:', state);
   }
@@ -65,7 +69,7 @@ export class TestComponent {
   [defaultSelectedUser]="users[0]"
   [users]="users"
   (selectedUser)="onSelectedUser($event)"
-  (state)="onStateChange($event)"
+  (stateChange)="onStateChange($event)"
 ></x-x-users-v1>
 
 ------------------------------------------------------------------------------

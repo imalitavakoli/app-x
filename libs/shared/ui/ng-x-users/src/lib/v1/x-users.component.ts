@@ -66,7 +66,7 @@ export class V1XUsersComponent extends V1BaseUiComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   protected override _xHasRequiredInputs(): boolean {
-    if (!this.users) return false;
+    if (!this.users || this.users.length === 0) return false;
     return true;
   }
 
@@ -76,7 +76,6 @@ export class V1XUsersComponent extends V1BaseUiComponent {
     else this.curr = this.defaultSelectedUser;
 
     // Set state.
-    if (this.users.length > 0) this.state = 'data';
-    else this.state = 'empty';
+    this.state = 'data';
   }
 }

@@ -2,15 +2,17 @@
 <!-- /////////////////////////////////////////////////////////////////////// -->
 <!-- Data                                                                    -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
-<section class="bg-einformative-lighter p-4">
-  <img class="h-12 w-12" alt="avatar" [src]="imgAvatar" />
-  <span>
+<section class="bg-einformative-lighter bg-opacity-30 p-4">
+  <figure class="bg-neutral flex justify-center">
+    <img class="h-32 w-32" alt="avatar" [src]="imgAvatar" />
+  </figure>
+  <div class="bg-neutral mt-4 bg-opacity-30 p-2 text-center text-sm font-bold">
     {{ creditSummary.status }}
-  </span>
+  </div>
 </section>
 } @else if (state === 'loading') {
 <!-- /////////////////////////////////////////////////////////////////////// -->
 <!-- Loading                                                                 -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
-<div class="skeleton h-12"></div>
+<div class="skeleton h-52"></div>
 }
