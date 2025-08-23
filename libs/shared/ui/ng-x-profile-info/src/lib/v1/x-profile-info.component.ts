@@ -47,6 +47,8 @@ export class V1XProfileInfoComponent extends V1BaseUiComponent {
   @Input() icoInfo = './assets/images/libs/shared/icon-info.svg';
   @Input() langCultureCode = 'en-GB';
   @Input() defaultStyle?: V1XCredit_Style;
+  @Input() showIcoInfo = true;
+  @Input() showBg = true;
   @Input() showBtnReadMore = true;
 
   @Output() clickedReadMore = new EventEmitter<void>();

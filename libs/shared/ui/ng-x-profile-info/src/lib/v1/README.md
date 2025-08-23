@@ -78,6 +78,14 @@ export class V1TestPageComponent {
   "
   langCultureCode="en-GB"
   defaultStyle="rounded"
+  [showIcoInfo]="
+    $any(
+      (configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasInfoIcon
+    )
+  "
+  [showBg]="
+    $any((configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasBg)
+  "
   [showBtnReadMore]="true"
   (clickedReadMore)="onClickedReadMore()"
   (clickedStyle)="onClickedStyle($event)"

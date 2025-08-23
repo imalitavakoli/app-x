@@ -5,15 +5,18 @@
 <section
   [ngClass]="{
     'rounded-3xl': style === 'rounded',
-    'rounded-none': style === 'sharp'
+    'rounded-none': style === 'sharp',
+    'bg-einformative bg-opacity-40': showBg
   }"
-  class="bg-einformative-lighter bg-opacity-30 p-4"
+  class="p-4"
 >
   <div class="flex items-center justify-start gap-4">
+    @if(showIcoInfo) {
     <svg-icon
       class="e-svg fill-eprimary text-eprimary block h-5 w-5"
       [src]="icoInfo"
     ></svg-icon>
+    }
     <div>
       <h2 class="text-lg">{{ data.fullName }}</h2>
       <span class="text-sm opacity-50">{{ data.dateOfBirth }}</span>
