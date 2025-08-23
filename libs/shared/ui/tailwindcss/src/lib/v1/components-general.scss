@@ -72,7 +72,7 @@
   /* //////////////////////////////////////////////////////////////////////// */
 
   .e-btn {
-    @apply ring-eneutral inline-block min-w-[150px] rounded-full px-10 py-3 text-base font-semibold shadow ring-opacity-30 transition focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply ring-eneutral inline-block rounded-full px-10 py-3 text-base font-semibold shadow ring-opacity-30 transition focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .e-btn--base {
