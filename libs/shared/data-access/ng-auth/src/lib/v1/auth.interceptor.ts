@@ -38,20 +38,15 @@ export class V1AuthInterceptor implements HttpInterceptor {
     new BehaviorSubject<unknown>(null);
 
   constructor() {
-    // Before doing anything, let's see if the token data is available in
-    // LocalStorage (i.e., see if user was already logged in or not).
-    // Because by calling `checkIfAlreadyLoggedin` action, the token data will
-    // sit in our state object... And it actually needs to already be there for
-    // us to be able to call protected API endpoints here in our Interceptor.
-    //
-    // NOTE: Why we need to call `checkIfAlreadyLoggedin` action here in the
-    // Auth Interceptor, while we are also calling it in Auth Guard? Because
-    // (1) not all pages are using our Auth Guard functions, and (2) we need the
-    // token data to be available in the state object, even before the Guard
-    // functions get called! Why is that? Well, we are setting the app's
-    // user predefined language right at the app's initialization phase... And
-    // calling the language related API endpoints require the token to be present.
-    this._authFacade.checkIfAlreadyLoggedin();
+    // Here in Auth Interceptor we are going to call some protected API
+    // endpoints which require the token to be present... So we should have
+    // already called `checkIfAlreadyLoggedin` action of the Auth Facade to see
+    // if the token is available in LocalStorage (i.e., see if user was already
+    // logged in or not)... But we don't need to call it here! Why? Because we
+    // already have called it in the app's initialization phase (to be able to
+    // fetch user's preferred language) before calling any protected API
+    // endpoints.
+    // this._authFacade.checkIfAlreadyLoggedin();
   }
 
   intercept(

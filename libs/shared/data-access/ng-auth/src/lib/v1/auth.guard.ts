@@ -13,12 +13,11 @@ export const v1AuthActivateIfNotLoggedin: CanActivateFn = (route, state) => {
   const authFacade = inject(V1AuthFacade);
   const router = inject(Router);
 
-  // If user is already logged in, redirect her to the Dashboard page.
+  // NOTE: Because of the Angular behaviour (Guards don't wait for
+  // APP_INITIALIZER). So we need to call the required Auth Facade methods here
+  // once gain, although we have already called them in the app's initialization
+  // phase.
   authFacade.checkIfAlreadyLoggedin();
-
-  // NOTE: Because of Angular bug (Guards don't wait for APP_INITIALIZER) we
-  // need to set the dashboard path here again, although we already set it in
-  // the app's initialization phase.
   authFacade.setProtectedInitialPath(route.data['protectedInitialPath']);
 
   return authFacade.authState$.pipe(
@@ -38,7 +37,10 @@ export const v1AuthActivateIfLoggedin: CanActivateFn = (route, state) => {
   const authFacade = inject(V1AuthFacade);
   const router = inject(Router);
 
-  // If user is NOT logged in, redirect her to the default page.
+  // NOTE: Because of the Angular behaviour (Guards don't wait for
+  // APP_INITIALIZER). So we need to call the required Auth Facade methods here
+  // once gain, although we have already called them in the app's initialization
+  // phase.
   authFacade.checkIfAlreadyLoggedin();
 
   return authFacade.authState$.pipe(
