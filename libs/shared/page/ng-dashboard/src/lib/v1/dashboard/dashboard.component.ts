@@ -4,6 +4,7 @@ import {
   inject,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -13,6 +14,7 @@ import { LottieComponent } from 'ngx-lottie';
 import { V1CapacitorCoreService } from '@x/shared-util-ng-capacitor';
 import { V2BasePageParentExtXUsersComponent } from '@x/shared-util-ng-bases';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
+import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';
 import { V1XUsersFeaComponent } from '@x/shared-feature-ng-x-users';
 import { V1XProfileImageFeaComponent } from '@x/shared-feature-ng-x-profile-image';
@@ -40,6 +42,11 @@ export class V1DashboardPageComponent extends V2BasePageParentExtXUsersComponent
   capacitorCoreService = inject(V1CapacitorCoreService);
   funsToShowArr!: V2Config_MapDep['ui']['dashboardFuns'];
 
+  /* Starter lib #1: X Users //////////////////////////////////////////////// */
+
+  @ViewChild('xUsersFea', { static: false })
+  override starterLib1_xUsersFeaCom!: V1XUsersFeaComponent;
+
   /* Other lib: Blahblah //////////////////////////////////////////////////// */
 
   //...
@@ -61,6 +68,16 @@ export class V1DashboardPageComponent extends V2BasePageParentExtXUsersComponent
 
   protected override _xUpdateOtherLibs(): void {
     this._updateBlahblah();
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Starter lib #1: X Users                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  override onXUsersSelectedUser(user: V1XUsers_MapUser) {
+    super.onXUsersSelectedUser(user);
+
+    console.log('Selected User:', user);
   }
 
   /* //////////////////////////////////////////////////////////////////////// */

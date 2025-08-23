@@ -37,31 +37,11 @@ export class V1XUsersOnePageComponent extends V2BasePageChildExtXUsersComponent 
     this._initBlahblah();
   }
 
-  /** This function is called by `onXUsersSelectedUser` when a new user is selected in the UI. */
-  private _update(): void {
-    this._updateBlahblah();
-  }
-
-  /* //////////////////////////////////////////////////////////////////////// */
-  /* Lib: X Users                                                             */
-  /* //////////////////////////////////////////////////////////////////////// */
-
-  override onXUsersSelectedUser(user: V1XUsers_MapUser) {
-    super.onXUsersSelectedUser(user);
-
-    // Update other libs.
-    this._update();
-  }
-
   /* //////////////////////////////////////////////////////////////////////// */
   /* Lib: Blahblah                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
 
   private _initBlahblah() {
-    //...
-  }
-
-  private _updateBlahblah() {
     //...
   }
 }

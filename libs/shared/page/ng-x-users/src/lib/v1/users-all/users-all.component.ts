@@ -49,6 +49,8 @@ export class V1XUsersAllPageComponent extends V2BasePageChildExtXUsersComponent 
   override onXUsersSelectedUser(user: V1XUsers_MapUser) {
     super.onXUsersSelectedUser(user);
 
+    console.log('Selected User (all child):', user);
+
     // Update other libs.
     this._update();
   }

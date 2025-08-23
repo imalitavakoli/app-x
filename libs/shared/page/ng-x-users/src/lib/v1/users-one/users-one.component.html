@@ -1,1 +1,19 @@
-users.one
+Users 'one' page.
+<br />
+Selected user ID: {{ id }}
+
+<section class="my-2 flex gap-2">
+  <a
+    class="e-btn bg-eprimary hover:bg-eprimary-lighter"
+    [routerLink]="['/x-users', id, 'edit']"
+  >
+    Edit User
+  </a>
+
+  <a
+    class="e-btn bg-epositive hover:bg-epositive-lighter"
+    [routerLink]="['/x-users', 'new']"
+  >
+    New User
+  </a>
+</section>
