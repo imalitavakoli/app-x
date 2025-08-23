@@ -40,6 +40,7 @@ export const v1AuthActivateIfLoggedin: CanActivateFn = (route, state) => {
 
   // If user is NOT logged in, redirect her to the default page.
   authFacade.checkIfAlreadyLoggedin();
+
   return authFacade.authState$.pipe(
     take(1),
     map((state) => {
