@@ -75,8 +75,8 @@ If you're interested in what each Boilerplate app or Sample library does, and ho
 
   - **ng-x-credit**: This functionality is **built using abstract lib types**. Its '_data-access_' lib has 'multi-instance' state object structure which is suitable for storing multiple variation of data at the same time. e.g., you call a single API endpoint with different URL query parameters to fetch different responses, you would use a 'multi-instance' state object to store each response in a separate instance of the same state object. This kind of state structure is especially useful for '_data-access_' libs that are initialized by multiple '_feature_' libs at the same time.
   - **ng-x-profile-image**: This functionality is **built using visual lib types**. i.e., it is built by only 2 type of libs: '_ui_' to present its visual UI, and '_feature_' to initialize the UI and feed it with some data that is fetched from other shared '_data-access_' libs. So the lib itself didn't specifically need to have its own '_data-access_' lib.
-  - **ng-x-profile-info**: This functionality is **built using all lib types**. Its '_data-access_' lib has 'single-instance' state object structure which is suitable for storing one single data at the same time.
-  - **ng-x-users**: This functionality is **built using all lib types**. Its '_data-access_' lib has 'entity' state object structure which is suitable for CRUD operations.
+  - **ng-x-profile-info**: This functionality is **built using all lib types** (except '_page_' lib). Its '_data-access_' lib has 'single-instance' state object structure which is suitable for storing one single data at the same time.
+  - **ng-x-users**: This functionality is **built using all lib types**. Its '_data-access_' lib has 'entity' state object structure which is suitable for CRUD operations. This functionality's '_page_' lib type is also available to demonstrate how CRUD operation can happen in different child routes.
 
 &nbsp;
 

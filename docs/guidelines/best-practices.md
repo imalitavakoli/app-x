@@ -103,16 +103,17 @@ To improve teamwork, we follow some best practices:
 
 &nbsp;
 
-- **Globally exposed components in '_ui_' or '_feature_' libs**: If the lib needs to expose more than one main component, each component should have its own folder directly within the version folder (e.g., v1). This structure keeps internal component files organized and makes it clear how many components the lib is exposing globally right at the first glance. For example:
+- **Globally exposed components in '_ui_' or '_feature_' libs**: If the lib needs to expose more than one main component, each component should have its own folder directly within the version folder (e.g., v1). So basically there's no component files (`.ts`, `.html`, `.scss`, etc.) directly inside of the version folder. This structure keeps internal component files organized and makes it clear how many components the lib is exposing globally right at the first glance. For example:
 
   - `v1/libname-wizard/libname-wizard.component.ts`
   - `v1/libname-popup/libname-popup.component.ts`
 
-- **Private internal files in '_ui_' or '_feature_' libs**: If the lib needs to be broken down into smaller components (or have lots of TS code files to hold different interfaces, mocks, or utility functions), but all of those files are meant to be for internal usage of the lib itself (i.e., they are NOT useful to be exposed globally across the workspace), they all should have '\_' prefix, whether these files exist directly in the version folder of the lib, or rest in their own respective folder. For example:
+- **Private internal files in '_ui_' or '_feature_' libs**: If the lib needs to be broken down into smaller components (or have lots of TS code files to hold different interfaces, mocks, or utility functions), but all of those files are meant to be for internal usage of the lib itself (i.e., they are NOT useful to be exposed globally across the workspace), then the ones which exist directly in the version folder of the lib should have '\_' prefix for their file name (e.g., `_libname.interfaces.ts`), and the ones which rest in their own respective folder should have '\_' prefix for their folder name (e.g., `_feature`). For example:
 
-  - `v1/_feature/wizard.component.ts` (this component is a '_feature_' one)
-  - `v1/_feature/popup.component.ts`
-  - `v1/_ui/button.component.ts` (this component is a '_ui_' one)
+  - `v1/libname.component.ts` (this is the lib's main component that is exposed globally and can rest directly in the version folder)
+  - `v1/_feature/wizard/wizard.component.ts` (this component is a '_feature_' one)
+  - `v1/_feature/popup/popup.component.ts`
+  - `v1/_ui/button/button.component.ts` (this component is a '_ui_' one)
   - `v1/_util/formatter.ts` (this TS file is a '_util_' one, which contains some capsulated utility functions)
   - `v1/_libname.interfaces.ts`
   - `v1/_util/mocks/something1.mocks.ts`
