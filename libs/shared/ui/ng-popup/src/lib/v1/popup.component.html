@@ -15,7 +15,7 @@
   >
     <div
       [ngClass]="holderClasses"
-      class="bg-eday-lighter dark:bg-enight m-6 flex max-h-[calc(100vh-((280px)+(var(--ion-safe-area-top)*0.5)+(var(--ion-safe-area-bottom)*0.5)))] min-w-[320px] max-w-4xl flex-col rounded-lg text-center shadow-[0px_0px_16px_0px_rgba(0,0,0,0.25)]"
+      class="bg-eday-lighter dark:bg-enight m-6 flex max-h-[calc(100vh-((280px)+(var(--ion-safe-area-top)*0.5)+(var(--ion-safe-area-bottom)*0.5)))] min-w-[320px] max-w-[calc(100%-2rem)] flex-col rounded-lg text-center shadow-[0px_0px_16px_0px_rgba(0,0,0,0.25)] md:max-w-4xl"
     >
       @if (!isClassicEnable) {
       <!-- ///////////////////////////////////////////////////////////////// -->
