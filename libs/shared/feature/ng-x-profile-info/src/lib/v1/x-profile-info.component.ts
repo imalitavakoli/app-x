@@ -173,7 +173,7 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
             }
 
             // We're here? Then it means that we should emit the error!
-            this._xOnError(
+            this.xOnError(
               {
                 key: key,
                 value: state.errors[key] as string,
@@ -203,7 +203,7 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
             }
 
             // We're here? Then it means that we should emit the error!
-            this._xOnError(
+            this.xOnError(
               {
                 key: key,
                 value: state.errors[key] as string,

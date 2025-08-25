@@ -142,7 +142,7 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
             }
 
             // We're here? Then it means that we should emit the error!
-            this._xOnError(
+            this.xOnError(
               {
                 key: crudAction as string,
                 value: state.error as string,
