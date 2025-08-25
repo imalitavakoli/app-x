@@ -26,7 +26,7 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * 03. Override `_xInitPre` (with super call right at the beginning).
  * 04. Override `_xFacadesPre`.
  * 05. Override `_xFacadesLoadesValidation`.
- * 06. Override `_xFacadesAddErrorListeners`. You may use `_xOnError` inside of
+ * 06. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
  * 07. Override `_xInit` (with super call right at the beginning).
@@ -47,7 +47,7 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * 02. Override `_xHasRequiredInputs`.
  * 03. Override `_xFacadesPre`.
  * 04. Override `_xFacadesLoadesValidation`.
- * 05. Override `_xFacadesAddErrorListeners`. You may use `_xOnError` inside of
+ * 05. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
  * 06. Override `_xDataPre`.
@@ -288,9 +288,6 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
     return true;
   }
 
-  // Introduced in the Base.
-  // protected _xIsInputChanged(param: string, changes: SimpleChanges): boolean {}
-
   /**
    * Dispatches the error event (`hasError`) when an error occurs while
    * fetching data from a 'data-access' lib.
@@ -299,7 +296,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * @param {string} [libName] - 'data-access' lib's name that throws the error.
    * @param {?string} [instanceName] - If the 'data-access' lib that throws the error is a multi-instance one, then this is the instance name that the error is related to.
    */
-  protected _xOnError(
+  xOnError(
     error: { key: string; value: string },
     libName: string,
     instanceName?: string,
@@ -423,7 +420,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * `_xInitPre` calls this function to let us subscribe to the state object
    * changes of our facades and check their `errors` property... If an error
    * happens while calling API endpoints, you can be informed here in this
-   * function, and use `_xOnError` to emit `hasError` output.
+   * function, and use `xOnError` to emit `hasError` output.
    *
    * NOTE: If you're keeping your subscriptions (not taking them down until a
    * specific condition is met), then you should unsubscribe from them in
@@ -452,7 +449,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *             }
    *
    *             // We're here? Then it means that we should emit the error!
-   *             this._xOnError(
+   *             this.xOnError(
    *               {
    *                 key: key,
    *                 value: state.errors[key] as string,

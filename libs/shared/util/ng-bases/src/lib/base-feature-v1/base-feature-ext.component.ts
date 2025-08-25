@@ -43,7 +43,7 @@ import { V1BaseFeatureComponent } from './base-feature.component';
  * 02. Override `_xHasRequiredInputs`.
  * 03. Override `_xFacadesPre`.
  * 04. Override `_xFacadesLoadesValidation`.
- * 05. Override `_xFacadesAddErrorListeners`. You may use `_xOnError` inside of
+ * 05. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
  * 06. Override `_xDataReset`. Here's the place, where You may set the 'ui'

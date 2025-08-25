@@ -28,12 +28,13 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * Base class for 'page' components.
  *
  * Here's how the inherited classes use this (in most cases):
- * 01. Override `_xHasRequiredInputs`.
- * 02. Override `_xInitPre` (with super call right at the beginning).
- * 03. Override `_xInit` (with super call right at the beginning).
- * 04. Override `_xUpdate` (with super call right at the beginning).
- * 05. Optional! In HTML, you can use `hasRequiredInputs`.
- * 06. Optional! In HTML, you can use `appVersion`.
+ * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 02. Override `_xHasRequiredInputs`.
+ * 03. Override `_xInitPre` (with super call right at the beginning).
+ * 04. Override `_xInit` (with super call right at the beginning).
+ * 05. Override `_xUpdate` (with super call right at the beginning).
+ * 06. Optional! In HTML, you can use `hasRequiredInputs`.
+ * 07. Optional! In HTML, you can use `appVersion`.
  *
  * @export
  * @class V2BasePageComponent
@@ -66,6 +67,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
   protected _baseUrl!: string;
   protected _lastLoadedLang!: string;
   protected _userId!: number;
+  protected _protectedInitialPath!: string;
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X lifecycle                                                              */
@@ -116,6 +118,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
       .subscribe((state) => {
         // Save required data.
         this._userId = state.datas.getToken?.userId as number;
+        this._protectedInitialPath = state.protectedInitialPath;
       });
 
     // Subscribe to the route query params to understand when all required

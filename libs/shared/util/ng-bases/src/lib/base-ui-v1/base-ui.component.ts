@@ -25,20 +25,22 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * Base class for all 'ui' components.
  *
  * Here's a way (#1) that the inherited classes use this:
- * 01. Override `_dataType`.
- * 02. Override `_xHasRequiredInputs`.
- * 03. Override `_xInitPre` (with super call right at the beginning).
- * 04. Override `_xInit` (with super call right at the beginning).
- * 05. Override `_xUpdate` (with super call right at the beginning). You may use
+ * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 02. Override `_dataType`.
+ * 03. Override `_xHasRequiredInputs`.
+ * 04. Override `_xInitPre` (with super call right at the beginning).
+ * 05. Override `_xInit` (with super call right at the beginning).
+ * 06. Override `_xUpdate` (with super call right at the beginning). You may use
  *     `_xIsInputChanged` inside of this function.
- * 06. Override `_xSetState` (with super call right at the beginning). Here you
+ * 07. Override `_xSetState` (with super call right at the beginning). Here you
  *     change `state` & `dataType` inputs.
  *
  * Here's also another way (#2) that the inherited classes use this (in most cases):
- * 01. Override `_dataType`.
- * 02. Override `_xHasRequiredInputs`.
- * 03. Override `_xInitPre` (with super call right at the beginning).
- * 04. Override `_xSetState` (with super call right at the beginning). Here you
+ * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 02. Override `_dataType`.
+ * 03. Override `_xHasRequiredInputs`.
+ * 04. Override `_xInitPre` (with super call right at the beginning).
+ * 05. Override `_xSetState` (with super call right at the beginning). Here you
  *     change `state` & `dataType` inputs.
  *
  * Here's how the 'feature' lib interacts with this:

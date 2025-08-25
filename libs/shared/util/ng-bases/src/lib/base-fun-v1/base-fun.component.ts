@@ -183,10 +183,10 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
    *
    * @protected
    * @param {string} param Input name
-   * @param {SimpleChanges} changes The changed properties
+   * @param {?SimpleChanges} changes The changed properties
    * @returns {boolean}
    */
-  protected _xIsInputChanged(param: string, changes: SimpleChanges): boolean {
+  protected _xIsInputChanged(param: string, changes?: SimpleChanges): boolean {
     if (!changes) return false;
     if (!changes[param]) return false;
     const prevValue = changes[param].previousValue;
