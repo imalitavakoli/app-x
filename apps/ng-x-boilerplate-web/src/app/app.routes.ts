@@ -21,7 +21,7 @@ export const appRoutes: Routes = [
   {
     path: 'auth',
     loadChildren: () =>
-      import('@x/shared-page-ng-auth').then((m) => m.V1AuthRoutes),
+      import('@x/shared-page-ng-auth').then((m) => m.V2AuthRoutes),
     canActivate: [v1AuthActivateIfNotLoggedin],
     data: {
       protectedInitialPath: environment.protected_initial_path, // Required for the guard.
