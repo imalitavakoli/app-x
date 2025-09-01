@@ -5,7 +5,7 @@
 <!--
 NOTE: This whole template is hidden by CSS when `contentCurrIndex > 0`! Why by 
 CSS and not by `ngIf`? Because we want to keep it in the DOM to be able to keep 
-listening to its listeners.
+listening to the 'method' components' outputs which are resting in this template.
 -->
 <ng-template #welcome>
   <article
@@ -52,22 +52,38 @@ listening to its listeners.
 
         <!-- Auth Method: Magic -->
         @if (hasAuthMagic) {
-        <x-method-magic [hasAuthMagic]="hasAuthMagic"></x-method-magic>
+        <x-method-magic
+          type="official"
+          [isAuthCanceledFromOutside]="isAuthCanceled"
+          (hasError)="
+            onError({ page: 'parent', lib: 'methodMagic', error: $event })
+          "
+          (submitted)="onSubmitted($event)"
+          (ready)="onReady()"
+        ></x-method-magic>
         }
 
         <!-- 'or' text -->
-        @if (hasAuthBankid) { @if (hasAuthMagic) {
+        @if (hasAuthBankid && hasAuthMagic) {
         <div class="text-eneutral-darker my-2 text-center">or</div>
-        } }
+        }
 
         <!-- Auth Method: Bankid -->
         @if (hasAuthBankid) {
-        <x-method-bankid [isSecondaryAuth]="hasAuthMagic"></x-method-bankid>
+        <x-method-bankid
+          [isSecondaryAuth]="hasAuthMagic"
+          [isAuthCanceledFromOutside]="isAuthCanceled"
+          (hasError)="
+            onError({ page: 'parent', lib: 'methodBankid', error: $event })
+          "
+          (submitted)="onSubmitted($event)"
+          (ready)="onReady()"
+        ></x-method-bankid>
         }
 
         <!-- 'Trouble logging in' button -->
         <div class="mb-[var(--ion-safe-area-bottom)] mt-8 text-center">
-          <a class="e-link" href="#" (click)="showPopupTroubleLogin = true">
+          <a class="e-link" href="#" (click)="showPopup_troubleLogin = true">
             Having trouble logging in?
           </a>
         </div>
@@ -84,7 +100,7 @@ listening to its listeners.
   <header
     class="e-header bg-eday-lighter dark:bg-enight fixed left-0 top-0 flex min-h-[60px] w-full shadow"
   >
-    <button (click)="onClickBack()" class="m-4">
+    <button (click)="onClickedBack()" class="m-4">
       <i class="bi bi-chevron-left text-xl"></i>
     </button>
   </header>
@@ -95,17 +111,16 @@ listening to its listeners.
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
 <!--
-NOTE: When 'login' button is pressed in the `welcome` template, this 
-template will be shown! Now based on the available Auth method in DEP config, 
-there are different 'login' buttons which are available in the `welcome` 
-template... So based on what 'login' button is pressed, this template decides 
-to show what `waiting` template!
+NOTE: When one of the 'method' components emit `submit` output ('login' button 
+is pressed in the `welcome` template), this template will be shown! Now based on 
+the emitted `waitingType` payload, this template decides to show what `waiting` 
+template!
 -->
 <ng-template #waiting>
   <section>
-    @if (contentWaitingType === 'email') {
+    @if (waitingType === 'email') {
     <ng-container *ngTemplateOutlet="waitingEmail"></ng-container>
-    } @else if (contentWaitingType === 'bankid') {
+    } @else if (waitingType === 'bankid') {
     <ng-container *ngTemplateOutlet="waitingBankid"></ng-container>
     }
   </section>
@@ -127,6 +142,7 @@ to show what `waiting` template!
         loop: true
       }"
     ></ng-lottie>
+    <!-- <i class="bi bi-envelope my-8 block text-5xl"></i> -->
 
     <h2 class="e-h-usual text-lg">Check your inbox</h2>
     <p class="p">Please open your email inbox</p>
@@ -140,7 +156,7 @@ to show what `waiting` template!
         {{ whatUserEntered }}
       </p>
       <button
-        (click)="contentTo(0); onClickBack()"
+        (click)="contentTo(0); onClickedBack()"
         class="e-btn e-btn--base mt-2"
       >
         Send email again
@@ -152,7 +168,7 @@ to show what `waiting` template!
     navigate to he next view (#contact referenced element)...
     -->
     <!-- <a class="e-link" href="#" (click)="contentToNext()">
-      {{ t('sign_in_verify_magic_link.having_trouble_logging_in') }}
+      Trouble logging in?
     </a> -->
   </section>
 </ng-template>
@@ -208,19 +224,19 @@ have it :)
 <ng-template #contact> </ng-template>
 
 <!-- /////////////////////////////////////////////////////////////////////// -->
-<!-- 'Trouble logging in' popup                                              -->
+<!-- Popup: Trouble logging in                                               -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
 <x-popup-v1
   *transloco="let t"
-  [isOpen]="showPopupTroubleLogin"
-  (closed)="showPopupTroubleLogin = false"
+  [isOpen]="showPopup_troubleLogin"
+  (closed)="showPopup_troubleLogin = false"
 >
   <div slot="body" class="max-w-[440px]">
     <div class="pb-2">
       <button
         title="Info"
-        (click)="showPopupTroubleLogin = false"
+        (click)="showPopup_troubleLogin = false"
         class="float-right"
       >
         <i class="bi bi-x h-3 w-3 cursor-pointer text-2xl"></i>
@@ -228,14 +244,7 @@ have it :)
     </div>
     <div class="p-6 text-center">
       <!-- Popup message -->
-      <h2
-        class="h2 e-h-usual"
-        xLongPressMeV1
-        [longPressDur]="1000"
-        (longPress)="onTroubleTitleLongPress()"
-      >
-        Having trouble logging in?
-      </h2>
+      <h2 class="h2 e-h-usual">Having trouble logging in?</h2>
       <p class="p">Contact our customer service:</p>
 
       @if ((configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail) {
@@ -293,8 +302,9 @@ is shown! As soon as user presses the 'login' button in the `welcome`, then We
 hide `welcome` and show `header` and `waiting` templates.
 
 NOTE: Why we didn't use `ngIf` to show/hide `welcome` template? Because we want 
-to keep the `welcome` template in the DOM to be able to keep listening to its 
-listeners when user is seeing other templates.
+to keep the `welcome` template in the DOM (even when user is seeing other 
+templates) as it's actually holding our 'method' components, and these 
+components have some outputs that we wanna keep listening to...
 -->
 <main *transloco="let t">
   <ng-container *ngTemplateOutlet="welcome"></ng-container>
@@ -322,33 +332,25 @@ listeners when user is seeing other templates.
 <!-- Show errors                                                             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (tplErrors && tplErrors.length > 0) {
+@if (errors && errors.length > 0) {
 <x-popup-v1
   *transloco="let t"
   [isHeadEnable]="true"
   [isOpen]="true"
-  (closed)="tplErrors = []"
+  (closed)="errors = []"
 >
   <div slot="head">
-    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+    <i class="bi bi-hourglass-split max-w- mr-2"></i>
     <span class="font-semibold">{{ t('common.error') }}</span>
   </div>
 
   <div slot="body">
-    <ng-lottie
-      width="100%"
-      height="180px"
-      containerClass="e-ani"
-      [options]="{
-        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
-        loop: false
-      }"
-    ></ng-lottie>
-    <p class="p m-6 text-center">
-      {{ t('common.error_desc') }}
+    <p class="p m-0 text-center">{{ t('common.error_desc') }}</p>
 
-      @for (error of tplErrors; track $index) {
-      <small class="e-ecode">{{ error.lib }}, {{ error.key }}</small> }
+    <p class="p m-0 break-all text-center">
+      @for (error of errors; track $index) {
+      <small class="e-ecode"> {{ error.lib }}:{{ error.error.key }} </small>
+      }
     </p>
   </div>
 </x-popup-v1>

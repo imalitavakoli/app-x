@@ -44,7 +44,7 @@
       'border-eprimary hover:border-eprimary-darker hover:text-eprimary-darker text-eprimary border-2':
         isSecondaryAuth
     }"
-    (click)="onClickLogin()"
+    (click)="authSubmitted()"
   >
     @if ( (authFacade.loadedLatest$| async)?.bankidGetRequiredData === false ) {
     <x-preloaders-v1
@@ -55,6 +55,7 @@
     <i class="mx-2 block h-4 w-4 fill-current"
       ><ng-container *ngTemplateOutlet="icoBankid"></ng-container
     ></i>
-    Sign in with BankID }
+    {{ t('sign_in_start.sign_in_with_bank_id') }}
+    }
   </button>
 </div>

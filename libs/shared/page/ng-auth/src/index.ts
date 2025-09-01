@@ -1,3 +1,3 @@
-export * from './lib/v1/lib.routes';
+export * from './lib/v2/lib.routes';
 
-export * from './lib/v1/auth/auth.component';
+export * from './lib/v2/auth/auth.component';

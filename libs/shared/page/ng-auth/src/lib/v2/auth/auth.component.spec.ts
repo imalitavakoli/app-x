@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { V1AuthPageComponent } from './auth.component';
+import { V2AuthPageComponent } from './auth.component';
 
-describe('V1AuthPageComponent', () => {
-  let component: V1AuthPageComponent;
-  let fixture: ComponentFixture<V1AuthPageComponent>;
+describe('V2AuthPageComponent', () => {
+  let component: V2AuthPageComponent;
+  let fixture: ComponentFixture<V2AuthPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [V1AuthPageComponent],
+      imports: [V2AuthPageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(V1AuthPageComponent);
+    fixture = TestBed.createComponent(V2AuthPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

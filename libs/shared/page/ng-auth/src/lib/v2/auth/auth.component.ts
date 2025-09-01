@@ -14,46 +14,39 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { IonContent } from '@ionic/angular/standalone';
 
 /**
- * In Auth page, all we do is to just lazy-load the target template dynamically!
- * So where's the rest of the logic happening? In the loaded template itself!
- *
- * NOTE: Templates themeselves are inherited from `templates/tpl.component.ts`.
- * So some of their logic is restting in that class.
+ * In this component, all we do is to just lazy-load the target template
+ * dynamically! Where's the rest of the logic? In the loaded template itself!
  *
  * @export
- * @class V1AuthPageComponent
- * @typedef {V1AuthPageComponent}
+ * @class V2AuthPageComponent
+ * @typedef {V2AuthPageComponent}
  * @implements {OnInit}
  */
 @Component({
-  selector: 'x-auth-page-v1',
+  selector: 'x-auth-page-v2',
   standalone: true,
   imports: [IonContent, CommonModule],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })
-export class V1AuthPageComponent implements OnInit {
+export class V2AuthPageComponent implements OnInit {
   @ViewChild('template', { read: ViewContainerRef }) tpl!: ViewContainerRef;
   readonly configFacade = inject(V2ConfigFacade);
-  private _template!: 'classic' | 'sample';
+  readonly capacitorCoreService = inject(V1CapacitorCoreService);
 
-  private readonly _capacitorCoreSerivce = inject(V1CapacitorCoreService);
-  platform: 'ios' | 'android' | 'desktop' = 'desktop';
+  private _template!: 'classic' | 'aligator';
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Lifecycle                                                                */
   /* //////////////////////////////////////////////////////////////////////// */
 
   ngOnInit(): void {
-    // Understand what is the platform that app is running on.
-    this.platform = this._capacitorCoreSerivce.getPlatform();
-
     this.configFacade.dataConfigDep$.pipe(take(1)).subscribe((data) => {
       data = data as V2Config_MapDep; // We are already sure DEP config is loaded.
 
       // Save required data.
-      // TODO: Here we should get the template type from the DEP config. But
-      // we don't have it yet! So we hard-code it to 'classic' for now.
+      // NOTE: We can read the lib's template from DEP config... But for now,
+      // we hard-code it to 'classic'.
       this._template = 'classic';
 
       // Init the component.
@@ -62,14 +55,10 @@ export class V1AuthPageComponent implements OnInit {
   }
 
   private _init() {
-    // Lazy load the page template.
-    if (this._template === 'sample') {
-      import('./templates/sample/auth-sample.component').then((module) => {
-        this.tpl.createComponent(module.V1AuthPageTplSampleComponent);
-      });
-    } else {
+    // Lazy load lib's template.
+    if (this._template === 'classic') {
       import('./templates/classic/auth-classic.component').then((module) => {
-        this.tpl.createComponent(module.V1AuthPageTplClassicComponent);
+        this.tpl.createComponent(module.V2AuthPageTplClassicComponent);
       });
     }
   }

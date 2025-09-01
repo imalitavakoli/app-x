@@ -2,7 +2,7 @@
 <!-- Template                                                                -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (platform === 'desktop') {
+@if (capacitorCoreService.getPlatform() === 'desktop') {
 <ng-template #template></ng-template>
 } @else {
 <ion-content>
