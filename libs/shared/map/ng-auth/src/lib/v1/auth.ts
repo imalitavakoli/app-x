@@ -65,8 +65,17 @@ export class V1Auth {
         return this._mapMagicSendLoginLink(data);
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@Auth/magicSendLoginLink:', error);
+        let error = err.error || err;
+
+        // NOTE: This API endpoint's data is very important... We parse its
+        // error in a different way to see almost all of the returned error's
+        // available properties.
+        if (typeof error === 'object') {
+          error.xUrl = endPoint; // Add URL property
+          error = JSON.stringify(error);
+        }
+
+        console.error('@V1Auth/magicSendLoginLink:', error);
         return throwError(() => error);
       }),
     );
@@ -113,7 +122,7 @@ export class V1Auth {
       }),
       catchError((err) => {
         const error = err.message || err;
-        console.error('@Auth/checkIfLinkSeen:', error);
+        console.error('@V1Auth/checkIfLinkSeen:', error);
         return throwError(() => error);
       }),
     );
@@ -171,7 +180,7 @@ export class V1Auth {
       }),
       catchError((err) => {
         const error = err.message || err;
-        console.error('@Auth/bankidGetRequiredData:', error);
+        console.error('@V1Auth/bankidGetRequiredData:', error);
         return throwError(() => error);
       }),
     );
@@ -221,7 +230,7 @@ export class V1Auth {
       }),
       catchError((err) => {
         const error = err.message || err;
-        console.error('@Auth/bankidCheckIfAuthenticated:', error);
+        console.error('@V1Auth/bankidCheckIfAuthenticated:', error);
         return throwError(() => error);
       }),
     );
@@ -281,7 +290,7 @@ export class V1Auth {
       }),
       catchError((err) => {
         const error = err.message || err;
-        console.error('@Auth/getTokenViaTicket:', error);
+        console.error('@V1Auth/getTokenViaTicket:', error);
         return throwError(() => error);
       }),
     );
@@ -326,7 +335,7 @@ export class V1Auth {
       }),
       catchError((err) => {
         const error = err.message || err;
-        console.error('@Auth/getTokenViaRefresh:', error);
+        console.error('@V1Auth/getTokenViaRefresh:', error);
         return throwError(() => error);
       }),
     );
@@ -380,7 +389,7 @@ export class V1Auth {
       }),
       catchError((err) => {
         const error = err.message || err;
-        console.error('@Auth/autoGetTicketId:', error);
+        console.error('@V1Auth/autoGetTicketId:', error);
         return throwError(() => error);
       }),
     );
