@@ -66,7 +66,7 @@ export class V2Config {
 
         // NOTE: We should NOT log the error, if we are in SSR environment.
         if (typeof document !== 'undefined') {
-          console.error('@Config/loadConfigDep:', error);
+          console.error('@V2Config/loadConfigDep:', error);
         }
 
         return throwError(() => error);
@@ -159,7 +159,7 @@ export class V2Config {
 
         // NOTE: We should NOT log the error, if we are in SSR environment.
         if (typeof document !== 'undefined') {
-          console.error('@Config/loadConfigFirebase:', error);
+          console.error('@V2Config/loadConfigFirebase:', error);
         }
 
         return throwError(() => error);
@@ -185,7 +185,7 @@ export class V2Config {
 
         // NOTE: We should NOT log the error, if we are in SSR environment.
         if (typeof document !== 'undefined') {
-          console.error('@Config/loadDataBuild:', error);
+          console.error('@V2Config/loadDataBuild:', error);
         }
 
         return throwError(() => error);
