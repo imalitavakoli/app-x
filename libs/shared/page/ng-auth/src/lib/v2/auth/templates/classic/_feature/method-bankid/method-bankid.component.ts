@@ -264,6 +264,7 @@ export class MethodBankidComponent
   }
 
   private _callAuth_bankidCheckIfAuthenticated() {
+    if (this._isTokenRequested) return;
     if (!this._bRef) return;
 
     this.authFacade.bankidCheckIfAuthenticated(

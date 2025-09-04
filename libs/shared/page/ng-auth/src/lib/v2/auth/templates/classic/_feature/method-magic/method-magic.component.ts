@@ -253,6 +253,7 @@ export class MethodMagicComponent
   }
 
   private _callAuth_checkIfLinkSeen() {
+    if (this._isTokenRequested) return;
     if (!this._ticketId) return;
 
     this.authFacade.checkIfLinkSeen(this._baseUrl, this._ticketId);
