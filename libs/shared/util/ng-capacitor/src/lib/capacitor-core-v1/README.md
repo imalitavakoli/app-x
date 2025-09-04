@@ -21,6 +21,7 @@ private _backSub!: Subscription;
 
 this._capacitorCoreService.getPlatform();
 this._capacitorCoreService.setPlatform('ios'); // Force a platform (Useful for simulation purposes).
+this._capacitorCoreService.isPlatformSim; // Whether `setPlatform` is called to define a simulated platform or not.
 
 /* Ionic: Listeners ///////////////////////////////////////////////////////// */
 

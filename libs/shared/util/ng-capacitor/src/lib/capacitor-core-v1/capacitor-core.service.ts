@@ -25,6 +25,17 @@ export class V1CapacitorCoreService {
 
   private _forcePlatform: 'ios' | 'android' | 'desktop' | undefined = undefined;
 
+  /**
+   * Whether `setPlatform` is called to define a simulated platform.
+   * This flag can be useful for the times that we are doing some platform
+   * specific thing, but we also need to understand whether we are in a real
+   * targetted platform or it's just a simulation! e.g., when we wanna choose
+   * between different types of Capacitor Browser plugins... If platform is
+   * simulated (returns ios but we're actually in desktop), then we should not
+   * use the Capacitor Browser plugin!
+   */
+  isPlatformSim = false;
+
   /* //////////////////////////////////////////////////////////////////////// */
   /* Ionic: Methods                                                           */
   /* //////////////////////////////////////////////////////////////////////// */
@@ -59,6 +70,7 @@ export class V1CapacitorCoreService {
    */
   setPlatform(platform: 'ios' | 'android' | 'desktop') {
     this._forcePlatform = platform;
+    this.isPlatformSim = true;
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
