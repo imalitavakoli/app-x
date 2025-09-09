@@ -34,7 +34,6 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
     CommonModule,
     V1AppHeaderDesktopComponent,
     V1AppHeaderMobileComponent,
-    TranslocoDirective,
   ],
   templateUrl: './app-header.component.html',
   styleUrl: './app-header.component.scss',

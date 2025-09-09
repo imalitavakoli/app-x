@@ -26,7 +26,6 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
     CommonModule,
     V1AppFooterDesktopComponent,
     V1AppFooterMobileComponent,
-    TranslocoDirective,
   ],
   templateUrl: './app-footer.component.html',
   styleUrl: './app-footer.component.scss',

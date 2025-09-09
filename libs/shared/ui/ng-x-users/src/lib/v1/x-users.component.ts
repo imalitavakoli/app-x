@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective } from '@jsverse/transloco';
 
@@ -20,7 +20,7 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 @Component({
   selector: 'x-x-users-v1',
   standalone: true,
-  imports: [CommonModule, FormsModule, V1ToggleMeDirective, TranslocoDirective],
+  imports: [FormsModule, V1ToggleMeDirective],
   templateUrl: './x-users.component.html',
   styleUrl: './x-users.component.scss',
 })

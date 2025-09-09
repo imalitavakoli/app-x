@@ -12,9 +12,12 @@ There are numerous commands available to assist you in development and generatin
 
 It's recommended for the Workspace Specialist to update the whole workspace. And here's how to do it:
 
+- Update your machine's globally installed [Node.js](https://nodejs.org/en), [pnpm](https://pnpm.io/), and [NX](https://nx.dev/) versions.
+
 - Run `nx migrate latest` to prepare the workspace for an automatic update to the latest version of frameworks, dependencies, libraries, codes, and configurations. After running this command, `package.json` will be modified, and `migrations.json` will be generated (if there are pending migrations). No other changes will occur.
 
-- Run `pnpm install --no-frozen-lockfile` to update the installed local dependencies.
+- Run `pnpm install` to update the installed local dependencies.  
+  **Tip!** Before running this command, feel free to delete your previously saved `pnpm-lock.yaml` file. Because we're going to do a major update on almost all of the dependencies.
 
 - Run `pnpm exec nx migrate --run-migrations` to update the workspace files!  
   **Note!** Before executing this command, review the `package.json` and `migrations.json` files to ensure their contents are appropriate. Only then should you proceed to run this command to update everything. Finally, you can remove the `migrations.json` file as it's no longer needed.

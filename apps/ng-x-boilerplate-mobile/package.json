@@ -23,12 +23,11 @@
     "@capacitor/cli": "../../node_modules/@capacitor/cli"
   },
   "browserslist": [
-    "Chrome >=61",
-    "ChromeAndroid >=61",
-    "Firefox >=63",
-    "Firefox ESR",
-    "Edge >=79",
-    "Safari >=13",
-    "iOS >=13"
+    "Chrome >=115",
+    "Edge >=115",
+    "Firefox >=115",
+    "Safari >=16",
+    "iOS >=16",
+    "not IE 11"
   ]
 }

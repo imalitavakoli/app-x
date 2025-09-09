@@ -8,7 +8,7 @@ import {
   ViewContainerRef,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Subscription } from 'rxjs';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
@@ -43,7 +43,7 @@ import { SimulatorComponent } from './simulator/simulator.component';
  */
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule, SimulatorComponent],
+  imports: [RouterModule, SimulatorComponent],
   selector: 'x-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

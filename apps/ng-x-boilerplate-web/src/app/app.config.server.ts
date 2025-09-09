@@ -1,5 +1,5 @@
+import { provideServerRendering } from '@angular/ssr';
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
 import { appConfig } from './app.config';
 import { ROUTES } from '@angular/router';
 import { AppShellComponent } from './app-shell/app-shell.component';

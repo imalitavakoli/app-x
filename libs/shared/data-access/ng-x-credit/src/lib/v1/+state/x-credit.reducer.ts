@@ -86,19 +86,18 @@ export const v1XCreditAdapter: EntityAdapter<V1XCredit_Entity> =
  *
  * @type {V1XCredit_State}
  */
-export const initialState: V1XCredit_State = v1XCreditAdapter.getInitialState({
-  lastSetStyle: undefined,
-  ids: ['g'],
-  entities: {
-    g: {
-      id: 'g',
-      loadedLatest: {} as V1XCredit_Loadeds,
-      loadeds: {} as V1XCredit_Loadeds,
-      errors: {} as V1XCredit_Errors,
-      datas: {} as V1XCredit_Datas,
-    },
+export const initialState: V1XCredit_State = v1XCreditAdapter.addOne(
+  {
+    id: 'g',
+    loadedLatest: {} as V1XCredit_Loadeds,
+    loadeds: {} as V1XCredit_Loadeds,
+    errors: {} as V1XCredit_Errors,
+    datas: {} as V1XCredit_Datas,
   },
-});
+  v1XCreditAdapter.getInitialState({
+    lastSetStyle: undefined,
+  }),
+);
 
 /* ////////////////////////////////////////////////////////////////////////// */
 /* Feature State Reducer                                                      */

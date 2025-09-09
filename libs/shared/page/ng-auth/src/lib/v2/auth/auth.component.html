@@ -2,10 +2,10 @@
 <!-- Template                                                                -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (capacitorCoreService.getPlatform() === 'desktop') {
-<ng-template #template></ng-template>
+@if (platform === 'desktop') {
+<ng-template #templateDesktop></ng-template>
 } @else {
 <ion-content>
-  <ng-template #template></ng-template>
+  <ng-template #templateMobile></ng-template>
 </ion-content>
 }

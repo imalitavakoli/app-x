@@ -18,59 +18,60 @@
         placeholder="you@x.com"
         email
         [(ngModel)]="sampleUserEmail"
-      />
-      <code class="code m-2">
-        Your email address:
-        {{ sampleUserEmail }}
-      </code>
-    </div>
-    <div>
-      <button
-        class="e-btn text-eday-lighter bg-eprimary hover:bg-eprimary-darker"
-        (click)="onSendLoginLink()"
-      >
-        Send login link
-      </button>
-      <code class="code m-2">
-        Received Ticket ID:
-        {{
+        />
+        <code class="code m-2">
+          Your email address:
+          {{ sampleUserEmail }}
+        </code>
+      </div>
+      <div>
+        <button
+          class="e-btn text-eday-lighter bg-eprimary hover:bg-eprimary-darker"
+          (click)="onSendLoginLink()"
+          >
+          Send login link
+        </button>
+        <code class="code m-2">
+          Received Ticket ID:
+          {{
           (authFacade.datas$ | async)?.magicSendLoginLink?.ticketId ||
-            'Undefined'
-        }}
-      </code>
-    </div>
-    <div>
-      <button
-        [disabled]="!(authFacade.datas$ | async)?.magicSendLoginLink"
-        class="e-btn text-eday-lighter bg-eprimary hover:bg-eprimary-darker disabled:hover:bg-eprimary"
-        (click)="onCheckIfLinkSeen()"
-      >
-        Check if Link seen
-      </button>
-      <code class="code m-2">
-        Ticket ID Status:
-        {{
+          'Undefined'
+          }}
+        </code>
+      </div>
+      <div>
+        <button
+          [disabled]="!(authFacade.datas$ | async)?.magicSendLoginLink"
+          class="e-btn text-eday-lighter bg-eprimary hover:bg-eprimary-darker disabled:hover:bg-eprimary"
+          (click)="onCheckIfLinkSeen()"
+          >
+          Check if Link seen
+        </button>
+        <code class="code m-2">
+          Ticket ID Status:
+          {{
           (authFacade.datas$ | async)?.checkIfLinkSeen?.ticketStatus ||
-            'Undefined'
-        }}
-      </code>
-    </div>
-  </section>
+          'Undefined'
+          }}
+        </code>
+      </div>
+    </section>
 
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <!-- Error messages                                                        -->
-  <!-- ///////////////////////////////////////////////////////////////////// -->
+    <!-- ///////////////////////////////////////////////////////////////////// -->
+    <!-- Error messages                                                        -->
+    <!-- ///////////////////////////////////////////////////////////////////// -->
 
-  <div
-    *ngIf="authFacade.hasError$ | async"
-    class="bg-enegative text-eday-lighter mt-4 rounded p-4 text-sm"
-  >
-    <strong>Error!</strong>
-    <!-- magicSendLoginLink -->
-    @if ((authFacade.errors$ | async)?.magicSendLoginLink) { In
-    magicSendLoginLink, something went wrong. }
-    <!-- checkIfLinkSeen -->
-    @if ((authFacade.errors$ | async)?.checkIfLinkSeen) { In checkIfLinkSeen,
-    something went wrong. }
-  </div>
-</main>
+    @if (authFacade.hasError$ | async) {
+      <div
+        class="bg-enegative text-eday-lighter mt-4 rounded p-4 text-sm"
+        >
+        <strong>Error!</strong>
+        <!-- magicSendLoginLink -->
+        @if ((authFacade.errors$ | async)?.magicSendLoginLink) { In
+          magicSendLoginLink, something went wrong. }
+          <!-- checkIfLinkSeen -->
+          @if ((authFacade.errors$ | async)?.checkIfLinkSeen) { In checkIfLinkSeen,
+            something went wrong. }
+          </div>
+        }
+      </main>

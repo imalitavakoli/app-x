@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { take } from 'rxjs';
 
 import { V1BaseCoreComponent } from '@x/ng-x-boilerplate-component-util-bases';
@@ -8,7 +8,7 @@ import { V1XProfileImageFeaComponent } from '@x/shared-feature-ng-x-profile-imag
 @Component({
   selector: 'x-core-x-profile-image-v1',
   standalone: true,
-  imports: [CommonModule, V1XProfileImageFeaComponent],
+  imports: [V1XProfileImageFeaComponent],
   templateUrl: './core-x-profile-image.component.html',
   styleUrl: './core-x-profile-image.component.scss',
 })

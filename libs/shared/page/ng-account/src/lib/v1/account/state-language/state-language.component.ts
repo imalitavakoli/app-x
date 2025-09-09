@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { V1TranslationsFeaComponent } from '@x/shared-feature-ng-translations';
@@ -17,11 +17,10 @@ import { TranslocoDirective } from '@jsverse/transloco';
   selector: 'x-state-language',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     V1TranslationsFeaComponent,
-    TranslocoDirective,
-  ],
+    TranslocoDirective
+],
   templateUrl: './state-language.component.html',
   styleUrls: ['./state-language.component.scss'],
 })

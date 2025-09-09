@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Subscription, exhaustMap, filter, of, take } from 'rxjs';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';
@@ -42,7 +42,7 @@ import { environment } from 'apps/ng-x-boilerplate-component/src/environments/en
 @Component({
   selector: 'x-core-initializer-v1',
   standalone: true,
-  imports: [CommonModule, V1PopupComponent],
+  imports: [V1PopupComponent],
   templateUrl: './core-initializer.component.html',
   styleUrls: ['./core-initializer.component.scss'],
 })

@@ -22,12 +22,7 @@ import { V1CurrencyPipe } from '@x/shared-ui-ng-pipes';
 @Component({
   selector: 'x-x-profile-info-v1',
   standalone: true,
-  imports: [
-    CommonModule,
-    AngularSvgIconModule,
-    TranslocoDirective,
-    V1CurrencyPipe,
-  ],
+  imports: [CommonModule, AngularSvgIconModule, V1CurrencyPipe],
   templateUrl: './x-profile-info.component.html',
   styleUrl: './x-profile-info.component.scss',
 })

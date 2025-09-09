@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonNavLink } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'x-ionic-nav-link-v1',
   standalone: true,
-  imports: [IonNavLink, CommonModule],
+  imports: [IonNavLink],
   templateUrl: './ionic-nav-link.component.html',
   styleUrl: './ionic-nav-link.component.scss',
 })

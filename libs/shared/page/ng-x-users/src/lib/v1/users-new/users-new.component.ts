@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 
 import { V2BasePageChildExtXUsersComponent } from '@x/shared-util-ng-bases';
@@ -8,7 +8,7 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 @Component({
   selector: 'x-x-users-new-page-v1',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './users-new.component.html',
   styleUrls: ['./users-new.component.scss'],
 })

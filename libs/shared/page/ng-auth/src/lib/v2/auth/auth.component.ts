@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   OnInit,
   ViewChild,
@@ -29,10 +30,17 @@ import { IonContent } from '@ionic/angular/standalone';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })
-export class V2AuthPageComponent implements OnInit {
-  @ViewChild('template', { read: ViewContainerRef }) tpl!: ViewContainerRef;
+export class V2AuthPageComponent implements AfterViewInit {
+  @ViewChild('templateDesktop', { read: ViewContainerRef })
+  tpl_desktop!: ViewContainerRef;
+  @ViewChild('templateMobile', { read: ViewContainerRef })
+  tpl_mobile!: ViewContainerRef;
+  tpl!: ViewContainerRef;
+
   readonly configFacade = inject(V2ConfigFacade);
-  readonly capacitorCoreService = inject(V1CapacitorCoreService);
+  private readonly _capacitorCoreService = inject(V1CapacitorCoreService);
+
+  platform: 'ios' | 'android' | 'desktop' = 'desktop';
 
   private _template!: 'classic' | 'aligator';
 
@@ -40,7 +48,13 @@ export class V2AuthPageComponent implements OnInit {
   /* Lifecycle                                                                */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    // Understand what is the platform that app is running on.
+    this.platform = this._capacitorCoreService.getPlatform();
+
+    // Define the template container based on platform.
+    this.tpl = this.platform === 'desktop' ? this.tpl_desktop : this.tpl_mobile;
+
     this.configFacade.dataConfigDep$.pipe(take(1)).subscribe((data) => {
       data = data as V2Config_MapDep; // We are already sure DEP config is loaded.
 

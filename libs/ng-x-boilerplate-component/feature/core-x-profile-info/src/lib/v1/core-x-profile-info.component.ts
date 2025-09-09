@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { take } from 'rxjs';
 
 import { V1BaseCoreComponent } from '@x/ng-x-boilerplate-component-util-bases';
@@ -8,7 +8,7 @@ import { V1XProfileInfoFeaComponent } from '@x/shared-feature-ng-x-profile-info'
 @Component({
   selector: 'x-core-x-profile-info-v1',
   standalone: true,
-  imports: [CommonModule, V1XProfileInfoFeaComponent],
+  imports: [V1XProfileInfoFeaComponent],
   templateUrl: './core-x-profile-info.component.html',
   styleUrl: './core-x-profile-info.component.scss',
 })
