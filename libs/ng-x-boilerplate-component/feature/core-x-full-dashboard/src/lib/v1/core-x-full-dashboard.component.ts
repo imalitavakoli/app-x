@@ -25,7 +25,6 @@ import { V1XProfileInfoFeaComponent } from '@x/shared-feature-ng-x-profile-info'
   standalone: true,
   imports: [
     CommonModule,
-    TranslocoDirective,
     V1XUsersFeaComponent,
     V1XProfileImageFeaComponent,
     V1XProfileInfoFeaComponent,
