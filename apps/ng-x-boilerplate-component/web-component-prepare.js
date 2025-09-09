@@ -158,7 +158,7 @@ function editIndexHtmlCss(directory, prefix = 'x') {
 
 function deleteAssetFolders(directory, prefix = 'x') {
   const assetsPath = path.join(directory, `${prefix}-assets`);
-  const foldersToDelete = ['icons', 'i18n'];
+  const foldersToDelete = ['icons'];
 
   foldersToDelete.forEach((folderName) => {
     const folderPath = path.join(assetsPath, folderName);
