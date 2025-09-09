@@ -4,7 +4,8 @@
   "description": "AppX is created via NX! An Xtensible, Xtendable, Xpandable Monorepo.",
   "license": "Copyright (c) 2025 Ali Tavakoli",
   "scripts": {
-    "prepare-build": "node ./tools/automations/prepare-build/prepare-build.js"
+    "prepare-build": "node ./tools/automations/prepare-build/prepare-build.js",
+    "postinstall": "electron-builder install-app-deps"
   },
   "private": true,
   "dependencies": {
