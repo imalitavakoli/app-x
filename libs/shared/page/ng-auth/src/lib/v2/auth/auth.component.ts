@@ -30,7 +30,7 @@ import { IonContent } from '@ionic/angular/standalone';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })
-export class V2AuthPageComponent implements AfterViewInit {
+export class V2AuthPageComponent implements OnInit, AfterViewInit {
   @ViewChild('templateDesktop', { read: ViewContainerRef })
   tpl_desktop!: ViewContainerRef;
   @ViewChild('templateMobile', { read: ViewContainerRef })
@@ -48,10 +48,15 @@ export class V2AuthPageComponent implements AfterViewInit {
   /* Lifecycle                                                                */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     // Understand what is the platform that app is running on.
+    // NOTE: Platform detection should happen before our Template reference is
+    // created in the DOM, so that the IF statement in HTML can directly read
+    // the correct block.
     this.platform = this._capacitorCoreService.getPlatform();
+  }
 
+  ngAfterViewInit(): void {
     // Define the template container based on platform.
     this.tpl = this.platform === 'desktop' ? this.tpl_desktop : this.tpl_mobile;
 
