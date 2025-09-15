@@ -23,6 +23,7 @@ dependencies {
     implementation project(':capacitor-firebase-analytics')
     implementation project(':capacitor-firebase-remote-config')
     implementation project(':capawesome-capacitor-android-edge-to-edge-support')
+    implementation project(':capawesome-capacitor-live-update')
 
 }
 
