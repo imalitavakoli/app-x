@@ -42,6 +42,7 @@ import { environment } from '../environments/environment';
 export class AppComponent implements OnInit {
   /* General //////////////////////////////////////////////////////////////// */
 
+  private readonly _platformId = inject(PLATFORM_ID);
   private readonly _route = inject(ActivatedRoute);
   private readonly _destroyRef = inject(DestroyRef);
   isBrowser = false;
@@ -63,7 +64,7 @@ export class AppComponent implements OnInit {
   /* constructor                                                              */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  constructor(@Inject(PLATFORM_ID) private _platformId: object) {
+  constructor() {
     this.isBrowser = isPlatformBrowser(this._platformId);
   }
 
