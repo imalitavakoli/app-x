@@ -45,6 +45,8 @@ When migrating the workspace, not all dependencies in the `package.json` file ma
 - **Tailwindcss related updates**: Whenever updating `tailwindcss`, it's worthy to also update `tailwindcss-scoped-preflight`, `prettier-plugin-tailwindcss`, `@tailwindcss/forms`, and `daisyui`.
 - **Transloco related updates**: Whenever updating `@jsverse/transloco`, it's worthy to also update `@jsverse/transloco-keys-manager`.
 
+**Note!** Of course, after updating dependency packages to their latest versions (such as Capacitor or TailwindCSS), you should also review their '_Upgrade Guides_'. This will help you identify any required changes in related workspace files and be aware of potential breaking changes.
+
 &nbsp;
 
 [🔝](#available-commands-🏃)
