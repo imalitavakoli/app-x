@@ -1,6 +1,6 @@
-require_relative '../../../../node_modules/.pnpm/@capacitor+ios@6.2.1_@capacitor+core@6.2.1/node_modules/@capacitor/ios/scripts/pods_helpers'
+require_relative '../../../../node_modules/.pnpm/@capacitor+ios@7.4.3_@capacitor+core@7.4.3/node_modules/@capacitor/ios/scripts/pods_helpers'
 
-platform :ios, '13.0'
+platform :ios, '14.0'
 use_frameworks!
 
 # workaround to avoid Xcode caching of Pods that requires
@@ -9,22 +9,22 @@ use_frameworks!
 install! 'cocoapods', :disable_input_output_paths => true
 
 def capacitor_pods
-  pod 'Capacitor', :path => '../../../../node_modules/.pnpm/@capacitor+ios@6.2.1_@capacitor+core@6.2.1/node_modules/@capacitor/ios'
-  pod 'CapacitorCordova', :path => '../../../../node_modules/.pnpm/@capacitor+ios@6.2.1_@capacitor+core@6.2.1/node_modules/@capacitor/ios'
-  pod 'CapacitorApp', :path => '../../../../node_modules/.pnpm/@capacitor+app@6.0.2_@capacitor+core@6.2.1/node_modules/@capacitor/app'
-  pod 'CapacitorAppLauncher', :path => '../../../../node_modules/.pnpm/@capacitor+app-launcher@6.0.3_@capacitor+core@6.2.1/node_modules/@capacitor/app-launcher'
-  pod 'CapacitorBrowser', :path => '../../../../node_modules/.pnpm/@capacitor+browser@6.0.5_@capacitor+core@6.2.1/node_modules/@capacitor/browser'
-  pod 'CapacitorDevice', :path => '../../../../node_modules/.pnpm/@capacitor+device@6.0.2_@capacitor+core@6.2.1/node_modules/@capacitor/device'
-  pod 'CapacitorFilesystem', :path => '../../../../node_modules/.pnpm/@capacitor+filesystem@6.0.3_@capacitor+core@6.2.1/node_modules/@capacitor/filesystem'
-  pod 'CapacitorHaptics', :path => '../../../../node_modules/.pnpm/@capacitor+haptics@6.0.2_@capacitor+core@6.2.1/node_modules/@capacitor/haptics'
-  pod 'CapacitorKeyboard', :path => '../../../../node_modules/.pnpm/@capacitor+keyboard@6.0.3_@capacitor+core@6.2.1/node_modules/@capacitor/keyboard'
-  pod 'CapacitorPreferences', :path => '../../../../node_modules/.pnpm/@capacitor+preferences@6.0.3_@capacitor+core@6.2.1/node_modules/@capacitor/preferences'
-  pod 'CapacitorPushNotifications', :path => '../../../../node_modules/.pnpm/@capacitor+push-notifications@6.0.4_@capacitor+core@6.2.1/node_modules/@capacitor/push-notifications'
-  pod 'CapacitorShare', :path => '../../../../node_modules/.pnpm/@capacitor+share@6.0.3_@capacitor+core@6.2.1/node_modules/@capacitor/share'
-  pod 'CapacitorStatusBar', :path => '../../../../node_modules/.pnpm/@capacitor+status-bar@6.0.2_@capacitor+core@6.2.1/node_modules/@capacitor/status-bar'
-  pod 'CapacitorFirebaseAnalytics', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+analytics@6.3.1_@capacitor+core@6.2.1_firebase@10.14.1/node_modules/@capacitor-firebase/analytics'
-  pod 'CapacitorFirebaseRemoteConfig', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+remote-config@6.3.1_@capacitor+core@6.2.1_firebase@10.14.1/node_modules/@capacitor-firebase/remote-config'
-  pod 'CapacitorPluginAppTrackingTransparency', :path => '../../../../node_modules/.pnpm/capacitor-plugin-app-tracking-transparency@2.0.5_@capacitor+core@6.2.1/node_modules/capacitor-plugin-app-tracking-transparency'
+  pod 'Capacitor', :path => '../../../../node_modules/.pnpm/@capacitor+ios@7.4.3_@capacitor+core@7.4.3/node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../../../node_modules/.pnpm/@capacitor+ios@7.4.3_@capacitor+core@7.4.3/node_modules/@capacitor/ios'
+  pod 'CapacitorApp', :path => '../../../../node_modules/.pnpm/@capacitor+app@7.1.0_@capacitor+core@7.4.3/node_modules/@capacitor/app'
+  pod 'CapacitorAppLauncher', :path => '../../../../node_modules/.pnpm/@capacitor+app-launcher@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/app-launcher'
+  pod 'CapacitorBrowser', :path => '../../../../node_modules/.pnpm/@capacitor+browser@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/browser'
+  pod 'CapacitorDevice', :path => '../../../../node_modules/.pnpm/@capacitor+device@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/device'
+  pod 'CapacitorFilesystem', :path => '../../../../node_modules/.pnpm/@capacitor+filesystem@7.1.4_@capacitor+core@7.4.3/node_modules/@capacitor/filesystem'
+  pod 'CapacitorHaptics', :path => '../../../../node_modules/.pnpm/@capacitor+haptics@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/haptics'
+  pod 'CapacitorKeyboard', :path => '../../../../node_modules/.pnpm/@capacitor+keyboard@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/keyboard'
+  pod 'CapacitorPreferences', :path => '../../../../node_modules/.pnpm/@capacitor+preferences@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/preferences'
+  pod 'CapacitorPushNotifications', :path => '../../../../node_modules/.pnpm/@capacitor+push-notifications@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/push-notifications'
+  pod 'CapacitorShare', :path => '../../../../node_modules/.pnpm/@capacitor+share@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/share'
+  pod 'CapacitorStatusBar', :path => '../../../../node_modules/.pnpm/@capacitor+status-bar@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/status-bar'
+  pod 'CapacitorFirebaseAnalytics', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+analytics@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/analytics'
+  pod 'CapacitorFirebaseRemoteConfig', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+remote-config@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/remote-config'
+  pod 'CapacitorPluginAppTrackingTransparency', :path => '../../../../node_modules/.pnpm/capacitor-plugin-app-tracking-transparency@2.0.5_@capacitor+core@7.4.3/node_modules/capacitor-plugin-app-tracking-transparency'
 end
 
 target 'App' do

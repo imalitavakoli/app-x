@@ -17,7 +17,9 @@
     "@capacitor/status-bar": "../../node_modules/@capacitor/status-bar",
     "@capacitor-firebase/analytics": "../../node_modules/@capacitor-firebase/analytics",
     "@capacitor-firebase/remote-config": "../../node_modules/@capacitor-firebase/remote-config",
-    "capacitor-plugin-app-tracking-transparency": "../../node_modules/capacitor-plugin-app-tracking-transparency"
+    "capacitor-plugin-app-tracking-transparency": "../../node_modules/capacitor-plugin-app-tracking-transparency",
+    "@capawesome/capacitor-android-edge-to-edge-support": "../../node_modules/@capawesome/capacitor-android-edge-to-edge-support",
+    "@capawesome/capacitor-live-update": "../../node_modules/@capawesome/capacitor-live-update"
   },
   "devDependencies": {
     "@capacitor/cli": "../../node_modules/@capacitor/cli"

@@ -113,6 +113,9 @@ importers:
       '@capacitor/status-bar':
         specifier: ^7.0.2
         version: 7.0.3(@capacitor/core@7.4.3)
+      '@capawesome/capacitor-android-edge-to-edge-support':
+        specifier: ^7.2.3
+        version: 7.2.3(@capacitor/core@7.4.3)
       '@capawesome/capacitor-live-update':
         specifier: ^7.2.1
         version: 7.2.2(@capacitor/core@7.4.3)
@@ -1610,6 +1613,11 @@ packages:
 
   '@capacitor/synapse@1.0.4':
     resolution: {integrity: sha512-/C1FUo8/OkKuAT4nCIu/34ny9siNHr9qtFezu4kxm6GY1wNFxrCFWjfYx5C1tUhVGz3fxBABegupkpjXvjCHrw==}
+
+  '@capawesome/capacitor-android-edge-to-edge-support@7.2.3':
+    resolution: {integrity: sha512-WtwXeU5Clg13t3SO6JvtIfJlpO+E48tHC+vNmC519zcS6GV9URl705UOvwOOvEyh6GFxAi2dHi8lj8iqIOYCdA==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
 
   '@capawesome/capacitor-live-update@7.2.2':
     resolution: {integrity: sha512-38fltILlpVFofY+Bz9yYXz/fl/zmKxa5F/goXmmpY+DfkfJvhFbWj92yqvRI2GhlDKbOxNyCoc9p8zYztYM4dQ==}
@@ -13274,6 +13282,10 @@ snapshots:
       '@capacitor/core': 7.4.3
 
   '@capacitor/synapse@1.0.4': {}
+
+  '@capawesome/capacitor-android-edge-to-edge-support@7.2.3(@capacitor/core@7.4.3)':
+    dependencies:
+      '@capacitor/core': 7.4.3
 
   '@capawesome/capacitor-live-update@7.2.2(@capacitor/core@7.4.3)':
     dependencies:
