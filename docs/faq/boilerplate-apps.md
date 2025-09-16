@@ -176,6 +176,11 @@ What Capacitor sync process does basically? It puts the latest build web files (
 
 **Utilize `ngZone`:** When dealing with Capacitor plugins (in '_util_' libs most of the times), it's recommended to utilize `ngZone` when listening to plugin's events. [Click here](https://capacitorjs.com/docs/guides/angular) to read more.
 
+**Firebase-Analytics:** If we like to implement firebase-analytics for our app to track user's activities (log events when user is interacting with the UI in different libs), in our [Firebase Console](https://console.firebase.google.com/), we should (1) add a project and add iOS/Android app, (2) enter app's package name ('_Android package name_' or '_iOS bundle ID_' that is mentioned in in `apps/{app-name}/capacitor.config.ts` file) or optionally more info about our app, (3) register our app. Eventually, `google-services` file should be created and placed somewhere in our native projects. [Click here](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics) to read more.
+
+- **In Android, disable 'Analytics data collection' & 'Advertising ID collection':** In `apps/{app-name}/android/app/src/main/AndroidManifest.xml` file, define `firebase_analytics_collection_enabled` & `google_analytics_adid_collection_enabled` to false. In this way, you're disabling 'Analytics collection' & 'personalized advertising behavior' by default in the native Android app. Then whenever you collect the end-user consent, you can enable them in the app codes.
+- **In iOS, disable 'Analytics data collection':** In `apps/{app-name}/ios/App/App/Info.plist` file, define `FIREBASE_ANALYTICS_COLLECTION_ENABLED` to false. In this way, you're disabling 'Analytics collection' by default in the native iOS app. Then whenever you collect the end-user consent, you can enable them in the app codes.
+
 **Deep-linking:** If we like to implement deep-linking for our app to let `app.component.ts` understand where to route the user, when the native app is opened after a deep link is clicked... We should listen for the `appUrlOpen` event. [Click here](https://capacitorjs.com/docs/guides/deep-links#deep-link-routing-using-the-capacitor-app-api) to read more.
 
 &nbsp;
