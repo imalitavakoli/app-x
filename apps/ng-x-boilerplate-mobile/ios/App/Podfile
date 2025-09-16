@@ -30,15 +30,18 @@ end
 
 target 'App' do
   capacitor_pods
-  # Add manual Pods here
+  # Add your Pods here
   pod 'FirebaseMessaging'
 
-  # pre_install will update the path value and uncomment this line.
-  # It is important to keep this line commented to begin with or the
-  # Ruby script is not able to edit it  - I don't know why but this works and it's fine -
-  # If running locally and versions don't match, simply comment the below line and allow
-  # the Ruby script fix it for you.
-#   pod 'CapacitorFirebaseAnalytics/AnalyticsWithoutAdIdSupport', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+analytics@6.3.1_@capacitor+core@6.2.1_firebase@10.14.1/node_modules/@capacitor-firebase/analytics'
+  # https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics#ios
+  # NOTE: Shall we have `AnalyticsWithoutAdIdSupport` or `Analytics`? Well, 
+  # `AnalyticsWithoutAdIdSupport` is required, if you're NOT going to show ads 
+  # in your app by using Google AdMob or other ad networks; and `Analytics` is
+  # required, if you are going to show ads in your app :)
+  # NOTE: If you're going to add the Pod by an automation tool, feel free to
+  # comment the Pod that is added manually here.
+  pod 'CapacitorFirebaseAnalytics/Analytics', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+analytics@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/analytics'
+  # pod 'CapacitorFirebaseAnalytics/AnalyticsWithoutAdIdSupport', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+analytics@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/analytics'
 end
 
 pre_install do |installer|

@@ -75,9 +75,9 @@
   	</dict>
   </array>
 
-  <!-- https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics#disable-analytics-data-collection-1 -->
+	<!-- https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics#ios -->
   <key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
-  <false/>
+  <true/>
 
 	<!-- https://capacitorjs.com/docs/apis/filesystem -->
   <key>UIFileSharingEnabled</key>
