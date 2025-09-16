@@ -121,15 +121,17 @@ Then we ran the following commands to install some Capacitor plugins:
 
 Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that they are installed, even if we don't import them in our app! Because Ionic itself makes use of them. [Click here](https://capacitorjs.com/docs/getting-started/with-ionic#install-capacitor-plugin-dependencies) to read more.
 
-- Ran `pnpm add @capacitor/preferences` to install [Preferences](https://capacitorjs.com/docs/apis/preferences) plugin.
-- Ran `pnpm add @capacitor/push-notifications` to install [Push-notifications](https://capacitorjs.com/docs/apis/push-notifications) plugin.
-- Ran `pnpm add @capacitor/browser` to install [Browser](https://capacitorjs.com/docs/apis/browser) plugin.
+- Ran `pnpm add @capacitor/preferences` to install [preferences](https://capacitorjs.com/docs/apis/preferences) plugin.
+- Ran `pnpm add @capacitor/push-notifications` to install [push-notifications](https://capacitorjs.com/docs/apis/push-notifications) plugin.
+- Ran `pnpm add @capacitor/browser` to install [browser](https://capacitorjs.com/docs/apis/browser) plugin.
 - Ran `pnpm add @capacitor/app-launcher` to install [app-launcher](https://capacitorjs.com/docs/apis/app-launcher) plugin.
 - Ran `pnpm add @capacitor/filesystem` to install [filesystem](https://capacitorjs.com/docs/apis/filesystem) plugin.
 - Ran `pnpm add @capacitor/share` to install [share](https://capacitorjs.com/docs/apis/share) plugin.
-- Ran `pnpm add @capacitor-firebase/analytics` to install [Firebase-analytics](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics) plugin.
-- Ran `pnpm add @capacitor-firebase/remote-config` to install [Firebase-remote-config](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config) plugin.
+- Ran `pnpm add @capacitor-firebase/analytics` to install [firebase-analytics](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics) plugin.
+- Ran `pnpm add @capacitor-firebase/remote-config` to install [firebase-remote-config](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config) plugin.
 - Ran `pnpm add capacitor-plugin-app-tracking-transparency` to install [iOS-att](https://github.com/mahnuh/capacitor-plugin-app-tracking-transparency) plugin.
+- Ran `pnpm add @capawesome/capacitor-android-edge-to-edge-support` to install [android-edge-to-edge](https://capawesome.io/plugins/android-edge-to-edge-support/) plugin
+- Ran `pnpm add @capawesome/capacitor-live-update` to install [live-update](https://capawesome.io/plugins/live-update/) plugin
 
 After installing the plugins, we modified `package.json` file inside of the app's folder to mention each one those plugins in it by referring to their installed global package at the root of the workspace. Basically Capacitor temporarily installs these plugins in the app folder to start its sync process, and then deletes them as soon as it finishes.
 
