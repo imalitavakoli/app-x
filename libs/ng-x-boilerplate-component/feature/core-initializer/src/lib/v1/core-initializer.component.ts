@@ -320,7 +320,8 @@ export class V1CoreInitializerComponent
   private _initAfterAuth() {
     // Let's initialize the Tracking Service if `trackActivity` input is defined.
     if (this.trackActivity === 'true') {
-      this._trackingService.prepare(this._appVersion);
+      this._trackingService.prepare(environment.version);
+      this._trackingService.initOrUpdate(['feedbacks', 'analytics']);
     }
   }
 
