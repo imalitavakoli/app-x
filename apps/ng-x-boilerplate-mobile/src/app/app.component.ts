@@ -227,11 +227,8 @@ export class AppComponent implements OnInit {
   }
 
   private _initTracking(): void {
-    // NOTE: We don't need to call the `init` method of the service individually
-    // here after `prepare`! Because the service itself understands that if the
-    // `consentsTracking` property is NOT truthy in the DEP config, then it
-    // should initialize the tracking services.
     this._trackingService.prepare(environment.version);
+    this._trackingService.initOrUpdate(['feedbacks', 'analytics']);
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
