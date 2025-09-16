@@ -35,7 +35,7 @@ export class V1TrackingService {
 
   private _dataConfigDep!: V2Config_MapDep;
   private _dataConfigFirebase!: V2Config_MapFirebase;
-  private _userId!: number;
+  private _userId?: number;
 
   private _appVersion = '0.0.0';
 
@@ -44,14 +44,17 @@ export class V1TrackingService {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
-   * Prepare the tracking service. This method itself will also call the
-   * `initOrUpdate` method.
+   * Prepare the tracking service.
    *
    * NOTE: MUST be called BEFORE calling `initOrUpdate`.
    *
    * NOTE: It will be called in `app.component.ts` of the app (after user logs in).
    *
-   * NOTE: This method can be called multiple times!
+   * NOTE: This method can be called multiple times! If it's called before user
+   * login, it only collects (prepares) DEP and Firebase configs. If it's called
+   * after user login, it also collects user's ID, which can be used by different
+   * tracking 3rd-party services, (such as Firebase Analytics) to collect more
+   * user-specific data.
    *
    * @param {string} appVersion
    */
@@ -76,23 +79,12 @@ export class V1TrackingService {
           return this._authFacade.authState$;
         }),
         take(1),
-        filter((state) => {
-          // Don't continue, if user was not logged in.
-          if (!state.datas?.getToken?.userId) {
-            console.log(
-              '@V1TrackingService/prepare: User MUST already be authenticated before calling this fun.',
-            );
-            return false;
-          }
-          return true;
-        }),
       )
       .subscribe((state) => {
         // Save required data.
-        this._userId = state.datas.getToken?.userId as number;
-
-        // Now we have everything we need to init the tracking services.
-        this.initOrUpdate(['feedbacks', 'analytics']);
+        if (state.datas.getToken?.userId) {
+          this._userId = state.datas.getToken?.userId;
+        }
       });
   }
 
@@ -101,14 +93,12 @@ export class V1TrackingService {
    *
    * NOTE: MUST be called BEFORE calling `logEvent`.
    *
-   * NOTE: It will be called by the 'consent' lib's output handler in
-   * `app.component.ts` of the app (after user logs in), where the 'consent' lib
-   * is initialized actually.
-   *
    * NOTE: This method can be called multiple times! First time, it initializes
-   * the tracking services, and the next times, it updates the tracking
-   * services... Mostly useful, when a user logs out, and another user logs in
-   * to the app (with another user ID) in the very same app session.
+   * the tracking services (even if user in not login yet), and the next times,
+   * it updates the tracking services... Mostly useful, to update the services
+   * with the user's ID (whenever she is logged in or when the previous logged
+   * in user logs out, and another user logs in to the app in the very same
+   * app session).
    *
    * @param {TrackingType[]} types
    */
@@ -184,7 +174,7 @@ export class V1TrackingService {
     if (!this.isInitApptentive) return;
 
     // Update...
-    this.apptentiveService.identifyPerson(this._userId);
+    if (this._userId) this.apptentiveService.identifyPerson(this._userId);
   }
 
   /* Firebase /////////////////////////////////////////////////////////////// */
@@ -213,7 +203,7 @@ export class V1TrackingService {
     if (!this.isInitFirebase) return;
 
     // Update...
-    this.firebaseService.analyticsSetUserId(this._userId);
+    if (this._userId) this.firebaseService.analyticsSetUserId(this._userId);
   }
 
   /* GoogleAnalytics //////////////////////////////////////////////////////// */

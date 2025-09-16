@@ -18,16 +18,18 @@ import { environment } from 'apps/ng-appname/src/environments/environment';
 import { V1TrackingService } from '@x/shared-util-ng-services';
 private readonly _trackingService = inject(V1TrackingService);
 
-// Prepare the service in `app.component.ts` of the app (after user logs in).
-// NOTE: This method itself will also call the `initOrUpdate` method ONLY IF the
-// `consentsTracking` property is NOT truthy in the DEP config (which is not
-// truthy by default).
+// Prepare the service in `app.component.ts` of the app.
+// NOTE: This method can be called multiple times! If it's called before user
+// login, it only collects (prepares) DEP and Firebase configs. If it's called
+// after user login, it also collects user's ID, which can be used by different
+// tracking 3rd-party services, (such as Firebase Analytics) to collect more
+// user-specific data.
 this._trackingService.prepare(environment.version);
 
 // Init tracking related services.
-// NOTE: This method MUST be called by the 'consent' lib's output handler in
-// `app.component.ts` of the app... Of course if the 'consent' lib itself (its
-// tracking view) is supposed to be initialized in the app.
+// NOTE: If you are collecting Consents from the end-user, then this method
+// MUST be called, after that the user gives Consents to allow the app to track
+// her activities.
 this._trackingService.initOrUpdate(['feedbacks', 'analytics']);
 
 // Log custom events to Apptentive & Firebase.
