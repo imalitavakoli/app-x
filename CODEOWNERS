@@ -91,6 +91,7 @@
 /libs/shared/util/ng-capacitor/src/lib/capacitor-att-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-browser-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-core-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-firebase-analytics-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-notification-v1/ @Ali
 /libs/shared/util/ng-services/src/lib/apptentive-v1/ @Ali
 /libs/shared/util/ng-services/src/lib/auth-auto-v1/ @Ali
