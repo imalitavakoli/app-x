@@ -6,8 +6,9 @@ import { V1HtmlEditorService } from '../html-editor-v1/html-editor.service';
 import { FirebaseConfig } from './firebase.interfaces';
 
 /**
- * In this service, we provide the Firebase services.
- * Firebase can be initialized in different ways:
+ * In this service, we provide the Firebase services. Such as Analytics.
+ *
+ * It can be initialized in different ways:
  *
  * 1. By using `@angular/fire` package and its new tree-shakable API.
  *    Read more: https://github.com/angular/angularfire/blob/main/docs/analytics.md
@@ -81,7 +82,7 @@ import { FirebaseConfig } from './firebase.interfaces';
  * }
  * ```
  *
- * 3. By using the official Firebase  JS SDK itself, which is what we are doing
+ * 3. By using the official Firebase JS SDK itself, which is what we are doing
  * here. Why? Because we like to easily provide the Firebase configuration
  * dynamically, which is not supported by `@angular/fire` package (at least not
  * currently).
@@ -106,6 +107,13 @@ export class V1FirebaseService {
   /* Methods                                                                  */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  /**
+   * Initialize Firebase service by using the official Firebase JS SDK which is
+   * installed in the workspace via the npm package.
+   *
+   * @param {FirebaseConfig} config
+   * @param {boolean} [isDebug=false]
+   */
   init(config: FirebaseConfig, isDebug = false) {
     // Init Firebase.
     const app = firebase.initializeApp(config);
@@ -114,6 +122,8 @@ export class V1FirebaseService {
     // Init Firebase Analytics.
     this._analytics = fireAnalytics.getAnalytics(app);
   }
+
+  /* Analytics ////////////////////////////////////////////////////////////// */
 
   analyticsLogEvent(name: string, data: any = undefined) {
     fireAnalytics.logEvent(this._analytics, name, data);
@@ -135,9 +145,16 @@ export class V1FirebaseService {
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* Methods: By CDN                                                          */
+  /* By CDN: Methods                                                          */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  /**
+   * Initialize Firebase service by using the official Firebase CDN which we are
+   * directly importing in `index.html` file of our app.
+   *
+   * @param {FirebaseConfig} config
+   * @param {boolean} [isDebug=false]
+   */
   initByCdn(config: FirebaseConfig, isDebug = false) {
     V1HtmlEditorService.insertScript(
       `
@@ -158,6 +175,8 @@ export class V1FirebaseService {
       false,
     );
   }
+
+  /* Analytics ////////////////////////////////////////////////////////////// */
 
   analyticsLogEventByCdn(name: string, data: any = undefined) {
     const w = window as any;
@@ -184,6 +203,8 @@ export class V1FirebaseService {
   /* //////////////////////////////////////////////////////////////////////// */
   /* Useful                                                                   */
   /* //////////////////////////////////////////////////////////////////////// */
+
+  /* Analytics ////////////////////////////////////////////////////////////// */
 
   private _analyticsAutoScreenTracking(isCdn = false) {
     this._router.events.subscribe((event) => {
