@@ -5,6 +5,10 @@ import { V2Config_MapDep, V2Config_MapFirebase } from '@x/shared-map-ng-config';
 import { V2ConfigFacade } from '@x/shared-api-data-access-ng-config';
 import { V1AuthFacade } from '@x/shared-api-data-access-ng-auth';
 import { V1HtmlEditorService } from '../html-editor-v1/html-editor.service';
+import {
+  V1CapacitorCoreService,
+  V1CapacitorFirebaseAnalyticsService,
+} from '@x/shared-util-ng-capacitor';
 import { V1ApptentiveService } from '../apptentive-v1/apptentive.service';
 import { V1FirebaseService } from '../firebase-v1/firebase.service';
 
@@ -26,9 +30,16 @@ export class V1TrackingService {
   private readonly _configFacade = inject(V2ConfigFacade);
   private readonly _authFacade = inject(V1AuthFacade);
 
+  private readonly _capacitorCoreService = inject(V1CapacitorCoreService);
+  readonly capacitorFirebaseAnalyticsService = inject(
+    V1CapacitorFirebaseAnalyticsService,
+  );
   readonly apptentiveService = inject(V1ApptentiveService);
   readonly firebaseService = inject(V1FirebaseService);
 
+  private _platform: 'ios' | 'android' | 'desktop' = 'desktop';
+
+  isInitCapacitorFirebaseAnalytics = false;
   isInitApptentive = false;
   isInitFirebase = false;
   isInitGoogleAnalytics = false;
@@ -59,6 +70,9 @@ export class V1TrackingService {
    * @param {string} appVersion
    */
   prepare(appVersion: string) {
+    // Understand what is the platform that app is running on.
+    this._platform = this._capacitorCoreService.getPlatform();
+
     // Save required data.
     this._appVersion = appVersion;
 
@@ -108,7 +122,9 @@ export class V1TrackingService {
     }
 
     if (types.includes('analytics')) {
-      this._initFirebase();
+      if (this._platform !== 'desktop') this._initCapacitorFirebaseAnalytics();
+      else this._initFirebase();
+
       this._initGoogleAnalytics();
     }
   }
@@ -134,16 +150,45 @@ export class V1TrackingService {
       this.apptentiveService.engage(name, data);
     }
 
+    if (this.isInitCapacitorFirebaseAnalytics) {
+      this.capacitorFirebaseAnalyticsService.logEvent(name, data);
+    }
     if (this.isInitFirebase) {
       this.firebaseService.analyticsLogEvent(name, data);
     }
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* Funtions                                                                 */
+  /* Funtions: Capacitor plugin (Firebase-Analytics)                          */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  /* Apptentive ///////////////////////////////////////////////////////////// */
+  private _initCapacitorFirebaseAnalytics() {
+    // Call update once, and do not continue if already initialized.
+    this._updateCapacitorFirebaseAnalytics();
+    if (this.isInitCapacitorFirebaseAnalytics) return;
+
+    // init...
+    this.capacitorFirebaseAnalyticsService.autoScreenTracking();
+
+    // Set init flag to true, and call update again (to do the rest of the work,
+    // if the first update call couldn't do its job as we were not initialized
+    // yet).
+    this.isInitCapacitorFirebaseAnalytics = true;
+    this._updateCapacitorFirebaseAnalytics();
+  }
+
+  private _updateCapacitorFirebaseAnalytics() {
+    // Do not continue if already NOT initialized.
+    if (!this.isInitCapacitorFirebaseAnalytics) return;
+
+    // Update...
+    if (this._userId)
+      this.capacitorFirebaseAnalyticsService.setUserId(this._userId);
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Funtions: Apptentive                                                     */
+  /* //////////////////////////////////////////////////////////////////////// */
 
   private _initApptentive() {
     // Do not continue if NOT all requirements are set.
@@ -177,7 +222,9 @@ export class V1TrackingService {
     if (this._userId) this.apptentiveService.identifyPerson(this._userId);
   }
 
-  /* Firebase /////////////////////////////////////////////////////////////// */
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Funtions: Firebase                                                       */
+  /* //////////////////////////////////////////////////////////////////////// */
 
   private _initFirebase() {
     // Do not continue if NOT all requirements are set.
@@ -206,7 +253,9 @@ export class V1TrackingService {
     if (this._userId) this.firebaseService.analyticsSetUserId(this._userId);
   }
 
-  /* GoogleAnalytics //////////////////////////////////////////////////////// */
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Funtions: GoogleAnalytics                                                */
+  /* //////////////////////////////////////////////////////////////////////// */
 
   /**
    * Initialize Google Analytics.
