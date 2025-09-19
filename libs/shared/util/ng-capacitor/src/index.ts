@@ -1,3 +1,6 @@
+export * from './lib/capacitor-android-edge-to-edge-support-v1/capacitor-android-edge-to-edge-support.service';
+export * from './lib/capacitor-android-edge-to-edge-support-v1/capacitor-android-edge-to-edge-support.interfaces';
+
 export * from './lib/capacitor-att-v1/capacitor-att.service';
 export * from './lib/capacitor-att-v1/capacitor-att.interfaces';
 
