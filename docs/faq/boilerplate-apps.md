@@ -181,6 +181,11 @@ What Capacitor sync process does basically? It puts the latest build web files (
 - **In Android, disable 'Analytics data collection' & 'Advertising ID collection':** In `apps/{app-name}/android/app/src/main/AndroidManifest.xml` file, define `firebase_analytics_collection_enabled` & `google_analytics_adid_collection_enabled` to false. In this way, you're disabling 'Analytics collection' & 'personalized advertising behavior' by default in the native Android app. Then whenever you collect the end-user consent, you can enable them in the app codes.
 - **In iOS, disable 'Analytics data collection':** In `apps/{app-name}/ios/App/App/Info.plist` file, define `FIREBASE_ANALYTICS_COLLECTION_ENABLED` to false. In this way, you're disabling 'Analytics collection' by default in the native iOS app. Then whenever you collect the end-user consent, you can enable them in the app codes.
 
+**Firebase-Analytics testing:** To test and make sure that Firebase events are successfully being logged into Firebase console, you should introduce the app that for Firebase while you're running it in 'Android Studio' & 'Xcode' simulators:
+
+- For Android, run `adb shell setprop debug.firebase.analytics.app {APP ID}` and then run the app in simulator.
+- For iOS, in Xcode: Product > Scheme > Edit Scheme… > Run > Arguments. Under "Arguments Passed On Launch" add: `-FIRAnalyticsDebugEnabled` and then run the app in simulator.
+
 **Deep-linking:** If we like to implement deep-linking for our app to let `app.component.ts` understand where to route the user, when the native app is opened after a deep link is clicked... We should listen for the `appUrlOpen` event. [Click here](https://capacitorjs.com/docs/guides/deep-links#deep-link-routing-using-the-capacitor-app-api) to read more.
 
 &nbsp;
