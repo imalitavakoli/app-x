@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
 
+import { v1MiscMakeGA4ForPageNav } from '@x/shared-util-formatters';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -58,7 +60,7 @@ export class V1CapacitorFirebaseAnalyticsService {
   autoScreenTracking() {
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.logScreen(event.urlAfterRedirects);
+        this.logScreen(v1MiscMakeGA4ForPageNav(event.urlAfterRedirects));
       }
     });
   }

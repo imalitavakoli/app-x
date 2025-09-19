@@ -1,5 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+
+import { v1MiscMakeGA4ForPageNav } from '@x/shared-util-formatters';
+
 import { V1HtmlEditorService } from '../html-editor-v1/html-editor.service';
 
 /**
@@ -125,7 +128,7 @@ export class V1ApptentiveService {
   autoScreenTracking() {
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.engage(event.urlAfterRedirects);
+        this.engage(v1MiscMakeGA4ForPageNav(event.urlAfterRedirects));
       }
     });
   }

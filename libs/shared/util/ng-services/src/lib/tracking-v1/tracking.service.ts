@@ -136,11 +136,11 @@ export class V1TrackingService {
    *
    * NOTE: It will be called from the 'feature' libs most of the times.
    *
-   * NOTE: Event name schema for libs: `lib-name_event-name`.
-   * e.g., `advisory-card_init`, `advisory-card_clicked-advice`.
+   * NOTE: Event name should follow 'GA4' naming rules. schema is: `libName_eventName`.
+   * e.g., `advisoryCard_init`, `advisoryCard_clickedAdvice`.
    *
    * @example
-   * this._trackingService.logEvent('advisory-card_loaded-advice', { data: 'something' });
+   * this._trackingService.logEvent('advisoryCard_loadedAdvice', { data: 'something' });
    *
    * @param {string} name
    * @param {*} [data=undefined]

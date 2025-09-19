@@ -33,9 +33,12 @@ this._firebaseService.analyticsAutoScreenTracking();
 //
 // NOTE: 'feature' libs initialize this service and send events.
 //
-// NOTE: Event name schema for libs: `lib-name_event-name`.
-// e.g., `advisory-card_init`, `advisory-card_clicked-advice`.
-this._firebaseService.analyticsLogEvent('lib-name_init', {data: 'payload data'});
+// NOTE: Event name should follow 'GA4' naming rules. schema is: `libName_eventName`.
+// e.g., `advisoryCard_init`, `advisoryCard_clickedAdvice`.
+//
+// TIP: For page (screen) navigaion events, schema is: `navTo_pageName`.
+// e.g., `navTo_dashboard`.
+this._firebaseService.analyticsLogEvent('libName_init', {data: 'something'});
 
 // After that user logs in, set the user ID.
 //

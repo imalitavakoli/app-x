@@ -36,9 +36,12 @@ this._trackingService.initOrUpdate(['feedbacks', 'analytics']);
 //
 // NOTE: 'feature' libs initialize this service and send events.
 //
-// NOTE: Event name schema for libs: `lib-name_event-name`.
-// e.g., `advisory-card_init`, `advisory-card_clicked-advice`.
-this._trackingService.logEvent('lib-name_init', { data: 'something' });
+// NOTE: Event name should follow 'GA4' naming rules. schema is: `libName_eventName`.
+// e.g., `advisoryCard_init`, `advisoryCard_clickedAdvice`.
+//
+// TIP: For page (screen) navigaion events, schema is: `navTo_pageName`.
+// e.g., `navTo_dashboard`.
+this._trackingService.logEvent('libName_init', { data: 'something' });
 
 // Access the `apptentiveService` instance.
 // NOTE: `isInitApptentive` is true, if `initOrUpdate` with `'feedbacks'` type is already called.

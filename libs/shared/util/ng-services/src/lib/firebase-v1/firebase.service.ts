@@ -2,6 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import * as firebase from 'firebase/app';
 import * as fireAnalytics from 'firebase/analytics';
+
+import { v1MiscMakeGA4ForPageNav } from '@x/shared-util-formatters';
+
 import { V1HtmlEditorService } from '../html-editor-v1/html-editor.service';
 import { FirebaseConfig } from './firebase.interfaces';
 
@@ -209,8 +212,14 @@ export class V1FirebaseService {
   private _analyticsAutoScreenTracking(isCdn = false) {
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (!isCdn) this.analyticsLogScreen(event.urlAfterRedirects);
-        else this.analyticsLogScreenByCdn(event.urlAfterRedirects);
+        if (!isCdn)
+          this.analyticsLogScreen(
+            v1MiscMakeGA4ForPageNav(event.urlAfterRedirects),
+          );
+        else
+          this.analyticsLogScreenByCdn(
+            v1MiscMakeGA4ForPageNav(event.urlAfterRedirects),
+          );
       }
     });
   }
