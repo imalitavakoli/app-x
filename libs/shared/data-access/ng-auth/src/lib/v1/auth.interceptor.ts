@@ -19,6 +19,11 @@ import {
   take,
   throwError,
 } from 'rxjs';
+
+import {
+  V1CapacitorCoreService,
+  V1CapacitorCore_AppInfo,
+} from '@x/shared-util-ng-capacitor';
 import { V1AuthFacade } from './+state/auth.facade';
 import { Router, ActivatedRoute } from '@angular/router';
 import { V1Auth_MapGetToken } from '@x/shared-map-ng-auth';
@@ -29,10 +34,14 @@ import { V2Config_MapDep } from '@x/shared-map-ng-config';
 export class V1AuthInterceptor implements HttpInterceptor {
   private readonly _authFacade = inject(V1AuthFacade);
   private readonly _configFacade = inject(V2ConfigFacade);
+  private readonly _capacitorCoreService = inject(V1CapacitorCoreService);
+
   private _tokenData: V1Auth_MapGetToken | null = null;
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
 
+  private _deviceUuid?: string = undefined; // Desktop apps don't have a device UUID.
+  private _nativeAppInfo: V1CapacitorCore_AppInfo | null = null; // Desktop apps don't have a device UUID.
   private _isRefreshing = false;
   private _refreshTokenSubj: BehaviorSubject<unknown> =
     new BehaviorSubject<unknown>(null);
@@ -47,12 +56,25 @@ export class V1AuthInterceptor implements HttpInterceptor {
     // fetch user's preferred language) before calling any protected API
     // endpoints.
     // this._authFacade.checkIfAlreadyLoggedin();
+
+    // Get device UUID (if available).
+    this._capacitorCoreService.deviceGetId().then((deviceIdInfo) => {
+      if (deviceIdInfo) this._deviceUuid = deviceIdInfo?.identifier;
+    });
+
+    // Get some app info.
+    this._capacitorCoreService.appGetInfo().then((info) => {
+      if (info) this._nativeAppInfo = info;
+    });
   }
 
   intercept(
     req: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
+    // Attach some app-specific data to ALL requests that wanna leave our app.
+    req = this._attachAppInfo(req);
+
     // If the request is already `authentication/oauth/token`, it means that
     // we've already tried to refresh the token once... So instead of continuing
     // the code in the function, let's return refresh token URL request itself...
@@ -65,11 +87,12 @@ export class V1AuthInterceptor implements HttpInterceptor {
     // in months... And the days until expiration that we've stored in the
     // LocalStorage is out of date by now...
     if (req.url.includes('authentication/oauth/token')) {
-      return next.handle(req).pipe(
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        }),
-      );
+      // Let's also check if `req` has 'refresh_token' URL Query Param that is
+      // 'refresh_token'.
+      const urlParams = new URLSearchParams(req.url.split('?')[1]);
+      if (urlParams.get('grant_type') === 'refresh_token') {
+        return next.handle(req);
+      }
     }
 
     // Let's first start subscribing to our own `authState` observable
@@ -157,6 +180,40 @@ export class V1AuthInterceptor implements HttpInterceptor {
     // If we're here, it means that the URL didn't match any of the public URLs,
     // so it's not public.
     return false;
+  }
+
+  /**
+   * Attach some app-specific data to the request (as 'X-Xapp' custom headers)
+   * before it leaves our app.
+   *
+   * NOTE: The API that we're sending the request to, must allow such custom
+   * header via CORS configuration, otherwise the browser will block the
+   * custom header. Server can also accept such custom header from trusted
+   * origins (via `Access-Control-Allow-Origin`) only to avoid giving arbitrary
+   * sites/apps an API surface.
+   *
+   * NOTE: In this function we should also bear in mind that the custom data
+   * that we're sending in the header, must not be too large in size! Because
+   * different servers/proxies impose limits on header sizes (commonly 4–8 KB).
+   *
+   * @private
+   * @param {HttpRequest<unknown>} req
+   * @returns {*}
+   */
+  private _attachAppInfo(req: HttpRequest<unknown>) {
+    if (!this._nativeAppInfo) return req;
+
+    return req.clone({
+      setHeaders: {
+        'X-Xapp': JSON.stringify({
+          id: this._nativeAppInfo.id,
+          name: this._nativeAppInfo.name,
+          version: this._nativeAppInfo.version,
+          build: this._nativeAppInfo.build,
+          ...(this._deviceUuid ? { uuid: this._deviceUuid } : {}),
+        }),
+      },
+    });
   }
 
   /**
