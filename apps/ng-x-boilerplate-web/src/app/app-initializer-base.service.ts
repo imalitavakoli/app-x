@@ -284,7 +284,7 @@ export class AppInitializerBaseService {
               this._setAuthConfig(baseUrl);
 
               // Switch to the `authState$` Observable.
-              return this._authFacade.authState$.pipe(skip(3), take(1));
+              return this._authFacade.authState$.pipe(skip(4), take(1));
             }),
             exhaustMap((state) => {
               // Last `exhaustMap` was halted? straightly return here as well.
@@ -363,6 +363,8 @@ export class AppInitializerBaseService {
     this._authFacade.setProtectedInitialPath(
       environment.protected_initial_path,
     ); // Default: '/dashboard'
+    // Set the app version.
+    this._authFacade.setAppVersion(environment.version);
   }
 
   /** Helper function to define Translations facade config. */
