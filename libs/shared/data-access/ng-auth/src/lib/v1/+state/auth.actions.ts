@@ -52,6 +52,7 @@ export const AuthActions = createActionGroup({
 
     setPublicUrls: props<{ urls: string[] }>(),
     setProtectedInitialPath: props<{ path: string }>(),
+    setAppVersion: props<{ version: string }>(),
 
     checkIfAlreadyLoggedin: emptyProps(), // Check if we should auto login the user next time she visits.
     logout: emptyProps(),

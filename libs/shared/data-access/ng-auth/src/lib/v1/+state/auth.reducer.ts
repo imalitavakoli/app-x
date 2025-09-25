@@ -13,6 +13,7 @@ export const authFeatureKey = 'v1Auth';
 export interface V1Auth_State {
   publicUrls: string[];
   protectedInitialPath: string;
+  appVersion: string | undefined;
 
   loadedLatest: V1Auth_Loadeds;
   loadeds: V1Auth_Loadeds;
@@ -24,6 +25,7 @@ export interface V1Auth_State {
 export const initialState: V1Auth_State = {
   publicUrls: [],
   protectedInitialPath: '/dashboard',
+  appVersion: undefined,
 
   loadedLatest: {} as V1Auth_Loadeds,
   loadeds: {} as V1Auth_Loadeds,
@@ -161,6 +163,14 @@ export const v1AuthReducer = createReducer(
     (state, action): V1Auth_State => ({
       ...state,
       protectedInitialPath: action.path,
+    }),
+  ),
+
+  on(
+    AuthActions.setAppVersion,
+    (state, action): V1Auth_State => ({
+      ...state,
+      appVersion: action.version,
     }),
   ),
 

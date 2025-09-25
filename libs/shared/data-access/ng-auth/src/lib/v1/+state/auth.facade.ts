@@ -29,6 +29,7 @@ export class V1AuthFacade {
   protectedInitialPath$ = this._store.pipe(
     select(authFeature.selectProtectedInitialPath),
   );
+  appVersion$ = this._store.pipe(select(authFeature.selectAppVersion));
 
   loadedLatest$ = this._store.pipe(select(authFeature.selectLoadedLatest));
   loadeds$ = this._store.pipe(select(authFeature.selectLoadeds));
@@ -116,6 +117,21 @@ export class V1AuthFacade {
    */
   setProtectedInitialPath(path: string) {
     this._store.dispatch(AuthActions.setProtectedInitialPath({ path }));
+  }
+
+  /**
+   * Set the app version.
+   * It can be defined right at the initialization phase of the app, and be used
+   * later in different libs, page. e.g., it can be used in the interceptor to
+   * be attached to the `X-Xapp` custom header of each request.
+   *
+   * NOTE: App version can also be accessed from the app's environment file or
+   * CommunicationService (by the parent pages).
+   *
+   * @param {string} version
+   */
+  setAppVersion(version: string) {
+    this._store.dispatch(AuthActions.setAppVersion({ version }));
   }
 
   /**

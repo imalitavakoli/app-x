@@ -121,6 +121,9 @@ this._authFacade.setProtectedInitialPath(); // Default: '/dashboard'
 // or not to update the Auth state of the app. Based on this decision, user will
 // be redirected to the appropriate page in `app.routes.ts` file.
 this._authFacade.checkIfAlreadyLoggedin();
+
+// Set the app version.
+this._authFacade.setAppVersion('0.0.0');
 ```
 
 **Tip!** How to log the user out? Well, just dispatch `logout` action. Then user's token will be deleted from LocalStorage and we can redirect her to another page in the app (e.g., 'Home' page).

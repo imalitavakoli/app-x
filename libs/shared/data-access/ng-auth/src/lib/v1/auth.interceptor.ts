@@ -195,21 +195,35 @@ export class V1AuthInterceptor implements HttpInterceptor {
    * NOTE: In this function we should also bear in mind that the custom data
    * that we're sending in the header, must not be too large in size! Because
    * different servers/proxies impose limits on header sizes (commonly 4–8 KB).
+   * So size of this custom header shouldn't be more than 700-800 bytes at
+   * maximum.
    *
    * @private
    * @param {HttpRequest<unknown>} req
    * @returns {*}
    */
   private _attachAppInfo(req: HttpRequest<unknown>) {
-    if (!this._nativeAppInfo) return req;
+    // Get app version.
+    let appVersion: string | undefined = undefined;
+    this._authFacade.appVersion$.pipe(take(1)).subscribe((version) => {
+      appVersion = version;
+    });
 
+    // Don't manipulate the request if we don't have any app info to attach.
+    if (!this._nativeAppInfo && !this._deviceUuid && !appVersion) return req;
+
+    // If we're here, it means that we have at least one piece of app info to
+    // attach to the request. So let's attach them all (if available).
     return req.clone({
       setHeaders: {
         'X-Xapp': JSON.stringify({
-          id: this._nativeAppInfo.id,
-          name: this._nativeAppInfo.name,
-          version: this._nativeAppInfo.version,
-          build: this._nativeAppInfo.build,
+          ...(appVersion ? { xVersion: appVersion } : {}),
+          ...(this._nativeAppInfo ? { id: this._nativeAppInfo.id } : {}),
+          ...(this._nativeAppInfo ? { name: this._nativeAppInfo.name } : {}),
+          ...(this._nativeAppInfo
+            ? { version: this._nativeAppInfo.version }
+            : {}),
+          ...(this._nativeAppInfo ? { build: this._nativeAppInfo.build } : {}),
           ...(this._deviceUuid ? { uuid: this._deviceUuid } : {}),
         }),
       },
