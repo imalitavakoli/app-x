@@ -3,7 +3,10 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, concatMap, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
-import { V1Translations } from '@x/shared-map-ng-translations';
+import {
+  V1Translations,
+  V1Translations_MapSelectedLang,
+} from '@x/shared-map-ng-translations';
 
 import { TranslationsActions } from './translations.actions';
 
@@ -70,7 +73,13 @@ export class V1TranslationsEffects {
       concatMap(({ url, userId }) => {
         return this._map.getSelectedLang(url, userId).pipe(
           map((data) =>
-            TranslationsActions.success({ relatedTo: 'selectedLang', data }),
+            TranslationsActions.success({
+              relatedTo: 'selectedLang',
+              data,
+              extra: {
+                cultureCode: (data as V1Translations_MapSelectedLang)?.id,
+              },
+            }),
           ),
           catchError((error) =>
             of(
