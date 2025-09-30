@@ -40,6 +40,7 @@ export class V1AuthInterceptor implements HttpInterceptor {
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
 
+  private _platform: 'ios' | 'android' | 'desktop' = 'desktop';
   private _deviceUuid?: string = undefined; // Desktop apps don't have a device UUID.
   private _nativeAppInfo: V1CapacitorCore_AppInfo | null = null; // Desktop apps don't have a device UUID.
   private _isRefreshing = false;
@@ -56,6 +57,10 @@ export class V1AuthInterceptor implements HttpInterceptor {
     // fetch user's preferred language) before calling any protected API
     // endpoints.
     // this._authFacade.checkIfAlreadyLoggedin();
+
+    // Get platform.
+    this._platform = this._capacitorCoreService.getPlatform();
+    if (this._capacitorCoreService.isPlatformSim) this._platform = 'desktop';
 
     // Get device UUID (if available).
     this._capacitorCoreService.deviceGetId().then((deviceIdInfo) => {
@@ -209,14 +214,12 @@ export class V1AuthInterceptor implements HttpInterceptor {
       appVersion = version;
     });
 
-    // Don't manipulate the request if we don't have any app info to attach.
-    if (!this._nativeAppInfo && !this._deviceUuid && !appVersion) return req;
-
     // If we're here, it means that we have at least one piece of app info to
     // attach to the request. So let's attach them all (if available).
     return req.clone({
       setHeaders: {
         'X-Xapp': JSON.stringify({
+          platform: this._platform,
           ...(appVersion ? { xVersion: appVersion } : {}),
           ...(this._nativeAppInfo ? { id: this._nativeAppInfo.id } : {}),
           ...(this._nativeAppInfo ? { name: this._nativeAppInfo.name } : {}),
@@ -240,7 +243,7 @@ export class V1AuthInterceptor implements HttpInterceptor {
    */
   private _attachToken(req: HttpRequest<unknown>, token: string) {
     return req.clone({
-      headers: new HttpHeaders().set('Authorization', `Bearer ${token}`),
+      headers: req.headers.set('Authorization', `Bearer ${token}`),
     });
   }
 
