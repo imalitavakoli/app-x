@@ -89,6 +89,10 @@ export class V1AppHeaderMobileComponent implements OnInit, OnChanges {
           }
         }
       });
+
+    this._translocoService.langChanges$
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => this._setTextTitle(this.pageRouteName));
   }
 
   ngOnChanges(changes?: SimpleChanges) {
