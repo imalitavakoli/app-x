@@ -41,11 +41,11 @@ export class V1TrackingService {
 
   isInitCapacitorFirebaseAnalytics = false;
   isInitApptentive = false;
-  isInitFirebase = false;
+  isInitFirebaseAnalytics = false;
   isInitGoogleAnalytics = false;
 
   private _dataConfigDep!: V2Config_MapDep;
-  private _dataConfigFirebase!: V2Config_MapFirebase;
+  private _dataConfigFirebase?: V2Config_MapFirebase;
   private _userId?: number;
 
   private _appVersion = '0.0.0';
@@ -123,7 +123,7 @@ export class V1TrackingService {
 
     if (types.includes('analytics')) {
       if (this._platform !== 'desktop') this._initCapacitorFirebaseAnalytics();
-      else this._initFirebase();
+      else this._initFirebaseAnalytics();
 
       this._initGoogleAnalytics();
     }
@@ -153,7 +153,7 @@ export class V1TrackingService {
     if (this.isInitCapacitorFirebaseAnalytics) {
       this.capacitorFirebaseAnalyticsService.logEvent(name, data);
     }
-    if (this.isInitFirebase) {
+    if (this.isInitFirebaseAnalytics) {
       this.firebaseService.analyticsLogEvent(name, data);
     }
   }
@@ -163,6 +163,9 @@ export class V1TrackingService {
   /* //////////////////////////////////////////////////////////////////////// */
 
   private _initCapacitorFirebaseAnalytics() {
+    // Do not continue if NOT all requirements are set.
+    if (!this._dataConfigDep.fun.configs.firebaseIntegration) return;
+
     // Call update once, and do not continue if already initialized.
     this._updateCapacitorFirebaseAnalytics();
     if (this.isInitCapacitorFirebaseAnalytics) return;
@@ -223,31 +226,31 @@ export class V1TrackingService {
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* Funtions: Firebase                                                       */
+  /* Funtions: Firebase-Analytics                                             */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  private _initFirebase() {
+  private _initFirebaseAnalytics() {
     // Do not continue if NOT all requirements are set.
     if (!this._dataConfigFirebase) return;
+    if (!this._dataConfigDep.fun.configs.firebaseIntegration) return;
 
     // Call update once, and do not continue if already initialized.
-    this._updateFirebase();
-    if (this.isInitFirebase) return;
+    this._updateFirebaseAnalytics();
+    if (this.isInitFirebaseAnalytics) return;
 
     // init...
-    this.firebaseService.init(this._dataConfigFirebase, isDevMode());
     this.firebaseService.analyticsAutoScreenTracking();
 
     // Set init flag to true, and call update again (to do the rest of the work,
     // if the first update call couldn't do its job as we were not initialized
     // yet).
-    this.isInitFirebase = true;
-    this._updateFirebase();
+    this.isInitFirebaseAnalytics = true;
+    this._updateFirebaseAnalytics();
   }
 
-  private _updateFirebase() {
+  private _updateFirebaseAnalytics() {
     // Do not continue if already NOT initialized.
-    if (!this.isInitFirebase) return;
+    if (!this.isInitFirebaseAnalytics) return;
 
     // Update...
     if (this._userId) this.firebaseService.analyticsSetUserId(this._userId);
