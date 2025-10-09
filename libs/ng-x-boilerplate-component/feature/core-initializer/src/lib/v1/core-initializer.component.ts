@@ -8,12 +8,17 @@ import {
   Output,
   SimpleChanges,
   inject,
+  isDevMode,
 } from '@angular/core';
-
 import { Subscription, exhaustMap, filter, of, take } from 'rxjs';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+
+import { V2Config_MapDep, V2Config_MapFirebase } from '@x/shared-map-ng-config';
+import {
+  V1FirebaseService,
+  V1TrackingService,
+} from '@x/shared-util-ng-services';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';
-import { V1TrackingService } from '@x/shared-util-ng-services';
 import {
   v1LocalWebcomSet,
   v1LocalWebcomGetAllErrors,
@@ -53,6 +58,7 @@ export class V1CoreInitializerComponent
   private readonly _translationsFacade = inject(V1TranslationsFacade);
   private readonly _authFacade = inject(V1AuthFacade);
   private readonly _langService = inject(TranslocoService);
+  private readonly _firebaseService = inject(V1FirebaseService);
   private readonly _trackingService = inject(V1TrackingService);
 
   private _authSub!: Subscription;
@@ -74,6 +80,7 @@ export class V1CoreInitializerComponent
   private _clientId!: number;
   private _userId?: number; // It will be `undefined` when user logs out.
   private _lastLoadedLang!: string;
+  private _configFirebase?: V2Config_MapFirebase; // Hold Firebase config.
 
   errors: { key: string; value: string }[] = [];
 
@@ -134,6 +141,7 @@ export class V1CoreInitializerComponent
           // Save required data.
           this._baseUrl = state.dataConfigDep.general.baseUrl;
           this._clientId = state.dataConfigDep.general.clientId;
+          this._configFirebase = state.dataConfigFirebase;
 
           // Switch to the `translationsState$` Observable.
           return this._translationsFacade.translationsState$;
@@ -318,9 +326,17 @@ export class V1CoreInitializerComponent
    * @private
    */
   private _initAfterAuth() {
-    // Let's initialize the Tracking Service if `trackActivity` input is defined.
+    // If `trackActivity` input is defined, then let's init tracking related
+    // services.
     if (this.trackActivity === 'true') {
-      this._trackingService.prepare(environment.version);
+      // Init Firebase service.
+      // FYI: This service is only useful for web-apps.
+      if (this._configFirebase) {
+        this._firebaseService.init(this._configFirebase, isDevMode());
+      }
+
+      // Init tracking service.
+      this._trackingService.prepare(this._appVersion);
       this._trackingService.initOrUpdate(['feedbacks', 'analytics']);
     }
   }
