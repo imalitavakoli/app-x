@@ -122,7 +122,7 @@ export class V1FirebaseService {
     const app = firebase.initializeApp(config);
     if (isDebug) firebase.setLogLevel('verbose');
 
-    // Init Firebase Analytics.
+    // Init Firebase: Analytics.
     this._analytics = fireAnalytics.getAnalytics(app);
   }
 

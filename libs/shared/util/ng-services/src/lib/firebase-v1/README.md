@@ -6,13 +6,17 @@ v1.
 
 It's a facade to work with the Firebase services for web across libs & apps.
 
-**Note!** This service is ONLY useful for Firebase implementation in Web-apps! So if you're looking for Firebase native SDKs implementation (such as Firebase native Analytics for iOS or Android), then consider using the Firebase Capacitor plugin service in the Capacitor lib.
+**Important!** This service is ONLY useful for Firebase implementation in Web-apps! So if you're looking for Firebase native SDKs implementation (such as Firebase native Analytics for iOS or Android), then consider using the Firebase Capacitor plugin service in the Capacitor lib.
 
 ```ts
+import { isDevMode } from '@angular/core';
 import { V1FirebaseService } from '@eliq/shared-util-ng-services';
+
 private readonly _firebaseService = inject(V1FirebaseService);
 
-// Init the service.
+// Init the whole Firebase service right at the initialization phase your app,
+// then later you can call different methods of the service to use a specific
+// feature of Firebase, such as Analytics.
 const config = {
   "apiKey": "xxx",
   "authDomain": "xxx.firebaseapp.com",
@@ -22,7 +26,7 @@ const config = {
   "appId": "xxx",
   "measurementId": "xxx"
 };
-this._firebaseService.init(config);
+this._firebaseService.init(config, isDevMode());
 
 /* Analytics //////////////////////////////////////////////////////////////// */
 
