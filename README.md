@@ -40,16 +40,25 @@ We are a monorepo! It's like a Lego puzzle game – we plug in the libs to the a
 
 # Introduction 🧠
 
-Recently, I worked on an awesome project that taught me a lot! 🎉  
-My main responsibility was to **architect and build a brand-new workspace from the ground up** — a monorepo containing a variety of apps and libraries.
+> Recently, I worked on an awesome project that taught me a lot! 🎉  
+> My main responsibility was to **architect and build a brand-new workspace from the ground up** — a monorepo containing a variety of apps and libraries.
+>
+> In this repository, I'm sharing my overall experience through boilerplate/sample codes, standards, and patterns that I developed to make such a workspace possible. These resources can be applied to almost any front-end project.  
+> I'd like to thank my family, friends, and colleagues for their motivation and for giving me the chance to keep learning and growing as I developed. You are truly the best ❤️
+>
+> I'd really appreciate it if you could give the project a ⭐!  
+> Also, feel free to **fork the repo** and start building your own projects.
+>
+> Creating an open-source project using it? [Get in touch](mailto:im.ali.tavakoli@gmail.com)!  
+> I'd love to hear about it 🙂
+>
+> — Ali Tavakoli
+
+Workspace specifications:
 
 - The apps are independent from one another.
 - The libs (libraries) can depend on each other and be shared across apps.
 - And the best part: the apps are cross-platform! 🚀 Code once and deliver everywhere — 🕸️ Web, 🍎 iOS, 🤖 Android, 🪟 Windows, 🐧 Linux, and 🙂 Mac.
-
-In this repository, I'm sharing my overall experience through boilerplate/sample code, standards, and patterns that I developed to make such a workspace possible. These resources can be applied to almost any front-end project.
-
-I'd like to thank my family, friends, and colleagues for their motivation and for giving me the chance to keep learning and growing as I developed. You are truly the best ❤️
 
 **Tip!** Most of the apps & libs in the workspace are Angular based at the moment.
 
@@ -62,7 +71,6 @@ If you're interested in what each Boilerplate app or Sample library does, and ho
 ## Files
 
 - **Boilerplate apps**: Apps that have `x` prefix are Boilerplates. You don't need to touch them! They just exist as a source of inspiration. You can copy-paste them and start working on your newly generated files.
-
   - **ng-x-boilerplate-component**: Angular app that builds web-components. It can also be used as a web-app that lazy-loads its components and can be embedded in an iframe window.
   - **ng-x-boilerplate-desktop**: Angular app that builds desktop apps by using _Electron_.
   - **ng-x-boilerplate-mobile**: Angular app that builds mobile apps by using _Ionic/Capacitor_.
@@ -72,7 +80,6 @@ If you're interested in what each Boilerplate app or Sample library does, and ho
 
 - **Sample libs**: Libs that have `x` prefix are Samples. You don't need to touch them! They just exist as a source of inspiration. You can copy-paste them and start working on your newly generated files.  
   **Tip!** Libs are collections of code with a predefined responsibility. They work together to provide larger functionality. In this workspace, I've included different sample functionalities that you can get inspired from. Some of these functionalities are built using all lib types. e.g., '_ui_' libs exist only to represent the user interface. They are 'dumb' libs that simply display data. '_feature_' libs are 'smart' libraries that fetch data and pass it to the UI.
-
   - **ng-x-credit**: This functionality is **built using abstract lib types**. Its '_data-access_' lib has 'multi-instance' state object structure which is suitable for storing multiple variation of data at the same time. e.g., you call a single API endpoint with different URL query parameters to fetch different responses, you would use a 'multi-instance' state object to store each response in a separate instance of the same state object. This kind of state structure is especially useful for '_data-access_' libs that are initialized by multiple '_feature_' libs at the same time.
   - **ng-x-profile-image**: This functionality is **built using visual lib types**. i.e., it is built by only 2 type of libs: '_ui_' to present its visual UI, and '_feature_' to initialize the UI and feed it with some data that is fetched from other shared '_data-access_' libs. So the lib itself didn't specifically need to have its own '_data-access_' lib.
   - **ng-x-profile-info**: This functionality is **built using all lib types** (except '_page_' lib). Its '_data-access_' lib has 'single-instance' state object structure which is suitable for storing one single data at the same time.
@@ -81,7 +88,6 @@ If you're interested in what each Boilerplate app or Sample library does, and ho
 &nbsp;
 
 - **Other libs**: Libs that don't have `x` prefix are just here to do some generic works! They don't need to be kept as a source of inspiration, so feel free to modify them in any way that suites your project needs. Here I mention some of the important ones:
-
   - **ng-auth**: It's an abstract functionality. It takes care of the user's authentication process to log in to the app.
   - **ng-config**: It's an abstract functionality. It takes care of loading the DEP (Dependency) config file right at the initialization phase of the app. And then later, app or any other lib can access it to read its the loaded JSON file's data. It basically lets your apps & libs to have some dynamic configurations which are stored in a JSON file which is loaded at the run-time.
   - **ng-translations**: It takes care of loading your apps language JSON file. By default the language files are in the app's assets folder locally, but it can be loaded from anywhere else (by for example calling an API endpoint).
@@ -137,14 +143,12 @@ In the workspace, I've added specific comments as keywords. These make it easier
 # Getting Started
 
 - ## `1` [Setting up the repository on a new machine](./docs/getting-started/setting-up-the-repository.md)
-
   - ### `— a` [Installing global dependencies](./docs/getting-started/setting-up-the-repository.md#installing-global-dependencies)
   - ### `— b` [Installing local dependencies](./docs/getting-started/setting-up-the-repository.md#installing-local-dependencies)
   - ### `— c` [Serve/build the Projects](./docs/getting-started/setting-up-the-repository.md#servebuild-the-projects)
   - ### `— d` [Opening the workspace (monorepo) in VSCode](./docs/getting-started/setting-up-the-repository.md#opening-the-workspace-monorepo-in-vscode)
 
 - ## `2` [Library types & their relationship](./docs/getting-started/library-types-and-their-relationship.md)
-
   - ### `— a` [Types](./docs/getting-started/library-types-and-their-relationship.md#types)
     - `—— A` ['api' type](./docs/getting-started/library-types-and-their-relationship.md#api-type)
     - `—— B` ['util' type](./docs/getting-started/library-types-and-their-relationship.md#util-type)
@@ -169,7 +173,6 @@ In the workspace, I've added specific comments as keywords. These make it easier
 # Guidelines
 
 - ## `1` [PR (Pull Request) rules](./docs/guidelines/pr-rules.md)
-
   - ### `— a` [Code Modification PRs](./docs/guidelines/pr-rules.md#code-modification-prs)
   - ### `— b` [FIN PRs](./docs/guidelines/pr-rules.md#fin-prs)
   - ### `— c` [More best practices about PRs](./docs/guidelines/pr-rules.md#more-best-practices-about-prs)
@@ -177,7 +180,6 @@ In the workspace, I've added specific comments as keywords. These make it easier
 - ## `2` [Lib backward compatibility](./docs/guidelines/lib-backward-compatibility.md)
 
 - ## `3` [Available commands](./docs/guidelines/available-commands.md)
-
   - ### `— a` [Updating the whole workspace](./docs/guidelines/available-commands.md#updating-the-whole-workspace)
   - ### `— b` [Commands schema](./docs/guidelines/available-commands.md#commands-schema)
   - ### `— c` [Useful](./docs/guidelines/available-commands.md#useful)
@@ -192,7 +194,6 @@ In the workspace, I've added specific comments as keywords. These make it easier
   - ### `— f` [_Optional!_ Installing & connecting to NX Cloud](./docs/guidelines/available-commands.md#optional-installing--connecting-to-nx-cloud)
 
 - ## `4` [Common tasks](./docs/guidelines/common-tasks.md)
-
   - ### `— a` [Generate & build a whole new functionality](./docs/guidelines/common-tasks.md#generate--build-a-whole-new-functionality)
   - ### `— b` [Consider an API error as an exception](./docs/guidelines/common-tasks.md#consider-an-api-error-as-an-exception)
   - ### `— c` [API response schema changes](./docs/guidelines/common-tasks.md#api-response-schema-changes)
@@ -206,7 +207,6 @@ In the workspace, I've added specific comments as keywords. These make it easier
   - ### `— k` [Update the workspace](./docs/guidelines/common-tasks.md#update-the-workspace)
 
 - ## `5` [Naming conventions](./docs/guidelines/naming-conventions.md)
-
   - ### `— a` [Folders](./docs/guidelines/naming-conventions.md#folders)
   - ### `— b` [Coding](./docs/guidelines/naming-conventions.md#coding)
   - ### `— c` [Styling](./docs/guidelines/naming-conventions.md#styling)
@@ -223,12 +223,10 @@ In the workspace, I've added specific comments as keywords. These make it easier
 # FAQ
 
 - ## `1` [Directories & files](./docs/faq/directories-and-files.md)
-
   - ### `— a` [Directories](./docs/faq/directories-and-files.md#directories)
   - ### `— b` [Files](./docs/faq/directories-and-files.md#files)
 
 - ## `2` [Our Boilerplate app(s)](./docs/faq/boilerplate-apps.md)
-
   - ### `— a` [How to have a new app](./docs/faq/boilerplate-apps.md#how-to-have-a-new-app)
   - ### `— b` [How most of our Boilerplate apps got created](./docs/faq/boilerplate-apps.md#how-most-of-our-boilerplate-apps-got-created)
   - ### `— c` [How to integrate Ionic & Capacitor](./docs/faq/boilerplate-apps.md#how-to-integrate-ionic--capacitor)
