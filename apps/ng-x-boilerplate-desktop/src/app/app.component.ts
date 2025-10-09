@@ -7,6 +7,7 @@ import {
   PLATFORM_ID,
   Inject,
   DestroyRef,
+  isDevMode,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -14,12 +15,13 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { take, tap } from 'rxjs';
 import { TranslocoPipe, TranslocoDirective } from '@jsverse/transloco';
 
+import { V1CapacitorCoreService } from '@x/shared-util-ng-capacitor';
 import {
+  V1FirebaseService,
   V1TrackingService,
   V1AuthAutoService,
 } from '@x/shared-util-ng-services';
-import { V1CapacitorCoreService } from '@x/shared-util-ng-capacitor';
-import { V2Config_MapDep } from '@x/shared-map-ng-config';
+import { V2Config_MapDep, V2Config_MapFirebase } from '@x/shared-map-ng-config';
 import { WindowMetadata } from '@x/ng-x-boilerplate-desktop-map-native-bridge';
 import { V1IonicAppHolderComponent } from '@x/shared-ui-ng-ionic';
 import { V1DaylightComponent } from '@x/shared-ui-ng-daylight';
@@ -51,6 +53,7 @@ export class AppComponent implements OnInit {
 
   readonly configFacade = inject(V2ConfigFacade);
   private readonly _authFacade = inject(V1AuthFacade);
+  private readonly _firebaseService = inject(V1FirebaseService);
   private readonly _trackingService = inject(V1TrackingService);
   private readonly _capacitorCoreService = inject(V1CapacitorCoreService);
   private readonly _authAutoService = inject(V1AuthAutoService);
@@ -58,6 +61,7 @@ export class AppComponent implements OnInit {
   platform: 'ios' | 'android' | 'desktop' = 'desktop';
 
   private _configDep!: V2Config_MapDep; // Hold ALL DEP config.
+  private _configFirebase?: V2Config_MapFirebase; // Hold Firebase config.
   private _userId?: number;
 
   authenticated = false; // Defines whether the user is authenticated or not.
@@ -92,6 +96,11 @@ export class AppComponent implements OnInit {
     // directly use the value from the subscription right after it.
     this.configFacade.dataConfigDep$.pipe(take(1)).subscribe((data) => {
       this._configDep = data as V2Config_MapDep;
+    });
+
+    // Get the Firebase config data (available in web-app).
+    this.configFacade.dataConfigFirebase$.pipe(take(1)).subscribe((data) => {
+      this._configFirebase = data;
     });
 
     // Keep listening to the auth state to see when the user is logged in.
@@ -171,26 +180,54 @@ export class AppComponent implements OnInit {
 
   /** Init the services that can start EVEN BEFORE the user is logged in. */
   private _initServices(): void {
+    this._initFirebase(); // Init the whole Firebase service.
+    this._initTracking(); // Prepare & init the tracking service.
     this._initAuthAuto(); // Init the auto-login service.
   }
 
   /** Init the services that MUST start after the user is logged in. */
   private _initServicesAfterAuth(): void {
-    this._initTracking(); // Init the tracking service.
+    this._initTrackingAfterAuth(); // Prepare & init the tracking service AGAIN to ALSO collect the logged in user's ID.
   }
 
   /* Individual services //////////////////////////////////////////////////// */
+
+  private _initFirebase(): void {
+    if (!this._configFirebase) return;
+    if (!this._configDep.fun.configs.firebaseIntegration) return;
+
+    // Firebase service is ONLY useful for desktop platform, because it's
+    // actually using the JS SDK of th Firebase... For mobile platforms, we use
+    // the Capacitor Firebase plugins (native SDKs). So here, we continue only
+    // if we're on desktop.
+    if (this.platform !== 'desktop') return;
+
+    this._firebaseService.init(this._configFirebase, isDevMode());
+  }
+
+  private _initTracking(): void {
+    this._trackingService.prepare(environment.version);
+
+    // Only init 'analytics' (Firebase) when user is NOT logged in yet.
+    // NOTE: As we still don't have the user's ID, it's ok to log generic app
+    // events to the Firebase Console...
+    this._trackingService.initOrUpdate(['analytics']);
+  }
+
+  private _initTrackingAfterAuth(): void {
+    this._trackingService.prepare(environment.version);
+
+    // If user IS logged in (i.e., we DO have the user's ID), then init
+    // 'analytics' (Firebase) and 'feedbacks' (Appentetive) to also collect
+    // user's ID in the events.
+    this._trackingService.initOrUpdate(['analytics', 'feedbacks']);
+  }
 
   private _initAuthAuto(): void {
     this._authAutoService
       .autoLogin()
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe();
-  }
-
-  private _initTracking(): void {
-    this._trackingService.prepare(environment.version);
-    this._trackingService.initOrUpdate(['feedbacks', 'analytics']);
   }
 
   /* //////////////////////////////////////////////////////////////////////// */

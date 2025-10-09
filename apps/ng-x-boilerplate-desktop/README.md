@@ -54,3 +54,6 @@ Here's the list of unique **brand-specific color & style variables** that this a
 ## Deployment notes
 
 - PWA name: You can change the app's name (when it gets installed on a device as a PWA) from `src/manifest.webmanifest` file.
+
+- Firebase services: For Firebase services (Analytics, or Remote-config), the `fun.configs.firebase_integration` flag in the DEP config must be set to true, and the `src/assets/firebase_config.json` file must also be present.
+  **Tip!** Is the JSON file required for mobile apps as well? Well, although this JSON file is primarily used by web apps (since mobile apps read their Firebase configuration from the `google-services` file in the native Android/iOS project), it's still required and should be created manually. This is because your app can be compiled for both web and mobile platforms simultaneously, and the web build needs this configuration file to function correctly.

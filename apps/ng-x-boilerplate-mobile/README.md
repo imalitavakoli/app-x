@@ -58,6 +58,9 @@ Here's the list of unique **brand-specific color & style variables** that this a
 
 - DEP config: Some dynamic configurations in the app's DEP config JSON files are disabled by prefixing their property names with the letter `X` (e.g., `Xapptentive`). We've chosen not to remove these disabled properties, so we can keep them for reference. This way, we can easily re-enable them at any time by simply removing the `X` prefix.
 
+- Firebase services: For Firebase services (Analytics, or Remote-config), the `fun.configs.firebase_integration` flag in the DEP config must be set to true, and the `src/assets/firebase_config.json` file must also be present.
+  **Tip!** Is the JSON file required for mobile apps as well? Well, although this JSON file is primarily used by web apps (since mobile apps read their Firebase configuration from the `google-services` file in the native Android/iOS project), it's still required and should be created manually. This is because your app can be compiled for both web and mobile platforms simultaneously, and the web build needs this configuration file to function correctly.
+
 - Mobile apps, Firebase plugins: For Firebase Capacitor plugins (Push-notification, Analytics, or Remote-config), `google-services` file should be created and placed in native Android (`android/app/google-services.json`) & iOS (`ios/App/App/GoogleService-Info.plist`) projects.
 
 - Mobile apps, placeholders: To prepare the native Android/iOS projects for a specific app ID & name, remember to replace the probable `X`, `com.x`, and `com.x.xxx` placeholders in the project files. For the Android project, remember to have a correct path to the `MainActivity.java` file (`android/app/src/main/java/com/x/nativeApp`).

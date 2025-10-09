@@ -58,4 +58,5 @@ Here's the list of unique **brand-specific color & style variables** that this a
 
 ## Deployment notes
 
-- Local language files: `i18n` folder in assets will be removed by `web-component-prepare.js` file, when you're going to prepare web-components files. Because we're loading language JSON files from server by default based on `app/transloco-loader.ts` logic. If you changed the language loading logic and like to load the app's language files locally, then update `web-component-prepare.js` to NOT delete `i18n` folder.
+- Firebase services: For Firebase services (Analytics, or Remote-config), the `fun.configs.firebase_integration` flag in the DEP config must be set to true, and the `src/assets/firebase_config.json` file must also be present.
+  **Tip!** Is the JSON file required for mobile apps as well? Well, although this JSON file is primarily used by web apps (since mobile apps read their Firebase configuration from the `google-services` file in the native Android/iOS project), it's still required and should be created manually. This is because your app can be compiled for both web and mobile platforms simultaneously, and the web build needs this configuration file to function correctly.
