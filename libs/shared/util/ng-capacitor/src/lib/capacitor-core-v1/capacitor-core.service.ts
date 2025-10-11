@@ -7,6 +7,7 @@ import { Device } from '@capacitor/device';
 import {
   V1CapacitorCore_AppInfo,
   V1CapacitorCore_DeviceId,
+  V1CapacitorCore_URLOpenListenerEvent,
 } from './capacitor-core.interfaces';
 
 @Injectable({
@@ -179,9 +180,25 @@ export class V1CapacitorCoreService {
    * Get native app info.
    *
    * @example
+   * ```ts
+   * // For HTML usage: Store the promise in a variable and then use it in HTML.
+   * appInfoPromise!: Promise<V1CapacitorCore_AppInfo | null>;
+   * ngOnInit(): void {
+   *   this.appInfoPromise = this.appGetInfo();
+   * }
+   *
+   * // For TS usage: Just call the method directly.
    * this._capacitorCoreService.appGetInfo().then((info) => {
    *  console.log('App Info:', info);
    * });
+   * ```
+   *
+   * @example
+   * ```html
+   * <div *ngIf="appInfoPromise | async as appInfo">
+   *   <p>App Name: {{ appInfo?.name }}</p>
+   * </div>
+   * ```
    *
    * @returns {Promise<V1CapacitorCore_AppInfo | null>}
    */
@@ -219,6 +236,29 @@ export class V1CapacitorCoreService {
         // Read more: https://capacitorjs.com/docs/guides/angular
         this._ngZone.run(() => {
           observer.next({ canGoBack });
+        });
+      });
+
+      return () => {
+        listener.then((removeListener) => removeListener.remove());
+      };
+    });
+  }
+
+  /**
+   * Emits when an url open event for the app is fired (app opens with a
+   * deep-linking url).
+   *
+   * @example
+   * this._capacitorCoreService.onAppUrlOpen.subscribe((e) => {
+   *   console.log('URL that app is opened with:', e.url);
+   * });
+   */
+  get onAppUrlOpen() {
+    return new Observable<V1CapacitorCore_URLOpenListenerEvent>((observer) => {
+      const listener = App.addListener('appUrlOpen', (event) => {
+        this._ngZone.run(() => {
+          observer.next(event);
         });
       });
 

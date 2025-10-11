@@ -53,6 +53,10 @@ this._backSub = this._capacitorCoreService.onBack.subscribe((e) => {
   else this._capacitorCoreService.exitApp();
 });
 
+this._capacitorCoreService.onAppUrlOpen.subscribe((e) => {
+  console.log('URL that app is opened with:', e.url);
+});
+
 /* Device: Methods ////////////////////////////////////////////////////////// */
 
 let deviceId: V1CapacitorCore_DeviceId | null = null;
