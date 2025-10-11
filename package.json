@@ -29,6 +29,7 @@
     "@azure/msal-browser": "^3.27.0",
     "@capacitor-firebase/analytics": "^7.3.1",
     "@capacitor-firebase/authentication": "^7.3.1",
+    "@capacitor-firebase/crashlytics": "^7.3.1",
     "@capacitor-firebase/remote-config": "^7.3.1",
     "@capacitor/android": "^7.4.3",
     "@capacitor/app": "^7.0.2",

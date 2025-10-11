@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+// https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics
+apply plugin: 'com.google.firebase.crashlytics'
+
 android {
     namespace "com.x.xxx"
     compileSdk rootProject.ext.compileSdkVersion
