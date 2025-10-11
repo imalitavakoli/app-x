@@ -131,6 +131,8 @@ Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that 
 - Ran `pnpm add @capacitor-firebase/authentication` to install [firebase-authentication](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/authentication) plugin.  
   apple.com auth [setup](https://github.com/capawesome-team/capacitor-firebase/blob/main/packages/authentication/docs/setup-apple.md).  
   google.com auth [setup](https://github.com/capawesome-team/capacitor-firebase/blob/main/packages/authentication/docs/setup-google.md).
+- Ran `pnpm add @capacitor-firebase/crashlytics` to install [firebase-authentication](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics) plugin.  
+  iOS [setup](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics#ios).
 - Ran `pnpm add @capacitor-firebase/remote-config` to install [firebase-remote-config](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config) plugin.
 - Ran `pnpm add capacitor-plugin-app-tracking-transparency` to install [iOS-att](https://github.com/mahnuh/capacitor-plugin-app-tracking-transparency) plugin.
 - Ran `pnpm add @capawesome/capacitor-android-edge-to-edge-support` to install [android-edge-to-edge](https://capawesome.io/plugins/android-edge-to-edge-support/) plugin
