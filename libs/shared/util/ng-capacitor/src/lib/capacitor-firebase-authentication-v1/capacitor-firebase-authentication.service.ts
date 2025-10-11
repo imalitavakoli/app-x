@@ -16,7 +16,7 @@ export class V1CapacitorFirebaseAuthenticationService {
   private readonly _translationsFacade = inject(V1TranslationsFacade);
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* Methods: sign-in                                                         */
+  /* Methods: sign in/out                                                     */
   /* //////////////////////////////////////////////////////////////////////// */
 
   async signInWithApple() {
@@ -29,15 +29,21 @@ export class V1CapacitorFirebaseAuthenticationService {
     return result.user;
   }
 
+  async signOut() {
+    await FirebaseAuthentication.signOut();
+  }
+
   /* //////////////////////////////////////////////////////////////////////// */
   /* Methods: Other                                                           */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  /** Deletes and signs out the user. */
   async deleteUser() {
     await FirebaseAuthentication.deleteUser();
   }
 
-  async setLanguageCode() {
+  /** Sets the user-facing language code for auth operations. */
+  async setLanguageCode(cultureCode?: string) {
     let lastLoadedLang!: string;
 
     // Get the last loaded language in the app.
@@ -49,7 +55,12 @@ export class V1CapacitorFirebaseAuthenticationService {
 
     // Set the language code in Firebase Authentication.
     await FirebaseAuthentication.setLanguageCode({
-      languageCode: lastLoadedLang,
+      languageCode: cultureCode || lastLoadedLang,
     });
+  }
+
+  /** Sets the user-facing language code to be the default app language. */
+  async useAppLanguage() {
+    await FirebaseAuthentication.useAppLanguage();
   }
 }

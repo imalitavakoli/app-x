@@ -16,7 +16,7 @@ import {
 
 private readonly _capacitorFirebaseAuthService = inject(V1CapacitorFirebaseAuthenticationService);
 
-/* Methods: sign-in ///////////////////////////////////////////////////////// */
+/* Methods: sign in/out ///////////////////////////////////////////////////// */
 
 let userA: V1CapacitorFirebaseAuthentication_SignInResult['user'] | null = null;
 this._capacitorFirebaseAuthService.signInWithApple().then((u) => {
@@ -28,9 +28,13 @@ this._capacitorFirebaseAuthService.signInWithGoogle().then((u) => {
   userG = u;
 });
 
+this._capacitorFirebaseAuthService.signOut();
+
 /* Methods: other /////////////////////////////////////////////////////////// */
 
 this._capacitorFirebaseAuthService.deleteUser();
 
-this._capacitorFirebaseAuthService.setLanguageCode();
+this._capacitorFirebaseAuthService.setLanguageCode('en-GB');
+
+this._capacitorFirebaseAuthService.useAppLanguage();
 ```
