@@ -10,7 +10,7 @@ It's a facade to work with the Firebase services for web across libs & apps.
 
 ```ts
 import { isDevMode } from '@angular/core';
-import { V1FirebaseService } from '@eliq/shared-util-ng-services';
+import { V1FirebaseService } from '@x/shared-util-ng-services';
 
 private readonly _firebaseService = inject(V1FirebaseService);
 

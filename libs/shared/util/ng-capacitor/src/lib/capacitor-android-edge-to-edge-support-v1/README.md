@@ -7,8 +7,9 @@ v1.
 ## Implementation guide
 
 ```ts
-import { V1CapacitorAndroidEdgeToEdgeSupportService } from '@eliq/shared-util-ng-capacitor';
+import { V1CapacitorCoreService, V1CapacitorAndroidEdgeToEdgeSupportService } from '@x/shared-util-ng-capacitor';
 
+private readonly _capacitorCoreService = inject(V1CapacitorCoreService);
 private readonly _capacitorAndroidEdgeToEdgeSupportService = inject(V1CapacitorAndroidEdgeToEdgeSupportService);
 
 /* Methods ////////////////////////////////////////////////////////////////// */
@@ -17,18 +18,10 @@ this._capacitorAndroidEdgeToEdgeSupportService.enable();
 this._capacitorAndroidEdgeToEdgeSupportService.disable();
 
 // Get safe area margins.
-// NOTE: Because this plugin is ONLY for Android deevices, we're just being
-// cautious and making sure that `insets` truthy and its top/bottom properties
-// are also truthy. Of course we could check the platform value as well...
-const insets = this._capacitorAndroidEdgeToEdgeSupportService.getInsets();
-let safeAreaTop = 0;
-let safeAreaBottom = 0;
-if (insets) {
-  if (insets.top && insets.top > 0) {
-    safeAreaTop = insets.top;
-  }
-  if (insets.bottom && insets.bottom > 0) {
-    safeAreaBottom = insets.bottom;
-  }
+// NOTE: Because this plugin is ONLY for Android deevices, we check the platform.
+if (this._capacitorCoreService.getPlatform() === 'android') {
+  const insets = this._capacitorAndroidEdgeToEdgeSupportService.getInsets();
+  const safeAreaTop = insets.top;
+  const safeAreaBottom = insets.bottom;
 }
 ```
