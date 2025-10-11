@@ -65,6 +65,9 @@ importers:
       '@capacitor-firebase/analytics':
         specifier: ^7.3.1
         version: 7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)
+      '@capacitor-firebase/authentication':
+        specifier: ^7.3.1
+        version: 7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)
       '@capacitor-firebase/remote-config':
         specifier: ^7.3.1
         version: 7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)
@@ -1507,6 +1510,15 @@ packages:
 
   '@capacitor-firebase/analytics@7.3.1':
     resolution: {integrity: sha512-RfNeB8BqMaLiNee8s2Fgt0Qrt/YLDE2Owl5W616Hj9mhR5eXAS+900szSZa95ynXilw1ZuSYwR/DC1c8VnMUAg==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+      firebase: ^11.2.0
+    peerDependenciesMeta:
+      firebase:
+        optional: true
+
+  '@capacitor-firebase/authentication@7.3.1':
+    resolution: {integrity: sha512-xuy2K7GXFc3c5mlfI4U9yp/qPlnkF+8IC5FEAQ3Vx4RXYgn/hDAybaZJMzKZ8eQkfttUaBJjADqnfMrYKG70Qw==}
     peerDependencies:
       '@capacitor/core': '>=7.0.0'
       firebase: ^11.2.0
@@ -13141,6 +13153,12 @@ snapshots:
   '@bufbuild/protobuf@2.8.0': {}
 
   '@capacitor-firebase/analytics@7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)':
+    dependencies:
+      '@capacitor/core': 7.4.3
+    optionalDependencies:
+      firebase: 12.2.1
+
+  '@capacitor-firebase/authentication@7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)':
     dependencies:
       '@capacitor/core': 7.4.3
     optionalDependencies:

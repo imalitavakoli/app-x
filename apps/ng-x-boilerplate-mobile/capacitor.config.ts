@@ -27,6 +27,13 @@ const config: CapacitorConfig = {
       resizeOnFullScreen: false, // Why false? To make it work smoothly with `EdgeToEdge`. Otherwise, the web view will be resized to fit the screen.
     },
 
+    // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/authentication
+    FirebaseAuthentication: {
+      authDomain: undefined,
+      skipNativeAuth: false,
+      providers: ['apple.com', 'google.com'],
+    },
+
     // Bypass Azure Cors
     CapacitorHttp: {
       enabled: true,
