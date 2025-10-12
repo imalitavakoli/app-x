@@ -32,6 +32,7 @@
     "@capacitor-firebase/crashlytics": "^7.3.1",
     "@capacitor-firebase/firestore": "^7.3.1",
     "@capacitor-firebase/remote-config": "^7.3.1",
+    "@capacitor-firebase/storage": "^7.3.1",
     "@capacitor/android": "^7.4.3",
     "@capacitor/app": "^7.0.2",
     "@capacitor/app-launcher": "^7.0.2",

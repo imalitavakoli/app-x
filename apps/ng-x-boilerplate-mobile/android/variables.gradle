@@ -35,6 +35,9 @@ ext {
     // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config
     $firebaseConfigVersion = '22.1.0'
 
+    // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/storage
+    $firebaseStorageVersion = '21.0.1'
+
     // https://github.com/capawesome-team/capacitor-plugins/tree/main/packages/live-update
     $okhttp3Version = '22.3.1'
     $zip4jVersion = '2.11.5'

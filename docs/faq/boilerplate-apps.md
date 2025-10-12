@@ -135,6 +135,7 @@ Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that 
   iOS [setup](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics#ios).
 - Ran `pnpm add @capacitor-firebase/firestore` to install [firebase-firestore](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/firestore) plugin.
 - Ran `pnpm add @capacitor-firebase/remote-config` to install [firebase-remote-config](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config) plugin.
+- Ran `pnpm add @capacitor-firebase/storage` to install [firebase-storage](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/storage) plugin.
 - Ran `pnpm add capacitor-plugin-app-tracking-transparency` to install [iOS-att](https://github.com/mahnuh/capacitor-plugin-app-tracking-transparency) plugin.
 - Ran `pnpm add @capawesome/capacitor-android-edge-to-edge-support` to install [android-edge-to-edge](https://capawesome.io/plugins/android-edge-to-edge-support/) plugin
 - Ran `pnpm add @capawesome/capacitor-live-update` to install [live-update](https://capawesome.io/plugins/live-update/) plugin
