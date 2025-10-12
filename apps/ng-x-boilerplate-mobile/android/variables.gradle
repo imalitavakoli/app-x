@@ -32,6 +32,9 @@ ext {
     // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/firestore
     $firebaseFirestoreVersion = '25.1.1'
 
+    // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/performance
+    $firebasePerfVersion = '21.0.4'
+
     // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config
     $firebaseConfigVersion = '22.1.0'
 

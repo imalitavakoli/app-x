@@ -74,6 +74,9 @@ importers:
       '@capacitor-firebase/firestore':
         specifier: ^7.3.1
         version: 7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)
+      '@capacitor-firebase/performance':
+        specifier: ^7.3.1
+        version: 7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)
       '@capacitor-firebase/remote-config':
         specifier: ^7.3.1
         version: 7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)
@@ -1546,6 +1549,15 @@ packages:
 
   '@capacitor-firebase/firestore@7.3.1':
     resolution: {integrity: sha512-uKDtbTu2YafqgMv9jmok0t999VflvnVQ54dOl0FNPVPy9RpY2bebOSeuwv+Akv3ULuIz8h1+wHaAlEqXpQtnUg==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+      firebase: ^11.2.0
+    peerDependenciesMeta:
+      firebase:
+        optional: true
+
+  '@capacitor-firebase/performance@7.3.1':
+    resolution: {integrity: sha512-BSL6f3iY93eV4tpVn6LbJDNO900yicBFXBzmZMkkpgkwFXpnU4WGFWLyD/U09WdTAOEU2En28vCX4CYyZmKeqA==}
     peerDependencies:
       '@capacitor/core': '>=7.0.0'
       firebase: ^11.2.0
@@ -13207,6 +13219,12 @@ snapshots:
       firebase: 12.2.1
 
   '@capacitor-firebase/firestore@7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)':
+    dependencies:
+      '@capacitor/core': 7.4.3
+    optionalDependencies:
+      firebase: 12.2.1
+
+  '@capacitor-firebase/performance@7.3.1(@capacitor/core@7.4.3)(firebase@12.2.1)':
     dependencies:
       '@capacitor/core': 7.4.3
     optionalDependencies:

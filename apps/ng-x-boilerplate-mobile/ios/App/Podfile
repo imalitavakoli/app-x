@@ -26,6 +26,7 @@ def capacitor_pods
   pod 'CapacitorFirebaseAuthentication', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+authentication@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/authentication'
   pod 'CapacitorFirebaseCrashlytics', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+crashlytics@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/crashlytics'
   pod 'CapacitorFirebaseFirestore', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+firestore@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/firestore'
+  pod 'CapacitorFirebasePerformance', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+performance@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/performance'
   pod 'CapacitorFirebaseRemoteConfig', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+remote-config@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/remote-config'
   pod 'CapacitorFirebaseStorage', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+storage@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/storage'
   pod 'CapacitorPluginAppTrackingTransparency', :path => '../../../../node_modules/.pnpm/capacitor-plugin-app-tracking-transparency@2.0.5_@capacitor+core@7.4.3/node_modules/capacitor-plugin-app-tracking-transparency'

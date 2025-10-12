@@ -134,6 +134,7 @@ Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that 
 - Ran `pnpm add @capacitor-firebase/crashlytics` to install [firebase-crashlytics](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics) plugin.  
   iOS [setup](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics#ios).
 - Ran `pnpm add @capacitor-firebase/firestore` to install [firebase-firestore](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/firestore) plugin.
+- Ran `pnpm add @capacitor-firebase/performance` to install [firebase-performance](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/performance) plugin.
 - Ran `pnpm add @capacitor-firebase/remote-config` to install [firebase-remote-config](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config) plugin.
 - Ran `pnpm add @capacitor-firebase/storage` to install [firebase-storage](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/storage) plugin.
 - Ran `pnpm add capacitor-plugin-app-tracking-transparency` to install [iOS-att](https://github.com/mahnuh/capacitor-plugin-app-tracking-transparency) plugin.
