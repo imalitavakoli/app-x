@@ -18,6 +18,10 @@ ext {
     androidxBrowserVersion = '1.8.0'
     firebaseMessagingVersion = '24.1.0'
 
+    // https://capacitorjs.com/docs/guides/ads
+    playServicesAdsVersion = '23.0.0'
+    androidxCoreKTXVersion = '1.13.0'
+
     // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics
     $firebaseAnalyticsVersion = '22.2.0'
 

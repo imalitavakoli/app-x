@@ -56,9 +56,25 @@
   <key>ITSAppUsesNonExemptEncryption</key>
   <false/>
 
+
+	<!-- https://capacitorjs.com/docs/guides/ads -->
+	<key>GADIsAdManagerApp</key>
+	<true/>
+	<key>GADApplicationIdentifier</key>
+	<string>com.x.xxx</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This identifier will be used to deliver personalized ads to you.</string>
+
 	<!-- https://github.com/mahnuh/capacitor-plugin-app-tracking-transparency -->
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Your data will be used to serve you more relevant energy data and advices.</string>
+	<string>Your data will be used to serve you more relevant data and advices.</string>
 
 	<!-- https://capacitorjs.com/docs/apis/app#ios -->
 	<key>CFBundleURLTypes</key>

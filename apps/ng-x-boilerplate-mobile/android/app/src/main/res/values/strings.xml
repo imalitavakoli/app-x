@@ -4,4 +4,7 @@
     <string name="title_activity_main">X</string>
     <string name="package_name">com.x.xxx</string>
     <string name="custom_url_scheme">com.x.xxx</string>
+
+    <!-- https://github.com/capacitor-community/admob -->
+    <string name="admob_app_id">com.x.xxx</string>
 </resources>
