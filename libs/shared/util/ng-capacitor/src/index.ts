@@ -12,5 +12,10 @@ export * from './lib/capacitor-core-v1/capacitor-core.interfaces';
 
 export * from './lib/capacitor-firebase-analytics-v1/capacitor-firebase-analytics.service';
 
+export * from './lib/capacitor-firebase-authentication-v1/capacitor-firebase-authentication.service';
+export * from './lib/capacitor-firebase-authentication-v1/capacitor-firebase-authentication.interfaces';
+
+export * from './lib/capacitor-firebase-crashlytics-v1/capacitor-firebase-crashlytics.service';
+
 export * from './lib/capacitor-notification-v1/capacitor-notification.service';
 export * from './lib/capacitor-notification-v1/capacitor-notification.interfaces';
