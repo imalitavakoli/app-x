@@ -4,12 +4,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
 
 // https://github.com/capacitor-community/sqlite
-packagingOptions {
-    exclude 'build-data.properties'
-}
+// packagingOptions {
+//     exclude 'build-data.properties'
+// }
 
 android {
-    namespace "com.x.xxx"
+    namespace "com.x.nativeApp"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.x.xxx"
