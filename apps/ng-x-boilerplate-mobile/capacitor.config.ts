@@ -4,7 +4,7 @@ import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 const config: CapacitorConfig = {
   appId: 'com.x.xxx',
   appName: 'X',
-  webDir: '../../dist/apps/ng-x-boilerplate-mobile/browser',
+  webDir: '../../fin/apps/ng-x-boilerplate-mobile/browser',
   server: {
     androidScheme: 'https',
   },
