@@ -67,6 +67,7 @@
     "better-sqlite3-multiple-ciphers": "^11.10.0",
     "bootstrap-icons": "^1.13.1",
     "capacitor-plugin-app-tracking-transparency": "^2.0.5",
+    "cordova-plugin-purchase": "^13.12.1",
     "date-fns": "^2.30.0",
     "electron-store": "^10.0.1",
     "firebase": "^12.2.1",

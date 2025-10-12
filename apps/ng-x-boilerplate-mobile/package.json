@@ -23,9 +23,10 @@
     "@capacitor-firebase/performance": "../../node_modules/@capacitor-firebase/performance",
     "@capacitor-firebase/remote-config": "../../node_modules/@capacitor-firebase/remote-config",
     "@capacitor-firebase/storage": "../../node_modules/@capacitor-firebase/storage",
-    "capacitor-plugin-app-tracking-transparency": "../../node_modules/capacitor-plugin-app-tracking-transparency",
     "@capawesome/capacitor-android-edge-to-edge-support": "../../node_modules/@capawesome/capacitor-android-edge-to-edge-support",
-    "@capawesome/capacitor-live-update": "../../node_modules/@capawesome/capacitor-live-update"
+    "@capawesome/capacitor-live-update": "../../node_modules/@capawesome/capacitor-live-update",
+    "capacitor-plugin-app-tracking-transparency": "../../node_modules/capacitor-plugin-app-tracking-transparency",
+    "cordova-plugin-purchase": "../../node_modules/cordova-plugin-purchase"
   },
   "devDependencies": {
     "@capacitor/cli": "../../node_modules/@capacitor/cli"

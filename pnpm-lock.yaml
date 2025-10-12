@@ -182,6 +182,9 @@ importers:
       capacitor-plugin-app-tracking-transparency:
         specifier: ^2.0.5
         version: 2.0.5(@capacitor/core@7.4.3)
+      cordova-plugin-purchase:
+        specifier: ^13.12.1
+        version: 13.12.1
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -5814,6 +5817,9 @@ packages:
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       webpack: ^5.1.0
+
+  cordova-plugin-purchase@13.12.1:
+    resolution: {integrity: sha512-IRYOLqv8iEn/i+JnTXZI6yITphiwO8Bn6qm0f6+5t0the9Wb/jYdk7Q6rB7l3AO21Is5AcBLptQAwLTY3tY1Rg==}
 
   core-js-compat@3.45.1:
     resolution: {integrity: sha512-tqTt5T4PzsMIZ430XGviK4vzYSoeNJ6CXODi6c/voxOT6IZqBht5/EKaSNnYiEjjRYxjVz7DQIsOsY0XNi8PIA==}
@@ -18730,6 +18736,8 @@ snapshots:
       serialize-javascript: 6.0.2
       tinyglobby: 0.2.15
       webpack: 5.101.2(@swc/core@1.5.7(@swc/helpers@0.5.15))(esbuild@0.25.9)
+
+  cordova-plugin-purchase@13.12.1: {}
 
   core-js-compat@3.45.1:
     dependencies:

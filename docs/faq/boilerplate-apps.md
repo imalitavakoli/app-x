@@ -137,9 +137,10 @@ Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that 
 - Ran `pnpm add @capacitor-firebase/performance` to install [firebase-performance](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/performance) plugin.
 - Ran `pnpm add @capacitor-firebase/remote-config` to install [firebase-remote-config](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/remote-config) plugin.
 - Ran `pnpm add @capacitor-firebase/storage` to install [firebase-storage](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/storage) plugin.
+- Ran `pnpm add @capawesome/capacitor-android-edge-to-edge-support` to install [android-edge-to-edge](https://capawesome.io/plugins/android-edge-to-edge-support/) plugin.
+- Ran `pnpm add @capawesome/capacitor-live-update` to install [live-update](https://capawesome.io/plugins/live-update/) plugin.
 - Ran `pnpm add capacitor-plugin-app-tracking-transparency` to install [iOS-att](https://github.com/mahnuh/capacitor-plugin-app-tracking-transparency) plugin.
-- Ran `pnpm add @capawesome/capacitor-android-edge-to-edge-support` to install [android-edge-to-edge](https://capawesome.io/plugins/android-edge-to-edge-support/) plugin
-- Ran `pnpm add @capawesome/capacitor-live-update` to install [live-update](https://capawesome.io/plugins/live-update/) plugin
+- Ran `pnpm add cordova-plugin-purchase` to install [cordova-plugin-purchase](https://capacitorjs.com/docs/guides/in-app-purchases) plugin.
 
 After installing the plugins, we modified `package.json` file inside of the app's folder to mention each one those plugins in it by referring to their installed global package at the root of the workspace. Basically Capacitor temporarily installs these plugins in the app folder to start its sync process, and then deletes them as soon as it finishes.
 

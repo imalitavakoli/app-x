@@ -30,7 +30,7 @@ dependencies {
     implementation project(':capacitor-firebase-storage')
     implementation project(':capawesome-capacitor-android-edge-to-edge-support')
     implementation project(':capawesome-capacitor-live-update')
-
+    implementation "com.android.billingclient:billing:7.1.1"
 }
 
 
