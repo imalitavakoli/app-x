@@ -141,6 +141,7 @@ Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that 
 - Ran `pnpm add @capacitor-firebase/storage` to install [firebase-storage](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/storage) plugin.
 - Ran `pnpm add @capawesome/capacitor-android-edge-to-edge-support` to install [android-edge-to-edge](https://capawesome.io/plugins/android-edge-to-edge-support/) plugin.
 - Ran `pnpm add @capawesome/capacitor-app-review` to install [app-review](https://github.com/capawesome-team/capacitor-plugins/tree/main/packages/app-review) plugin.
+- Ran `pnpm add @capawesome/capacitor-app-update` to install [app-update](https://github.com/capawesome-team/capacitor-plugins/tree/main/packages/app-update) plugin.
 - Ran `pnpm add @capawesome/capacitor-live-update` to install [live-update](https://capawesome.io/plugins/live-update/) plugin.
 - Ran `pnpm add capacitor-plugin-app-tracking-transparency` to install [iOS-att](https://github.com/mahnuh/capacitor-plugin-app-tracking-transparency) plugin.
 - Ran `pnpm add cordova-plugin-purchase` to install [cordova-plugin-purchase](https://capacitorjs.com/docs/guides/in-app-purchases) plugin.

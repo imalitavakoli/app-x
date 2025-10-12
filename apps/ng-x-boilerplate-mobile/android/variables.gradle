@@ -48,6 +48,10 @@ ext {
     // https://github.com/capawesome-team/capacitor-plugins/tree/main/packages/app-review
     $androidPlayReviewVersion = '2.0.2'
 
+    // https://github.com/capawesome-team/capacitor-plugins/tree/main/packages/app-update
+    $androidPlayAppUpdateVersion = '2.1.0'
+    $androidPlayServicesBaseVersion = '18.0.1'
+
     // https://github.com/capawesome-team/capacitor-plugins/tree/main/packages/live-update
     $okhttp3Version = '22.3.1'
     $zip4jVersion = '2.11.5'

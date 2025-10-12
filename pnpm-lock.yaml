@@ -143,6 +143,9 @@ importers:
       '@capawesome/capacitor-app-review':
         specifier: ^7.0.1
         version: 7.0.1(@capacitor/core@7.4.3)
+      '@capawesome/capacitor-app-update':
+        specifier: ^7.0.1
+        version: 7.0.1(@capacitor/core@7.4.3)
       '@capawesome/capacitor-live-update':
         specifier: ^7.2.1
         version: 7.2.2(@capacitor/core@7.4.3)
@@ -1717,6 +1720,11 @@ packages:
 
   '@capawesome/capacitor-app-review@7.0.1':
     resolution: {integrity: sha512-J7SJPsazjG529t8+KHqbOXSWeLPaqquDln9SlnVAkhtKAQx71KZYYzkHyFWiNqnDjMBWuD0D45AhXZOKeJDQ8Q==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+
+  '@capawesome/capacitor-app-update@7.0.1':
+    resolution: {integrity: sha512-VEzAa8vdG8BvW8pjjinmUeiEfzDlZ2XBfAIBE0o0Gib63+FTZg8d0tAu0nUoV/s/1oIOM7Fk+PokN5GpQrY8sQ==}
     peerDependencies:
       '@capacitor/core': '>=7.0.0'
 
@@ -13479,6 +13487,10 @@ snapshots:
       '@capacitor/core': 7.4.3
 
   '@capawesome/capacitor-app-review@7.0.1(@capacitor/core@7.4.3)':
+    dependencies:
+      '@capacitor/core': 7.4.3
+
+  '@capawesome/capacitor-app-update@7.0.1(@capacitor/core@7.4.3)':
     dependencies:
       '@capacitor/core': 7.4.3
 
