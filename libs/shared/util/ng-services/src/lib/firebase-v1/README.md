@@ -49,4 +49,22 @@ this._firebaseService.analyticsLogEvent('libName_init', {data: 'something'});
 // NOTE: If you're going to collect Consent from the logged in user, this method
 // MUST be called after that user allows the Consent.
 this._firebaseService.analyticsSetUserId(123);
+
+/* Realtime Database //////////////////////////////////////////////////////// */
+
+this._firebaseService.dbGet('users/user1')
+  .then(data => {
+   console.log(data);
+  })
+  .catch(error => {
+   console.error(error);
+  });
+
+this._firebaseService.dbSet('users/user1', { name: 'John', age: 30 })
+  .then(() => {
+   console.log('Data set successfully');
+  })
+  .catch(error => {
+   console.error(error);
+  });
 ```

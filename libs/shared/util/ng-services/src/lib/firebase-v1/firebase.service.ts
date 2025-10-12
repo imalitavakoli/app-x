@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import * as firebase from 'firebase/app';
 import * as fireAnalytics from 'firebase/analytics';
+import * as fireDb from 'firebase/database';
 
 import { v1MiscMakeGA4ForPageNav } from '@x/shared-util-formatters';
 
@@ -105,6 +106,7 @@ import { FirebaseConfig } from './firebase.interfaces';
 export class V1FirebaseService {
   private _router = inject(Router);
   private _analytics!: fireAnalytics.Analytics;
+  private _database!: fireDb.Database;
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Methods                                                                  */
@@ -124,6 +126,9 @@ export class V1FirebaseService {
 
     // Init Firebase: Analytics.
     this._analytics = fireAnalytics.getAnalytics(app);
+
+    // Init Firebase: Database.
+    this._database = fireDb.getDatabase(app);
   }
 
   /* Analytics ////////////////////////////////////////////////////////////// */
@@ -145,6 +150,52 @@ export class V1FirebaseService {
   /** Call `analyticsLogScreen` when page navigation (routing) happens automatically */
   analyticsAutoScreenTracking() {
     this._analyticsAutoScreenTracking(false);
+  }
+
+  /* Realtime Database ////////////////////////////////////////////////////// */
+
+  /**
+   * Get data once from the Realtime Database.
+   *
+   * @example
+   * this._firebaseService.dbGet('users/user1')
+   *  .then(data => {
+   *   console.log(data);
+   *  })
+   *  .catch(error => {
+   *   console.error(error);
+   *  });
+   *
+   * @async
+   * @param {string} path
+   * @returns {Promise<any>}
+   */
+  async dbGet(path: string) {
+    const dbRef = fireDb.ref(this._database);
+    const snapshot = await fireDb.get(fireDb.child(dbRef, path));
+    return snapshot.exists() ? snapshot.val() : null;
+  }
+
+  /**
+   * Set data in the Realtime Database.
+   *
+   * @example
+   * this._firebaseService.dbSet('users/user1', { name: 'John', age: 30 })
+   *  .then(() => {
+   *   console.log('Data set successfully');
+   *  })
+   *  .catch(error => {
+   *   console.error(error);
+   *  });
+   *
+   * @async
+   * @param {string} path
+   * @param {*} data
+   * @returns {unknown}
+   */
+  async dbSet(path: string, data: any) {
+    await fireDb.set(fireDb.ref(this._database, path), data);
+    return true;
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
