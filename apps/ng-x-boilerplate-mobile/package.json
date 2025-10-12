@@ -11,6 +11,7 @@
     "@capacitor/haptics": "../../node_modules/@capacitor/haptics",
     "@capacitor/ios": "../../node_modules/@capacitor/ios",
     "@capacitor/keyboard": "../../node_modules/@capacitor/keyboard",
+    "@capacitor/local-notifications": "../../node_modules/@capacitor/local-notifications",
     "@capacitor/preferences": "../../node_modules/@capacitor/preferences",
     "@capacitor/push-notifications": "../../node_modules/@capacitor/push-notifications",
     "@capacitor/share": "../../node_modules/@capacitor/share",

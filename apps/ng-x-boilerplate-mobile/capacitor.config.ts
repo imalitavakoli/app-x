@@ -10,7 +10,7 @@ const config: CapacitorConfig = {
   },
 
   plugins: {
-    // Push Notifications
+    // https://capacitorjs.com/docs/apis/push-notifications
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
     },
