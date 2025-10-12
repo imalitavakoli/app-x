@@ -25,6 +25,7 @@ def capacitor_pods
   pod 'CapacitorFirebaseAnalytics', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+analytics@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/analytics'
   pod 'CapacitorFirebaseAuthentication', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+authentication@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/authentication'
   pod 'CapacitorFirebaseCrashlytics', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+crashlytics@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/crashlytics'
+  pod 'CapacitorFirebaseFirestore', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+firestore@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/firestore'
   pod 'CapacitorFirebaseRemoteConfig', :path => '../../../../node_modules/.pnpm/@capacitor-firebase+remote-config@7.3.1_@capacitor+core@7.4.3_firebase@12.2.1/node_modules/@capacitor-firebase/remote-config'
   pod 'CapacitorPluginAppTrackingTransparency', :path => '../../../../node_modules/.pnpm/capacitor-plugin-app-tracking-transparency@2.0.5_@capacitor+core@7.4.3/node_modules/capacitor-plugin-app-tracking-transparency'
   pod 'CapawesomeCapacitorLiveUpdate', :path => '../../../../node_modules/.pnpm/@capawesome+capacitor-live-update@7.2.2_@capacitor+core@7.4.3/node_modules/@capawesome/capacitor-live-update'
