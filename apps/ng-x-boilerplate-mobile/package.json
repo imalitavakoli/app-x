@@ -17,6 +17,7 @@
     "@capacitor/share": "../../node_modules/@capacitor/share",
     "@capacitor/status-bar": "../../node_modules/@capacitor/status-bar",
     "@capacitor-community/admob": "../../node_modules/@capacitor-community/admob",
+    "@capacitor-community/sqlite": "../../node_modules/@capacitor-community/sqlite",
     "@capacitor-firebase/analytics": "../../node_modules/@capacitor-firebase/analytics",
     "@capacitor-firebase/authentication": "../../node_modules/@capacitor-firebase/authentication",
     "@capacitor-firebase/crashlytics": "../../node_modules/@capacitor-firebase/crashlytics",

@@ -3,6 +3,11 @@ apply plugin: 'com.android.application'
 // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics
 apply plugin: 'com.google.firebase.crashlytics'
 
+// https://github.com/capacitor-community/sqlite
+packagingOptions {
+    exclude 'build-data.properties'
+}
+
 android {
     namespace "com.x.xxx"
     compileSdk rootProject.ext.compileSdkVersion

@@ -28,6 +28,7 @@
     "@azure/msal-angular": "^3.1.0",
     "@azure/msal-browser": "^3.27.0",
     "@capacitor-community/admob": "^7.0.3",
+    "@capacitor-community/sqlite": "^7.0.1",
     "@capacitor-firebase/analytics": "^7.3.1",
     "@capacitor-firebase/authentication": "^7.3.1",
     "@capacitor-firebase/crashlytics": "^7.3.1",
@@ -75,6 +76,7 @@
     "highcharts": "^11.1.0",
     "highcharts-angular": "^3.1.2",
     "ionicons": "^7.4.0",
+    "jeep-sqlite": "^2.8.0",
     "jquery": "^3.7.1",
     "load-awesome": "^1.1.0",
     "localstorage-polyfill": "^1.0.1",
@@ -85,6 +87,7 @@
     "ngx-tippy-wrapper": "^6.3.0",
     "primeng": "^20.0.1",
     "rxjs": "~7.8.1",
+    "sql.js": "^1.13.0",
     "tslib": "^2.6.1",
     "zone.js": "0.15.1"
   },

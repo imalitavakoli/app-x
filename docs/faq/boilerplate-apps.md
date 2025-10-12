@@ -127,6 +127,8 @@ Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that 
 - Ran `pnpm add @capacitor/app-launcher` to install [app-launcher](https://capacitorjs.com/docs/apis/app-launcher) plugin.
 - Ran `pnpm add @capacitor/filesystem` to install [filesystem](https://capacitorjs.com/docs/apis/filesystem) plugin.
 - Ran `pnpm add @capacitor/share` to install [share](https://capacitorjs.com/docs/apis/share) plugin.
+- Ran `pnpm add @capacitor-community/admob` to install [admob](https://capacitorjs.com/docs/guides/ads) plugin.
+- Ran `pnpm add @capacitor-community/sqlite` to install [sqlite](https://github.com/capacitor-community/sqlite) plugin.
 - Ran `pnpm add @capacitor-firebase/analytics` to install [firebase-analytics](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics) plugin.
 - Ran `pnpm add @capacitor-firebase/authentication` to install [firebase-authentication](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/authentication) plugin.  
   apple.com auth [setup](https://github.com/capawesome-team/capacitor-firebase/blob/main/packages/authentication/docs/setup-apple.md).  
