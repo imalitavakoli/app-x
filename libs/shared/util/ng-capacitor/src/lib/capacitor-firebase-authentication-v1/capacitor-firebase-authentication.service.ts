@@ -34,6 +34,24 @@ export class V1CapacitorFirebaseAuthenticationService {
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
+  /* Methods: user data                                                       */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  async getCurrentUser() {
+    const result = await FirebaseAuthentication.getCurrentUser();
+    return result.user;
+  }
+
+  async getIdToken() {
+    const currentUser = await this.getCurrentUser();
+    if (!currentUser) {
+      return;
+    }
+    const result = await FirebaseAuthentication.getIdToken();
+    return result.token;
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
   /* Methods: Other                                                           */
   /* //////////////////////////////////////////////////////////////////////// */
 
