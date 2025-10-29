@@ -1,4 +1,10 @@
-import { APP_INITIALIZER, ApplicationConfig, isDevMode } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  ApplicationConfig,
+  inject,
+  isDevMode,
+  provideAppInitializer,
+} from '@angular/core';
 import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
@@ -57,12 +63,10 @@ export const appConfig: ApplicationConfig = {
       player: () => player,
     }),
     provideAngularSvgIcon(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (service: AppInitializerService) => service.init(),
-      deps: [AppInitializerService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const service = inject(AppInitializerService);
+      return service.init()(); // call the function that init() returns
+    }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: V1AuthInterceptor,

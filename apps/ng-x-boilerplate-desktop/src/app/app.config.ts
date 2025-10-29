@@ -2,7 +2,9 @@ import {
   APP_INITIALIZER,
   ApplicationConfig,
   importProvidersFrom,
+  inject,
   isDevMode,
+  provideAppInitializer,
 } from '@angular/core';
 import {
   HTTP_INTERCEPTORS,
@@ -81,12 +83,10 @@ export const appConfig: ApplicationConfig = {
       player: () => import('lottie-web/build/player/lottie_svg'),
     }),
     provideAngularSvgIcon(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (service: AppInitializerService) => service.init(),
-      deps: [AppInitializerService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const service = inject(AppInitializerService);
+      return service.init()(); // call the function that init() returns
+    }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: V1AuthInterceptor,
