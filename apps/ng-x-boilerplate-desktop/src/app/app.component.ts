@@ -196,12 +196,10 @@ export class AppComponent implements OnInit {
     if (!this._configFirebase) return;
     if (!this._configDep.fun.configs.firebaseIntegration) return;
 
-    // Firebase service is ONLY useful for desktop platform, because it's
-    // actually using the JS SDK of th Firebase... For mobile platforms, we use
-    // the Capacitor Firebase plugins (native SDKs). So here, we continue only
-    // if we're on desktop.
-    if (this.platform !== 'desktop') return;
-
+    // Although Firebase service is mostly useful for desktop platforms (because
+    // for mobile platforms we use the native SDKs via Capacitor plugins), we
+    // still initialize it for ALL platforms, because in this way, we can use
+    // some Firebase features that their Capacitor plugins are not available yet.
     this._firebaseService.init(this._configFirebase, isDevMode());
   }
 
