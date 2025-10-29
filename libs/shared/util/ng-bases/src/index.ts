@@ -1,3 +1,5 @@
+export * from './lib/base-app-init-v1/base-app-init.service';
+
 export * from './lib/base-feature-v1/base-feature-ext-x-credit.component';
 export * from './lib/base-feature-v1/base-feature-ext.component';
 export * from './lib/base-feature-v1/base-feature.component';

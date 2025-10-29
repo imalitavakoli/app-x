@@ -1,3 +1,5 @@
+export * from './lib/base-app-init-v1/base-app-init.interfaces';
+
 export * from './lib/base-page-v2/base-page.interfaces';
 
 export * from './lib/base-ui-v1/base-ui.interfaces';
