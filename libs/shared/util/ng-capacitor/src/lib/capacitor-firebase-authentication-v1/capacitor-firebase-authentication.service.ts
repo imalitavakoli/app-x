@@ -4,7 +4,10 @@ import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
 import { V1TranslationsFacade } from '@x/shared-api-data-access-ng-translations';
 
-import { V1CapacitorFirebaseAuthentication_SignInResult } from './capacitor-firebase-authentication.interfaces';
+import {
+  V1CapacitorFirebaseAuthentication_SignInResult,
+  V1CapacitorFirebaseAuthentication_User,
+} from './capacitor-firebase-authentication.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -80,5 +83,36 @@ export class V1CapacitorFirebaseAuthenticationService {
   /** Sets the user-facing language code to be the default app language. */
   async useAppLanguage() {
     await FirebaseAuthentication.useAppLanguage();
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Listeners                                                                */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  /**
+   * Emits when the currently signed-in user state changes.
+   *
+   * @example
+   * this._capacitorCoreService.onAuthStateChange.subscribe((e) => {
+   *   console.log('User state changed!', e.user);
+   * });
+   */
+  get onAuthStateChange() {
+    return new Observable<{
+      user: V1CapacitorFirebaseAuthentication_User | null;
+    }>((observer) => {
+      const listener = FirebaseAuthentication.addListener(
+        'authStateChange',
+        ({ user }) => {
+          this._ngZone.run(() => {
+            observer.next({ user });
+          });
+        },
+      );
+
+      return () => {
+        listener.then((removeListener) => removeListener.remove());
+      };
+    });
   }
 }

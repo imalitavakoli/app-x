@@ -49,4 +49,10 @@ this._capacitorFirebaseAuthService.deleteUser();
 this._capacitorFirebaseAuthService.setLanguageCode('en-GB');
 
 this._capacitorFirebaseAuthService.useAppLanguage();
+
+/* Listeners //////////////////////////////////////////////////////////////// */
+
+this._authStateChangeSub = this._capacitorFirebaseAuthService.onAuthStateChange.subscribe((e) => {
+  console.log('User state changed!', e.user);
+});
 ```
