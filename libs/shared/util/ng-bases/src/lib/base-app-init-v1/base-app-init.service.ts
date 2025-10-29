@@ -469,7 +469,7 @@ export class V1BaseAppInitService {
   protected _addDepStyles() {
     const cacheBuster = Math.random().toString(36).substring(7);
     const depStyles = `
-    <link rel="stylesheet" href="./assets/DEP_style.css?cache=${cacheBuster}" type="text/css">
+    <link rel="stylesheet" href="./${this._assetsFolder}/DEP_style.css?cache=${cacheBuster}" type="text/css">
     `;
     V1HtmlEditorService.insertContent(depStyles);
   }
