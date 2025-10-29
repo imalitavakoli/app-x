@@ -133,6 +133,10 @@ export class V1FirebaseService {
 
   /* Analytics ////////////////////////////////////////////////////////////// */
 
+  get fireAnalytics() {
+    return fireAnalytics;
+  }
+
   analyticsLogEvent(name: string, data: any = undefined) {
     fireAnalytics.logEvent(this._analytics, name, data);
   }
@@ -154,11 +158,19 @@ export class V1FirebaseService {
 
   /* Realtime Database ////////////////////////////////////////////////////// */
 
+  get fireDb() {
+    return fireDb;
+  }
+
   /**
    * Get data once from the Realtime Database.
    *
    * @example
-   * this._firebaseService.dbGet('users/user1')
+   * const fireDb = this._firebaseService.fireDb;
+   * this._firebaseService.dbGet(
+   *  'users/user1',
+   *  [fireDb.orderByChild('age'), fireDb.equalTo(30)]
+   *  )
    *  .then(data => {
    *   console.log(data);
    *  })
@@ -168,11 +180,21 @@ export class V1FirebaseService {
    *
    * @async
    * @param {string} path
+   * @param {fireDb.QueryConstraint[]} constraints
    * @returns {Promise<any>}
    */
-  async dbGet(path: string) {
+  async dbGet(path: string, constraints?: fireDb.QueryConstraint[]) {
     const dbRef = fireDb.ref(this._database);
-    const snapshot = await fireDb.get(fireDb.child(dbRef, path));
+    const dbRefNested = fireDb.child(dbRef, path);
+    let q: fireDb.Query;
+
+    if (constraints && constraints.length > 0) {
+      q = fireDb.query(dbRefNested, ...constraints);
+    } else {
+      q = dbRefNested;
+    }
+
+    const snapshot = await fireDb.get(q);
     return snapshot.exists() ? snapshot.val() : null;
   }
 
