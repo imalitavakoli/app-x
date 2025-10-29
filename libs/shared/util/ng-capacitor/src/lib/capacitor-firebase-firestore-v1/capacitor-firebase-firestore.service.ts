@@ -122,7 +122,7 @@ export class V1CapacitorFirebaseFirestoreService {
   }
 
   /**
-   * Emits when the document snapshot is updated.
+   * Emits when the collection snapshot is updated.
    *
    * @example
    * this._capacitorFirebaseFirestoreService.onCollectionSnapshot('users')
