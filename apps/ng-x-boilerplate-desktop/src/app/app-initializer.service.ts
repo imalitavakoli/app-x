@@ -7,6 +7,7 @@ import { Injectable, inject, isDevMode } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 
+import { V1BaseAppInitService } from '@x/shared-util-ng-bases';
 import { V1HtmlEditorService } from '@x/shared-util-ng-services';
 import {
   V2Config_MapDataBuild,
@@ -16,8 +17,6 @@ import {
 import { mapConfigExtra } from '@x/ng-x-boilerplate-desktop-map-config';
 
 import { environment } from '../environments/environment';
-import { HaltedState } from './app.interfaces';
-import { AppInitializerBaseService } from './app-initializer-base.service';
 
 /**
  * This is the app's initializer service! Its responsibility is to load all of
@@ -40,7 +39,7 @@ import { AppInitializerBaseService } from './app-initializer-base.service';
  * @extends {AppInitializerBaseService}
  */
 @Injectable({ providedIn: 'root' })
-export class AppInitializerService extends AppInitializerBaseService {
+export class AppInitializerService extends V1BaseAppInitService {
   /* General //////////////////////////////////////////////////////////////// */
 
   // protected readonly _router = inject(Router); // Introduced in Base.
@@ -63,7 +62,7 @@ export class AppInitializerService extends AppInitializerBaseService {
    * @inheritdoc
    */
   override init() {
-    return super.init();
+    return super.init(environment);
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
