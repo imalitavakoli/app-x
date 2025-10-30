@@ -43,7 +43,6 @@ Here's the process for making source code modification PRs.
 &nbsp;
 
 - `6` **Switch to the 'master' branch and fetch origin** to ensure you have the latest version of the 'master' branch locally on your machine. Follow these steps:
-
   - If you already had the latest version, switch back to your own branch and simply create a PR (and add reviewers) to merge your branch with the 'master' branch.
   - If you fetched origin and found yourself behind the latest changes on the 'master' branch, pull origin, switch back to your own branch, merge new commits from 'master' into your own branch, and then: (1) If there were no conflicts, you are ready to create a PR (and add reviewers) to merge your branch with the 'master' branch. (2) If there were conflicts, discuss them with the Code Owner, whom you have conflicts with, to decide whose modifications should be retained.  
     **Tip!** Conflicts rarely occur when developers respect the 'CODEOWNERS' concept and teams are synchronized when working on different parts of the repository.
@@ -66,7 +65,6 @@ Here's the process for making source code modification PRs.
   **Tip!** Remember to close the source branch after merging.
 
   After creating your PR:
-
   - If it's approved by reviewers, proceed to merge it with the 'master' branch.
   - If it's rejected, return to your code, make modifications, commit the changes to update your PR, and mention the reviewer who rejected it in a comment on the PR.
 
@@ -100,15 +98,19 @@ In our workspace, releasing a new version of an app involves compiling the app a
 &nbsp;
 
 - `4` **Compile the target app**, then:
-
   - Delete all files in the `fin/apps/{app-name}/browser` directory, except the server config file (typically `web.config` for most apps).
   - Copy all files from `dist/apps/{app-name}/browser` and paste them into the `fin/apps/{app-name}/browser` directory.
 
 &nbsp;
 
-- `5` **Commit the changes and create a 'dev version' tag on the commit**. A 'dev version' tag consists of two parts: (1) the latest version of DEP config in the workspace; (2) the latest version of the compiled app.  
+- `5` **Commit the changes and create a 'dev version' tag on the commit**. A 'dev version' tag consists of two parts: (1) the latest version of DEP config in the workspace; (2) the latest version of the compiled app; (3) app's 'soft' release flag.  
+  **What is the 'soft' release flag?** It's presented for mobile apps and not web-apps. It specifies whether this version of the app required a full binary compilation (i.e., a native Capacitor plugin is added/removed or native project files updated) or not.  
   **FIN commit naming convention:** `[short-app-name]/v[x.x.x]: [description]`, for example, `boilerplate/v1.1.0: updated auth page`.  
-  **'dev version' tag naming structure:** `dep:v[x.x.x]_app-name:v[x.x.x]`, for example, `dep:v1.1.0_ng-boilerplate:v1.2.3`.
+  **'dev version' tag naming structure:** `DEP-[x.x.x];[app-name]-[y.y.y]_soft`, for example, `DEP-1.1.0;ng-boilerplate-1.2.3_soft`, `DEP-1.1.0;ng-boilerplate-1.2.3`, or `DEP-1.1.0;ANY`.
+
+  **In case you want to release a tag for 1+ apps:** It is possible to create multiple tags on top of each other and over one commit.  
+  **When to use `ANY` as the app name:** Only when all of the FIN files for all apps are updated.  
+  **If the ending `_soft` is not present:** It means that updating to this tag requires a full binary compilation and it's not just a web-base update (i.e., live-update can happen for the mobile app).
 
 &nbsp;
 
@@ -133,7 +135,8 @@ In our workspace, releasing a new version of an app involves compiling the app a
 &nbsp;
 
 - `10` **Finally, create a 'prod version' tag** ONLY on the commit that already has a 'dev version' tag (as we are already sure that the commit with a 'dev version' tag has been tested before tagging it with 'prod').  
-  **'prod version' tag naming structure:** `prod_dep:v[x.x.x]_app-name:v[x.x.x]`, for example, `prod_dep:v1.1.0_ng-boilerplate:v1.2.3`.
+  **'prod version' tag naming structure:** `prod_DEP-[x.x.x];[app-name]-[y.y.y]_soft`, for example, `prod_DEP-1.1.0;ng-boilerplate-1.2.3_soft`.  
+  **Tip!** See step number `5` above for more details about the structure of tags.
 
 &nbsp;
 
