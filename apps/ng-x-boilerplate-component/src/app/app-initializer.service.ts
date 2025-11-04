@@ -37,7 +37,7 @@ import { environment } from '../environments/environment';
  * @export
  * @class AppInitializerService
  * @typedef {AppInitializerService}
- * @extends {AppInitializerBaseService}
+ * @extends {V1BaseAppInitService}
  */
 @Injectable({ providedIn: 'root' })
 export class AppInitializerService extends V1BaseAppInitService {
