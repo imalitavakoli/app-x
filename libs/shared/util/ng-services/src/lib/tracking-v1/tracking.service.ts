@@ -38,6 +38,7 @@ export class V1TrackingService {
   readonly firebaseService = inject(V1FirebaseService);
 
   private _platform: 'ios' | 'android' | 'desktop' = 'desktop';
+  private _isNative = false;
 
   isInitCapacitorFirebaseAnalytics = false;
   isInitApptentive = false;
@@ -72,6 +73,9 @@ export class V1TrackingService {
   prepare(appVersion: string) {
     // Understand what is the platform that app is running on.
     this._platform = this._capacitorCoreService.getPlatform();
+
+    // Understand whether we're on native platform or not.
+    this._isNative = this._capacitorCoreService.isNativePlatform();
 
     // Save required data.
     this._appVersion = appVersion;
@@ -122,7 +126,7 @@ export class V1TrackingService {
     }
 
     if (types.includes('analytics')) {
-      if (this._platform !== 'desktop') this._initCapacitorFirebaseAnalytics();
+      if (this._isNative) this._initCapacitorFirebaseAnalytics();
       else this._initFirebaseAnalytics();
 
       this._initGoogleAnalytics();
