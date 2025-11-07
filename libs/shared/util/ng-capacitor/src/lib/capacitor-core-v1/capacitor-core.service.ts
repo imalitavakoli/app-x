@@ -168,6 +168,22 @@ export class V1CapacitorCoreService {
     return Capacitor.isPluginAvailable(name);
   }
 
+  /**
+   * Check if the platform is native or not. `android` and `ios` would return
+   * true, otherwise false.
+   *
+   * NOTE: This method is more reliable than checking the platform via
+   * `getPlatform` method, because that method is actually based on user agent
+   * and `window.navigator.platform`, which can be easily spoofed, but this
+   * method is based on whether the code runs inside a Capacitor native shell
+   * or not.
+   *
+   * @returns {boolean}
+   */
+  isNativePlatform() {
+    return Capacitor.isNativePlatform();
+  }
+
   /* //////////////////////////////////////////////////////////////////////// */
   /* App: Methods                                                             */
   /* //////////////////////////////////////////////////////////////////////// */

@@ -35,6 +35,7 @@ const resumeSub = this._capacitorCoreService.onResume.subscribe(() => {
 /* Core: Methods //////////////////////////////////////////////////////////// */
 
 const isNotificationAvailable = this._capacitorCoreService.isPluginAvailable('PushNotifications');
+const isNativePlatform = this._capacitorCoreService.isNativePlatform();
 
 /* App: Methods ///////////////////////////////////////////////////////////// */
 
