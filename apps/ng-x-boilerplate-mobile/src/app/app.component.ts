@@ -75,6 +75,7 @@ export class AppComponent implements OnInit {
   private readonly _authAutoService = inject(V1AuthAutoService);
 
   platform: 'ios' | 'android' | 'desktop' = 'desktop';
+  isNative = false;
 
   private _configDep!: V2Config_MapDep; // Hold ALL DEP config.
   private _configFirebase?: V2Config_MapFirebase; // Hold Firebase config.
@@ -100,6 +101,9 @@ export class AppComponent implements OnInit {
 
     // Understand what is the platform that app is running on.
     this.platform = this._capacitorCoreService.getPlatform();
+
+    // Understand whether we're on native platform or not.
+    this.isNative = this._capacitorCoreService.isNativePlatform();
 
     // Get the DEP config data.
     // NOTE: Rxjs take(1) and first() operators are synchronous, so we can
@@ -236,8 +240,8 @@ export class AppComponent implements OnInit {
       );
     };
 
-    // If we are on desktop or `PushNotifications` plugin is not available, simply return.
-    if (this.platform === 'desktop') return;
+    // If we are on browser or `PushNotifications` plugin is not available, simply return.
+    if (!this.isNative) return;
     if (!this._capacitorCoreService.isPluginAvailable('PushNotifications'))
       return;
 
