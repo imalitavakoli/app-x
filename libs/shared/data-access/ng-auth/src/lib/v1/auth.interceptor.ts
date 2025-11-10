@@ -41,6 +41,7 @@ export class V1AuthInterceptor implements HttpInterceptor {
   private readonly _route = inject(ActivatedRoute);
 
   private _platform: 'ios' | 'android' | 'desktop' = 'desktop';
+  private _isNative = false;
   private _deviceUuid?: string = undefined; // Desktop apps don't have a device UUID.
   private _nativeAppInfo: V1CapacitorCore_AppInfo | null = null; // Desktop apps don't have a device UUID.
   private _isRefreshing = false;
@@ -61,6 +62,9 @@ export class V1AuthInterceptor implements HttpInterceptor {
     // Get platform.
     this._platform = this._capacitorCoreService.getPlatform();
     if (this._capacitorCoreService.isPlatformSim) this._platform = 'desktop';
+
+    // Get isNative.
+    this._isNative = this._capacitorCoreService.isNativePlatform();
 
     // Get device UUID (if available).
     this._capacitorCoreService.deviceGetId().then((deviceIdInfo) => {
@@ -220,6 +224,7 @@ export class V1AuthInterceptor implements HttpInterceptor {
       setHeaders: {
         'X-Xapp': JSON.stringify({
           platform: this._platform,
+          isNative: this._isNative,
           ...(appVersion ? { xVersion: appVersion } : {}),
           ...(this._nativeAppInfo ? { id: this._nativeAppInfo.id } : {}),
           ...(this._nativeAppInfo ? { name: this._nativeAppInfo.name } : {}),
