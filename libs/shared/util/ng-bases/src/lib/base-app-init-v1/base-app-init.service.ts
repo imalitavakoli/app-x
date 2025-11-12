@@ -10,7 +10,10 @@ import { asapScheduler, exhaustMap, of, skip, take } from 'rxjs';
 
 import { V1BaseAppInit_HaltedState } from '@x/shared-util-ng-bases-model';
 import { v1LanguageGetCode } from '@x/shared-util-formatters';
-import { V1HtmlEditorService } from '@x/shared-util-ng-services';
+import {
+  V1HtmlEditorService,
+  V1FirebaseService,
+} from '@x/shared-util-ng-services';
 import {
   V2Config_MapDataBuild,
   V2Config_MapDep,
@@ -38,6 +41,7 @@ export class V1BaseAppInitService {
   private readonly _configFacade = inject(V2ConfigFacade);
   private readonly _authFacade = inject(V1AuthFacade);
   private readonly _translationsFacade = inject(V1TranslationsFacade);
+  private readonly _firebaseService = inject(V1FirebaseService);
 
   /** App's DEP config `extra` property mapping function in the 'map' lib of the app. */
   protected readonly _mapConfigExtra: unknown = () => ({ extra: {} });
@@ -154,6 +158,18 @@ export class V1BaseAppInitService {
       // Do more settings, now that data (Build) is loaded.
       this._dataBuildLoaded(dataBuild);
       return null;
+    };
+
+    // Helper function to init Firebase service.
+    const initFirebase = () => {
+      if (!configFirebase) return;
+      if (!configDep.fun.configs.firebaseIntegration) return;
+
+      // Although Firebase service is mostly useful for desktop platforms (because
+      // for mobile platforms we use the native SDKs via Capacitor plugins), we
+      // still initialize it for ALL platforms, because in this way, we can use
+      // some Firebase features that their Capacitor plugins are not available yet.
+      this._firebaseService.init(configFirebase, isDevMode());
     };
 
     // Helper function to set more settings after user is login.
@@ -285,6 +301,9 @@ export class V1BaseAppInitService {
 
               // Set Auth facade config.
               this._setAuthConfig(baseUrl, environment);
+
+              // Init Firebase service (if it should be initialized).
+              initFirebase();
 
               // Switch to the `authState$` Observable.
               return this._authFacade.authState$.pipe(skip(4), take(1));
