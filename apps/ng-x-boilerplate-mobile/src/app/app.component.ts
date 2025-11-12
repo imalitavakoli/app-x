@@ -169,7 +169,6 @@ export class AppComponent implements OnInit {
 
   /** Init the services that can start EVEN BEFORE the user is logged in. */
   private _initServices(): void {
-    this._initFirebase(); // Init the whole Firebase service.
     this._initTracking(); // Prepare & init the tracking service.
     this._initAuthAuto(); // Init the auto-login service.
     this._initCapCoreDeepLinkingListener(); // Listen to deep-linking.
@@ -182,17 +181,6 @@ export class AppComponent implements OnInit {
   }
 
   /* Individual services //////////////////////////////////////////////////// */
-
-  private _initFirebase(): void {
-    if (!this._configFirebase) return;
-    if (!this._configDep.fun.configs.firebaseIntegration) return;
-
-    // Although Firebase service is mostly useful for desktop platforms (because
-    // for mobile platforms we use the native SDKs via Capacitor plugins), we
-    // still initialize it for ALL platforms, because in this way, we can use
-    // some Firebase features that their Capacitor plugins are not available yet.
-    this._firebaseService.init(this._configFirebase, isDevMode());
-  }
 
   private _initTracking(): void {
     this._trackingService.prepare(environment.version);
