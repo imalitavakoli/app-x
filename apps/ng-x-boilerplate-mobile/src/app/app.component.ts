@@ -172,6 +172,7 @@ export class AppComponent implements OnInit {
     this._initFirebase(); // Init the whole Firebase service.
     this._initTracking(); // Prepare & init the tracking service.
     this._initAuthAuto(); // Init the auto-login service.
+    this._initCapCoreDeepLinkingListener(); // Listen to deep-linking.
   }
 
   /** Init the services that MUST start after the user is logged in. */
@@ -216,6 +217,20 @@ export class AppComponent implements OnInit {
       .autoLogin()
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe();
+  }
+
+  private _initCapCoreDeepLinkingListener(): void {
+    if (typeof document === 'undefined') return; // If we are in SSR env (not in browser), just return.
+
+    this._capacitorCoreService.onAppUrlOpen
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((e) => {
+        const url = new URL(e.url);
+        if (!url) return;
+        const host = url.host;
+        const blahblahParam = url.searchParams.get('blahblah');
+        // ...
+      });
   }
 
   private _initCapNotification(): void {
