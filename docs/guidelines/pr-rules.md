@@ -77,9 +77,11 @@ Here's the process for making source code modification PRs.
 Here we outline the process for creating an app `fin` directory PR.  
 In our workspace, releasing a new version of an app involves compiling the app and then copying the compiled files from `dist/apps/{app-name}/browser` to `fin/apps/{app-name}/browser`. Files in the `dist` folder are ignored in git, but files in the `fin` folder are committed. Later on, pipelines (automation tools) can use FIN files to have access to a specific compiled version of an app, in order to change the app's assets and prepare it for different brands (clients).
 
+**Important!** The `fin` folder is updated ONLY when releasing a new version of an app. This means you may need to complete multiple tasks and merge 'Code modification PR' branches before releasing a new version of an app.
+
 **Note!** What is `web.config` in the `fin` folder? It's an XML-based configuration file used in Azure web apps. If the app will be deployed on an Apache-based web server, a `.htaccess` config file should be in the `fin` folder instead.
 
-**Important!** The `fin` folder is updated ONLY when releasing a new version of an app. This means you may need to complete multiple tasks and merge 'Code modification PR' branches before releasing a new version of an app.
+**Tip!** Depending on your workspace setup, you can delete the `fin` folder and completely skip the 'FIN PR' process described below.
 
 &nbsp;
 
@@ -93,20 +95,16 @@ In our workspace, releasing a new version of an app involves compiling the app a
 
 &nbsp;
 
-- `3` **Update app's version** by updating its `apps/{app-name}/environments/` files. Also, update its `CHANGELOG.md` to list the tasks completed in the new version.
-
-&nbsp;
-
-- `4` **Compile the target app**, then:
+- `3` **Compile the target app**, then:
   - Delete all files in the `fin/apps/{app-name}/browser` directory, except the server config file (typically `web.config` for most apps).
   - Copy all files from `dist/apps/{app-name}/browser` and paste them into the `fin/apps/{app-name}/browser` directory.
 
 &nbsp;
 
-- `5` **Commit the changes and create a 'dev version' tag on the commit**. A 'dev version' tag consists of two parts: (1) the latest version of DEP config in the workspace; (2) the latest version of the compiled app; (3) app's 'soft' release flag.  
+- `4` **Commit the changes and create a 'dev version' tag on the commit**. A 'dev version' tag consists of these parts: (1) the latest version of DEP config in the workspace; (2) the latest version of the compiled app; (3) app's testing revision version number; (4) app's 'soft' release flag.  
   **What is the 'soft' release flag?** It's presented for mobile apps and not web-apps. It specifies whether this version of the app required a full binary compilation (i.e., a native Capacitor plugin is added/removed or native project files updated) or not.  
-  **FIN commit naming convention:** `[short-app-name]/v[x.x.x]: [description]`, for example, `boilerplate/v1.1.0: updated auth page`.  
-  **'dev version' tag naming structure:** `DEP-[x.x.x];[app-name]-[y.y.y]_soft`, for example, `DEP-1.1.0;ng-boilerplate-1.2.3_soft`, `DEP-1.1.0;ng-boilerplate-1.2.3`, or `DEP-1.1.0;ANY`.
+  **FIN commit naming convention:** `[short-app-name]/v[x.x.x]/r[y]: [description]`, for example, `boilerplate/v1.1.0/r1: updated part 1 of auth page`.  
+  **'dev version' tag naming structure:** `DEP-[x.x.x];[app-name]-[y.y.y]-r[z]_soft`, for example, `DEP-1.1.0;ng-boilerplate-1.2.3-r1_soft`, `DEP-1.1.0;ng-boilerplate-1.2.3-r2`, or `DEP-1.1.0;ANY-1.2.3-r1`.
 
   **In case you want to release a tag for 1+ apps:** It is possible to create multiple tags on top of each other and over one commit.  
   **When to use `ANY` as the app name:** Only when all of the FIN files for all apps are updated.  
@@ -114,29 +112,45 @@ In our workspace, releasing a new version of an app involves compiling the app a
 
 &nbsp;
 
-- `6` Now **test the app**.  
+- `5` Now **test the app**.  
   **Important!** After your own testing, wait for ACs & QAs to complete testing and inform you of their results.  
-  **Note!** If testing fails, stop the 'FIN' process and start the 'code modification' process.
+  **Note!** If testing fails, stop the 'FIN' process and start the 'code modification' process... And whenever your new code modifications (in another branch of yours) are merged with 'master', you can whether (1) create a new FIN branch from 'master' and do the 'FIN' process from the beginning; or (2) switch back to your previous FIN branch, fetch the latest changes from 'master', and then continue with your 'FIN' process.
 
 &nbsp;
 
-- `7` After a successful test, because the testing process might have been taken long by ACs (e.g., a couple of days), then to ensure you have the latest version of the 'master' branch locally on your machine, **switch to the 'master' branch and fetch origin** once again. Then repeat the similar workflow you've already done in the step number `6` of 'code modification' process.
+- `6` After a successful test, because the testing process might have been taken long by ACs (e.g., a couple of days), then to ensure you have the latest version of the 'master' branch locally on your machine, **switch to the 'master' branch and fetch origin** once again. Then repeat the similar workflow you've already done in the step number `6` of 'code modification' process.  
+  **Note!** If another developer has already released a new version of the same app you've been working on (and you've been releasing different revision 'dev version' tags for it recently), then your compiled `fin` files may conflict with the newer ones from the 'master' branch. In this case, you can safely discard your local `fin` files and keep the ones from 'master'. You'll regenerate the correct `fin` files anyway in the next step when you recompile the app.
 
 &nbsp;
 
-- `8` **Make a PR and add Code Owners as reviewers**. Reviewers don't need to review 'FIN' changed files as the content of the `fin` folder is auto-generated by the compiler. However, in your PR description, it's helpful to list the links to the related tasks (e.g., `TEA-4600`) completed in this version of the app.
+- `7` **Update app's version** by updating its `apps/{app-name}/environments/` files. Also, update its `CHANGELOG.md` to list the tasks completed in the new version.
 
 &nbsp;
 
-- `9` **Merge your PR** when approved by reviewers.  
+- `8` **Compile the target app**, and once again:
+  - Delete all files in the `fin/apps/{app-name}/browser` directory, except the server config file (typically `web.config` for most apps).
+  - Copy all files from `dist/apps/{app-name}/browser` and paste them into the `fin/apps/{app-name}/browser` directory.
+
+&nbsp;
+
+- `9` **Commit the changes**.  
+  **FIN commit naming convention:** `[short-app-name]/v[x.x.x]: [description]`, for example, `boilerplate/v1.1.0: updated auth page`.
+
+&nbsp;
+
+- `10` **Make a PR and add Code Owners as reviewers**. Reviewers don't need to review 'FIN' changed files as the content of the `fin` folder is auto-generated by the compiler. However, in your PR description, it's helpful to list the links to the related tasks (e.g., `TEA-4600`) completed in this version of the app.
+
+&nbsp;
+
+- `11` **Merge your PR** when approved by reviewers.  
   **Important!** When merging the branch, include a 1-line Changelog message in the commit message. Such message can be helpful for ACs whenever they wanna test a specific version of an app.  
   **Tip!** Remember to delete the branch (check 'Close source branch' option), once the PR is approved and you wanna merge it with master.
 
 &nbsp;
 
-- `10` **Finally, create a 'prod version' tag** ONLY on the commit that already has a 'dev version' tag (as we are already sure that the commit with a 'dev version' tag has been tested before tagging it with 'prod').  
+- `12` **Finally, create a 'prod version' tag** ONLY on the FIN commit. A 'prod version' tag consists of these parts: (1) the latest version of DEP config in the workspace; (2) the latest version of the compiled app; (3) app's 'soft' release flag.  
   **'prod version' tag naming structure:** `prod_DEP-[x.x.x];[app-name]-[y.y.y]_soft`, for example, `prod_DEP-1.1.0;ng-boilerplate-1.2.3_soft`.  
-  **Tip!** See step number `5` above for more details about the structure of tags.
+  **Tip!** See step number `4` above for more details about the structure of tags.
 
 &nbsp;
 
