@@ -3,7 +3,7 @@ import {
   runExecutor as nxRunExecutor,
   ExecutorContext,
 } from '@nx/devkit';
-import { EchoExecutorSchema } from './schema';
+import { EchoV1ExecutorSchema } from './schema';
 import {
   validateOptions,
   getLatestVersionFromChangelog,
@@ -14,7 +14,7 @@ import {
   commitAndPushFin,
 } from './fin-util';
 
-const runExecutor: PromiseExecutor<EchoExecutorSchema> = async (
+const runExecutor: PromiseExecutor<EchoV1ExecutorSchema> = async (
   options,
   context: ExecutorContext,
 ) => {

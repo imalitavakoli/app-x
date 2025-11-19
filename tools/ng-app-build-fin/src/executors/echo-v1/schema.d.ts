@@ -1,4 +1,4 @@
-export interface EchoExecutorSchema {
+export interface EchoV1ExecutorSchema {
   changelog: string;
   environmentsPath: string;
   projectName: string;

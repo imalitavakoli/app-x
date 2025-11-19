@@ -1,9 +1,9 @@
 {
   "executors": {
-    "echo": {
-      "implementation": "./src/executors/echo/echo",
-      "schema": "./src/executors/echo/schema.json",
-      "description": "echo executor"
+    "echo-v1": {
+      "implementation": "./src/executors/echo-v1/echo-v1",
+      "schema": "./src/executors/echo-v1/schema.json",
+      "description": "echo-v1 executor"
     }
   }
 }

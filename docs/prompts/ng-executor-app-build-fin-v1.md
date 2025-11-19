@@ -13,7 +13,7 @@ Workspace is a NX monorepo.
 I have done the following:
 
 - I generated a plugin in the workspace by running: `nx g @nx/plugin:plugin tools/ng-app-build-fin`. That's why you can see `tools/ng-app-build-fin` folder.
-- I created an executor by running: `nx generate @nx/plugin:executor tools/ng-app-build-fin/src/executors/echo`. That's why you can see`tools/ng-app-build-fin/src/executors/echo/echo.ts` file.
+- I created an executor by running: `nx generate @nx/plugin:executor tools/ng-app-build-fin/src/executors/echo-v1`. That's why you can see`tools/ng-app-build-fin/src/executors/echo-v1/echo-v1.ts` file.
 
 &nbsp;
 
@@ -35,7 +35,7 @@ You are a NX monorepo specialist who can code NX executors in the workspace, acc
 
 ## What to do
 
-Update `echo.ts` file of the executor (and other executor related files, such as `schema.d.ts` and `schema.json`) to do the steps explained below, when `runExecutor` function is called with the provided `options` argument.
+Update `echo-v1.ts` file of the executor (and other executor related files, such as `schema.d.ts` and `schema.json`) to do the steps explained below, when `runExecutor` function is called with the provided `options` argument.
 
 **Tip!** Take care of each step in its own encapsulated function (create a new util file to keep all encapsulated function in it, if you wish).
 
