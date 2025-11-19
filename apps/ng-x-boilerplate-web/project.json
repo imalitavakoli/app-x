@@ -179,7 +179,7 @@
       "defaultConfiguration": "production"
     },
     "echo-fin": {
-      "executor": "@x/ng-app-build-fin:echo",
+      "executor": "@x/ng-app-build-fin:echo-v1",
       "options": {
         "changelog": "apps/ng-x-boilerplate-web/CHANGELOG.md",
         "environmentsPath": "apps/ng-x-boilerplate-web/src/environments",
