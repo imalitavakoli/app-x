@@ -1,4 +1,5 @@
 {
   "appService.defaultWebAppToDeploy": "None",
-  "appService.showBuildDuringDeployPrompt": false
+  "appService.showBuildDuringDeployPrompt": false,
+  "eslint.validate": ["json"]
 }

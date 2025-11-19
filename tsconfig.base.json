@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@x/ng-app-build-fin": ["tools/ng-app-build-fin/src/index.ts"],
       "@x/ng-x-boilerplate-component-feature-core-initializer": [
         "libs/ng-x-boilerplate-component/feature/core-initializer/src/index.ts"
       ],

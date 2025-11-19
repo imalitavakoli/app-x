@@ -154,6 +154,16 @@
         "buildTarget": "ng-x-boilerplate-component:build"
       }
     },
+    "echo-fin": {
+      "executor": "@x/ng-app-build-fin:echo",
+      "options": {
+        "changelog": "apps/ng-x-boilerplate-component/CHANGELOG.md",
+        "environmentsPath": "apps/ng-x-boilerplate-component/src/environments",
+        "projectName": "ng-x-boilerplate-component",
+        "projectBuildTarget": "app-shell",
+        "handleGit": false
+      }
+    },
     "webcom": {
       "command": "node apps/ng-x-boilerplate-component/web-component-prepare.js --trace-deprecation"
     },

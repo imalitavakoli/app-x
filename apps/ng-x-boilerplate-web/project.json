@@ -178,6 +178,16 @@
       },
       "defaultConfiguration": "production"
     },
+    "echo-fin": {
+      "executor": "@x/ng-app-build-fin:echo",
+      "options": {
+        "changelog": "apps/ng-x-boilerplate-web/CHANGELOG.md",
+        "environmentsPath": "apps/ng-x-boilerplate-web/src/environments",
+        "projectName": "ng-x-boilerplate-web",
+        "projectBuildTarget": "app-shell",
+        "handleGit": false
+      }
+    },
     "transloco-extract": {
       "command": "npx transloco-keys-manager extract --sort --project=apps/ng-x-boilerplate-web/project.json --output=apps/ng-x-boilerplate-web/src/assets/i18n --langs=extracted"
     }

@@ -1,0 +1,51 @@
+{
+  "name": "ng-app-build-fin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "tools/ng-app-build-fin/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/tools/ng-app-build-fin",
+        "main": "tools/ng-app-build-fin/src/index.ts",
+        "tsConfig": "tools/ng-app-build-fin/tsconfig.lib.json",
+        "assets": [
+          "tools/ng-app-build-fin/*.md",
+          {
+            "input": "./tools/ng-app-build-fin/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./tools/ng-app-build-fin/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./tools/ng-app-build-fin",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./tools/ng-app-build-fin",
+            "glob": "executors.json",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "tools/ng-app-build-fin/jest.config.ts"
+      }
+    }
+  }
+}

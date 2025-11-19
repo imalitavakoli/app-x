@@ -220,6 +220,12 @@ In the workspace, I've added specific comments as keywords. These make it easier
 
 &nbsp;
 
+# Prompts
+
+- ## `1` [Angular executor app build FIN](./docs/prompts/ng-executor-app-build-fin.md)
+
+&nbsp;
+
 # FAQ
 
 - ## `1` [Directories & files](./docs/faq/directories-and-files.md)

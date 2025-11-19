@@ -39,6 +39,7 @@ Here's the list of unique **brand-specific color & style variables** that this a
 - Run `nx serve ng-x-boilerplate-desktop` to serve the app.
 - Run `nx build ng-x-boilerplate-desktop` to build the app.
 - Run `nx app-shell ng-x-boilerplate-desktop` to build the app + its app-shell.
+- Run `nx run ng-x-boilerplate-desktop:echo-fin --handleGit=true` to build the app + its app-shell + FIN process (`CHANGELOG.md` should be updated first).
 
 ## Electron (building native app)
 
