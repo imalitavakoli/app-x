@@ -123,7 +123,6 @@ export class V2BasePageParentExtXUsersComponent
   isReadyStarterLib1 = false;
   selectedUserId!: number;
   selectedUser!: V1XUsers_MapUser;
-  hasSelectedLocMeters = true;
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* lifecycle                                                                */
