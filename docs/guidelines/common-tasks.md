@@ -15,11 +15,18 @@ There are always some common tasks that we need to take care of for different pr
 ## Generate & build a whole new functionality
 
 - Generate & build a '_map_' lib (if that feature needs to deal with API).
-- Generate & build a '_ui_' lib.
 - Generate & build a '_data-access_' lib (if that feature needs to deal with API).
+- Generate & build a '_ui_' lib.
 - Generate & build a '_feature_' lib.
 
-**Important!** After building/updating a functionality, it's important to keep all of the updated libs' `README.md` files up-to-date. The Definition of Done (DoD) for a lib is to have a working ready-to-use copy-paste documentation! We basically need to be able to copy the lib's sample codes in its `README.md` file, paste them in our Boilerplate's test page, and be able to see the final results without any errors.
+**Important!** After building/updating a functionality, it's important to keep all of the updated libs' `README.md` files up-to-date. The Definition of Done (DoD) for a lib is to have a working ready-to-use copy-paste documentation! We basically need to be able to copy the lib's sample codes in its `README.md` file, paste them in our test page, and be able to see the final results without any errors.
+
+Here are good examples of `README.md` files:
+
+- for a '_map_' lib: `libs/shared/map/ng-x-credit/src/lib/v1/README.md`.
+- for a '_data-access_' lib: `libs/shared/data-access/ng-x-credit/src/lib/v1/README.md`.
+- for a '_ui_' lib: `libs/shared/ui/ng-x-profile-info/src/lib/v1/README.md`.
+- for a '_feature_' lib: `libs/shared/feature/ng-x-profile-info/src/lib/v1/README.md`.
 
 **Note!** In order to build '_ui_', '_feature_', or '_page_' libs easier, feel free to extend your lib's component class from the base classes that are available in `shared-util-ng-bases` lib.
 
@@ -31,8 +38,10 @@ There are always some common tasks that we need to take care of for different pr
 
 Whenever we receive an error from the server, we log it by `console.error` in '_map_' lib, emit the error as an output in '_feature_' lib, and show the error in '_page_' lib. But according to our logic, sometimes we may like to consider some errors as exceptions and let the app to just ignore them. Here are the steps to do so:
 
-- Update the corresponding '_map_' lib to not log that specific error.
-- Update the corresponding '_feature_' lib to not emit that specific error.
+- Update the corresponding '_map_' lib to not log that specific error.  
+  **Tip!** You can get inspired from `getDetail` function of `V1XCredit` class (`shared-map-ng-x-credit` lib).
+- Update the corresponding '_feature_' lib to not emit that specific error.  
+  **Tip!** You can get inspired from `_xFacadesAddErrorListeners` function of `V1XProfileInfoFeaComponent` class (`shared-feature-ng-x-profile-info` lib).
 
 &nbsp;
 
@@ -55,7 +64,7 @@ Whenever back-end developers add/remove a property in their API's JSON response 
 
 - Update the corresponding '_map_' lib + its interfaces.
 - Update the corresponding '_data-access_' lib.
-- In '_NX Console_' extension: Click to focus on the newly modified '_data-access_' lib in NX Graph, to see what '_feature_'/'_page_' libs are dependant to it.
+- In '_NX Console_' extension: Focus on the newly modified '_data-access_' lib in NX Graph, to see what '_feature_'/'_page_' libs are dependant to it.
 - Update the dependant '_feature_'/'_page_' libs (+ probable dependant '_ui_'/'_util_' libs).
 
 &nbsp;
@@ -85,7 +94,6 @@ Some '_ui_' libs include assets (like images or icons). These assets must be pre
   e.g., `lib_controllers_ico_home`.
 
 - Update `shared-map-ng-config` lib:
-
   - Update `config.interfaces.ts` file to update API interface (`V2Config_ApiDep`) & map interface (`V2Config_MapDep`) `assets` property.
   - Update `config.ts` file to update the mapped object's `assets` property to inject & map your lib's assets properties.  
     e.g., `...libControllersInjectAssets(data?.assets, assetsFolderName),`.
@@ -110,7 +118,6 @@ Some '_feature_' libs have dynamic configuration (DEP config). Such config shoul
   e.g., `CONTROLLERS_1_0_0`.
 
 - Update `shared-map-ng-config` lib:
-
   - Create your own lib's mapping TS file beside `config.ts` file.  
     e.g., `config-lib-controllers.ts`.  
     And in that file you simply write and export your DEP config injector function (e.g., `libControllersInjectV1Inputs`) that map the DEP JSON configs for your lib's config.
@@ -128,7 +135,7 @@ Some '_feature_' libs have dynamic configuration (DEP config). Such config shoul
 
 ## Add new communication interface for a lib
 
-Some '_ui_', '_feature_', or '_page_' libs prefer to have indirect communication via the Communication Service lib (which is a lib that emits events for building communication between different components). The Communication Service can emit `any` type events (or store `any` type data), but it's always the best to specify the event/data interface when you wanna use it! So if your lib is going to initialize the Communication Service to whether emit an event (e.g., `this.cs.emitChange(payload);`), subscribe to an event (e.g., `this.cs.changeEmitted$.subscribe({value} => {});`), or store some small data (e.g., `this.cs.storedData = {...this.cs.storedData, extra};`), it should also create its own interface. Here are the steps to do so:
+Some '_ui_', '_feature_', or '_page_' libs prefer to have indirect communication via the Communication Service (a service in `shared-util-ng-services` lib), which is a lib that emits events for building communication between different components. The Communication Service can emit `any` type events (or store `any` type data), but it's always the best to specify the event/data interface when you wanna use it! So if your lib is going to initialize the Communication Service to whether emit an event (e.g., `this.cs.emitChange(payload);`), subscribe to an event (e.g., `this.cs.changeEmitted$.subscribe({value} => {});`), or store some small data (e.g., `this.cs.storedData = {...this.cs.storedData, extra};`), it should also create its own interface. Here are the steps to do so:
 
 - Update `shared-util-ng-bases` lib:
   - Create your own lib's interface file beside `communication.interfaces.ts` file.  
@@ -148,7 +155,6 @@ As we already know, '_feature_' libs are the last piece of the puzzle for buildi
   **Tip!** Of course after generating the lib, we should make sure that the components' versioning folder structure, component's class name, and component's selector name are according to our standards (similar to other Core libs).
 
 - Update our Web-Component generator app:
-
   - Update `app.interfaces.ts` file to (1) add the component's name in `ComType` (e.g., `initializer-v1`); (2) add component's interface (e.g., `ApiInputsInitializerV1`).  
     **Tip!** All of this interface's optional/required properties must basically be in `string` types. Because this interface is actually showing what URL Query Params our Web-component generator app can accept as the component's inputs.
   - Update `app.component.ts` file to (1) lazy-load the component in `ngAfterViewInit`; (2) setup the component's loading & updating functions (`loadComInitializer` & `setComInitializer`).
@@ -161,7 +167,6 @@ As we already know, '_feature_' libs are the last piece of the puzzle for buildi
 It’s also worth mentioning that, over time, most of our '_feature_' libraries will be upgraded to version +1. At that point, we may decide to release a new version of their web-components and update our Web-Component generator app to compile only the latest versions. In that case, we would first take the following steps before proceeding with the previously mentioned ones:
 
 - Update our Web-Component generator app:
-
   - Update `project.json` file to add a new build configuration. e.g., `targets.build.configurations.webcom-v2`.
   - Add a new `main` TS file. e.g., `main.webcom-v2.ts`.
   - Add a new `tsconfig` file. e.g., `apps/ng-webcom/tsconfig.webcom-v2.json`.
@@ -176,7 +181,6 @@ It’s also worth mentioning that, over time, most of our '_feature_' libraries 
 Some of the '_feature_' libs are already wrapped in another '_feature_' lib (named Core libs) under our Web-Component generator app's (it's one of the apps in our workspace) domain. So whenever that lib's inputs/outputs get updated, the Core lib (which wraps the original lib) should also get updated to support all of the newly updated inputs/outputs. Here are the steps to do so:
 
 - Update our Web-Component generator app:
-
   - Update `app.interfaces.ts` file to mention the newly updated inputs in the lib's related interface.
     e.g., `ApiInputsInitializerV1` interface.
   - Update `app.component.ts` file to mention the newly updated inputs in the lib's related input setup function.
