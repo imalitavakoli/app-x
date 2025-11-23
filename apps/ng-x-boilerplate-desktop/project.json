@@ -183,7 +183,7 @@
         "environmentsPath": "apps/ng-x-boilerplate-desktop/src/environments",
         "projectName": "ng-x-boilerplate-desktop",
         "projectBuildTarget": "app-shell",
-        "handleGit": false
+        "handleGit": true
       }
     },
     "transloco-extract": {

@@ -39,7 +39,7 @@ Here's the list of unique **brand-specific color & style variables** that this a
 - Run `nx serve ng-x-boilerplate-web` to serve the app.
 - Run `nx build ng-x-boilerplate-web` to build the app.
 - Run `nx app-shell ng-x-boilerplate-web` to build the app + its app-shell.
-- Run `nx run ng-x-boilerplate-web:auto-build-fin --handleGit=false` to build the app + its app-shell + FIN process (`CHANGELOG.md` should be updated first).
+- Run `nx run ng-x-boilerplate-web:auto-build-fin --handleGit=true` to build the app + its app-shell + FIN process (`CHANGELOG.md` should be updated first).
 
 ## Deployment notes
 

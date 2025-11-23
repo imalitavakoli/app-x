@@ -185,7 +185,7 @@
         "environmentsPath": "apps/ng-x-boilerplate-web/src/environments",
         "projectName": "ng-x-boilerplate-web",
         "projectBuildTarget": "app-shell",
-        "handleGit": false
+        "handleGit": true
       }
     },
     "transloco-extract": {
