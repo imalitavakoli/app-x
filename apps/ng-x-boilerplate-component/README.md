@@ -52,7 +52,7 @@ Here's the list of unique **brand-specific color & style variables** that this a
 
 - Run `nx serve ng-x-boilerplate-component` to serve the app.
 - Run `nx build ng-x-boilerplate-component` to build the app.
-- Run `nx run ng-x-boilerplate-component:echo-fin --handleGit=true` to build the app + FIN process (`CHANGELOG.md` should be updated first).
+- Run `nx run ng-x-boilerplate-component:auto-build-fin --handleGit=true` to build the app + FIN process (`CHANGELOG.md` should be updated first).
 
 - Run `nx build ng-x-boilerplate-component --configuration=webcom-v1` to build V1 of all web-components.
 - Run `nx run ng-x-boilerplate-component:webcom webcom-v1` to concat JS files and edit the html file to prepare V1 of all web-components for an easy use.

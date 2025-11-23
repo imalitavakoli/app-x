@@ -12,8 +12,8 @@
 Workspace is a NX monorepo.
 I have done the following:
 
-- I generated a plugin in the workspace by running: `nx g @nx/plugin:plugin tools/ng-app-build-fin`. That's why you can see `tools/ng-app-build-fin` folder.
-- I created an executor by running: `nx generate @nx/plugin:executor tools/ng-app-build-fin/src/executors/echo-v1`. That's why you can see`tools/ng-app-build-fin/src/executors/echo-v1/echo-v1.ts` file.
+- I generated a plugin in the workspace by running: `nx g @nx/plugin:plugin tools/ng-auto-build`. That's why you can see `tools/ng-auto-build` folder.
+- I created an executor by running: `nx generate @nx/plugin:executor tools/ng-auto-build/src/executors/fin-v1`. That's why you can see`tools/ng-auto-build/src/executors/fin-v1/fin-v1.ts` file.
 
 &nbsp;
 
@@ -23,21 +23,22 @@ You are a NX monorepo specialist who can code NX executors in the workspace, acc
 
 &nbsp;
 
-## Workflow
+## High-level Workflow
 
-- Read 'What to do' section.
-- Understand what files should be updated/created.
-- Understand what files you should read from.
-- Start updating files based on your priority and understanding.
-- Review the updated/created files to check for any probable errors/problems, and try to fix them (repeat this step until all errors/problems are fixed).
+- Read 'What to do' section to:
+  - Understand what files you should read from.
+  - Understand What files should be updated/created.
+  - Start updating/creating files based on your priority and understanding.
+  - Review the updated/created files to check for any probable errors/problems, and try to fix them (repeat this step until all errors/problems are fixed).
+- Read 'Conclusion' section.
 
 **Tip!** Do not ask me any further questions along the way, unless you're missing a file or you're feeling unclear about something that you have to do.
 
 ## What to do
 
-Update `echo-v1.ts` file of the executor (and other executor related files, such as `schema.d.ts` and `schema.json`) to do the steps explained below, when `runExecutor` function is called with the provided `options` argument.
+Update `fin-v1.ts` file of the executor (and other executor related files, such as `schema.d.ts` and `schema.json`) to do the steps explained below, when `runExecutor` function is called with the provided `options` argument.
 
-**Tip!** Take care of each step in its own encapsulated function (create a new util file to keep all encapsulated function in it, if you wish).
+**Tip!** Take care of each step in its own encapsulated function (create a new util file to keep all encapsulated functions in it and implement the functions).
 
 ### Step 1: Check `options` properties
 
@@ -48,6 +49,7 @@ Here are the `options` properties:
 - `projectName` (required): Project name.
 - `projectBuildTarget` (required): Project build command (target) to run and compile the project.
 - `handleGit` (optional, default is `false`): Define whether the Git related steps should be completed or skipped.
+  `isSoft` (optional, default is `false`): Define whether the Git tag should include 'soft' keyword (indicates whether the new version of the project is a soft web-base or hard native-base update).
 
 Check the `options` object, and based on that, do the following:
 
@@ -63,10 +65,10 @@ Check the `options.handleGit` property, and based on that, do the following:
 
 FIN branch naming convention: `[project-name]/v[x.x.x]`. e.g., `ng-boilerplate/v1.0.0`.
 
-What's the project name?  
+What's 'project-name'?  
 It's in `options.projectName` property.
 
-What's the latest project's version?  
+What's the latest project's version ('x.x.x')?  
 You can read it from the CHANGELOG. Find the latest project version that is mentioned beside the release date. e.g., `[2.0.0] - 2025-11-18`.
 
 Continue to do the following:
@@ -134,6 +136,28 @@ Continue to do the following:
 
 - Commit the changes.
 - Push the changes (if you could without any errors).
+
+&nbsp;
+
+### Step 8: (Git) Create tag
+
+Check the `options.handleGit` property, and based on that, do the following:
+
+- If it's true, continue.
+- It it's false, skip this step.
+
+Tag naming convention: `prod_DEP-[y.y.y];[project-name]-[x.x.x][?_soft]`. e.g., `prod_DEP-1.1.0;ng-boilerplate-1.2.3_soft` or `prod_DEP-1.1.0;ng-boilerplate-1.2.3`.
+
+What's the latest DEP's version ('y.y.y')?  
+You can read it from `apps/{project-name}/src/assets/DEP_config.json`. Search `config_version` property in the JSON file, which it's value is in 'y.y.y' format. e.g., `1.2.3`. If it was not found, consider that it is as same as the project version. Also consider that 'assets' folder in some of the projects may have a prefix. e.g., `x-`.
+
+Should `_soft` be included or not?  
+Check in `options.isSoft` property.
+
+Continue to do the following:
+
+- Create a tag on the commit that happened in the previous steps.
+- Push the tag creation (if you could without any errors).
 
 &nbsp;
 

@@ -1,9 +1,9 @@
 import { ExecutorContext } from '@nx/devkit';
 
-import { EchoV1ExecutorSchema } from './schema';
-import executor from './echo-v1';
+import { FinV1ExecutorSchema } from './schema';
+import executor from './fin-v1';
 
-const options: EchoV1ExecutorSchema = {};
+const options: FinV1ExecutorSchema = {};
 const context: ExecutorContext = {
   root: '',
   cwd: process.cwd(),
@@ -19,7 +19,7 @@ const context: ExecutorContext = {
   nxJsonConfiguration: {},
 };
 
-describe('EchoVx Executor', () => {
+describe('FinV1 Executor', () => {
   it('can run', async () => {
     const output = await executor(options, context);
     expect(output.success).toBe(true);

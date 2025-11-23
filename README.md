@@ -222,7 +222,7 @@ In the workspace, I've added specific comments as keywords. These make it easier
 
 # Prompts
 
-- ## `1` [Angular executor app build FIN](./docs/prompts/ng-executor-app-build-fin.md)
+- ## `1` [Angular executor app build FIN](./docs/prompts/ng-executor-auto-build_fin.md)
 
 &nbsp;
 

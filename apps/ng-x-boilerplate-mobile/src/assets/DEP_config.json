@@ -1,4 +1,5 @@
 {
+  "config_version": "1.0.0",
   "assets": {
     "font_base": "./assets/fonts/E-Base.ttf",
     "font_bold": "./assets/fonts/E-Bold.ttf",

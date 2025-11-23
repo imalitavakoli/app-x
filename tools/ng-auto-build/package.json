@@ -1,5 +1,5 @@
 {
-  "name": "@x/ng-app-build-fin",
+  "name": "@eliq/ng-auto-build",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

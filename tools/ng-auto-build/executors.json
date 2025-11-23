@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "fin-v1": {
+      "implementation": "./src/executors/fin-v1/fin-v1",
+      "schema": "./src/executors/fin-v1/schema.json",
+      "description": "fin-v1 executor"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 {
+  "config_version": "1.0.0",
   "__COMMENT__assets": "This node ('assets') is used to specify the file path to all different assets being used by different components. TIP: Usually, you don't need to modify any of these paths.",
   "assets": {
     "font_base": "./x-assets/fonts/E-Base.ttf",

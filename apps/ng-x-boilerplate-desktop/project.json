@@ -176,14 +176,15 @@
         }
       }
     },
-    "echo-fin": {
-      "executor": "@x/ng-app-build-fin:echo-v1",
+    "auto-build-fin": {
+      "executor": "@x/ng-auto-build:fin-v1",
       "options": {
         "changelog": "apps/ng-x-boilerplate-desktop/CHANGELOG.md",
         "environmentsPath": "apps/ng-x-boilerplate-desktop/src/environments",
         "projectName": "ng-x-boilerplate-desktop",
         "projectBuildTarget": "app-shell",
-        "handleGit": false
+        "handleGit": false,
+        "isSoft": false
       }
     },
     "transloco-extract": {

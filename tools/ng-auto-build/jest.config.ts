@@ -1,10 +1,10 @@
 export default {
-  displayName: 'ng-app-build-fin',
+  displayName: 'ng-auto-build',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/tools/ng-app-build-fin',
+  coverageDirectory: '../../coverage/tools/ng-auto-build',
 };
