@@ -161,8 +161,7 @@
         "environmentsPath": "apps/ng-x-boilerplate-component/src/environments",
         "projectName": "ng-x-boilerplate-component",
         "projectBuildTarget": "app-shell",
-        "handleGit": false,
-        "isSoft": true
+        "handleGit": false
       }
     },
     "webcom": {
