@@ -49,7 +49,6 @@ Here are the `options` properties:
 - `projectName` (required): Project name.
 - `projectBuildTarget` (required): Project build command (target) to run and compile the project.
 - `handleGit` (optional, default is `false`): Define whether the Git related steps should be completed or skipped.
-  `isSoft` (optional, default is `false`): Define whether the Git tag should include 'soft' keyword (indicates whether the new version of the project is a soft web-base or hard native-base update).
 
 Check the `options` object, and based on that, do the following:
 
@@ -136,28 +135,6 @@ Continue to do the following:
 
 - Commit the changes.
 - Push the changes (if you could without any errors).
-
-&nbsp;
-
-### Step 8: (Git) Create tag
-
-Check the `options.handleGit` property, and based on that, do the following:
-
-- If it's true, continue.
-- It it's false, skip this step.
-
-Tag naming convention: `prod_DEP-[y.y.y];[project-name]-[x.x.x][?_soft]`. e.g., `prod_DEP-1.1.0;ng-boilerplate-1.2.3_soft` or `prod_DEP-1.1.0;ng-boilerplate-1.2.3`.
-
-What's the latest DEP's version ('y.y.y')?  
-You can read it from `apps/{project-name}/src/assets/DEP_config.json`. Search `config_version` property in the JSON file, which it's value is in 'y.y.y' format. e.g., `1.2.3`. If it was not found, consider that it is as same as the project version. Also consider that 'assets' folder in some of the projects may have a prefix. e.g., `x-`.
-
-Should `_soft` be included or not?  
-Check in `options.isSoft` property.
-
-Continue to do the following:
-
-- Create a tag on the commit that happened in the previous steps.
-- Push the tag creation (if you could without any errors).
 
 &nbsp;
 
