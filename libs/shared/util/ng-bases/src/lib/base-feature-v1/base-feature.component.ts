@@ -13,7 +13,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { combineLatest, map, Observable, of, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  of,
+  Subscription,
+} from 'rxjs';
 
 import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
 
@@ -115,6 +122,24 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   @Output() hasError = new EventEmitter<{ key: string; value: string }>();
 
   /* //////////////////////////////////////////////////////////////////////// */
+  /* Setter, Getter                                                           */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  /**
+   * Check if we've called to fetch data for the very first time.
+   */
+  protected _isFirstDataFetchDone = new BehaviorSubject<boolean>(false);
+  get isFirstDataFetchDone(): boolean {
+    return this._isFirstDataFetchDone.getValue();
+  }
+  set isFirstDataFetchDone(value: boolean) {
+    this._isFirstDataFetchDone.next(value);
+  }
+  get isFirstDataFetchDone$(): Observable<boolean> {
+    return this._isFirstDataFetchDone.asObservable();
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
   /* X lifecycle                                                              */
   /* //////////////////////////////////////////////////////////////////////// */
 
@@ -134,12 +159,14 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
 
     // Set variables.
     const facadeLoadeds = this._xFacadesPre();
-    // NOTE: We add `of(true)` to make sure the `combineLatest` emits at least
-    // once. Why we need to make sure of that? Because if all 'requested API
+    // NOTE: We add `isFirstDataFetchDone$` to make sure the `combineLatest`
+    // emits at least once AFTER that we have fetched the required data for the
+    // very first time (initialization phase, whenever all required inputs are
+    // set). Why we need to make sure of that? Because if all 'requested API
     // calls arrays' of facades are undefined (i.e., we are simply returning an
     // empty array in `_xFacadesPre`), then the `combineLatest` will not emit
     // anything...
-    const observables = [of(true), ...facadeLoadeds];
+    const observables = [this.isFirstDataFetchDone$, ...facadeLoadeds];
 
     // Prepare the Observable to check: If all data is ready.
     this._isAllDataReady$ = combineLatest(
@@ -149,6 +176,30 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
       ],
     ).pipe(
       map((all) => {
+        // Don't continue IF we still didn't call `_xDataFetch` for the very
+        // first time. Why? Because the 'requested API calls arrays' might be
+        // undefined at the beginning, but may be defined with some pushed
+        // values later, when we're fetching data at the initialization phase...
+        // So we don't like to return true here, by mistake, while we might
+        // still need to fetch some data, as soon as code execution reaches to
+        // `_xDataFetch` function.
+        //
+        // Why this check is not important later, when inputs are changed?
+        // Because before the first data fetch, we are still not sure that
+        // whether 'requested API calls arrays' is going to be defined or not,
+        // so we like to prevent the facades to cause emitting `combineLatest`
+        // too early... But later, when inputs are changed, one of the following
+        // scenarios will happen: (1) 'requested API calls arrays' are still
+        // undefined, then it means that no API call will be called, so nothing
+        // is changed in the facades Object and this whole Observable will not
+        // emit anything new. (2) 'requested API calls arrays' are defined, some
+        // API called are called, facade Objects are updated, and then this
+        // Observable emits new values, and based on the requested data, we will
+        // return true or false... So basically, there's no need to check this
+        // flag here later.
+        const firstDataFetchDone = all[0];
+        if (!firstDataFetchDone) return false;
+
         // Set variables.
         let isAllDataReady = false;
         const loadedsArr = all.slice(1); // Filter out the first item in `all` array, because the first item is always a `true` boolean value that we don't need it here (we just needed it to make sure the `combineLatest` emits at least once).
@@ -218,6 +269,10 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
     this._xDataPre();
     this._xDataReset();
     this._xDataFetch();
+
+    // Indicate that data fetch is done for the very first time (it is useful
+    // in `_initPre`).
+    if (!this.isFirstDataFetchDone) this.isFirstDataFetchDone = true;
   }
 
   /**
@@ -331,18 +386,15 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * @example
    * ```ts
    * protected readonly _insightsFacade = inject(V3InsightsFacade);
-   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[];
    *
    * // Here's an example of how to override this function in a child class.
    * protected override _xFacadesPre(): (Observable<{ [key: string]: boolean }> | Observable<boolean>)[] {
    *   const observables = [];
    *
    *   // LIB: Insights (main)
-   *   if (this._insightsRequestedData_main) {
-   *     observables.push(
-   *       this._insightsFacade.entityLoadeds$('V1BaseFeatureComponent_main'),
-   *     );
-   *   }
+   *   observables.push(
+   *     this._insightsFacade.entityLoadeds$('V1BaseFeatureComponent_main'),
+   *   );
    *
    *   return observables as Observable<{ [key: string]: boolean }>[];
    * }
@@ -435,39 +487,37 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * // Here's an example of how to override this function in a child class.
    * protected override _xFacadesAddErrorListeners(): void {
    *   // LIB: Insights (main)
-   *   if (this._insightsRequestedData_main) {
-   *     this._insightsSub_main = this._insightsFacade
-   *       .entity$('V1BaseFeatureComponent_main')
-   *       .pipe(takeUntilDestroyed(this._destroyRef))
-   *       .subscribe((state) => {
-   *         // Emit the error messages if any.
-   *         const emitError = (key: keyof V3Insights_Datas) => {
-   *           if (state.loadedLatest[key] && state.errors[key]) {
-   *             // Don't emit the following errors (they are exceptions).
-   *             if (state.errors[key] === 'BLAHBLAH') {
-   *               return;
-   *             }
-   *
-   *             // We're here? Then it means that we should emit the error!
-   *             this.xOnError(
-   *               {
-   *                 key: key,
-   *                 value: state.errors[key] as string,
-   *               },
-   *               'V3InsightsFacade',
-   *               'V1BaseFeatureComponent_main',
-   *             );
+   *   this._insightsSub_main = this._insightsFacade
+   *     .entity$('V1BaseFeatureComponent_main')
+   *     .pipe(takeUntilDestroyed(this._destroyRef))
+   *     .subscribe((state) => {
+   *       // Emit the error messages if any.
+   *       const emitError = (key: keyof V3Insights_Datas) => {
+   *         if (state.loadedLatest[key] && state.errors[key]) {
+   *           // Don't emit the following errors (they are exceptions).
+   *           if (state.errors[key] === 'BLAHBLAH') {
+   *             return;
    *           }
-   *         };
    *
-   *         // Loop through `_insightsRequestedData_main` array to emit the error messages.
-   *         this._insightsRequestedData_main = this
-   *           ._insightsRequestedData_main as (keyof V3Insights_Datas)[];
+   *           // We're here? Then it means that we should emit the error!
+   *           this.xOnError(
+   *             {
+   *               key: key,
+   *               value: state.errors[key] as string,
+   *             },
+   *             'V3InsightsFacade',
+   *             'V1BaseFeatureComponent_main',
+   *           );
+   *         }
+   *       };
+   *
+   *       // Loop through `_insightsRequestedData_main` array to emit the error messages.
+   *       if (this._insightsRequestedData_main) {
    *         this._insightsRequestedData_main.forEach((key) => {
    *           emitError(key as keyof V3Insights_Datas);
    *         });
-   *     });
-   *   }
+   *       }
+   *   });
    * }
    * ```
    *
@@ -519,11 +569,9 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * // Here's an example of how to override this function in a child class.
    * protected override _xDataReset(): void {
    *   // LIB: Insights (main)
-   *   if (this._insightsRequestedData_main) {
-   *     this._insightsRequestedData_main = [];
-   *     this._insightsFacade.reset('V1BaseFeatureComponent_main');
-   *     // this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main'); This should have been done BEFORE the DOM is initialized.
-   *   }
+   *   if (this._insightsRequestedData_main) this._insightsRequestedData_main = [];
+   *   this._insightsFacade.reset('V1BaseFeatureComponent_main');
+   *   // this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main'); This should have been done BEFORE the DOM is initialized.
    * }
    * ```
    *
@@ -550,22 +598,19 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * @example
    * ```ts
    * protected readonly _insightsFacade = inject(V3InsightsFacade);
-   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[] = [];
+   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[];
    *
    * private _callInsights_getLocations(instance: string) {
-   *   // If `instance` is main, then main 'requested API calls array' should also be already defined.
-   *   if (this._insightsRequestedData_main) {
-   *     this._insightsRequestedData_main.push('locations');
-   *   }
+   *   // If we should call this API endpoint, then main 'requested API calls array' should get defined (if it's not defined yet).
+   *   if (!this._insightsRequestedData_main) this._insightsRequestedData_main = [];
+   *   this._insightsRequestedData_main.push('locations');
    *   this._insightsFacade.getLocations(this._baseUrl, this._userId, instance);
    * }
    *
    * // Here's an example of how to override this function in a child class.
    * protected override _xDataFetch(): void {
    *   // LIB: Insights (main)
-   *   if (this._insightsRequestedData_main) {
-   *     this._callInsights_getLocations('V1BaseFeatureComponent_main');
-   *   }
+   *   this._callInsights_getLocations('V1BaseFeatureComponent_main');
    * }
    * ```
    *
