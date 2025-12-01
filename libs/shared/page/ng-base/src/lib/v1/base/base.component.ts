@@ -6,6 +6,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
 
 import { V1CapacitorCoreService } from '@x/shared-util-ng-capacitor';
+import { V1OnNavScrollMeToTopDirective } from '@x/shared-ui-ng-directives';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1AppHeaderFeaComponent } from '@x/shared-feature-ng-app-header';
 import { V1AppFooterFeaComponent } from '@x/shared-feature-ng-app-footer';
@@ -17,6 +18,7 @@ import { V1AppFooterFeaComponent } from '@x/shared-feature-ng-app-footer';
     IonContent,
     CommonModule,
     RouterModule,
+    V1OnNavScrollMeToTopDirective,
     V1AppHeaderFeaComponent,
     V1AppFooterFeaComponent,
   ],
