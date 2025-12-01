@@ -123,11 +123,11 @@ In our workspace, releasing a new version of an app involves compiling the app a
 
 &nbsp;
 
-**Note!** After step number `6`, you can optionally skip step `7`, `8`, and `9` to automatically do them (you still need to continue with the process from step number `10`). Now here's how to skip the mentioned steps: (1) Switch back to 'master' branch, (2) delete the FIN branch that you have created earlier, (3) update app's `CHANGELOG.md` to list the tasks completed in the new version, and (4) run `nx run appname:auto-build-fin --handleGit=true` command of the app (of course the app should already have `auto-build-fin` target) to do the mentioned steps automatically by running an executor that exists in the workspace. It's also worth mentioning that, if you prefer to do those steps manually as well, you can just simply continue to the next step.
+**Note!** After step number `6`, you can optionally skip step `7`, `8` and `9` to automatically do them (you still need to continue with the process from step number `10`). Now here's how to skip the mentioned steps: (1) Switch back to 'master' branch, (2) delete the FIN branch that you have created earlier, (3) update app's `CHANGELOG.md` to briefly mention what has been changed, and (4) run `nx run appname:auto-build-fin --handleGit=true` command of the app (of course the app should already have `auto-build-fin` target) to do the mentioned steps automatically by running an executor that exists in the workspace. It's also worth mentioning that, if you prefer to do those steps manually as well, you can just simply continue to the next step.
 
 &nbsp;
 
-- `7` **Update app's version** by updating its `apps/{app-name}/environments/` files. Also, update its `CHANGELOG.md` to list the tasks completed in the new version.
+- `7` **Update app's version** by updating its `apps/{app-name}/environments/` files. Also, update its `CHANGELOG.md` to briefly mention what has been changed (It's also nice to list the tasks completed in the new version).
 
 &nbsp;
 

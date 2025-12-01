@@ -121,6 +121,7 @@ Then we ran the following commands to install some Capacitor plugins:
 
 Above plugins are Capacitor Plugin Dependencies. i.e., we should make sure that they are installed, even if we don't import them in our app! Because Ionic itself makes use of them. [Click here](https://capacitorjs.com/docs/getting-started/with-ionic#install-capacitor-plugin-dependencies) to read more.
 
+- Ran `pnpm add @capacitor/local-notifications` to install [local-notifications](https://capacitorjs.com/docs/apis/local-notifications) plugin.
 - Ran `pnpm add @capacitor/preferences` to install [preferences](https://capacitorjs.com/docs/apis/preferences) plugin.
 - Ran `pnpm add @capacitor/push-notifications` to install [push-notifications](https://capacitorjs.com/docs/apis/push-notifications) plugin.
 - Ran `pnpm add @capacitor/browser` to install [browser](https://capacitorjs.com/docs/apis/browser) plugin.

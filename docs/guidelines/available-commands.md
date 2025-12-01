@@ -12,7 +12,7 @@ There are numerous commands available to assist you in development and generatin
 
 To keep the workspace dependencies up to date and take advantage of the latest standards in the technologies you're using, it's recommended to update the entire workspace from time to time. This section explains how to do it.
 
-### How the Workspace Specialist can update the whole workspace
+### Workspace Specialist: How to update the whole workspace
 
 - Update your machine's globally installed [Node.js](https://nodejs.org/en), [pnpm](https://pnpm.io/), and [NX](https://nx.dev/) versions.
 
@@ -28,14 +28,7 @@ To keep the workspace dependencies up to date and take advantage of the latest s
 
 - _Optional!_ Run `pnpm exec nx migrate --run-migrations --create-commits` to update the workspace and create commits for each step! Depending on the update size and workspace, the migration process may generate numerous changes requiring review. With the `--create-commits` flag, NX will automatically create a separate commit for each successfully completed migration (with a default commit prefix of `chore: [nx migration]`). This not only distinguishes NX migration commits from manual file edits, but also ensures each step of the migration has passed tests successfully.
 
-### How to update the whole workspace as a team member
-
-After the Workspace Specialist updates the workspace and merges the changes into 'master', you, as a team member, should also update the dependencies on your machine:
-
-- Update your machine's globally installed [Node.js](https://nodejs.org/en), [pnpm](https://pnpm.io/), and [NX](https://nx.dev/) versions to match with the versions that the Workspace Specialist specifies. e.g., if the NX version should be 21.5.1, you can run `npm install -g nx@21.5.1` (or `npm add --global nx@21.5.1`) to install the exact version.
-- Run `pnpm install --frozen-lockfile` to update the installed local dependencies.
-
-### What the Workspace Specialist should consider
+### Workspace Specialist: What should be considered
 
 When migrating the workspace, not all dependencies in the `package.json` file may be updated to their latest major versions. So before running `pnpm install` command, you may need to write their latest version in `package.json` file manually. Here are some notes to keep in mind:
 
@@ -46,6 +39,15 @@ When migrating the workspace, not all dependencies in the `package.json` file ma
 - **Transloco related updates**: Whenever updating `@jsverse/transloco`, it's worthy to also update `@jsverse/transloco-keys-manager`.
 
 **Note!** Of course, after updating dependency packages to their latest versions (such as Capacitor or TailwindCSS), you should also review their '_Upgrade Guides_'. This will help you identify any required changes in related workspace files and be aware of potential breaking changes.
+
+**Note!** After completing the migration, make sure to serve apps to confirm everything works as expected. It's also a good idea to test the generation commands to ensure that libs and components can still be generated normally.
+
+### How to update the whole workspace as a team member
+
+After the Workspace Specialist updates the workspace and merges the changes into 'master', you, as a team member, should also update the dependencies on your machine:
+
+- Update your machine's globally installed [Node.js](https://nodejs.org/en), [pnpm](https://pnpm.io/), and [NX](https://nx.dev/) versions to match with the versions that the Workspace Specialist specifies. e.g., if the NX version should be 21.5.1, you can run `npm install -g nx@21.5.1` (or `npm add --global nx@21.5.1`) to install the exact version.
+- Run `pnpm install --frozen-lockfile` to update the installed local dependencies.
 
 &nbsp;
 

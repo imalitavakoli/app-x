@@ -61,7 +61,6 @@ To improve teamwork, we follow some best practices:
 ## Organizing
 
 - **When building UI, it's important to maintain consistency** across different libraries created by multiple front-end developers. Here's the priority, from top to bottom, when using different 3rd-party frameworks:
-
   - Our own shared libs for building unique-designed UIs across our company. Such as simple inputs, cards, buttons, links, preloader, etc.
   - [daisyui](https://daisyui.com/) for building simple UIs, such as toggle, carousel, accordion, etc.
   - [ionicframework](https://ionicframework.com/) for building more common complex UIs, such as alert, menu, etc.
@@ -82,13 +81,11 @@ To improve teamwork, we follow some best practices:
 - **Import component dependencies in a consistent order from top to bottom**! This practice not only makes it easier for a new developer to read & understand the logic of an older component, but it also helps unify the structure of components across the workspace.
 
   The following order is recommended:
-
   - Technology related dependencies (e.g., Angular core, common, router, rxjs, etc.).
   - Our workspace libs.
   - Lib's internal files.
 
   Regarding the workspace libs, The following order is recommended, based on the types of libs:
-
   - '_util_'
   - '_map_'
   - '_ui_'
@@ -103,19 +100,22 @@ To improve teamwork, we follow some best practices:
 
 &nbsp;
 
-- **Globally exposed components in '_ui_' or '_feature_' libs**: If the lib needs to expose more than one main component, each component should have its own folder directly within the version folder (e.g., v1). So basically there's no component files (`.ts`, `.html`, `.scss`, etc.) directly inside of the version folder. This structure keeps internal component files organized and makes it clear how many components the lib is exposing globally right at the first glance. For example:
-
+- **Globally exposed components in '_ui_' or '_feature_' libs**: If the lib needs to expose more than one main component, each component should have its own folder directly within the version folder (e.g., v1). So basically there's no component files (`.ts`, `.html`, `.scss`, etc.) directly inside of the version folder. This structure keeps internal component files organized and makes it clear how many components the lib is exposing globally right at the first glance.  
+  **Tip!** If your lib has technology related prefix (e.g., `ng-`), then you don't need to repeat the prefix for the inner folders. So the lib's main folder (which hold all of the lib files including `project.json` and others) can be `ng-chart`, but inner folder names (which hold the globally exposed components) can be `chart-wizard` or `chart-popup`.  
+  For example:
   - `v1/libname-wizard/libname-wizard.component.ts`
   - `v1/libname-popup/libname-popup.component.ts`
 
-- **Private internal files in '_ui_' or '_feature_' libs**: If the lib needs to be broken down into smaller components (or have lots of TS code files to hold different interfaces, mocks, or utility functions), but all of those files are meant to be for internal usage of the lib itself (i.e., they are NOT useful to be exposed globally across the workspace), then the ones which exist directly in the version folder of the lib should have '\_' prefix for their file name (e.g., `_libname.interfaces.ts`), and the ones which rest in their own respective folder should have '\_' prefix for their folder name (e.g., `_feature`). For example:
-
-  - `v1/libname.component.ts` (this is the lib's main component that is exposed globally and can rest directly in the version folder)
+- **Private internal files in '_ui_' or '_feature_' libs**: If the lib needs to be broken down into smaller components (or have lots of TS code files to hold different interfaces, mocks, or utility functions), but all of those files are meant to be for internal usage of the lib itself (i.e., they are NOT useful to be exposed globally across the workspace), then the ones which exist directly in the version folder of the lib should have '\_' prefix for their file name (e.g., `_libname.interfaces.ts`), and the ones which rest in their own respective folder should have '\_' prefix for their folder name (e.g., `_feature`).  
+  **Tip!** If your lib has technology related prefix (e.g., `ng-`), then you don't need to repeat the prefix for the inner folders. So the lib's main folder (which hold all of the lib files including `project.json` and others) can be `ng-chart`, but inner folder names (which hold the globally or internally exposed components) can be `chart` or `wizard`.  
+  For example:
+  - `v1/libname/libname.component.ts` (this is the lib's main component that is exposed globally)
   - `v1/_feature/wizard/wizard.component.ts` (this component is a '_feature_' one)
   - `v1/_feature/popup/popup.component.ts`
   - `v1/_ui/button/button.component.ts` (this component is a '_ui_' one)
+  - `v1/_ui/button/button.interfaces.ts` (this interface is being used by the 'button' component only)
   - `v1/_util/formatter.ts` (this TS file is a '_util_' one, which contains some capsulated utility functions)
-  - `v1/_libname.interfaces.ts`
+  - `v1/_libname.interfaces.ts` (this interface is being used by multiple internal components, utilities, or services)
   - `v1/_util/mocks/something1.mocks.ts`
   - `v1/_util/mocks/something2.mocks.ts`
 
