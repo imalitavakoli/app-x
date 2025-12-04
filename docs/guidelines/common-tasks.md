@@ -151,7 +151,7 @@ Some '_ui_', '_feature_', or '_page_' libs prefer to have indirect communication
 
 As we already know, '_feature_' libs are the last piece of the puzzle for building a whole new functionality. So after having them in place, we may like to deliver them as web-component as well. In order to do that, we need to generate a new '_feature_' typed lib (named Core lib) under our Web-Component generator app (it's one of the apps in our workspace) domain to wrap in the original '_feature_' lib. This newly generated Core lib will eventually become a web-component by our Web-Component generator app. Here are the steps to do so:
 
-- Run `nx g @nx/angular:lib appname-feature-corename --directory=libs/appname/feature/corename --tags=type:feature,domain:appname` command to generate a new '_feature_' lib under Web-Component generator app domain.  
+- Run `nx g @nx/angular:lib {appname}-feature-{corename} --directory=libs/{appname}/feature/{corename} --tags=type:feature,domain:{appname}` command to generate a new '_feature_' lib under Web-Component generator app domain.  
   **Tip!** Of course after generating the lib, we should make sure that the components' versioning folder structure, component's class name, and component's selector name are according to our standards (similar to other Core libs).
 
 - Update our Web-Component generator app:

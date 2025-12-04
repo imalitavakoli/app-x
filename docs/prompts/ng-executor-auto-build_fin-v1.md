@@ -125,7 +125,7 @@ Check the `options.handleGit` property, and based on that, do the following:
 - If it's true, continue.
 - It it's false, skip this step.
 
-Commit message naming convention: `[project-name]/v[x.x.x]: [description]`. e.g., `ng-boilerplate/v1.1.0: updated auth page`.
+Commit message naming convention: `[project-name]/v[x.x.x]/[description]`. e.g., `ng-boilerplate/v1.1.0/updated auth page`.
 
 Where's the commit message 'description' part?  
 You can read it from the CHANGELOG, under the latest project version.  

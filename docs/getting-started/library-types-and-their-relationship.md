@@ -117,7 +117,7 @@ Pages initialize multiple '_feature_' libs to bring up a much bigger functionali
 
 Always keep all the codes for shared libraries in folders that have version numbers. For example, the path to the shared library codes should be like this: `libs/shared/util/{lib-name}/src/lib/{version}`.
 
-**Note!** When you like to export your shared library codes (in the `libs/shared/util/{lib-name}/src/index.ts` file of the shared library), you can also export the codes from different version folders using alias names like this: `export * as V1NAME from './lib/v1/lib-name';`. But, this approach is not recommended, because (1) codes (such as constants, functions, interfaces, and etc.) cannot be imported individually; (2) the codes imported under an alias name, cannot be used in HTML templates directly; (3) You cannot export components, directives, and pipes under an alias name, so this forces you to use two different ways of importing codes, rather than having one single unique way of doing this. That's why we just simply include the version number directly in the TypeScript code that is going to be exported. For instance, `V1PopupComponent`, or `V1ToggleMeDirective` (and for components, directives, and pipes, of course in their selectors/names as well, for example `x-popup-v1`, or `xToggleMeV1`).
+**Note!** When you like to export your shared library codes (in the `libs/shared/util/{lib-name}/src/index.ts` file of the shared library), you can also export the codes from different version folders using alias names like this: `export * as V1NAME from './lib/v1/{lib-name}';`. But, this approach is not recommended, because (1) codes (such as constants, functions, interfaces, and etc.) cannot be imported individually; (2) the codes imported under an alias name, cannot be used in HTML templates directly; (3) You cannot export components, directives, and pipes under an alias name, so this forces you to use two different ways of importing codes, rather than having one single unique way of doing this. That's why we just simply include the version number directly in the TypeScript code that is going to be exported. For instance, `V1PopupComponent`, or `V1ToggleMeDirective` (and for components, directives, and pipes, of course in their selectors/names as well, for example `x-popup-v1`, or `xToggleMeV1`).
 
 **Important!** If for any reason you decided to export a specific code under an alias name (although it's not recommended), search for your alias name across the entire workspace to ensure it has NOT been used previously! New alias names MUST be unique to prevent accidental conflicts in the projects.
 
@@ -140,14 +140,12 @@ The versioning folder names can be something like `v1`, `v2`, etc. They can also
 Shared libs are the libraries that will be utilized across multiple apps and other libraries. Some of these libs will be used more commonly than others. Here are some important notes to keep in mind about such libs.
 
 - `libs/shared/ui/tailwindcss/` lib: In this lib, you can find the following CSS classes, which can be used in special occasions:
-
   - In `components-general.scss` `e-h-usual`: To show any heading in `1.875rem = 30px` size (`<h4>` size). Our apps use this heading font size a lot... So for example, to have a page heading, we can semantically use `<h1>` HTML tag, but set `e-h-usual` CSS class for it.
   - In `components-general.scss` `e-ecode`: To show the app's UX edge decisions codes. It adds some styles to the code.
   - In `components-general.scss` `e-notrans`: To show the texts that are not being read from the translations lib, and are hard-coded instead. It makes finding such texts easier across the app to plan for adding their translations later.  
     **Tip!** If you just want to mark such texts in your code (without adding any css styles), you can just simply write `TODO:TRANS` comment above your text, whether it's in HTML or TS.
 
 - `libs/shared/ui/base/` lib: In this lib, you can find the following CSS classes, which can be used in special occasions:
-
   - In `mains.scss` `e-svg`: To define some default styles for the direct `<svg>` element that is loaded in `<inline-svg>` components that have `e-svg` CSS class.
 
 [🔙](../../README.md#getting-started)

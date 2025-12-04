@@ -25,18 +25,18 @@ Here's the process for making source code modification PRs.
 &nbsp;
 
 - `3` If you're in this step, it means investigations & consultations are already done, and code modifications are needed. So **create a new task** for every semantic (meaningful) modification in our codebase.  
-  **Task naming conventions:** `x: [description]`, `x/apps/[short-app-name]: [description]`, or `x/libs/[lib-type]/[short-lib-name]: [description]`. For example, `x: update deps`, `x/apps/boilerplate: add simple auth page`, `x/libs/feature,ui/chart: update readme`.  
-  **Tip!** Tasks are usually small. For instance, task `x/apps/boilerplate: add simple auth page` may only modify 7 files and add 4 files.
+  **Task naming conventions:** `x/[description]`, `x/apps/[app-name]/[description]`, or `x/libs/[lib-type]/[lib-name]/[description]`. For example, `x/update deps`, `x/apps/ng-boilerplate/add simple auth page`, `x/libs/feature,ui/ng-chart/update readme`.  
+  **Tip!** Tasks are usually small. For instance, task `x/apps/ng-boilerplate/add simple auth page` may only modify 7 files and add 4 files.
 
 &nbsp;
 
 - `4` Fetch the latest modifications from the 'master' branch to your local machine, then **create a new branch** from 'master' for every task.  
-  **Branch naming convention:** `(task-ticket-num)x:[description]`, `(task-ticket-num)x/apps/[short-app-name]:[description]`, or `(task-ticket-num)x/libs/[lib-type]/[short-lib-name]:[description]`. For example, `(TEA-4600)x:update-deps`, `(TEA-4600)x/apps/boilerplate:add-simple-auth-page`, `(TEA-4600)x/libs/feature,ui/chart:update-readme`.
+  **Branch naming convention:** `(task-ticket-num)x/[description]`, `(task-ticket-num)x/apps/[app-name]/[description]`, or `(task-ticket-num)x/libs/[lib-type]/[lib-name]/[description]`. For example, `(TEA-4600)x/update-deps`, `(TEA-4600)x/apps/ng-boilerplate/add-simple-auth-page`, `(TEA-4600)x/libs/feature,ui/ng-chart/update-readme`.
 
 &nbsp;
 
 - `5` Make your modifications in your branch, and **commit every little semantic modification** with a brief description.  
-  **Commit naming convention:** `x: [description]`, `x/apps/[short-app-name]: [description]`, or `x/libs/[lib-type]/[short-lib-name]: [description]`. For example, `x: updated deps`, `x/apps/boilerplate: added simple auth page`, `x/libs/feature,ui/chart: updated readme`.  
+  **Commit naming convention:** `x/[description]`, `x/apps/[app-name]/[description]`, or `x/libs/[lib-type]/[lib-name]/[description]`. For example, `x/updated deps`, `x/apps/ng-boilerplate/added simple auth page`, `x/libs/feature,ui/ng-chart/updated readme`.  
   **Important!** If you have updated `package.json` or `pnpm-lock.yaml` files, you must inform the Workspace Specialist or EM (Engineering Manager), because updating the workspace packages is sensitive and might break the pipeline processes (if there's any automation defined).  
   **Note!** Always remember to keep the `README.md` file and documentation of the app/lib you've modified up-to-date. Here's the best practice: (1) Before changing any code, update the docs accordingly; (2) make your code modifications; (3) review the docs again to ensure they reflect the final changes. This way, the documentation stays current.
 
@@ -90,7 +90,7 @@ In our workspace, releasing a new version of an app involves compiling the app a
 &nbsp;
 
 - `2` Fetch the latest modifications on the 'master' branch to your local machine, then **create a new FIN branch** from 'master' for each app you want to release its new production version.  
-  **FIN branch naming convention:** `[short-app-name]/v[x.x.x]`, for example, `boilerplate/v1.0.0`.  
+  **FIN branch naming convention:** `[app-name]/v[x.x.x]`, for example, `ng-boilerplate/v1.0.0`.  
   **Tip!** It's recommended to follow [Semantic Versioning](http://semver.org/).
 
 &nbsp;
@@ -103,7 +103,7 @@ In our workspace, releasing a new version of an app involves compiling the app a
 
 - `4` **Commit the changes and create a 'dev version' tag on the commit**. A 'dev version' tag consists of these parts: (1) the latest version of DEP config in the workspace; (2) the latest version of the compiled app; (3) app's testing revision version number; (4) app's 'soft' release flag.  
   **What is the 'soft' release flag?** It's presented for mobile apps and not web-apps. It specifies whether this version of the app required a full binary compilation (i.e., a native Capacitor plugin is added/removed or native project files updated) or not.  
-  **FIN commit naming convention:** `[short-app-name]/v[x.x.x]/r[y]: [description]`, for example, `boilerplate/v1.1.0/r1: updated part 1 of auth page`.  
+  **FIN commit naming convention:** `[app-name]/v[x.x.x]/r[y]/[description]`, for example, `ng-boilerplate/v1.1.0/r1/updated part 1 of auth page`.
   **'dev version' tag naming structure:** `DEP-[x.x.x];[app-name]-[y.y.y]-r[z]_soft`, for example, `DEP-1.1.0;ng-boilerplate-1.2.3-r1_soft`, `DEP-1.1.0;ng-boilerplate-1.2.3-r2`, or `DEP-1.1.0;ANY-1.2.3-r1`.
 
   **In case you want to release a tag for 1+ apps:** It is possible to create multiple tags on top of each other and over one commit.  
@@ -123,7 +123,7 @@ In our workspace, releasing a new version of an app involves compiling the app a
 
 &nbsp;
 
-**Note!** After step number `6`, you can optionally skip step `7`, `8` and `9` to automatically do them (you still need to continue with the process from step number `10`). Now here's how to skip the mentioned steps: (1) Switch back to 'master' branch, (2) delete the FIN branch that you have created earlier, (3) update app's `CHANGELOG.md` to briefly mention what has been changed, and (4) run `nx run appname:auto-build-fin --handleGit=true` command of the app (of course the app should already have `auto-build-fin` target) to do the mentioned steps automatically by running an executor that exists in the workspace. It's also worth mentioning that, if you prefer to do those steps manually as well, you can just simply continue to the next step.
+**Note!** After step number `6`, you can optionally skip step `7`, `8` and `9` to automatically do them (you still need to continue with the process from step number `10`). Now here's how to skip the mentioned steps: (1) Switch back to 'master' branch, (2) delete the FIN branch that you have created earlier, (3) update app's `CHANGELOG.md` to briefly mention what has been changed, and (4) run `nx run {appname}:auto-build-fin --handleGit=true` command of the app (of course the app should already have `auto-build-fin` target) to do the mentioned steps automatically by running an executor that exists in the workspace. It's also worth mentioning that, if you prefer to do those steps manually as well, you can just simply continue to the next step.
 
 &nbsp;
 
@@ -138,7 +138,7 @@ In our workspace, releasing a new version of an app involves compiling the app a
 &nbsp;
 
 - `9` **Commit the changes**.  
-  **FIN commit naming convention:** `[short-app-name]/v[x.x.x]: [description]`, for example, `boilerplate/v1.1.0: updated auth page`.
+  **FIN commit naming convention:** `[app-name]/v[x.x.x]/[description]`, for example, `ng-boilerplate/v1.1.0/updated auth page`.
 
 &nbsp;
 
