@@ -99,7 +99,7 @@ export function commitAndPushFin(
   version: string,
   description: string,
 ): boolean {
-  const msg = `${projectName}/v${version}: ${description}`;
+  const msg = `${projectName}/v${version}/${description}`;
   try {
     execSync('git add .');
     execSync(`git commit -m "${msg}"`);
