@@ -133,6 +133,7 @@
     "@typescript-eslint/parser": "7.16.0",
     "@typescript-eslint/utils": "^7.16.0",
     "autoprefixer": "^10.4.15",
+    "baseline-browser-mapping": "^2.9.2",
     "commander": "^13.1.0",
     "cypress": "14.2.1",
     "daisyui": "^4.10.5",
