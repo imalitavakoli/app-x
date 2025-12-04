@@ -123,6 +123,7 @@ export class AppComponent implements OnInit {
     });
 
     // Init some libs.
+    if (!this.isBrowser) return; // If not in browser (i.e., we are in SSR env and running `app-shell` command), just return.
     this._xInit();
   }
 
