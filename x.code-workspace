@@ -1,32 +1,32 @@
 {
   "folders": [
     {
-      "path": "."
-    }
+      "path": ".",
+    },
   ],
   "settings": {
     "[javascript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.formatOnSave": true,
-      "editor.formatOnSaveMode": "file"
+      "editor.formatOnSaveMode": "file",
     },
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.formatOnSave": true,
-      "editor.formatOnSaveMode": "file"
+      "editor.formatOnSaveMode": "file",
     },
     "[json]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.formatOnSave": true,
-      "editor.formatOnSaveMode": "file"
+      "editor.formatOnSaveMode": "file",
     },
     "[jsonc]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.formatOnSave": true,
-      "editor.formatOnSaveMode": "file"
+      "editor.formatOnSaveMode": "file",
     },
     "[markdown]": {
-      "files.trimTrailingWhitespace": false
+      "files.trimTrailingWhitespace": false,
     },
     "editor.tabSize": 2,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -34,12 +34,12 @@
     "editor.formatOnSaveMode": "file",
     "editor.rulers": [80],
     "editor.quickSuggestions": {
-      "strings": "on"
+      "strings": "on",
     },
     "spellright.notificationClass": "hint",
     "files.associations": {
       "CODEOWNERS": "ignore",
-      "*.css": "tailwindcss"
+      "*.css": "tailwindcss",
     },
     "comment-divider.shouldLengthIncludeIndent": true,
     "comment-divider.mainHeaderFiller": "/",
@@ -50,6 +50,7 @@
     "comment-divider.mainHeaderHeight": "block",
     "comment-divider.subheaderHeight": "line",
     "comment-divider.length": 80,
-    "nxConsole.generateAiAgentRules": true
-  }
+    "nxConsole.generateAiAgentRules": true,
+    "chat.mcp.access": "all",
+  },
 }

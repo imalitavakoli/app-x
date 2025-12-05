@@ -19,7 +19,7 @@ Before proceeding, ensure you have the following installed on your machine:
 
 - Run `npm install -g pnpm@9.15.9` to install [pnpm](https://pnpm.io/) globally on your machine. It's a fast and disk space-efficient package manager.
 - Run `pnpm setup` to set up the global bin directory of pnpm at `C:\Users\USER\AppData\Local\pnpm` on your machine.
-- Run `npm install -g nx@21.5.1` to install [NX](https://nx.dev/) globally on your machine.
+- Run `npm install -g nx@22.1.3` to install [NX](https://nx.dev/) globally on your machine.
 - Run `npm install -g electron-builder@26.0.12`
 - _Optional!_ Run `pnpm add -g nx` to install [NX](https://nx.dev/) globally via [pnpm](https://pnpm.io/) on your machine.
 
