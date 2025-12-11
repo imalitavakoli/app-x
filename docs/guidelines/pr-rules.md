@@ -31,7 +31,7 @@ Here's the process for making source code modification PRs.
 &nbsp;
 
 - `4` Fetch the latest modifications from the 'master' branch to your local machine, then **create a new branch** from 'master' for every task.  
-  **Branch naming convention:** `(task-ticket-num)x/[description]`, `(task-ticket-num)x/apps/[app-name]/[description]`, or `(task-ticket-num)x/libs/[lib-type]/[lib-name]/[description]`. For example, `(TEA-4600)x/update-deps`, `(TEA-4600)x/apps/ng-boilerplate/add-simple-auth-page`, `(TEA-4600)x/libs/feature,ui/ng-chart/update-readme`.
+  **Branch naming convention:** `[task-id]-[description]`, or `[bugfix,feature,refactor]/[task-id]-[description]`. For example, `TEA-4600-update-deps`, `feature/TEA-4600-add-simple-auth-page`.
 
 &nbsp;
 
@@ -123,7 +123,7 @@ In our workspace, releasing a new version of an app involves compiling the app a
 
 &nbsp;
 
-**Note!** After step number `6`, you can optionally skip step `7`, `8` and `9` to automatically do them (you still need to continue with the process from step number `10`). Now here's how to skip the mentioned steps: (1) Switch back to 'master' branch, (2) delete the FIN branch that you have created earlier, (3) update app's `CHANGELOG.md` to briefly mention what has been changed, and (4) run `nx run {appname}:auto-build-fin --handleGit=true` command of the app (of course the app should already have `auto-build-fin` target) to do the mentioned steps automatically by running an executor that exists in the workspace. It's also worth mentioning that, if you prefer to do those steps manually as well, you can just simply continue to the next step.
+**Note!** After step number `6`, you can optionally skip step `7`, `8` and `9` to automatically do them (you still need to continue with the process from step number `10`). Now here's how to skip the mentioned steps: (1) Switch back to 'master' branch, (2) delete the FIN branch that you have created earlier, (3) update app's `CHANGELOG.md` to briefly mention what has been changed, and (4) run `nx run {appname}:auto-build-fin --handleGit=true` command of the app (of course the app should already have `auto-build-fin` target in its `project.json` file) to do the mentioned steps automatically by running an executor that exists in the workspace. It's also worth mentioning that, if you prefer to do those steps manually as well, you can just simply continue to the next step.
 
 &nbsp;
 

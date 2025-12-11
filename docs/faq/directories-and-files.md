@@ -46,4 +46,6 @@ Some directories & files are familiar to all of us right at the beginning! But t
 - `apps/{app-name}/src/assets/DEP_config.json`: It's the app's configuration file, and our app loads it on initialization (i.e., in `apps/{app-name}/src/app/app.config.ts` file) to define its important configs, such as '_BaseURL_', '_ClientID_', and etc.  
   **Note!** Some app's config JSON file may also have an `extra` property. This property contains that app's specific configs. So it means that the app needs to have its own specific '_map_' lib to map (proxify) the data that is in that property as well, and use that lib as soon as the JSON file is loaded on initialization.
 
+- **AI agents related files**: `.gemini/settings.json`, `.github/copilot-instructions.md`, `.mcp.json`, `AGENTS.md`, and `CLAUDE.md`. They help agents to do tasks on your workspace easier and efficiently.
+
 [🔙](../../README.md#faq)
