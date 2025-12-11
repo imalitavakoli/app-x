@@ -6,7 +6,7 @@
 - Apps live in `apps/`, shared code in `libs/`. Each app/lib has its own `project.json`.
 - Library types: `api`, `util`, `map`, `data-access`, `ui`, `feature`, `page`, `app` (see `/docs/getting-started/library-types-and-their-relationship.md`).
 - Code is composed by plugging libs into apps, following a Lego-like modular approach.
-- See `/docs/introduction/folder-structure.md` for directory conventions and `/docs/mindset/monorepo.md` for rationale.
+- See `/docs/introduction/folder-structure.md` and `/docs/faq/directories-and-files.md` for directory conventions and `/docs/mindset/monorepo.md` for rationale.
 
 ## Developer Workflows
 
