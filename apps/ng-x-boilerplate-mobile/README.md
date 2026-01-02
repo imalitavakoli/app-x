@@ -53,6 +53,17 @@ Here's the list of unique **brand-specific color & style variables** that this a
 - _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-build:ios` to build ios native app.
 - _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-build:android` to build android native app.
 
+&nbsp;
+
+**live-reload the app in native devices:**  
+While developing and working with native plugins in app, you may need to quickly see results on native devices.
+Steps to do that:
+
+- Find out about your machine's IP address (on Mac, run: `ifconfig | grep inet`; on Windows, run: `ipconfig`).
+- Mention your IP address in `capacitor.config.ts` file, by adding the following _temporarily_ code in `config.server`: `url: 'http://192.168.1.xxx:4200', cleartext: true,`.
+- Run the sync command for iOS or Android.
+- Run the serve command with `--host 0.0.0.0` option (to tell Angular to listen on all network interfaces, not just `localhost`).
+
 ## Deployment notes
 
 - PWA name: You can change the app's name (when it gets installed on a device as a PWA) from `src/manifest.webmanifest` file.
