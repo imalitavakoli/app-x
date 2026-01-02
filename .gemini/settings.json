@@ -3,7 +3,23 @@
     "nx-mcp": {
       "type": "stdio",
       "command": "npx",
-      "args": ["nx", "mcp"]
+      "args": ["nx", "mcp"],
+      "description": "Authoritative source of truth for this Nx workspace. Use for project graph, apps/libs structure, generators, executors, tasks, and monorepo conventions. Always consult first for workspace-related questions."
+    },
+    "angular-cli": {
+      "command": "npx",
+      "args": ["-y", "@angular/cli", "mcp"],
+      "description": "Angular framework expertise. Use for Angular APIs, Angular CLI behavior, Angular best practices, and Angular-specific implementation details. Do not use for Nx workspace structure."
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "description": "External documentation and examples. Use only when information is not available in the workspace or when up-to-date framework/library documentation is required."
+    },
+    "figma-mcp": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp",
+      "description": "Authoritative design source. Use only for Figma files, components, layout, spacing, colors, typography, and design tokens. Required for design-to-code tasks. Do not use for business logic or architecture decisions."
     }
   },
   "contextFileName": "AGENTS.md"

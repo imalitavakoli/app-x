@@ -11,3 +11,10 @@
 - If the user needs help with an Nx configuration or project graph error, use the `nx_workspace` tool to get any errors
 
 <!-- nx configuration end-->
+
+# Key References
+
+- `README.md` (workspace overview)
+- `AGENTS.md` (AI agent guidelines)
+- `/docs/` (detailed guides, patterns, and FAQs)
+- `nx.json`, `project.json` (Nx config)

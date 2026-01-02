@@ -205,6 +205,7 @@ In the workspace, I've added specific comments as keywords. These make it easier
   - ### `— i` [Generate & build a web-component](./docs/guidelines/common-tasks.md#generate--build-a-web-component)
   - ### `— j` [Update a web-component](./docs/guidelines/common-tasks.md#update-a-web-component)
   - ### `— k` [Update the workspace](./docs/guidelines/common-tasks.md#update-the-workspace)
+  - ### `— l` [Update the workspace AI instructions](./docs/guidelines/common-tasks.md#update-the-workspace-ai-instructions)
 
 - ## `5` [Naming conventions](./docs/guidelines/naming-conventions.md)
   - ### `— a` [Folders](./docs/guidelines/naming-conventions.md#folders)

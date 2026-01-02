@@ -52,5 +52,6 @@
     "comment-divider.length": 80,
     "nxConsole.generateAiAgentRules": true,
     "chat.mcp.access": "all",
+    "chat.mcp.gallery.enabled": true,
   },
 }

@@ -201,6 +201,30 @@ Some of the '_feature_' libs are already wrapped in another '_feature_' lib (nam
 To update the whole workspace, Here are the steps to do so:
 
 - Follow '**Guidelines > 3 > a**' ('Updating the whole workspace') section of docs.
-- Update '**Getting Started > 1 > a**' ('Installing global dependencies') section of docs.
+- Update '**Getting Started > 1 > a**' ('Setting up the repository on a new machine' & 'Installing global dependencies') sections of docs according to the new version of dependencies (such as Node.js, pnpm, and etc.) which has been installed.
+
+&nbsp;
+
+[🔝](#common-tasks-✅)
+
+## Update the workspace AI instructions
+
+**Important!** This task should be done by the Workspace Specialist most of the times.
+
+As the workspace grows, its documentation evolves as well. AI agents rely on these documents to understand workspace rules, naming conventions, and structures. Therefore, it's important to keep AI-related instructions (e.g., MCP server configurations) up to date to ensure agents can read and interpret them correctly.
+
+To achieve this, the following files should be reviewed regularly to make sure they reflect the latest workspace standards.
+
+- _MCP config!_ `.gemini/settings.json`.
+- _MCP config!_ `.vscode/mcp.json`.
+- _MCP config!_ `.mcp.json`.
+- `AGENTS.md`.
+
+For IDE-specific AI agent instructions, review the following files:
+
+- `.github/copilot-instructions.md`.
+- `CLAUDE.md`.
+
+**Tip!** If you are using other IDEs that require separate files for their own AI agents, you can use the above-mentioned 'IDE-specific' AI agent instruction files as a reference for writing your own instructions. _In simple terms:_ the main AI agent instructions should always be documented in `AGENTS.md` file, while the 'IDE-specific' instruction files should simply reference that file.
 
 [🔙](../../README.md#guidelines)
