@@ -4,7 +4,7 @@
 
 Before proceeding, ensure you have the following installed on your machine:
 
-- [Node.js](https://nodejs.org/), which includes npm. npm stands for [Node Packaged Modules](https://www.npmjs.com/) and manages development dependencies through Node.js.
+- [Node.js](https://nodejs.org/) (version 22.19.0), which includes npm. npm stands for [Node Packaged Modules](https://www.npmjs.com/) and manages development dependencies through Node.js.
 - [Git](https://git-scm.com/), a distributed version control system.
 
 **Tip!** If you're new to command line tools, [here is a great starting guide](http://webdesign.tutsplus.com/series/the-command-line-for-web-design--cms-777)!
@@ -34,6 +34,8 @@ Before proceeding, ensure you have the following installed on your machine:
 
 - Navigate to the folder where you cloned the repository using `cd my/path/to/here`.
 - Run `pnpm install --frozen-lockfile` to install all required local dependencies.
+
+**Note!** If you've encountered an error while installing the local dependencies, it's mostly probable that your installed version of local dependencies are not working properly with the version of global dependencies (Node.js, Nx, or pnpm) which are installed on your machine! So read the error which is causing the installation to be failed, and ask AI (LLM) 🤖 something like: "I ran `pnpm install --frozen-lockfile` and it seems that `<package>` is causing an issue! Can you look into `package.json` to check the package's version that is causing the issue, in order to see if it is compatible with the versions of Node.js, Nx, or pnpm that I already have installed on my machine? Then provide a suggested version for it to be installed".
 
 **Tip!** If you're using Github Desktop to clone the repository, [click here](https://github.com/desktop/desktop/blob/development/docs/integrations/bitbucket.md) for instructions.
 

@@ -31,7 +31,7 @@ Here's the process for making source code modification PRs.
 &nbsp;
 
 - `4` Fetch the latest modifications from the 'master' branch to your local machine, then **create a new branch** from 'master' for every task.  
-  **Branch naming convention:** `[task-id]-[description]`, or `[bugfix,feature,refactor]/[task-id]-[description]`. For example, `TEA-4600-update-deps`, `feature/TEA-4600-add-simple-auth-page`.
+  **Branch naming convention:** `[task-id]-[description]`, or `[bugfix,feature,hotfix,release]/[task-id]-[description]`. For example, `TEA-4600-update-deps`, `feature/TEA-4600-add-simple-auth-page`, `release/TEA-4601-lib-auth`.
 
 &nbsp;
 
