@@ -39,6 +39,7 @@ We recommend some naming conventions for different types of variables/functions 
 &nbsp;
 
 - **Observable variables**: End with `$`. For example, `count$: Observable<CounterState>;`.
+- **Signal variables (rather than signal inputs)**: Start with `$`. For example, `$count: Signal<CounterState>;`.
 - **Boolean variables**: Start with `is`, `has`, 'shall'. For example, `isUserAuthenticated = false;`.
 - **Array variables**: End with `s` or `Arr`. For example, `errors = [];`, `forbiddenNamesArr = ['John', 'Jane'];`.
 - **Object variables**: End with `Obj`. For example, `userObj = {name: 'John', age: 32};`.

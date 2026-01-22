@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -102,13 +103,13 @@ export class V2BasePageParentExtXUsersComponent
 
   // protected _communicationService = inject(V1CommunicationService); // Introduced in the Base.
 
-  // errors: V2BasePage_Error[] = []; // Introduced in the Base.
+  // errors = signal<V2BasePage_Error[]>([]); // Introduced in the Base.
 
   // Flags
-  // hasRequiredInputs = false; // Introduced in the Base.
+  // hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion?: string; // Introduced in the Base.
+  // appVersion = signal(''); // Introduced in the Base.
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -120,9 +121,9 @@ export class V2BasePageParentExtXUsersComponent
 
   starterLib1_xUsersFeaCom!: V1XUsersFeaComponent;
 
-  isReadyStarterLib1 = false;
-  selectedUserId!: number;
-  selectedUser!: V1XUsers_MapUser;
+  isReadyStarterLib1 = signal(false);
+  selectedUserId = signal<number | undefined>(undefined);
+  selectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* lifecycle                                                                */
@@ -172,6 +173,7 @@ export class V2BasePageParentExtXUsersComponent
   // protected _xHasRequiredInputs(): boolean {}
 
   /**
+   *
    * Init XUser 'feature' lib as a starter lib.
    *
    * @inheritdoc
@@ -181,7 +183,7 @@ export class V2BasePageParentExtXUsersComponent
   protected override _xHasInitStarterLibs(): boolean {
     // Check if the starter lib #1 is ready or not. If it's not ready, then
     // run its initializer function & return false.
-    if (!this.isReadyStarterLib1) {
+    if (!this.isReadyStarterLib1()) {
       this._initStarterLib1();
       return false;
     }
@@ -202,8 +204,8 @@ export class V2BasePageParentExtXUsersComponent
   /** This function is called by the starter lib #1, when lib is ready. */
   onReadyStarterLib1() {
     // Set latest user ID.
-    this.selectedUserId = this.starterLib1_xUsersFeaCom.getSelectedUserId();
-    this.selectedUser = this.starterLib1_xUsersFeaCom.getSelectedUser();
+    this.selectedUserId.set(this.starterLib1_xUsersFeaCom.getSelectedUserId());
+    this.selectedUser.set(this.starterLib1_xUsersFeaCom.getSelectedUser());
 
     // Save the required data to `communicationService` for child routes.
     this._communicationService.storedData = {
@@ -216,14 +218,14 @@ export class V2BasePageParentExtXUsersComponent
 
     // Set ready flag of this lib to true & call `_xInitAllLibs` to init rest of
     // the libs.
-    this.isReadyStarterLib1 = true;
+    this.isReadyStarterLib1.set(true);
     this._xInitAllLibs();
   }
 
   /** This function is called by the starter lib #1, when a new user is selected by the user. */
   onXUsersSelectedUser(user: V1XUsers_MapUser) {
-    this.selectedUserId = user.id as number;
-    this.selectedUser = user;
+    this.selectedUserId.set(user.id as number);
+    this.selectedUser.set(user);
 
     // Emit the change for child routes.
     this._communicationService.emitChange({

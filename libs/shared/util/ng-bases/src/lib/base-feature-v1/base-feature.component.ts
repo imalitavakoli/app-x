@@ -5,10 +5,11 @@ import {
   Component,
   EventEmitter,
   inject,
+  input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -29,7 +30,7 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  *
  * Here's a way (#1) that the inherited classes use this:
  * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `_xHasRequiredInputs`.
+ * 02. Override `_xHasRequiredInputs` (with super call right at the beginning).
  * 03. Override `_xInitPre` (with super call right at the beginning).
  * 04. Override `_xFacadesPre`.
  * 05. Override `_xFacadesLoadesValidation`.
@@ -37,32 +38,32 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
  * 07. Override `_xInit` (with super call right at the beginning).
- * 08. Override `_xUpdate` (with super call right at the beginning). You may use
- *     `_xIsInputChanged` inside of this function.
+ * 08. Override `_xUpdate` (with super call right at the beginning). When having
+ *     `@Input` (zone.js), you may use `_xIsInputChanged` inside of this function.
  * 09. Override `_xDataPre`.
- * 10. Override `_xDataReset`. Here's the place, where You may set the 'ui'
+ * 10. Override `_xDataReset`. Here's the place, where you may set the 'ui'
  *     lib's `state` input to 'loading'.
  * 11. Override `_xDataFetch`.
  * 12. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
- *     beginning). Here's the place, where You may set the 'ui' lib's `state`
+ *     beginning). Here's the place, where you may set the 'ui' lib's `state`
  *     input to to other states, according to the fetched data. You may also
  *     change its `dataType` input to the type that explains the fetched data
  *     the best.
  *
  * Here's also another way (#2) that the inherited classes use this (in most cases):
  * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `_xHasRequiredInputs`.
+ * 02. Override `_xHasRequiredInputs` (with super call right at the beginning).
  * 03. Override `_xFacadesPre`.
  * 04. Override `_xFacadesLoadesValidation`.
  * 05. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
  * 06. Override `_xDataPre`.
- * 07. Override `_xDataReset`. Here's the place, where You may set the 'ui'
+ * 07. Override `_xDataReset`. Here's the place, where you may set the 'ui'
  *     lib's `state` input to 'loading'.
  * 08. Override `_xDataFetch`.
  * 09. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
- *     beginning). Here's the place, where You may set the 'ui' lib's `state`
+ *     beginning). Here's the place, where you may set the 'ui' lib's `state`
  *     input to to other states, according to the fetched data. You may also
  *     change its `dataType` input to the type that explains the fetched data
  *     the best.
@@ -71,8 +72,8 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * 01. The lib initializes this component in its HTML.
  * 02. The lib provides this component's required inputs.
  * 03. The lib listens to `hasError` output to see if any error occurs in this
- *     component while fetching data from a 'data-access' lib, and it can show
- *     the error message to the user.
+ *     component while fetching data from a 'data-access' lib, so that it can
+ *     show the error message to the user.
  * 04. Optional! The lib listens to `ready` or `allDataIsReady` outputs.
  *
  * @export
@@ -98,28 +99,31 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
+   * If 'true', then it means that the lib should handle showing error messages
+   * in the UI. If 'false', then the lib will NOT handle showing error messages
+   * in the UI, and it's up to the parent lib (which has initialized this lib)
+   * to take advantage of `hasError` output and show error messages.
+   */
+  showErrors = input(true);
+
+  /**
    * Emits only one time! And that's when all API endpoints are called, their
    * data is ready, and `_xInitOrUpdateAfterAllDataReady` is already called for
    * the very first time.
-   *
-   * @type {*}
    */
-  @Output() ready = new EventEmitter<void>();
+  ready = output<void>();
 
   /**
    * Emits each time (when an inputs is changed) all API endpoints are called,
    * their data is ready, and `_xInitOrUpdateAfterAllDataReady` is already
    * called.
-   *
-   * @type {*}
    */
-  @Output() allDataIsReady = new EventEmitter<void>();
+  allDataIsReady = output<void>();
 
   /**
    * Emits when an error occurs while fetching data from a 'data-access' lib.
-   * @output
    */
-  @Output() hasError = new EventEmitter<{ key: string; value: string }>();
+  hasError = output<{ key: string; value: string }>();
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Setter, Getter                                                           */
@@ -144,9 +148,14 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   // Introduced in the Base.
+  // NOTE: This function should be overridden in the child class, for the times
+  // that we're using multi-instance 'data-access' libs. In here, we create
+  // a new instance(s) for the 'data-access' lib.
+  // e.g., `this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main');`
   // protected  _xInitPreBeforeDom(): void {}
 
   /**
+   *
    * Prepare the component's `_isAllDataReady$` Observable to start subscribing
    * to it and see if all data is ready... If all data is ready, then
    * `_xInitOrUpdateAfterAllDataReady` function will be called.
@@ -161,7 +170,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
     const facadeLoadeds = this._xFacadesPre();
     // NOTE: We add `isFirstDataFetchDone$` to make sure the `combineLatest`
     // emits at least once AFTER that we have fetched the required data for the
-    // very first time (initialization phase, whenever all required inputs are
+    // very first time (Initialization phase, whenever all required inputs are
     // set). Why we need to make sure of that? Because if all 'requested API
     // calls arrays' of facades are undefined (i.e., we are simply returning an
     // empty array in `_xFacadesPre`), then the `combineLatest` will not emit
@@ -179,7 +188,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
         // Don't continue IF we still didn't call `_xDataFetch` for the very
         // first time. Why? Because the 'requested API calls arrays' might be
         // undefined at the beginning, but may be defined with some pushed
-        // values later, when we're fetching data at the initialization phase...
+        // values later, when we're fetching data at the Initialization phase...
         // So we don't like to return true here, by mistake, while we might
         // still need to fetch some data, as soon as code execution reaches to
         // `_xDataFetch` function.
@@ -255,6 +264,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   }
 
   /**
+   *
    * Prepare calling API endpoints from a 'data-access' lib (by calling
    * `_xDataPre`), reset any probable old data of a 'data-access' lib (by
    * calling `_xDataReset`), and finally start fetching new data for a
@@ -276,6 +286,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   }
 
   /**
+   *
    * Reset any probable old data of a 'data-access' lib (by calling
    * `_xDataReset`), and finally start fetching new data for a 'data-access' lib
    * (by calling `_xDataFetch`).
@@ -348,8 +359,8 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * fetching data from a 'data-access' lib.
    *
    * @param {{ key: string; value: string }} error
-   * @param {string} [libName] - 'data-access' lib's name that throws the error.
-   * @param {?string} [instanceName] - If the 'data-access' lib that throws the error is a multi-instance one, then this is the instance name that the error is related to.
+   * @param {string} [libName] - 'data-access' lib's facade class name. It's the 'data-access' lib that throws the error.
+   * @param {?string} [instanceName] - If the 'data-access' lib that throws the error is a multi-instance one (has multi-instance object structure in its reducer's state interface), then this is the instance name that the error is related to. Schema: '{ThisClassName}_{main|secondary|...}'.
    */
   xOnError(
     error: { key: string; value: string },
@@ -372,16 +383,16 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
-   * `_xInitPre` calls this function to prepare the 'data-access' lib facades.
+   * `_xInitPre` calls this function to prepare `_isAllDataReady$` Observable.
    * This process contains the following steps:
-   * - Add lib's `loadeds` state property as an Observable (i.e., `loadeds$` or
-   *   `entityLoadeds$`) to an array.
+   * - Add 'data-access' lib's `loadeds` state property as an Observable (i.e.,
+   *   `loadeds$` or `entityLoadeds$`) to an array.
    * - Return the array of Observables.
    *
    * NOTE: The order of Observables that you push to the array is important!
    * Because you're going to use the `loadeds` array later in
-   * `_xFacadesLoadesValidation` function (as `loadedsArr` argument) later, to
-   * check if all data is ready.
+   * `_xFacadesLoadesValidation` function (as `loadedsArr` argument), to check
+   * if all data is ready.
    *
    * @example
    * ```ts
@@ -417,6 +428,9 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *   they are not defined, it means that there's no data to load, so we just
    *   return `true` (i.e., all data is ready); otherwise, we continue to the
    *   next step.
+   *   Tip! If you know that you will definitely call one or more API endpoints
+   *   and your 'requested API calls arrays' of facades are always defined (as
+   *   empty arrays), then you don't need to do this check here.
    * - Check every key that exists in a 'requested API calls object' (an item of
    *   `loadedsArr` argument) to see if that key is `true`.
    * - If all keys for all of the 'requested API calls arrays' (`loadedsArr`
@@ -533,7 +547,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
 
   /**
    * A callback method that is invoked right at the Initialization phase, once
-   * ALL required inputs are defined (i.e., when _xHasRequiredInputs returns
+   * ALL required inputs are defined (i.e., when `_xHasRequiredInputs` returns
    * true).
    *
    * **Who calls it?** `_xInit` right before calling `_xDataFetch`.
@@ -571,7 +585,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *   // LIB: Insights (main)
    *   if (this._insightsRequestedData_main) this._insightsRequestedData_main = [];
    *   this._insightsFacade.reset('V1BaseFeatureComponent_main');
-   *   // this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main'); This should have been done BEFORE the DOM is initialized.
+   *   // this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main'); // This should already have been done BEFORE the DOM is initialized (in `_xInitPreBeforeDom`).
    * }
    * ```
    *
@@ -584,16 +598,25 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   /**
    * A callback method that is invoked right at the Initialization phase, once
    * ALL required inputs are defined (i.e., when `_xHasRequiredInputs` returns
-   * true) & each time an inputs is changed.
+   * true) & each time an input is changed.
    *
-   * **Who calls it?** `_xInit`  & `_xUpdate`.
+   * **Who calls it?** `_xInit` & `_xUpdate`.
    *
-   * **Useful for?** Fetching new data for a 'data-access' lib.
+   * **Useful for?** Fetching new data from a 'data-access' lib.
    *
-   * NOTE: If you want this function to call API endpoints from a 'data-access'
-   * lib successfully, then the related 'requested API calls array' (e.g.,
-   * `_insightsRequestedData_main`) should NOT be undefined in your child class
-   * , instead it can be an empty array initially.
+   * NOTE: Based on your logic, (1) you know that you will definitely call one
+   * or more API endpoints (by calling the 'data-acces' lib's facade functions);
+   * (2) or you may call one or more API endpoints (based on some conditions,
+   * such as the presence of some inputs); So if condition (1) is true, then the
+   * related 'requested API calls array' (e.g., `_insightsRequestedData_main`)
+   * should NOT be undefined in your child class initially, instead consider to
+   * define it as an empty array... In this way, you make sure that the
+   * `_xFacadesLoadesValidation` function works properly, because a defined
+   * 'requested API calls array' indicates that you DO NEED some data to fetch,
+   * and now that the array is empty or its items (which are keys of requested
+   * data) are NOT all loaded yet, then the function will return `false`,
+   * instead of assuming that because the array is undefined, there's no data to
+   * load, so it would return `true` by mistake.
    *
    * @example
    * ```ts
@@ -601,7 +624,14 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[];
    *
    * private _callInsights_getLocations(instance: string) {
-   *   // If we should call this API endpoint, then main 'requested API calls array' should get defined (if it's not defined yet).
+   *   // NOTE: Based on some conditions, we may decide to just return here
+   *   // (i.e., not calling the API endpoint)... e.g., if the required/optional
+   *   // inputs which are related to fetching 'locations' data are not defined,
+   *   // then we will return here.
+   *   // return;
+   *
+   *   // If we're here, it means that we should call this API endpoint, then
+   *   // main 'requested API calls array' should get defined (if it's not defined yet).
    *   if (!this._insightsRequestedData_main) this._insightsRequestedData_main = [];
    *   this._insightsRequestedData_main.push('locations');
    *   this._insightsFacade.getLocations(this._baseUrl, this._userId, instance);

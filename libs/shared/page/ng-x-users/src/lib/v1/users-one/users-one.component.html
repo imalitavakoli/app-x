@@ -1,11 +1,11 @@
 Users 'one' page.
 <br />
-Selected user ID: {{ id }}
+Selected user ID: {{ id() }}
 
 <section class="my-2 flex gap-2">
   <a
     class="e-btn bg-eprimary hover:bg-eprimary-lighter"
-    [routerLink]="['/x-users', id, 'edit']"
+    [routerLink]="['/x-users', id(), 'edit']"
   >
     Edit User
   </a>

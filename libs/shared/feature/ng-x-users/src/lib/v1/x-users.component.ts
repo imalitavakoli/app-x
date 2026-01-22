@@ -8,6 +8,8 @@ import {
   Output,
   ViewChild,
   inject,
+  output,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
@@ -57,23 +59,13 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
 
   readonly xUsersFacade = inject(V1XUsersFacade);
 
-  defaultSelectedUser?: V1XUsers_MapUser;
+  defaultSelectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  /**
-   * If 'true', then the lib will handle showing error messages in the UI.
-   * If 'false', then the lib will NOT handle showing error messages in the UI,
-   * and it's up to the parent lib to take advantage of `hasError` output and
-   * show error messages.
-   *
-   * @type {boolean}
-   */
-  @Input() showErrors = true;
-
-  @Output() selectedUser = new EventEmitter<V1XUsers_MapUser>();
+  selectedUser = output<V1XUsers_MapUser>();
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X Lifecycle                                                              */
@@ -98,7 +90,9 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
     // Try setting the following URL Query Param input: 'user-id'
     if (defUserId && xUsers) {
       xUsers = xUsers as V1XUsers_MapUser[];
-      this.defaultSelectedUser = xUsers.find((user) => user.id === defUserId);
+      this.defaultSelectedUser.set(
+        xUsers.find((user) => user.id === defUserId),
+      );
     }
   }
 
@@ -111,7 +105,7 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
   }
 
   getSelectedUser(): V1XUsers_MapUser {
-    return this.xUsersCom.getSelectedUser();
+    return this.xUsersCom.getSelectedUser() as V1XUsers_MapUser;
   }
 
   /* //////////////////////////////////////////////////////////////////////// */

@@ -10,10 +10,11 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { exhaustMap, skip, Subscription, take } from 'rxjs';
 
@@ -53,14 +54,15 @@ export class V2BasePageComponent extends V1BaseFunComponent {
 
   // 'data-access' libs
   readonly configFacade = inject(V2ConfigFacade);
+  $dataConfigDep = toSignal(this.configFacade.dataConfigDep$);
   protected readonly _translationsFacade = inject(V1TranslationsFacade);
   protected readonly _authFacade = inject(V1AuthFacade);
 
   // Flags
-  hasRequiredInputs = false;
+  hasRequiredInputs = signal(false);
 
   // Fetched data from route
-  appVersion?: string;
+  appVersion = signal('');
 
   // Fetched data from 'data-access' libs
   protected _configDep!: V2Config_MapDep;
@@ -74,6 +76,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
+   *
    * Take care of fetching some data such as `_baseUrl`, `_lastLoadedLang`,
    * `_userId`, and etc. Also subscribe to the route query params to understand
    * when all required URL Query Params (inputs) are defined...
@@ -88,9 +91,9 @@ export class V2BasePageComponent extends V1BaseFunComponent {
     // immediatly use the extracted data from the subscription right after it.
 
     // Get the app version from the route snapshot (if it's already provided)!
-    // NOTE: It can provided by `app.routes.ts` file of the app.
+    // NOTE: It can be provided by `app.routes.ts` file of the app.
     this._route.data.pipe(take(1)).subscribe((data) => {
-      if (data['appVersion']) this.appVersion = data['appVersion'];
+      if (data['appVersion']) this.appVersion.set(data['appVersion']);
     });
 
     // Get all initial required data from 'data-access' libs.
@@ -138,6 +141,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
   }
 
   /**
+   *
    * Set the `hasRequiredInputs` flag to true. This flag can be useful in HTML
    * to determine if all required URL Query Params (inputs) for the page to
    * function correctly are already available or not, so the page can initialize
@@ -154,10 +158,11 @@ export class V2BasePageComponent extends V1BaseFunComponent {
     // NOTE: As this flag determines that everything is ready for the page to
     // start initializing its libs (even the starter libs), maybe it can be
     // useful in HTML.
-    this.hasRequiredInputs = true;
+    this.hasRequiredInputs.set(true);
   }
 
   /**
+   *
    * A callback method that is invoked once ALL required inputs are defined
    * (i.e., when `_xHasRequiredInputs` returns true) & each time an inputs is
    * changed.
@@ -178,6 +183,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
+   *
    * Check if ALL required URL Query Params (inputs) for the page to function
    * correctly are already available or not (by checking route snapshot). This
    * function is called at the initialization phase, and each time a URL Query

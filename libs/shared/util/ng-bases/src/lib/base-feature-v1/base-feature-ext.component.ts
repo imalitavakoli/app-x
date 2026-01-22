@@ -28,6 +28,7 @@ import { V1TranslationsFacade } from '@x/shared-api-data-access-ng-translations'
 import { V1AuthFacade } from '@x/shared-api-data-access-ng-auth';
 
 import { V1BaseFeatureComponent } from './base-feature.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
  * Base class for all 'feature' components (extended version which takes care of
@@ -77,6 +78,7 @@ export class V1BaseFeatureExtComponent extends V1BaseFeatureComponent {
 
   // 'data-access' libs
   readonly configFacade = inject(V2ConfigFacade);
+  $dataConfigDep = toSignal(this.configFacade.dataConfigDep$);
   readonly translationsFacade = inject(V1TranslationsFacade);
   protected readonly _authFacade = inject(V1AuthFacade);
 
@@ -91,6 +93,7 @@ export class V1BaseFeatureExtComponent extends V1BaseFeatureComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
+   *
    * Take care of fetching some data such as `_baseUrl`, `_lastLoadedLang`,
    * `_userId`, and etc.
    *

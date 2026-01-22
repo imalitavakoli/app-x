@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  effect,
   inject,
   OnChanges,
   OnDestroy,
@@ -17,11 +18,11 @@ import {
  *
  * Here's how the inherited classes use this (in most cases):
  * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `_xHasRequiredInputs`.
+ * 02. Override `_xHasRequiredInputs` (with super call right at the beginning).
  * 03. Override `_xInitPre` (with super call right at the beginning).
  * 04. Override `_xInit` (with super call right at the beginning).
- * 05. Override `_xUpdate` (with super call right at the beginning). You may use
- *     `_xIsInputChanged` inside of this function.
+ * 05. Override `_xUpdate` (with super call right at the beginning). When having
+ *     `@Input` (zone.js), you may use `_xIsInputChanged` inside of this function.
  *
  * @export
  * @class V1BaseFunComponent
@@ -42,6 +43,25 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
   protected _isXInit = false;
 
   /* //////////////////////////////////////////////////////////////////////// */
+  /* Constructor                                                              */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  constructor() {
+    // This effect will run whenever a required/optional input changes. How?
+    // Because we are actually reading ALL inputs inside `_xHasRequiredInputs`
+    // to track them! In other words, this effect is reading ALL inputs indirectly.
+    effect(() => {
+      // NOTE: So why we're NOT calling `ngOnChanges` to do the very same things
+      // that Angular's change detection does, when classic `@Input` properties
+      // change? Because currently (as of Angular 20), when signal inputs are
+      // changed form the parent component, Angular itself calls `ngOnChanges`!
+      // That's why we're keeping the logic here, but we're NOT calling it at
+      // the moment to prevent double calls.
+      // this.ngOnChanges();
+    });
+  }
+
+  /* //////////////////////////////////////////////////////////////////////// */
   /* Lifecycle                                                                */
   /* //////////////////////////////////////////////////////////////////////// */
 
@@ -52,9 +72,9 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     // NOTE: We use `ngAfterViewInit` instead of `ngOnInit`, because we like to
     // make sure that we already have access to the DOM, before starting the TS
-    // logic. Now in such case, because the DOM is already initialzed with the
-    // inital value of the inputs, then if the component that is going to use
-    // this component, provide another value for the inputs just immediatly
+    // logic. Now in such case, because the DOM is already initialized with the
+    // initial value of the inputs, then if the component that is going to use
+    // this component, provides another value for the inputs just immediately
     // after the view init, we may receive Angular's
     // `ExpressionChangedAfterItHasBeenCheckedError` error. To prevent that,
     // we use a timeout to ensure the view is already stable, and then we can
@@ -78,10 +98,13 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes?: SimpleChanges): void {
+    // Track dependencies FIRST (this is required for `constructor` effect)!
+    const hasInputs = this._xHasRequiredInputs();
+
     if (!this._isNgAfterViewInit) return; // Don't continue if NOT initialized.
 
     // Continue ONLY IF all requirements are defined.
-    if (!this._xHasRequiredInputs()) return;
+    if (!hasInputs) return;
 
     // Now that all required inputs are already defined, init, if we didn't before!
     if (!this._isXInit) this._xInit();
@@ -130,8 +153,8 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
    * (i.e., when `_xHasRequiredInputs` returns true).
    *
    * **Who calls it?** Angular `ngAfterViewInit` (if all required inputs are
-   * already ready right at the initialization phase) or `ngOnChanges`
-   * (whenever all required inputs are defined).
+   * already ready right at the initialization phase) or `ngOnChanges` or
+   * `constructor` effect (whenever all required inputs are defined).
    *
    * **Useful for?** Initialization... i.e., starting to write down the main
    * logic.
@@ -147,10 +170,15 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
    * (i.e., when `_xHasRequiredInputs` returns true) & each time an inputs is
    * changed.
    *
-   * **Who calls it?** Angular `ngOnChanges`.
+   * **Who calls it?** Angular `ngOnChanges` or `constructor` effect.
    *
-   * **Useful for?** Updating... i.e., reacting based on each input change with
-   * the help of `_xIsInputChanged`.
+   * **Useful for?** Updating... i.e., reacting based on each input change.
+   *
+   * NOTE: When having `@Input` (zone.js), this function's `changes` argument is
+   * defined and you can react based on the changed input with the help of
+   * `_xIsInputChanged`. When having signals (no zone.js), this function's
+   * `changes` argument is undefined, and you need to have explicit effects for
+   * your inputs, if you wish to react based on their changes.
    *
    * @protected
    * @param {?SimpleChanges} [changes] The changed properties
@@ -168,8 +196,29 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
    * called at the initialization phase, and each time an input changes.
    *
    * NOTE: In this Base class, we're just simply returning true. But child
-   * classes should override this function according to their own inputs. Don't
-   * have any required inputs? Then you don't need to override this function!
+   * classes should override this function according to their own inputs.
+   * having `@Input` (zone.js) and don't have any required inputs? Then you
+   * don't need to override this function!
+   *
+   * NOTE: When having signals (no zone.js), you should override this function
+   * to let it read ALL your inputs, EVEN IF you don't have any required inputs,
+   * because this function is used inside the `constructor` effect (to track all
+   * inputs), so that the effect can run whenever any input changes.
+   *
+   * @example
+   * ```ts
+   * protected override _xHasRequiredInputs(): boolean {
+   *   super._xHasRequiredInputs();
+   *
+   *   // Read optional inputs to track them.
+   *   this.input1();
+   *   this.input2();
+   *
+   *   // Check for required inputs (which also leads to tracking them).
+   *   if (!this.requiredInput1()) return false;
+   *   return true;
+   * }
+   * ```
    *
    * @protected
    * @returns {boolean}

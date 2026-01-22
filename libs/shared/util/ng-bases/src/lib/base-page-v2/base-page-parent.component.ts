@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -37,7 +38,7 @@ import { V2BasePageComponent } from './base-page.component';
  * 05. Override `_xHasInitStarterLibs`.
  * 06. Override `_xInitOtherLibs`.
  * 07. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
- *     it may throw (by its `hasError` output): `xOnError({lib: 'blahblah', error: $event})`.
+ *     it may throw (by its `hasError` output): `xOnError({page: 'parent', lib: 'blahblah', error: $event})`.
  * 08. In HTML, use `errors` array to show the errors that 'feature' libs may
  *     emit (e.g., in a popup), and also reset the array (e.g., when the user
  *     closes the popup).
@@ -85,13 +86,13 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
 
   protected _communicationService = inject(V1CommunicationService);
 
-  errors: V2BasePage_Error[] = [];
+  errors = signal<V2BasePage_Error[]>([]);
 
   // Flags
-  // hasRequiredInputs = false; // Introduced in the Base.
+  // hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion?: string; // Introduced in the Base.
+  // appVersion = signal(''); // Introduced in the Base.
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -104,8 +105,9 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
-   * Fetch `appVersion` via the communication service, listen to the error
-   * events that child routes may emit, and emit an event (via the communication
+   *
+   * Save `appVersion` in the communication service, listen to the error events
+   * that child routes may emit, and emit an event (via the communication
    * service) to indicate that this page is initialized.
    *
    * @inheritdoc
@@ -117,7 +119,7 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
     // Save the required data to `communicationService` for child routes.
     this._communicationService.storedData = {
       ...this._communicationService.storedData,
-      appVersion: this.appVersion,
+      appVersion: this.appVersion(),
     } as V1Communication_Data;
 
     // Listen to the error events that child routes may emit.
@@ -140,6 +142,7 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
   }
 
   /**
+   *
    * Call `_xInitAllLibs` to start initializing all libs, whether they are
    * starter libs or not.
    *
@@ -223,17 +226,17 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
    * do it only after that starter libs are ready... Because sometimes it just
    * makes sense to initialize the whole child route content, by the time that
    * we're already sure that starter libs could get initialized successfully:
-   * `<div *ngIf="isReadyStarterLib1"><router-outlet></router-outlet></div>`.
+   * `<div *ngIf="isReadyStarterLib1()"><router-outlet></router-outlet></div>`.
    *
    * @example
    * ```ts
-   * isReadyStarterLib1 = false; // Flag to determine if starter lib #1 is ready or not.
+   * isReadyStarterLib1 = signal(false); // Flag to determine if starter lib #1 is ready or not.
    *
    * // Here's an example of how to override this function in a child class.
    * protected override _xHasInitStarterLibs(): boolean {
    *   // Check if the starter lib #1 is ready or not. If it's not ready, then
    *   // run its initializer function & return false.
-   *   if (!this.isReadyStarterLib1) {
+   *   if (!this.isReadyStarterLib1()) {
    *     this._initStarterLib1();
    *     return false;
    *   }
@@ -254,7 +257,7 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
    * onReadyStarterLib1(): void {
    *   // Set ready flag of this lib to true & call `_xInitAllLibs` to init rest
    *   // of the libs.
-   *   this.isReadyStarterLib1 = true;
+   *   this.isReadyStarterLib1.set(true);
    *   this._xInitAllLibs();
    * }
    * ```
@@ -294,6 +297,6 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
     libTemplate = undefined,
     error,
   }: V2BasePage_Error): void {
-    this.errors.push({ page, pageTemplate, lib, libTemplate, error });
+    this.errors().push({ page, pageTemplate, lib, libTemplate, error });
   }
 }

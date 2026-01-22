@@ -27,14 +27,14 @@
 <main>
   <!-- Title -->
   @if (capacitorCoreService.getPlatform() === 'desktop') {
-  <header
-    *transloco="let t; prefix: 'menu_options'"
-    class="relative flex items-center justify-between pb-[32px] pt-[32px]"
-  >
-    <div class="mx-auto">
-      <h1 class="text-[1.625rem] font-bold">Users</h1>
-    </div>
-  </header>
+    <header
+      *transloco="let t; prefix: 'menu_options'"
+      class="relative flex items-center justify-between pb-[32px] pt-[32px]"
+    >
+      <div class="mx-auto">
+        <h1 class="text-[1.625rem] font-bold">Users</h1>
+      </div>
+    </header>
   }
 
   <!-- Starter lib #1: X Users -->
@@ -45,9 +45,9 @@
   </section>
 
   <section class="e-container mt-8">
-    @if (isReadyStarterLib1) {
-    <!-- Sub page -->
-    <router-outlet></router-outlet>
+    @if (isReadyStarterLib1()) {
+      <!-- Sub page -->
+      <router-outlet></router-outlet>
     }
   </section>
 </main>
@@ -56,63 +56,78 @@
 <!-- Show errors                                                             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (errors && errors.length > 0) {
-<x-popup-v1
-  *transloco="let t"
-  [isHeadEnable]="true"
-  [isOpen]="true"
-  (closed)="errors = []"
->
-  <div slot="head">
-    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-    <span class="font-semibold">{{ t('common.error') }}</span>
-  </div>
+@if (errors() && errors().length > 0) {
+  <x-popup-v1
+    *transloco="let t"
+    [isHeadEnable]="true"
+    [isOpen]="true"
+    (closed)="errors.set([])"
+  >
+    <div slot="head">
+      <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+      <span class="font-semibold">{{ t('common.error') }}</span>
+    </div>
 
-  <div slot="body">
-    <ng-lottie
-      width="100%"
-      height="180px"
-      containerClass="e-ani"
-      [options]="{
-        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
-        loop: false
-      }"
-    ></ng-lottie>
-    <p class="p m-6 text-center">
-      {{ t('common.error_desc') }}
+    <div slot="body">
+      <ng-lottie
+        width="100%"
+        height="180px"
+        containerClass="e-ani"
+        [options]="{
+          path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+          loop: false,
+        }"
+      ></ng-lottie>
+      <p class="p m-6 text-center">
+        {{ t('common.error_desc') }}
 
-      @for (error of errors; track $index) {
+        @for (error of errors(); track $index) {
+          <!-- Parent page ///////////////////////////////////////////////// -->
 
-      <!-- Parent page ///////////////////////////////////////////////////// -->
+          @if (error.page === 'parent') {
+            Parent:
+            <small class="e-ecode"
+              >{{ error.lib }}, {{ error.error.key }}</small
+            >
+          }
 
-      @if (error.page === 'parent') { Parent:
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      }
+          <!-- All page //////////////////////////////////////////////////// -->
 
-      <!-- All page //////////////////////////////////////////////////////// -->
+          @if (error.page === 'all') {
+            All:
+            <small class="e-ecode"
+              >{{ error.lib }}, {{ error.error.key }}</small
+            >
+          }
 
-      @if (error.page === 'all') { All:
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      }
+          <!-- Edit page /////////////////////////////////////////////////// -->
 
-      <!-- Edit page /////////////////////////////////////////////////////// -->
+          @if (error.page === 'edit') {
+            Edit:
+            <small class="e-ecode"
+              >{{ error.lib }}, {{ error.error.key }}</small
+            >
+          }
 
-      @if (error.page === 'edit') { Edit:
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      }
+          <!-- New page //////////////////////////////////////////////////// -->
 
-      <!-- New page //////////////////////////////////////////////////////// -->
+          @if (error.page === 'new') {
+            New:
+            <small class="e-ecode"
+              >{{ error.lib }}, {{ error.error.key }}</small
+            >
+          }
 
-      @if (error.page === 'new') { New:
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      }
+          <!-- One page //////////////////////////////////////////////////// -->
 
-      <!-- One page //////////////////////////////////////////////////////// -->
-
-      @if (error.page === 'one') { One:
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      } }
-    </p>
-  </div>
-</x-popup-v1>
+          @if (error.page === 'one') {
+            One:
+            <small class="e-ecode"
+              >{{ error.lib }}, {{ error.error.key }}</small
+            >
+          }
+        }
+      </p>
+    </div>
+  </x-popup-v1>
 }

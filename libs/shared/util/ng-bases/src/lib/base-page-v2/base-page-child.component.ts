@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -46,7 +47,7 @@ import { V2BasePageComponent } from './base-page.component';
  * 01. Override `_pageName` & `_urlRoot`.
  * 02. Override `_xHasRequiredInputs`.
  * 03. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
- *     it may throw (by its `hasError` output): `xOnError({lib: 'blahblah', error: $event})`.
+ *     it may throw (by its `hasError` output): `xOnError({page: 'one', lib: 'blahblah', error: $event})`.
  * 04. Optional! In HTML, you can Use `hasRequiredInputs`.
  * 05. Optional! In HTML, you can use `appVersion`.
  * 06. Optional! In HTML, you can use `id`.
@@ -90,13 +91,13 @@ export class V2BasePageChildComponent extends V2BasePageComponent {
   protected _urlRoot = '/dashboard';
 
   // Flags
-  // hasRequiredInputs = false; // Introduced in the Base.
+  // hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion?: string; // Introduced in the Base.
+  // appVersion = signal(''); // Introduced in the Base.
 
   /** In edit/one pages, there's always ID parameter. */
-  id?: string | number;
+  id = signal<string | number | undefined>(undefined);
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -109,6 +110,7 @@ export class V2BasePageChildComponent extends V2BasePageComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
+   *
    * Fetch `id` from the route params (if it's already provided), fetch
    * `appVersion` via the communication service, and emit an event (via the
    * communication service) to indicate that this page is initialized.
@@ -121,14 +123,16 @@ export class V2BasePageChildComponent extends V2BasePageComponent {
 
     // Get the page current ID (if it's already provided)!
     this._route.params.pipe(take(1)).subscribe((params: Params) => {
-      if (params['id']) this.id = params['id'];
+      if (params['id']) this.id.set(params['id']);
     });
 
     // NOTE: If this is a child route that is defined in the 'page' lib
     // `lib.routes.ts` file (and not the app's `app.routes.ts` file), then
     // `appVersion` cannot be fetched from the route snapshot... Instead, we can
     // get it from parent via the communication service.
-    this.appVersion = this._communicationService.storedData?.appVersion;
+    this.appVersion.set(
+      this._communicationService.storedData?.appVersion ?? '',
+    );
 
     // Emit an event when this page is initialized.
     // NOTE: Such event can be useful for the mobile-header to update its UI

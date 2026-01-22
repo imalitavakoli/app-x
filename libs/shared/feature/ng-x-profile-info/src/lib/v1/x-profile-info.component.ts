@@ -8,6 +8,8 @@ import {
   Output,
   ViewChild,
   inject,
+  input,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -68,22 +70,12 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   /* Input, Output                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  @Input() userId!: number;
+  userId = input.required<number>();
 
-  /**
-   * If 'true', then the lib will handle showing error messages in the UI.
-   * If 'false', then the lib will NOT handle showing error messages in the UI,
-   * and it's up to the parent lib to take advantage of `hasError` output and
-   * show error messages.
-   *
-   * @type {boolean}
-   */
-  @Input() showErrors = true;
+  showBtnReadMore = input(true);
 
-  @Input() showBtnReadMore = true;
-
-  @Output() clickedReadMore = new EventEmitter<void>();
-  @Output() clickedStyle = new EventEmitter<V1XCredit_Style>();
+  clickedReadMore = output<void>();
+  clickedStyle = output<V1XCredit_Style>();
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X Lifecycle                                                              */
@@ -106,7 +98,11 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   protected override _xHasRequiredInputs(): boolean {
-    if (!this.userId) return false;
+    // Read optional inputs to track them.
+    this.showBtnReadMore();
+
+    // Check for required inputs (which also leads to tracking them).
+    if (!this.userId()) return false;
     return true;
   }
 
@@ -237,10 +233,10 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   protected override _xDataFetch(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main.push('detail');
-    this.xCreditFacade.getDetail(this._baseUrl, this.userId, this.comName);
+    this.xCreditFacade.getDetail(this._baseUrl, this.userId(), this.comName);
 
     // LIB: XProfileInfo
     this._xProfileInfoRequestedData.push('data');
-    this.xProfileInfoFacade.getData(this._baseUrl, this.userId);
+    this.xProfileInfoFacade.getData(this._baseUrl, this.userId());
   }
 }

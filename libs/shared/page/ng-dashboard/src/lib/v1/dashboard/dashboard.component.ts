@@ -4,6 +4,7 @@ import {
   inject,
   OnDestroy,
   OnInit,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -40,7 +41,7 @@ export class V1DashboardPageComponent extends V2BasePageParentExtXUsersComponent
   /* General //////////////////////////////////////////////////////////////// */
 
   capacitorCoreService = inject(V1CapacitorCoreService);
-  funsToShowArr!: V2Config_MapDep['ui']['dashboardFuns'];
+  funsToShowArr = signal<V2Config_MapDep['ui']['dashboardFuns']>([]);
 
   /* Starter lib #1: X Users //////////////////////////////////////////////// */
 
@@ -59,7 +60,7 @@ export class V1DashboardPageComponent extends V2BasePageParentExtXUsersComponent
     super._xInitPre();
 
     // Understand what 'feature' libs we should show and in what order from DEP config.
-    this.funsToShowArr = this._configDep.ui.dashboardFuns;
+    this.funsToShowArr.set(this._configDep.ui.dashboardFuns);
   }
 
   protected override _xInitOtherLibs(): void {

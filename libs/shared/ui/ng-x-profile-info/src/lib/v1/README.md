@@ -7,9 +7,10 @@ v1.
 Here's a simple example of how to use the lib:
 
 ```ts
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 import { V1BaseUi_State } from '@x/shared-util-ng-bases-model';
@@ -28,24 +29,20 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 @Component({
   selector: 'x-test',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    TranslocoDirective,
-    V1XProfileInfoComponent,
-  ],
+  imports: [CommonModule, RouterModule, V1XProfileInfoComponent],
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
 export class V1TestPageComponent {
   readonly configFacade = inject(V2ConfigFacade);
+  $dataConfigDep = toSignal(this.configFacade.dataConfigDep$);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Inputs                                                                   */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  data: V1XProfileInfo_MapData = V1_X_PROFILE_INFO_DATA;
-  creditDetail: V1XCredit_MapDetail = V1_X_PROFILE_INFO_CREDIT_DETAIL;
+  data = signal<V1XProfileInfo_MapData>(V1_X_PROFILE_INFO_DATA);
+  creditDetail = signal<V1XCredit_MapDetail>(V1_X_PROFILE_INFO_CREDIT_DETAIL);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Outputs                                                                  */
@@ -70,22 +67,19 @@ export class V1TestPageComponent {
 ```
 
 ```html
+<!--
+NOTE: Observables can also be used in no zone.js mode, but using signal is 
+recemmended.
+e.g., `$any((configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasBg)`.
+-->
 <x-x-profile-info-v1
-  [data]="data"
-  [creditDetail]="creditDetail"
-  [icoInfo]="
-    $any((configFacade.dataConfigDep$ | async)?.assets?.libXprofileInfoIcoInfo)
-  "
+  [data]="data()"
+  [creditDetail]="creditDetail()"
+  [icoInfo]="$any($dataConfigDep()?.assets?.libXprofileInfoIcoInfo)"
   langCultureCode="en-GB"
   defaultStyle="rounded"
-  [showIcoInfo]="
-    $any(
-      (configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasInfoIcon
-    )
-  "
-  [showBg]="
-    $any((configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasBg)
-  "
+  [showIcoInfo]="$any($dataConfigDep()?.libs?.xProfileInfoV1?.hasInfoIcon)"
+  [showBg]="$any($dataConfigDep()?.libs?.xProfileInfoV1?.hasBg)"
   [showBtnReadMore]="true"
   (clickedReadMore)="onClickedReadMore()"
   (clickedStyle)="onClickedStyle($event)"

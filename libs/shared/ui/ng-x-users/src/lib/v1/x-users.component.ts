@@ -1,4 +1,15 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  WritableSignal,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -25,31 +36,31 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
   styleUrl: './x-users.component.scss',
 })
 export class V1XUsersComponent extends V1BaseUiComponent {
-  curr!: V1XUsers_MapUser;
-
-  // protected _state: V1BaseUi_State = 'loading'; // Introduced in base class
-  protected override _dataType: V1BaseUi_DataType = 'all';
+  curr = signal<V1XUsers_MapUser | undefined>(undefined);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  @Input() users!: V1XUsers_MapUser[];
+  // state = model<V1BaseUi_State>('loading'); // Introduced in base class
+  override dataType = model<V1BaseUi_DataType>('all');
 
-  @Input() defaultSelectedUser?: V1XUsers_MapUser;
+  users = input.required<V1XUsers_MapUser[]>();
 
-  @Output() selectedUser = new EventEmitter<V1XUsers_MapUser>();
+  defaultSelectedUser = input<V1XUsers_MapUser | undefined>(undefined);
+
+  selectedUser = output<V1XUsers_MapUser>();
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Methods                                                                  */
   /* //////////////////////////////////////////////////////////////////////// */
 
   getSelectedUserId() {
-    return this.curr.id as number;
+    return (this.curr() as V1XUsers_MapUser).id as number;
   }
 
   getSelectedUser() {
-    return this.curr;
+    return this.curr();
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -57,7 +68,7 @@ export class V1XUsersComponent extends V1BaseUiComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   onSelectedUser(user: V1XUsers_MapUser) {
-    this.curr = user;
+    this.curr.set(user);
     this.selectedUser.emit(user);
   }
 
@@ -66,16 +77,24 @@ export class V1XUsersComponent extends V1BaseUiComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   protected override _xHasRequiredInputs(): boolean {
-    if (!this.users || this.users.length === 0) return false;
+    super._xHasRequiredInputs();
+
+    // Read optional inputs to track them.
+    this.defaultSelectedUser();
+
+    // Check for required inputs (which also leads to tracking them).
+    if (!this.users() || this.users().length === 0) return false;
     return true;
   }
 
   protected override _xSetState(): void {
+    super._xSetState();
+
     // Set currently selected user.
-    if (!this.defaultSelectedUser) this.curr = this.users[0];
-    else this.curr = this.defaultSelectedUser;
+    if (!this.defaultSelectedUser()) this.curr.set(this.users()[0]);
+    else this.curr.set(this.defaultSelectedUser());
 
     // Set state.
-    this.state = 'data';
+    this.state.set('data');
   }
 }

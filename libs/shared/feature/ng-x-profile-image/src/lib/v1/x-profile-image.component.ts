@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
   inject,
+  input,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -49,24 +50,15 @@ export class V1XProfileImageFeaComponent extends V1BaseFeatureExtXCreditComponen
   /* Input, Output                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  @Input() userId!: number;
-
-  /**
-   * If 'true', then the lib will handle showing error messages in the UI.
-   * If 'false', then the lib will NOT handle showing error messages in the UI,
-   * and it's up to the parent lib to take advantage of `hasError` output and
-   * show error messages.
-   *
-   * @type {boolean}
-   */
-  @Input() showErrors = true;
+  userId = input.required<number>();
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X useful functions                                                       */
   /* //////////////////////////////////////////////////////////////////////// */
 
   protected override _xHasRequiredInputs(): boolean {
-    if (!this.userId) return false;
+    // Check for required inputs (which also leads to tracking them).
+    if (!this.userId()) return false;
     return true;
   }
 
@@ -77,6 +69,6 @@ export class V1XProfileImageFeaComponent extends V1BaseFeatureExtXCreditComponen
   protected override _xDataFetch(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main.push('summary');
-    this.xCreditFacade.getSummary(this._baseUrl, this.userId, this.comName);
+    this.xCreditFacade.getSummary(this._baseUrl, this.userId(), this.comName);
   }
 }

@@ -1,18 +1,20 @@
-@if (state === 'data') {
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<!-- Data                                                                    -->
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<section class="bg-einformative bg-opacity-40 p-4">
-  <figure class="bg-eneutral flex justify-center">
-    <img class="h-32 w-32" alt="avatar" [src]="imgAvatar" />
-  </figure>
-  <div class="bg-eneutral mt-4 bg-opacity-30 p-2 text-center text-sm font-bold">
-    {{ creditSummary.status }}
-  </div>
-</section>
-} @else if (state === 'loading') {
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<!-- Loading                                                                 -->
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<div class="skeleton h-52"></div>
+@if (state() === 'data') {
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <!-- Data                                                                  -->
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <section class="bg-einformative bg-opacity-40 p-4">
+    <figure class="bg-eneutral flex justify-center">
+      <img class="h-32 w-32" alt="avatar" [src]="imgAvatar()" />
+    </figure>
+    <div
+      class="bg-eneutral mt-4 bg-opacity-30 p-2 text-center text-sm font-bold"
+    >
+      {{ creditSummary().status }}
+    </div>
+  </section>
+} @else if (state() === 'loading') {
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <!-- Loading                                                               -->
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <div class="skeleton h-52"></div>
 }

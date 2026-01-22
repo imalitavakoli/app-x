@@ -1,70 +1,72 @@
-@if (state === 'data') {
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<!-- Data                                                                    -->
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<section
-  [ngClass]="{
-    'rounded-3xl': style === 'rounded',
-    'rounded-none': style === 'sharp',
-    'bg-einformative bg-opacity-40': showBg
-  }"
-  class="p-4"
->
-  <div class="flex items-center justify-start gap-4">
-    @if(showIcoInfo) {
-    <svg-icon
-      class="e-svg fill-eprimary text-eprimary block h-5 w-5"
-      [src]="icoInfo"
-    ></svg-icon>
-    }
-    <div>
-      <h2 class="text-lg">{{ data.fullName }}</h2>
-      <span class="text-sm opacity-50">{{ data.dateOfBirth }}</span>
+@if (state() === 'data') {
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <!-- Data                                                                  -->
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <section
+    [ngClass]="{
+      'rounded-3xl': style() === 'rounded',
+      'rounded-none': style() === 'sharp',
+      'bg-einformative bg-opacity-40': showBg(),
+    }"
+    class="p-4"
+  >
+    <div class="flex items-center justify-start gap-4">
+      @if (showIcoInfo()) {
+        <svg-icon
+          class="e-svg fill-eprimary text-eprimary block h-5 w-5"
+          [src]="icoInfo()"
+        ></svg-icon>
+      }
+      <div>
+        <h2 class="text-lg">{{ data().fullName }}</h2>
+        <span class="text-sm opacity-50">{{ data().dateOfBirth }}</span>
+      </div>
     </div>
-  </div>
 
-  <hr class="opacity-25" />
+    <hr class="opacity-25" />
 
-  <!-- country -->
-  @if(data.country) { Country: <span> {{ data.country }} </span> }
-  <!-- Bio -->
-  @if(data.bio) {
-  <p>{{ data.bio }}</p>
-  }
-
-  <hr class="opacity-25" />
-
-  <div class="my-2">
-    Balance:
-    {{
-      creditDetail.balance
-        | currencyV1: creditDetail.balanceCurrency : langCultureCode
-    }}
-  </div>
-
-  <div class="flex justify-stretch gap-4">
-    <button
-      title="Change style"
-      (click)="onClickedStyle()"
-      class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
-    >
-      <i class="bi bi-circle-square"></i>
-    </button>
-
-    @if(showBtnReadMore) {
-    <button
-      title="Read more"
-      (click)="clickedReadMore.emit()"
-      class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
-    >
-      <i class="bi bi-book"></i>
-    </button>
+    <!-- country -->
+    @if (data().country) {
+      Country: <span> {{ data().country }} </span>
     }
-  </div>
-</section>
-} @else if (state === 'loading') {
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<!-- Loading                                                                 -->
-<!-- /////////////////////////////////////////////////////////////////////// -->
-<div class="skeleton h-52"></div>
+    <!-- Bio -->
+    @if (data().bio) {
+      <p>{{ data().bio }}</p>
+    }
+
+    <hr class="opacity-25" />
+
+    <div class="my-2">
+      Balance:
+      {{
+        creditDetail().balance
+          | currencyV1: creditDetail().balanceCurrency : langCultureCode()
+      }}
+    </div>
+
+    <div class="flex justify-stretch gap-4">
+      <button
+        title="Change style"
+        (click)="onClickedStyle()"
+        class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
+      >
+        <i class="bi bi-circle-square"></i>
+      </button>
+
+      @if (showBtnReadMore()) {
+        <button
+          title="Read more"
+          (click)="clickedReadMore.emit()"
+          class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
+        >
+          <i class="bi bi-book"></i>
+        </button>
+      }
+    </div>
+  </section>
+} @else if (state() === 'loading') {
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <!-- Loading                                                               -->
+  <!-- ///////////////////////////////////////////////////////////////////// -->
+  <div class="skeleton h-52"></div>
 }

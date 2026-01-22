@@ -7,9 +7,10 @@ v1.
 Here's a simple example of how to use the lib:
 
 ```ts
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 import { V1BaseUi_State } from '@x/shared-util-ng-bases-model';
@@ -20,19 +21,20 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 @Component({
   selector: 'x-test',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoDirective, V1XUsersComponent],
+  imports: [CommonModule, RouterModule, V1XUsersComponent],
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
 export class V1TestPageComponent {
   readonly configFacade = inject(V2ConfigFacade);
+  $dataConfigDep = toSignal(this.configFacade.dataConfigDep$);
   @ViewChild('xUsers') xUsersCom!: V1XUsersComponent;
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Inputs                                                                   */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  users: V1XUsers_MapUser[] = V1_X_USERS_ALL;
+  users = signal<V1XUsers_MapUser[]>(V1_X_USERS_ALL);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Outputs                                                                  */
@@ -66,8 +68,8 @@ export class V1TestPageComponent {
 ```html
 <x-x-users-v1
   #xUsers
-  [defaultSelectedUser]="users[0]"
-  [users]="users"
+  [defaultSelectedUser]="users()[0]"
+  [users]="users()"
   (selectedUser)="onSelectedUser($event)"
   (stateChange)="onStateChange($event)"
 ></x-x-users-v1>

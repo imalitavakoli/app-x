@@ -27,7 +27,7 @@
 <ng-template #xProfileImageFeaTpl>
   <section class="col-span-1">
     <x-x-profile-image-fea-v1
-      [userId]="selectedUserId"
+      [userId]="$any(selectedUserId())"
       [showErrors]="false"
       (hasError)="
         xOnError({ page: 'parent', lib: 'xProfileImageFea', error: $event })
@@ -68,28 +68,34 @@
 
   <section class="e-container mt-8">
     <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-      @if (isReadyStarterLib1 && funsToShowArr && funsToShowArr.length > 0) {
-      @for (item of funsToShowArr; track $index) {
-      <!--
-      Although we're in a loop, but let's add the items by checking them
-      in a IF statment one by one. Why? Because we should show them based on a
-      condition.
-      -->
+      @if (
+        isReadyStarterLib1() && funsToShowArr() && funsToShowArr().length > 0
+      ) {
+        @for (item of funsToShowArr(); track $index) {
+          <!--
+          Although we're in a loop, but let's add the items by checking them
+          in a IF statment one by one. Why? Because we should show them based on 
+          a condition.
+          -->
 
-      <!-- Other lib: Blahblah -->
-      @if (false) {
-      <ng-container *ngTemplateOutlet="blahblahFeaTpl"></ng-container>
+          <!-- Other lib: Blahblah -->
+          @if (false) {
+            <ng-container *ngTemplateOutlet="blahblahFeaTpl"></ng-container>
+          }
+
+          <!-- Other lib: X Profile Image -->
+          @if (item.showXProfileImage) {
+            <ng-container
+              *ngTemplateOutlet="xProfileImageFeaTpl"
+            ></ng-container>
+          }
+
+          <!-- Other lib: X Profile Info -->
+          @if (item.showXProfileInfo) {
+            <ng-container *ngTemplateOutlet="xProfileInfoFeaTpl"></ng-container>
+          }
+        }
       }
-
-      <!-- Other lib: X Profile Image -->
-      @if (item.showXProfileImage) {
-      <ng-container *ngTemplateOutlet="xProfileImageFeaTpl"></ng-container>
-      }
-
-      <!-- Other lib: X Profile Info -->
-      @if (item.showXProfileInfo) {
-      <ng-container *ngTemplateOutlet="xProfileInfoFeaTpl"></ng-container>
-      } } }
     </div>
   </section>
 </main>
@@ -98,48 +104,54 @@
 <!-- Show errors                                                             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (errors && errors.length > 0) {
-<x-popup-v1
-  *transloco="let t"
-  [isHeadEnable]="true"
-  [isOpen]="true"
-  (closed)="errors = []"
->
-  <div slot="head">
-    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-    <span class="font-semibold">{{ t('common.error') }}</span>
-  </div>
+@if (errors() && errors().length > 0) {
+  <x-popup-v1
+    *transloco="let t"
+    [isHeadEnable]="true"
+    [isOpen]="true"
+    (closed)="errors.set([])"
+  >
+    <div slot="head">
+      <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+      <span class="font-semibold">{{ t('common.error') }}</span>
+    </div>
 
-  <div slot="body">
-    <ng-lottie
-      width="100%"
-      height="180px"
-      containerClass="e-ani"
-      [options]="{
-        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
-        loop: false
-      }"
-    ></ng-lottie>
-    <p class="p m-6 text-center">
-      {{ t('common.error_desc') }}
+    <div slot="body">
+      <ng-lottie
+        width="100%"
+        height="180px"
+        containerClass="e-ani"
+        [options]="{
+          path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+          loop: false,
+        }"
+      ></ng-lottie>
+      <p class="p m-6 text-center">
+        {{ t('common.error_desc') }}
 
-      @for (error of errors; track $index) {
+        @for (error of errors(); track $index) {
+          <!-- Starter lib #1: X Users -->
+          @if (error.lib === 'xUsersFea') {
+            <small class="e-ecode">
+              {{ error.lib }}, {{ error.error.key }}
+            </small>
+          }
 
-      <!-- Starter lib #1: X Users -->
-      @if (error.lib === 'xUsersFea') {
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      }
+          <!-- Other lib: X Profile Image -->
+          @if (error.lib === 'xProfileImageFea') {
+            <small class="e-ecode">
+              {{ error.lib }}, {{ error.error.key }}
+            </small>
+          }
 
-      <!-- Other lib: X Profile Image -->
-      @if (error.lib === 'xProfileImageFea') {
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      }
-
-      <!-- Other lib: X Profile Info -->
-      @if (error.lib === 'xProfileInfoFea') {
-      <small class="e-ecode">{{ error.lib }}, {{ error.error.key }}</small>
-      } }
-    </p>
-  </div>
-</x-popup-v1>
+          <!-- Other lib: X Profile Info -->
+          @if (error.lib === 'xProfileInfoFea') {
+            <small class="e-ecode">
+              {{ error.lib }}, {{ error.error.key }}
+            </small>
+          }
+        }
+      </p>
+    </div>
+  </x-popup-v1>
 }

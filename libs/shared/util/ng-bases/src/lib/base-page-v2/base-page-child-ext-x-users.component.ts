@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -73,11 +74,11 @@ export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent 
   // protected _urlRoot = '/dashboard'; // Introduced in the Base.
 
   // Flags
-  // hasRequiredInputs = false; // Introduced in the Base.
+  // hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion?: string; // Introduced in the Base.
-  // id?: string | number; // Introduced in the Base.
+  // appVersion = signal(''); // Introduced in the Base.
+  // id = signal<string | number | undefined>(undefined); // Introduced in the Base.
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -87,8 +88,8 @@ export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent 
 
   /* Lib: Users ///////////////////////////////////////////////////////////// */
 
-  selectedUserId!: number;
-  selectedUser!: V1XUsers_MapUser;
+  selectedUserId = signal<number | undefined>(undefined);
+  selectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X lifecycle                                                              */
@@ -105,8 +106,8 @@ export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent 
     const extraFromParent = this._communicationService.storedData
       ?.extra as V1Communication_Data_Util_V2_BasePage_ParentExtU;
     if (extraFromParent) {
-      this.selectedUserId = extraFromParent.initialUserId;
-      this.selectedUser = extraFromParent.initialUser;
+      this.selectedUserId.set(extraFromParent.initialUserId);
+      this.selectedUser.set(extraFromParent.initialUser);
     }
 
     // Listen to the events that parent may emit.
@@ -139,7 +140,7 @@ export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent 
 
   /** This function is called by 'X Users' lib, when a new user is selected in the UI. */
   onXUsersSelectedUser(user: V1XUsers_MapUser) {
-    this.selectedUserId = user.id as number;
-    this.selectedUser = user;
+    this.selectedUserId.set(user.id as number);
+    this.selectedUser.set(user);
   }
 }

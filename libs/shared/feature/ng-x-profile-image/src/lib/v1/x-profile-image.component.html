@@ -1,42 +1,40 @@
 <x-x-profile-image-v1
   [creditSummary]="$any((xCreditFacade.entityDatas$(comName) | async)?.summary)"
-  [imgAvatar]="
-    $any(
-      (configFacade.dataConfigDep$ | async)?.assets?.libXprofileImageImgAvatar
-    )
-  "
+  [imgAvatar]="$any($dataConfigDep()?.assets?.libXprofileImageImgAvatar)"
 ></x-x-profile-image-v1>
 
 <!-- /////////////////////////////////////////////////////////////////////// -->
 <!-- Show an error if something happens in the 'data-access' lib             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (showErrors && (xCreditFacade.entityHasError$(comName) | async)) {
-<x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
-  <div slot="head">
-    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-    <span class="font-semibold">{{ t('common.error') }}</span>
-  </div>
+@if (showErrors() && (xCreditFacade.entityHasError$(comName) | async)) {
+  <x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
+    <div slot="head">
+      <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+      <span class="font-semibold">{{ t('common.error') }}</span>
+    </div>
 
-  <div slot="body">
-    <ng-lottie
-      width="100%"
-      height="180px"
-      containerClass="e-ani"
-      [options]="{
-        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
-        loop: false
-      }"
-    ></ng-lottie>
-    <p class="p m-6 text-center">
-      {{ t('common.error_desc') }}
+    <div slot="body">
+      <ng-lottie
+        width="100%"
+        height="180px"
+        containerClass="e-ani"
+        [options]="{
+          path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+          loop: false,
+        }"
+      ></ng-lottie>
+      <p class="p m-6 text-center">
+        {{ t('common.error_desc') }}
 
-      <!-- xCreditFacade /////////////////////////////////////////////////// -->
+        <!-- xCreditFacade ///////////////////////////////////////////////// -->
 
-      @if ((xCreditFacade.entityErrors$(comName) | async)?.summary) {
-      <small class="e-ecode"> V1XCreditFacade({{ comName }})/summary </small>
-      }
-    </p>
-  </div>
-</x-popup-v1>
+        @if ((xCreditFacade.entityErrors$(comName) | async)?.summary) {
+          <small class="e-ecode">
+            V1XCreditFacade({{ comName }})/summary
+          </small>
+        }
+      </p>
+    </div>
+  </x-popup-v1>
 }

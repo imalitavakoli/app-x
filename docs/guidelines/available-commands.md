@@ -30,13 +30,16 @@ To keep the workspace dependencies up to date and take advantage of the latest s
 
 ### Workspace Specialist: What should be considered
 
-When migrating the workspace, not all dependencies in the `package.json` file may be updated to their latest major versions. So before running `pnpm install` command, you may need to write their latest version in `package.json` file manually. Here are some notes to keep in mind:
+When migrating the workspace, not all dependencies in the `package.json` file may be updated to their latest major versions. So before running `pnpm install` command, you may need to write their latest version in `package.json` file manually.
+
+Here are some notes to keep in mind:
 
 - Whenever you wanna update a dependency, run `pnpm info <package> version` to see what is your target's package's latest version, in order to write that specific version in `package.json` file.
 - Remember to update `@angular-builders/custom-webpack`, and `@angular/cli` to match with the major version of `@angular/core`.
 - **Capacitor/Ionic related updates**: Whenever updating Capacitor plugins, it's worthy to also update `@capacitor/assets`, `@capacitor/cli`, `@ionic/angular`, and `ionicons`.
 - **Tailwindcss related updates**: Whenever updating `tailwindcss`, it's worthy to also update `tailwindcss-scoped-preflight`, `prettier-plugin-tailwindcss`, `@tailwindcss/forms`, and `daisyui`.
 - **Transloco related updates**: Whenever updating `@jsverse/transloco`, it's worthy to also update `@jsverse/transloco-keys-manager`.
+- Remember to update `tools/{plugin}/package.json` file of the workspace's generators/executors to refer to the latest installed NX version in their `dependencies.@nx/devkit` property.
 
 **Note!** Of course, after updating dependency packages to their latest versions (such as Capacitor or TailwindCSS), you should also review their '_Upgrade Guides_'. This will help you identify any required changes in related workspace files and be aware of potential breaking changes.
 

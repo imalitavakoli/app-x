@@ -1,6 +1,6 @@
 <x-x-users-v1
   #xUsers
-  [defaultSelectedUser]="defaultSelectedUser"
+  [defaultSelectedUser]="defaultSelectedUser()"
   [users]="$any(xUsersFacade.allEntities$ | async)"
   (selectedUser)="selectedUser.emit($event)"
 ></x-x-users-v1>
@@ -9,30 +9,30 @@
 <!-- Show an error if something happens in the 'data-access' lib             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (showErrors && (xUsersFacade.error$ | async)) {
-<x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
-  <div slot="head">
-    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-    <span class="font-semibold">{{ t('common.error') }}</span>
-  </div>
+@if (showErrors() && (xUsersFacade.error$ | async)) {
+  <x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
+    <div slot="head">
+      <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+      <span class="font-semibold">{{ t('common.error') }}</span>
+    </div>
 
-  <div slot="body">
-    <ng-lottie
-      width="100%"
-      height="180px"
-      containerClass="e-ani"
-      [options]="{
-        path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
-        loop: false
-      }"
-    ></ng-lottie>
-    <p class="p m-6 text-center">
-      {{ t('common.error_desc') }}
+    <div slot="body">
+      <ng-lottie
+        width="100%"
+        height="180px"
+        containerClass="e-ani"
+        [options]="{
+          path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+          loop: false,
+        }"
+      ></ng-lottie>
+      <p class="p m-6 text-center">
+        {{ t('common.error_desc') }}
 
-      <small class="e-ecode">
-        V1XUsersFacade/{{ xUsersFacade.crudActionLatest$ | async }}
-      </small>
-    </p>
-  </div>
-</x-popup-v1>
+        <small class="e-ecode">
+          V1XUsersFacade/{{ xUsersFacade.crudActionLatest$ | async }}
+        </small>
+      </p>
+    </div>
+  </x-popup-v1>
 }
