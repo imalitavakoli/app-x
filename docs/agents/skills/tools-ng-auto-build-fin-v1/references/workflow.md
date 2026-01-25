@@ -1,28 +1,3 @@
-# Prompt Angular Executor: Build app FIN files
-
-**Version:** 1.0  
-**Revised:** 2025-11-18
-
----
-
-&nbsp;
-
-## Workspace specification
-
-Workspace is a NX monorepo.
-I have done the following:
-
-- I generated a plugin in the workspace by running: `nx g @nx/plugin:plugin tools/ng-auto-build`. That's why you can see `tools/ng-auto-build` folder.
-- I created an executor by running: `nx generate @nx/plugin:executor tools/ng-auto-build/src/executors/fin-v1`. That's why you can see`tools/ng-auto-build/src/executors/fin-v1/fin-v1.ts` file.
-
-&nbsp;
-
-## Your Role
-
-You are a NX monorepo specialist who can code NX executors in the workspace, according to this documentations: https://nx.dev/docs/extending-nx/local-executors
-
-&nbsp;
-
 ## High-level Workflow
 
 - Read 'What to do' section to:
@@ -32,11 +7,13 @@ You are a NX monorepo specialist who can code NX executors in the workspace, acc
   - Review the updated/created files to check for any probable errors/problems, and try to fix them (repeat this step until all errors/problems are fixed).
 - Read 'Conclusion' section.
 
-**Tip!** Do not ask me any further questions along the way, unless you're missing a file or you're feeling unclear about something that you have to do.
+**Important!** This skill can be used only ONCE in the workspace! So if `/tools/ng-auto-build/src/executors/fin-v*` directory already exists, before doing anything, ask the user, whether they have already run this skill before or not... And if they answered no, ONLY THEN start the workflow to complete the skill steps.
+
+**Tip!** Do not ask the user any further questions along the way, unless you're missing a file or you're feeling unclear about something that you have to do.
 
 ## What to do
 
-Update `fin-v1.ts` file of the executor (and other executor related files, such as `schema.d.ts` and `schema.json`) to do the steps explained below, when `runExecutor` function is called with the provided `options` argument.
+Update the attached file, i.e., `fin-v*.ts` file of the executor (and other executor related files, such as `schema.d.ts` and `schema.json`) to do the steps explained below, when `runExecutor` function is called with the provided `options` argument.
 
 **Tip!** Take care of each step in its own encapsulated function (create a new util file to keep all encapsulated functions in it and implement the functions).
 

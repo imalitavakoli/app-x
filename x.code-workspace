@@ -53,5 +53,6 @@
     "nxConsole.generateAiAgentRules": true,
     "chat.mcp.access": "all",
     "chat.mcp.gallery.enabled": true,
+    "chat.useAgentSkills": true,
   },
 }

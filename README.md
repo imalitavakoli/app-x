@@ -221,9 +221,10 @@ In the workspace, I've added specific comments as keywords. These make it easier
 
 &nbsp;
 
-# Prompts
+# Skills
 
-- ## `1` [Angular executor app build FIN](./docs/prompts/ng-executor-auto-build_fin.md)
+- ## `1` [PRD](./docs/agents/skills/prd-v1/SKILL.md)
+- ## `2` [tools: ng-auto-build/fin-v1](./docs/agents/skills/tools-ng-auto-build-fin-v1/SKILL.md)
 
 &nbsp;
 
