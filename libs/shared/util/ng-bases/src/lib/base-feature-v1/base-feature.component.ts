@@ -634,7 +634,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *   // main 'requested API calls array' should get defined (if it's not defined yet).
    *   if (!this._insightsRequestedData_main) this._insightsRequestedData_main = [];
    *   this._insightsRequestedData_main.push('locations');
-   *   this._insightsFacade.getLocations(this._baseUrl, this._userId, instance);
+   *   this._insightsFacade.getLocations(this._baseUrl, this._userId, instance, 'V1BaseFeatureComponent');
    * }
    *
    * // Here's an example of how to override this function in a child class.

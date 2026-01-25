@@ -11,6 +11,7 @@ export const XProfileInfoActions = createActionGroup({
     /* Get data ///////////////////////////////////////////////////////////// */
 
     getData: props<{
+      lib: string;
       url: string;
       userId: number;
     }>(),

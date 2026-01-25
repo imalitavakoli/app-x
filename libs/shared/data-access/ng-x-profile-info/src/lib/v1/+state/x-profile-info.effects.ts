@@ -17,8 +17,8 @@ export class V1XProfileInfoEffects {
   getData$ = createEffect(() =>
     this.actions$.pipe(
       ofType(XProfileInfoActions.getData),
-      concatMap(({ url, userId }) => {
-        return this._map.getData(url, userId).pipe(
+      concatMap(({ lib, url, userId }) => {
+        return this._map.getData(url, userId, lib).pipe(
           map((data) =>
             XProfileInfoActions.success({
               relatedTo: 'data',

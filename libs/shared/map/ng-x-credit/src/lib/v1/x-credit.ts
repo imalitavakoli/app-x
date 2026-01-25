@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 
+import { V1BaseMap } from '@x/shared-util-ng-bases';
+
 import {
   V1XCredit_ApiSummary,
   V1XCredit_MapSummary,
@@ -22,7 +24,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class V1XCredit {
+export class V1XCredit extends V1BaseMap {
   private readonly _http = inject(HttpClient);
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -36,9 +38,14 @@ export class V1XCredit {
    *
    * @param {string} url
    * @param {number} userId
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1XCredit_MapSummary>}
    */
-  getSummary(url: string, userId: number): Observable<V1XCredit_MapSummary> {
+  getSummary(
+    url: string,
+    userId: number,
+    lib = 'any',
+  ): Observable<V1XCredit_MapSummary> {
     // Here's the endpoint
     const endPoint = `${url}/users/${userId}/credit?type=summary`;
 
@@ -53,11 +60,13 @@ export class V1XCredit {
     // Let's send the request
     return observable.pipe(
       map((data) => {
+        this._logSuccess(data, lib);
         return this._mapSummary(data);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XCredit/getSummary:', error);
+        this._logFailure(error, lib);
         return throwError(() => error);
       }),
     );
@@ -86,9 +95,14 @@ export class V1XCredit {
    *
    * @param {string} url
    * @param {number} userId
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1XCredit_MapDetail>}
    */
-  getDetail(url: string, userId: number): Observable<V1XCredit_MapDetail> {
+  getDetail(
+    url: string,
+    userId: number,
+    lib = 'any',
+  ): Observable<V1XCredit_MapDetail> {
     // Here's the endpoint
     const endPoint = `${url}/users/${userId}/credit?type=detail`;
 
@@ -105,6 +119,7 @@ export class V1XCredit {
     // Let's send the request
     return observable.pipe(
       map((data) => {
+        this._logSuccess(data, lib);
         return this._mapDetail(data);
       }),
       catchError((err) => {
@@ -125,8 +140,10 @@ export class V1XCredit {
 
         // If parsed, return custom code. Otherwise, return generic error message.
         if (errorParsed && errorParsed.code) {
+          this._logFailure(errorParsed.code as V1XCredit_ApiErrorDetail, lib);
           return throwError(() => errorParsed.code as V1XCredit_ApiErrorDetail);
         }
+        this._logFailure(error, lib);
         return throwError(() => error);
       }),
     );
@@ -144,34 +161,5 @@ export class V1XCredit {
 
     // Let's return the final result
     return map;
-  }
-
-  /* //////////////////////////////////////////////////////////////////////// */
-  /* Useful                                                                   */
-  /* //////////////////////////////////////////////////////////////////////// */
-
-  /**
-   * After we catch an error from the API response, here we try to parse it to
-   * see if it's a JSON or not! If it's a customized error from API, then we
-   * must be able to parse it successfully! If we couldn't, it means that the
-   * error is something else because of any other reason...
-   * If we parse it, we return the parsed object, otherwise, we return false.
-   *
-   * @private
-   * @param {*} error
-   * @returns {(any | boolean)}
-   */
-  private _parsedError(error: any): any | boolean {
-    // If `error.error` is already an object, just return itself.
-    if (error['error'] && error['error'] instanceof Object) return error.error;
-
-    // If `error.error` was NOT an object, we would be here. So try to parse it.
-    let err;
-    try {
-      err = JSON.parse(error.error);
-      return err;
-    } catch (error) {
-      return false;
-    }
   }
 }

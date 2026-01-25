@@ -1,5 +1,7 @@
 <x-x-profile-image-v1
-  [creditSummary]="$any((xCreditFacade.entityDatas$(comName) | async)?.summary)"
+  [creditSummary]="
+    $any((xCreditFacade.entityDatas$(nameInstance_main) | async)?.summary)
+  "
   [imgAvatar]="$any($dataConfigDep()?.assets?.libXprofileImageImgAvatar)"
 ></x-x-profile-image-v1>
 
@@ -7,7 +9,9 @@
 <!-- Show an error if something happens in the 'data-access' lib             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (showErrors() && (xCreditFacade.entityHasError$(comName) | async)) {
+@if (
+  showErrors() && (xCreditFacade.entityHasError$(nameInstance_main) | async)
+) {
   <x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
     <div slot="head">
       <i class="bi bi-exclamation-triangle-fill mr-2"></i>
@@ -29,9 +33,11 @@
 
         <!-- xCreditFacade ///////////////////////////////////////////////// -->
 
-        @if ((xCreditFacade.entityErrors$(comName) | async)?.summary) {
+        @if (
+          (xCreditFacade.entityErrors$(nameInstance_main) | async)?.summary
+        ) {
           <small class="e-ecode">
-            V1XCreditFacade({{ comName }})/summary
+            V1XCreditFacade({{ nameInstance_main }})/summary
           </small>
         }
       </p>

@@ -61,6 +61,8 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
 
   defaultSelectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
 
+  readonly nameThis: string = 'V1XUsersFeaComponent'; // Name of this component
+
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
@@ -167,6 +169,6 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
   }
 
   protected override _xDataFetch(): void {
-    this.xUsersFacade.getAll(this._baseUrl);
+    this.xUsersFacade.getAll(this._baseUrl, this.nameThis);
   }
 }

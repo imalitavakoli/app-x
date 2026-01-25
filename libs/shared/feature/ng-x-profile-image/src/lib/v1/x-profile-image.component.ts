@@ -44,7 +44,9 @@ import { V1XProfileImageComponent } from '@x/shared-ui-ng-x-profile-image';
   styleUrl: './x-profile-image.component.scss',
 })
 export class V1XProfileImageFeaComponent extends V1BaseFeatureExtXCreditComponent {
-  override readonly comName: string = 'V1XProfileImageFeaComponent_main';
+  readonly nameThis: string = 'V1XProfileImageFeaComponent'; // Name of this component
+  override readonly nameInstance_main: string =
+    'V1XProfileImageFeaComponent_main';
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
@@ -69,6 +71,11 @@ export class V1XProfileImageFeaComponent extends V1BaseFeatureExtXCreditComponen
   protected override _xDataFetch(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main.push('summary');
-    this.xCreditFacade.getSummary(this._baseUrl, this.userId(), this.comName);
+    this.xCreditFacade.getSummary(
+      this._baseUrl,
+      this.userId(),
+      this.nameInstance_main,
+      this.nameThis,
+    );
   }
 }

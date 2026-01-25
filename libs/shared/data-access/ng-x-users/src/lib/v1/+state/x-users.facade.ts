@@ -7,6 +7,7 @@
 import { Injectable, inject } from '@angular/core';
 import { select, Store, Action } from '@ngrx/store';
 
+import { V1BaseFacade } from '@x/shared-util-ng-bases';
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 
 import { XUsersActions } from './x-users.actions';
@@ -16,8 +17,8 @@ import * as selectors from './x-users.selectors';
 @Injectable({
   providedIn: 'root',
 })
-export class V1XUsersFacade {
-  private readonly _store = inject(Store);
+export class V1XUsersFacade extends V1BaseFacade {
+  // protected readonly _store = inject(Store); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Selectors: Let's select one option from our feature state object.        */
@@ -36,39 +37,39 @@ export class V1XUsersFacade {
   /* Actions: Let's modify the state by dispatching actions.                  */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  getAll(url: string) {
-    this._store.dispatch(XUsersActions.getAll({ url }));
+  getAll(url: string, lib = 'any') {
+    this._store.dispatch(XUsersActions.getAll({ lib, url }));
   }
 
   setSelectedId(id: number) {
     this._store.dispatch(XUsersActions.setSelectedId({ id }));
   }
 
-  addOne(url: string, user: V1XUsers_MapUser) {
-    this._store.dispatch(XUsersActions.addOne({ url, user }));
+  addOne(url: string, user: V1XUsers_MapUser, lib = 'any') {
+    this._store.dispatch(XUsersActions.addOne({ lib, url, user }));
   }
 
-  addMany(url: string, users: V1XUsers_MapUser[]) {
-    this._store.dispatch(XUsersActions.addMany({ url, users }));
+  addMany(url: string, users: V1XUsers_MapUser[], lib = 'any') {
+    this._store.dispatch(XUsersActions.addMany({ lib, url, users }));
   }
 
-  updateOne(url: string, user: V1XUsers_MapUser) {
-    this._store.dispatch(XUsersActions.updateOne({ url, user }));
+  updateOne(url: string, user: V1XUsers_MapUser, lib = 'any') {
+    this._store.dispatch(XUsersActions.updateOne({ lib, url, user }));
   }
 
-  updateMany(url: string, users: V1XUsers_MapUser[]) {
-    this._store.dispatch(XUsersActions.updateMany({ url, users }));
+  updateMany(url: string, users: V1XUsers_MapUser[], lib = 'any') {
+    this._store.dispatch(XUsersActions.updateMany({ lib, url, users }));
   }
 
-  removeOne(url: string, id: number) {
-    this._store.dispatch(XUsersActions.removeOne({ url, id }));
+  removeOne(url: string, id: number, lib = 'any') {
+    this._store.dispatch(XUsersActions.removeOne({ lib, url, id }));
   }
 
-  removeMany(url: string, ids: number[]) {
-    this._store.dispatch(XUsersActions.removeMany({ url, ids }));
+  removeMany(url: string, ids: number[], lib = 'any') {
+    this._store.dispatch(XUsersActions.removeMany({ lib, url, ids }));
   }
 
-  removeAll(url: string) {
-    this._store.dispatch(XUsersActions.removeAll({ url }));
+  removeAll(url: string, lib = 'any') {
+    this._store.dispatch(XUsersActions.removeAll({ lib, url }));
   }
 }

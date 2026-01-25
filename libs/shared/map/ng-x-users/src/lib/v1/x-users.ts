@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 
+import { V1BaseMap } from '@x/shared-util-ng-bases';
+
 import { V1XUsers_ApiUser, V1XUsers_MapUser } from './x-users.interfaces';
 
 /**
@@ -14,7 +16,7 @@ import { V1XUsers_ApiUser, V1XUsers_MapUser } from './x-users.interfaces';
 @Injectable({
   providedIn: 'root',
 })
-export class V1XUsers {
+export class V1XUsers extends V1BaseMap {
   private readonly _http = inject(HttpClient);
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -27,9 +29,10 @@ export class V1XUsers {
    * Authenticated: Via 'shared-data-access-ng-auth' lib interceptor.
    *
    * @param {string} url
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1XUsers_MapUser[]>}
    */
-  getAll(url: string): Observable<V1XUsers_MapUser[]> {
+  getAll(url: string, lib = 'any'): Observable<V1XUsers_MapUser[]> {
     // Here's the endpoint
     const endPoint = `${url}/users`; // Not using URL in our Boilerplate app
 
@@ -42,11 +45,13 @@ export class V1XUsers {
     // Let's send the request
     return observable.pipe(
       map((data) => {
+        this._logSuccess(data, lib);
         return this._mapAll(data);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XUsers/getAll:', error);
+        this._logFailure(error, lib);
         return throwError(() => error);
       }),
     );
@@ -75,9 +80,14 @@ export class V1XUsers {
    *
    * @param {string} url
    * @param {V1XUsers_MapUser} user
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1XUsers_MapUser>}
    */
-  addOne(url: string, user: V1XUsers_MapUser): Observable<V1XUsers_MapUser> {
+  addOne(
+    url: string,
+    user: V1XUsers_MapUser,
+    lib = 'any',
+  ): Observable<V1XUsers_MapUser> {
     // Here's the endpoint
     const endPoint = `${url}/users`; // Not using URL in our Boilerplate app
 
@@ -98,11 +108,13 @@ export class V1XUsers {
     // Let's send the request
     return observable.pipe(
       map((data) => {
+        this._logSuccess(data, lib);
         return this._mapOne(data);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XUsers/addOne:', error);
+        this._logFailure(error, lib);
         return throwError(() => error);
       }),
     );
@@ -115,9 +127,14 @@ export class V1XUsers {
    *
    * @param {string} url
    * @param {V1XUsers_MapUser} user
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1XUsers_MapUser>}
    */
-  updateOne(url: string, user: V1XUsers_MapUser): Observable<V1XUsers_MapUser> {
+  updateOne(
+    url: string,
+    user: V1XUsers_MapUser,
+    lib = 'any',
+  ): Observable<V1XUsers_MapUser> {
     // Here's the endpoint
     const endPoint = `${url}/users/${user.id}`; // Not using URL in our Boilerplate app
 
@@ -139,11 +156,13 @@ export class V1XUsers {
     // Let's send the request
     return observable.pipe(
       map((data) => {
+        this._logSuccess(data, lib);
         return this._mapOne(data);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XUsers/updateOne:', error);
+        this._logFailure(error, lib);
         return throwError(() => error);
       }),
     );
@@ -156,9 +175,10 @@ export class V1XUsers {
    *
    * @param {string} url
    * @param {number} id
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<number>}
    */
-  removeOne(url: string, id: number): Observable<number> {
+  removeOne(url: string, id: number, lib = 'any'): Observable<number> {
     // Here's the endpoint
     const endPoint = `${url}/users/${id}`;
 
@@ -171,11 +191,13 @@ export class V1XUsers {
     // Let's send the request
     return observable.pipe(
       map(() => {
+        this._logSuccess(id, lib);
         return id;
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XUsers/removeOne:', error);
+        this._logFailure(error, lib);
         return throwError(() => error);
       }),
     );

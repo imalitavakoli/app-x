@@ -1,6 +1,8 @@
 <x-x-profile-info-v1
   [data]="$any((xProfileInfoFacade.datas$ | async)?.data)"
-  [creditDetail]="$any((xCreditFacade.entityDatas$(comName) | async)?.detail)"
+  [creditDetail]="
+    $any((xCreditFacade.entityDatas$(nameInstance_main) | async)?.detail)
+  "
   [icoInfo]="$any($dataConfigDep()?.assets?.libXprofileInfoIcoInfo)"
   [langCultureCode]="
     $any(translationsFacade.lastLoadedLangCultureCode$ | async)
@@ -19,7 +21,7 @@
 
 @if (
   showErrors() &&
-  ((xCreditFacade.entityHasError$(comName) | async) ||
+  ((xCreditFacade.entityHasError$(nameInstance_main) | async) ||
     (xProfileInfoFacade.hasError$ | async))
 ) {
   <x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
@@ -43,8 +45,10 @@
 
         <!-- xCreditFacade ///////////////////////////////////////////////// -->
 
-        @if ((xCreditFacade.entityErrors$(comName) | async)?.detail) {
-          <small class="e-ecode"> V1XCreditFacade({{ comName }})/detail </small>
+        @if ((xCreditFacade.entityErrors$(nameInstance_main) | async)?.detail) {
+          <small class="e-ecode">
+            V1XCreditFacade({{ nameInstance_main }})/detail
+          </small>
         }
 
         <!-- xProfileInfoFacade //////////////////////////////////////////// -->

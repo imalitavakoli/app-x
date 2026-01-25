@@ -64,7 +64,8 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   protected _xCreditRequestedData_main: (keyof V1XCredit_Datas)[] = [];
   protected _xProfileInfoRequestedData: (keyof V1XProfileInfo_Datas)[] = [];
 
-  readonly comName: string = 'V1XProfileInfoFeaComponent_main';
+  readonly nameThis: string = 'V1XProfileInfoFeaComponent'; // Name of this component
+  readonly nameInstance_main: string = 'V1XProfileInfoFeaComponent_main'; // Name of the 'main' instance for multi-instance 'data-access' libs based on this component.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
@@ -83,7 +84,7 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
 
   protected override _xInitPreBeforeDom(): void {
     // LIB: XCredit (main)
-    this.xCreditFacade.createIfNotExists(this.comName);
+    this.xCreditFacade.createIfNotExists(this.nameInstance_main);
   }
 
   protected override _xInitOrUpdateAfterAllDataReady() {
@@ -114,7 +115,7 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
     const observables = [];
 
     // LIB: XCredit (main)
-    observables.push(this.xCreditFacade.entityLoadeds$(this.comName));
+    observables.push(this.xCreditFacade.entityLoadeds$(this.nameInstance_main));
 
     // LIB: XProfileInfo
     observables.push(this.xProfileInfoFacade.loadeds$);
@@ -157,7 +158,7 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   protected override _xFacadesAddErrorListeners(): void {
     // LIB: XCredit (main)
     this.xCreditFacade
-      .entity$(this.comName)
+      .entity$(this.nameInstance_main)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((state) => {
         // Emit the error messages if any.
@@ -175,7 +176,7 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
                 value: state.errors[key] as string,
               },
               'V1XCreditFacade',
-              this.comName,
+              this.nameInstance_main,
             );
           }
         };
@@ -223,7 +224,7 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   protected override _xDataReset(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main = [];
-    this.xCreditFacade.reset(this.comName);
+    this.xCreditFacade.reset(this.nameInstance_main);
 
     // LIB: XProfileInfo
     this._xProfileInfoRequestedData = [];
@@ -233,10 +234,19 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
   protected override _xDataFetch(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main.push('detail');
-    this.xCreditFacade.getDetail(this._baseUrl, this.userId(), this.comName);
+    this.xCreditFacade.getDetail(
+      this._baseUrl,
+      this.userId(),
+      this.nameInstance_main,
+      this.nameThis,
+    );
 
     // LIB: XProfileInfo
     this._xProfileInfoRequestedData.push('data');
-    this.xProfileInfoFacade.getData(this._baseUrl, this.userId());
+    this.xProfileInfoFacade.getData(
+      this._baseUrl,
+      this.userId(),
+      this.nameThis,
+    );
   }
 }

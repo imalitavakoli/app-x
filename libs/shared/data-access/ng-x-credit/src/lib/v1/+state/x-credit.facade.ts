@@ -8,6 +8,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
+import { V1BaseFacade } from '@x/shared-util-ng-bases';
 import { V1XCredit_Style } from '@x/shared-map-ng-x-credit';
 
 import { XCreditActions } from './x-credit.actions';
@@ -22,8 +23,8 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class V1XCreditFacade {
-  private readonly _store = inject(Store);
+export class V1XCreditFacade extends V1BaseFacade {
+  // protected readonly _store = inject(Store); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Selectors: Let's select one option from our feature state object.        */
@@ -83,10 +84,12 @@ export class V1XCreditFacade {
    * @param {string} url
    * @param {number} userId
    * @param {string} [id='g']
+   * @param {string} [lib='any']
    */
-  getSummary(url: string, userId: number, id = 'g') {
+  getSummary(url: string, userId: number, id = 'g', lib = 'any') {
     this._store.dispatch(
       XCreditActions.getSummary({
+        lib,
         id,
         url,
         userId,
@@ -100,10 +103,12 @@ export class V1XCreditFacade {
    * @param {string} url
    * @param {number} userId
    * @param {string} [id='g']
+   * @param {string} [lib='any']
    */
-  getDetail(url: string, userId: number, id = 'g') {
+  getDetail(url: string, userId: number, id = 'g', lib = 'any') {
     this._store.dispatch(
       XCreditActions.getDetail({
+        lib,
         id,
         url,
         userId,

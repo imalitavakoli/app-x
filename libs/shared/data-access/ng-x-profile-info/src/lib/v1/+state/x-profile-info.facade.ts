@@ -7,6 +7,8 @@
 import { Injectable, inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
+import { V1BaseFacade } from '@x/shared-util-ng-bases';
+
 import { XProfileInfoActions } from './x-profile-info.actions';
 import * as selectors from './x-profile-info.selectors';
 import { xProfileInfoFeature } from './x-profile-info.reducer';
@@ -14,8 +16,8 @@ import { xProfileInfoFeature } from './x-profile-info.reducer';
 @Injectable({
   providedIn: 'root',
 })
-export class V1XProfileInfoFacade {
-  private readonly _store = inject(Store);
+export class V1XProfileInfoFacade extends V1BaseFacade {
+  // protected readonly _store = inject(Store); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Selectors: Let's select one option from our feature state object.        */
@@ -38,9 +40,17 @@ export class V1XProfileInfoFacade {
   /* Actions: Let's modify the state by dispatching actions.                  */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  getData(url: string, userId: number) {
+  /**
+   * Get data.
+   *
+   * @param {string} url
+   * @param {number} userId
+   * @param {string} [lib='any']
+   */
+  getData(url: string, userId: number, lib = 'any') {
     this._store.dispatch(
       XProfileInfoActions.getData({
+        lib,
         url,
         userId,
       }),

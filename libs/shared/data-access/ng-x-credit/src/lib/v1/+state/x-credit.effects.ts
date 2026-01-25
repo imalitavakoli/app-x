@@ -54,8 +54,8 @@ export class V1XCreditEffects {
   getSummary$ = createEffect(() =>
     this.actions$.pipe(
       ofType(XCreditActions.getSummary),
-      concatMap(({ id, url, userId }) => {
-        return this._map.getSummary(url, userId).pipe(
+      concatMap(({ lib, id, url, userId }) => {
+        return this._map.getSummary(url, userId, lib).pipe(
           map((data) =>
             XCreditActions.success({
               id,
@@ -88,8 +88,8 @@ export class V1XCreditEffects {
   getDetail$ = createEffect(() =>
     this.actions$.pipe(
       ofType(XCreditActions.getDetail),
-      concatMap(({ id, url, userId }) => {
-        return this._map.getDetail(url, userId).pipe(
+      concatMap(({ lib, id, url, userId }) => {
+        return this._map.getDetail(url, userId, lib).pipe(
           map((data) =>
             XCreditActions.success({
               id,

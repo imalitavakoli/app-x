@@ -43,7 +43,7 @@ import { V1BaseFeatureExtComponent } from './base-feature-ext.component';
  * choice.
  *
  * Here's how the inherited classes use this (in most cases):
- * 01. Override `comName` and set it to your component's class name.
+ * 01. Override `nameInstance_main` and set it to your component's class name.
  * 02. Override `_xHasRequiredInputs`.
  * 03. Override `_xDataReset`. (with super call right at the beginning). Here's
  *     the place, where You may set the 'ui' lib's `state` input to 'loading'.
@@ -97,7 +97,7 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
    * lib... In order to do that, we need to create a new instance of the state
    * object with the component name as its ID.
    */
-  readonly comName: string = 'V1BaseFeatureExtXCreditComponent_main';
+  readonly nameInstance_main: string = 'V1BaseFeatureExtXCreditComponent_main';
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X lifecycle                                                              */
@@ -109,7 +109,7 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
    */
   protected override _xInitPreBeforeDom(): void {
     // LIB: XCredit (main)
-    this.xCreditFacade.createIfNotExists(this.comName);
+    this.xCreditFacade.createIfNotExists(this.nameInstance_main);
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -125,7 +125,7 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
     const observables = [];
 
     // LIB: XCredit (main)
-    observables.push(this.xCreditFacade.entityLoadeds$(this.comName));
+    observables.push(this.xCreditFacade.entityLoadeds$(this.nameInstance_main));
 
     return observables as Observable<{ [key: string]: boolean }>[];
   }
@@ -165,7 +165,7 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
   protected override _xFacadesAddErrorListeners(): void {
     // LIB: XCredit (main)
     this.xCreditFacade
-      .entity$(this.comName)
+      .entity$(this.nameInstance_main)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((state) => {
         // Emit the error messages if any.
@@ -183,7 +183,7 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
                 value: state.errors[key] as string,
               },
               'V1XCreditFacade',
-              this.comName,
+              this.nameInstance_main,
             );
           }
         };
@@ -206,6 +206,6 @@ export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent 
   protected override _xDataReset(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main = [];
-    this.xCreditFacade.reset(this.comName);
+    this.xCreditFacade.reset(this.nameInstance_main);
   }
 }

@@ -25,6 +25,7 @@ export const XCreditActions = createActionGroup({
     /* ////////////////////////////////////////////////////////////////////// */
 
     getSummary: props<{
+      lib: string;
       id: string;
       url: string;
       userId: number;
@@ -35,6 +36,7 @@ export const XCreditActions = createActionGroup({
     /* ////////////////////////////////////////////////////////////////////// */
 
     getDetail: props<{
+      lib: string;
       id: string;
       url: string;
       userId: number;

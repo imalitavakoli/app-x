@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 
+import { V1BaseMap } from '@x/shared-util-ng-bases';
+
 import {
   V1XProfileInfo_ApiData,
   V1XProfileInfo_MapData,
@@ -17,7 +19,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class V1XProfileInfo {
+export class V1XProfileInfo extends V1BaseMap {
   private readonly _http = inject(HttpClient);
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -31,9 +33,14 @@ export class V1XProfileInfo {
    *
    * @param {string} url
    * @param {number} userId
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1XProfileInfo_MapData>}
    */
-  getData(url: string, userId: number): Observable<V1XProfileInfo_MapData> {
+  getData(
+    url: string,
+    userId: number,
+    lib = 'any',
+  ): Observable<V1XProfileInfo_MapData> {
     // Here's the endpoint
     const endPoint = `${url}/users/${userId}/profile-info`;
 
@@ -50,11 +57,13 @@ export class V1XProfileInfo {
     // Let's send the request
     return observable.pipe(
       map((data) => {
+        this._logSuccess(data, lib);
         return this._mapData(data);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XProfileInfo/getData:', error);
+        this._logFailure(error, lib);
         return throwError(() => error);
       }),
     );

@@ -19,8 +19,8 @@ export class V1XUsersEffects {
   getAll$ = createEffect(() =>
     this.actions$.pipe(
       ofType(XUsersActions.getAll),
-      concatMap(({ url }) => {
-        return this._map.getAll(url).pipe(
+      concatMap(({ lib, url }) => {
+        return this._map.getAll(url, lib).pipe(
           map((users) => XUsersActions.getAllSuccess({ users })),
           catchError((error) => of(XUsersActions.failure({ error }))),
         );
@@ -31,8 +31,8 @@ export class V1XUsersEffects {
   addOne$ = createEffect(() =>
     this.actions$.pipe(
       ofType(XUsersActions.addOne),
-      concatMap(({ url, user }) => {
-        return this._map.addOne(url, user).pipe(
+      concatMap(({ lib, url, user }) => {
+        return this._map.addOne(url, user, lib).pipe(
           map((user) => XUsersActions.addOneSuccess({ user })),
           catchError((error) => of(XUsersActions.failure({ error }))),
         );
@@ -43,8 +43,8 @@ export class V1XUsersEffects {
   updateOne$ = createEffect(() =>
     this.actions$.pipe(
       ofType(XUsersActions.updateOne),
-      concatMap(({ url, user }) => {
-        return this._map.updateOne(url, user).pipe(
+      concatMap(({ lib, url, user }) => {
+        return this._map.updateOne(url, user, lib).pipe(
           map((user) =>
             XUsersActions.updateOneSuccess({
               user: { id: user.id as number, changes: user }, // To satisfy NgRx updateOne argument type.
@@ -59,8 +59,8 @@ export class V1XUsersEffects {
   removeOne$ = createEffect(() =>
     this.actions$.pipe(
       ofType(XUsersActions.removeOne),
-      concatMap(({ url, id }) => {
-        return this._map.removeOne(url, id).pipe(
+      concatMap(({ lib, url, id }) => {
+        return this._map.removeOne(url, id, lib).pipe(
           map((id) => XUsersActions.removeOneSuccess({ id })),
           catchError((error) => of(XUsersActions.failure({ error }))),
         );

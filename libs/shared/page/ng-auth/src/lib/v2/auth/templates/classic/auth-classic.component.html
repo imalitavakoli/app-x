@@ -12,7 +12,7 @@ listening to the 'method' components' outputs which are resting in this template
     *transloco="let t"
     class="e-auth bg-eday-lighter flex min-h-screen w-full flex-col md:flex-row md:gap-4"
     [ngClass]="{
-      hidden: contentCurrIndex > 0
+      hidden: contentCurrIndex > 0,
     }"
   >
     <!-- Logo -->
@@ -33,7 +33,7 @@ listening to the 'method' components' outputs which are resting in this template
         'background-image':
           'url(' +
           (configFacade.dataConfigDep$ | async)?.assets?.thisAuthImgBg +
-          ')'
+          ')',
       }"
     ></section>
 
@@ -52,33 +52,33 @@ listening to the 'method' components' outputs which are resting in this template
 
         <!-- Auth Method: Magic -->
         @if (hasAuthMagic) {
-        <x-method-magic
-          type="official"
-          [isAuthCanceledFromOutside]="isAuthCanceled"
-          (hasError)="
-            onError({ page: 'parent', lib: 'methodMagic', error: $event })
-          "
-          (submitted)="onSubmitted($event)"
-          (ready)="onReady()"
-        ></x-method-magic>
+          <x-method-magic
+            type="official"
+            [isAuthCanceledFromOutside]="isAuthCanceled"
+            (hasError)="
+              onError({ page: 'parent', lib: 'methodMagic', error: $event })
+            "
+            (submitted)="onSubmitted($event)"
+            (ready)="onReady()"
+          ></x-method-magic>
         }
 
         <!-- 'or' text -->
         @if (hasAuthBankid && hasAuthMagic) {
-        <div class="text-eneutral-darker my-2 text-center">or</div>
+          <div class="text-eneutral-darker my-2 text-center">or</div>
         }
 
         <!-- Auth Method: Bankid -->
         @if (hasAuthBankid) {
-        <x-method-bankid
-          [isSecondaryAuth]="hasAuthMagic"
-          [isAuthCanceledFromOutside]="isAuthCanceled"
-          (hasError)="
-            onError({ page: 'parent', lib: 'methodBankid', error: $event })
-          "
-          (submitted)="onSubmitted($event)"
-          (ready)="onReady()"
-        ></x-method-bankid>
+          <x-method-bankid
+            [isSecondaryAuth]="hasAuthMagic"
+            [isAuthCanceledFromOutside]="isAuthCanceled"
+            (hasError)="
+              onError({ page: 'parent', lib: 'methodBankid', error: $event })
+            "
+            (submitted)="onSubmitted($event)"
+            (ready)="onReady()"
+          ></x-method-bankid>
         }
 
         <!-- 'Trouble logging in' button -->
@@ -119,9 +119,9 @@ template!
 <ng-template #waiting>
   <section>
     @if (waitingType === 'email') {
-    <ng-container *ngTemplateOutlet="waitingEmail"></ng-container>
+      <ng-container *ngTemplateOutlet="waitingEmail"></ng-container>
     } @else if (waitingType === 'bankid') {
-    <ng-container *ngTemplateOutlet="waitingBankid"></ng-container>
+      <ng-container *ngTemplateOutlet="waitingBankid"></ng-container>
     }
   </section>
 </ng-template>
@@ -139,7 +139,7 @@ template!
       containerClass="e-ani pb-6 pt-3"
       [options]="{
         path: (configFacade.dataConfigDep$ | async)?.assets?.gfxEmail,
-        loop: true
+        loop: true,
       }"
     ></ng-lottie>
     <!-- <i class="bi bi-envelope my-8 block text-5xl"></i> -->
@@ -198,15 +198,15 @@ template!
     manually.
     -->
     @if (platform === 'ios') {
-    <a
-      *transloco="let t"
-      class="e-btn e-btn--base py-[6px]"
-      [href]="whatUrlToRedirect"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Open BankID to login
-    </a>
+      <a
+        *transloco="let t"
+        class="e-btn e-btn--base py-[6px]"
+        [href]="whatUrlToRedirect"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open BankID to login
+      </a>
     }
   </section>
 </ng-template>
@@ -248,44 +248,48 @@ have it :)
       <p class="p">Contact our customer service:</p>
 
       @if ((configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail) {
-      <a
-        class="e-link mb-4 block"
-        [href]="
-          'mailto:' +
-          (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail
-        "
-      >
-        {{ (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail }}
-      </a>
-      } @if ((configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone)
-      {
-      <a
-        class="e-link mb-4 block"
-        [href]="
-          'tel:' +
-          (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone
-        "
-      >
-        {{ (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone }}
-      </a>
+        <a
+          class="e-link mb-4 block"
+          [href]="
+            'mailto:' +
+            (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail
+          "
+        >
+          {{
+            (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientEmail
+          }}
+        </a>
+      }
+      @if ((configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone) {
+        <a
+          class="e-link mb-4 block"
+          [href]="
+            'tel:' +
+            (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone
+          "
+        >
+          {{
+            (configFacade.dataConfigDep$ | async)?.ui?.authConfig?.clientPhone
+          }}
+        </a>
       }
 
       <!-- App version text -->
       <div class="text-eneutral-darker mt-6 text-sm">
-        <span>V{{ appVersion }}</span>
+        <span>V{{ appVersion() }}</span>
         <br />
         @if ($any(configFacade.dataDataBuild$ | async)?.buildId) {
-        <span>
-          BuildID:
-          {{ $any(configFacade.dataDataBuild$ | async)?.buildId }}
-        </span>
+          <span>
+            BuildID:
+            {{ $any(configFacade.dataDataBuild$ | async)?.buildId }}
+          </span>
         }
         <!-- Native app info -->
         @if (nativeAppInfo) {
-        <div>
-          <div>App Version: {{ nativeAppInfo.version }}</div>
-          <!-- <div>App Build: {{ nativeAppInfo.build }}</div> -->
-        </div>
+          <div>
+            <div>App Version: {{ nativeAppInfo.version }}</div>
+            <!-- <div>App Build: {{ nativeAppInfo.build }}</div> -->
+          </div>
         }
       </div>
     </div>
@@ -310,21 +314,21 @@ components have some outputs that we wanna keep listening to...
   <ng-container *ngTemplateOutlet="welcome"></ng-container>
 
   @if (contentCurrIndex > 0) {
-  <article
-    class="bg-eday-lighter dark:bg-enight absolute left-0 top-0 min-h-screen w-full"
-  >
-    <ng-container *ngTemplateOutlet="header"></ng-container>
-
-    <section
-      class="flex min-h-[calc(100vh-60px)] items-center justify-center p-8 pt-[calc(var(--ion-safe-area-top)+60px)] text-center"
+    <article
+      class="bg-eday-lighter dark:bg-enight absolute left-0 top-0 min-h-screen w-full"
     >
-      @if (contentCurrIndex === 1) {
-      <ng-container *ngTemplateOutlet="waiting"></ng-container>
-      } @else if (contentCurrIndex === 2) {
-      <ng-container *ngTemplateOutlet="contact"></ng-container>
-      }
-    </section>
-  </article>
+      <ng-container *ngTemplateOutlet="header"></ng-container>
+
+      <section
+        class="flex min-h-[calc(100vh-60px)] items-center justify-center p-8 pt-[calc(var(--ion-safe-area-top)+60px)] text-center"
+      >
+        @if (contentCurrIndex === 1) {
+          <ng-container *ngTemplateOutlet="waiting"></ng-container>
+        } @else if (contentCurrIndex === 2) {
+          <ng-container *ngTemplateOutlet="contact"></ng-container>
+        }
+      </section>
+    </article>
   }
 </main>
 
@@ -333,25 +337,25 @@ components have some outputs that we wanna keep listening to...
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
 @if (errors && errors.length > 0) {
-<x-popup-v1
-  *transloco="let t"
-  [isHeadEnable]="true"
-  [isOpen]="true"
-  (closed)="errors = []"
->
-  <div slot="head">
-    <i class="bi bi-hourglass-split max-w- mr-2"></i>
-    <span class="font-semibold">{{ t('common.error') }}</span>
-  </div>
+  <x-popup-v1
+    *transloco="let t"
+    [isHeadEnable]="true"
+    [isOpen]="true"
+    (closed)="errors = []"
+  >
+    <div slot="head">
+      <i class="bi bi-hourglass-split max-w- mr-2"></i>
+      <span class="font-semibold">{{ t('common.error') }}</span>
+    </div>
 
-  <div slot="body">
-    <p class="p m-0 text-center">{{ t('common.error_desc') }}</p>
+    <div slot="body">
+      <p class="p m-0 text-center">{{ t('common.error_desc') }}</p>
 
-    <p class="p m-0 break-all text-center">
-      @for (error of errors; track $index) {
-      <small class="e-ecode"> {{ error.lib }}:{{ error.error.key }} </small>
-      }
-    </p>
-  </div>
-</x-popup-v1>
+      <p class="p m-0 break-all text-center">
+        @for (error of errors; track $index) {
+          <small class="e-ecode"> {{ error.lib }}:{{ error.error.key }} </small>
+        }
+      </p>
+    </div>
+  </x-popup-v1>
 }
