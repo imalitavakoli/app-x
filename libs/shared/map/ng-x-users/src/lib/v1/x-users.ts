@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 
 import { V1BaseMap } from '@x/shared-util-ng-bases';
@@ -17,7 +17,7 @@ import { V1XUsers_ApiUser, V1XUsers_MapUser } from './x-users.interfaces';
   providedIn: 'root',
 })
 export class V1XUsers extends V1BaseMap {
-  private readonly _http = inject(HttpClient);
+  // protected readonly _http = inject(HttpClient); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Set/Update/Delete entities                                               */
@@ -39,19 +39,22 @@ export class V1XUsers extends V1BaseMap {
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
     const observable = this._http.get<V1XUsers_ApiUser[]>(
       'https://jsonplaceholder.typicode.com/users',
+      {
+        observe: 'response',
+      },
     );
-    // const observable = this._http.get<V1XUsers_ApiUser[]>(endPoint);
+    // const observable = this._http.get<V1XUsers_ApiUser[]>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        this._logSuccess(data, lib);
-        return this._mapAll(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapAll(res.body as V1XUsers_ApiUser[]);
       }),
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
         const error = err.message || err;
         console.error('@V1XUsers/getAll:', error);
-        this._logFailure(error, lib);
+        this._logFailure(err.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
@@ -102,19 +105,22 @@ export class V1XUsers extends V1BaseMap {
     const observable = this._http.post<V1XUsers_ApiUser>(
       'https://jsonplaceholder.typicode.com/users',
       payload,
+      {
+        observe: 'response',
+      },
     );
-    // const observable = this._http.post<V1XUsers_ApiUser>(endPoint, payload);
+    // const observable = this._http.post<V1XUsers_ApiUser>(endPoint, payload, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        this._logSuccess(data, lib);
-        return this._mapOne(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapOne(res.body as V1XUsers_ApiUser);
       }),
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
         const error = err.message || err;
         console.error('@V1XUsers/addOne:', error);
-        this._logFailure(error, lib);
+        this._logFailure(err.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
@@ -150,19 +156,22 @@ export class V1XUsers extends V1BaseMap {
     const observable = this._http.put<V1XUsers_ApiUser>(
       `https://jsonplaceholder.typicode.com/users/${user.id}`,
       payload,
+      {
+        observe: 'response',
+      },
     );
-    // const observable = this._http.put<V1XUsers_ApiUser>(endPoint, payload);
+    // const observable = this._http.put<V1XUsers_ApiUser>(endPoint, payload, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        this._logSuccess(data, lib);
-        return this._mapOne(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapOne(res.body as V1XUsers_ApiUser);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XUsers/updateOne:', error);
-        this._logFailure(error, lib);
+        this._logFailure(err.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
@@ -185,19 +194,22 @@ export class V1XUsers extends V1BaseMap {
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
     const observable = this._http.delete<unknown>(
       `https://jsonplaceholder.typicode.com/users/${id}`,
+      {
+        observe: 'response',
+      },
     );
-    // const observable = this._http.delete<unknown>(endPoint);
+    // const observable = this._http.delete<unknown>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map(() => {
-        this._logSuccess(id, lib);
+      map((res) => {
+        this._logSuccess(id, res, lib);
         return id;
       }),
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
         const error = err.message || err;
         console.error('@V1XUsers/removeOne:', error);
-        this._logFailure(error, lib);
+        this._logFailure(err.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );

@@ -1,3 +1,10 @@
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpResponse,
+} from '@angular/common/http';
+import { inject } from '@angular/core';
+
 /**
  * Base class for 'map' lib.
  *
@@ -20,6 +27,8 @@
  * @typedef {V1BaseMap}
  */
 export class V1BaseMap {
+  protected readonly _http = inject(HttpClient);
+
   /* //////////////////////////////////////////////////////////////////////// */
   /* Useful                                                                   */
   /* //////////////////////////////////////////////////////////////////////// */
@@ -29,10 +38,11 @@ export class V1BaseMap {
    * and receives a successful response.
    *
    * @protected
-   * @param {*} res Response received
+   * @param {*} res Response received (body)
+   * @param {HttpResponse<any>} meta Full HTTP response
    * @param {string} [lib='any'] Lib's name that requested an API endpoint. e.g., 'V1XUsersFeaComponent'
    */
-  protected _logSuccess(res: any, lib = 'any'): void {
+  protected _logSuccess(res: any, meta: HttpResponse<any>, lib = 'any'): void {
     // ...
   }
 
@@ -41,10 +51,15 @@ export class V1BaseMap {
    * and receives an error.
    *
    * @protected
-   * @param {*} msg Error message
+   * @param {string | undefined} msg Error message (body), if available
+   * @param {HttpErrorResponse} meta Full HTTP error response
    * @param {string} [lib='any'] Lib's name that requested an API endpoint. e.g., 'V1XUsersFeaComponent'
    */
-  protected _logFailure(msg: any, lib = 'any'): void {
+  protected _logFailure(
+    msg: string | undefined,
+    meta: HttpErrorResponse,
+    lib = 'any',
+  ): void {
     // ...
   }
 

@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 
 import { V1BaseMap } from '@x/shared-util-ng-bases';
@@ -25,7 +25,7 @@ import {
   providedIn: 'root',
 })
 export class V1XCredit extends V1BaseMap {
-  private readonly _http = inject(HttpClient);
+  // protected readonly _http = inject(HttpClient); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Get summary data                                                         */
@@ -50,23 +50,30 @@ export class V1XCredit extends V1BaseMap {
     const endPoint = `${url}/users/${userId}/credit?type=summary`;
 
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
-    const observable: Observable<V1XCredit_ApiSummary> = of({
-      user_id: userId,
-      status: 'active',
-      created_at: '2023-10-01T00:00:00',
-    });
-    // const observable = this._http.get<V1XCredit_ApiSummary>(endPoint);
+    const observable: Observable<HttpResponse<V1XCredit_ApiSummary>> = of(
+      new HttpResponse<V1XCredit_ApiSummary>({
+        body: {
+          user_id: userId,
+          status: 'active',
+          created_at: '2023-10-01T00:00:00',
+        },
+        status: 200,
+        statusText: 'OK',
+        url: endPoint,
+      }),
+    );
+    // const observable = this._http.get<V1XCredit_ApiSummary>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        this._logSuccess(data, lib);
-        return this._mapSummary(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapSummary(res.body as V1XCredit_ApiSummary);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XCredit/getSummary:', error);
-        this._logFailure(error, lib);
+        this._logFailure(error.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
@@ -107,20 +114,27 @@ export class V1XCredit extends V1BaseMap {
     const endPoint = `${url}/users/${userId}/credit?type=detail`;
 
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
-    const observable: Observable<V1XCredit_ApiDetail> = of({
-      user_id: userId,
-      balance: 1000,
-      balance_currency: 'USD',
-      updated_at: '2023-10-01T00:00:00',
-      expired_at: '2024-10-01T00:00:00',
-    });
-    // const observable = this._http.get<V1XCredit_ApiDetail>(endPoint);
+    const observable: Observable<HttpResponse<V1XCredit_ApiDetail>> = of(
+      new HttpResponse<V1XCredit_ApiDetail>({
+        body: {
+          user_id: userId,
+          balance: 1000,
+          balance_currency: 'USD',
+          updated_at: '2023-10-01T00:00:00',
+          expired_at: '2024-10-01T00:00:00',
+        },
+        status: 200,
+        statusText: 'OK',
+        url: endPoint,
+      }),
+    );
+    // const observable = this._http.get<V1XCredit_ApiDetail>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        this._logSuccess(data, lib);
-        return this._mapDetail(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapDetail(res.body as V1XCredit_ApiDetail);
       }),
       catchError((err) => {
         const error = err.message || err;
@@ -140,10 +154,14 @@ export class V1XCredit extends V1BaseMap {
 
         // If parsed, return custom code. Otherwise, return generic error message.
         if (errorParsed && errorParsed.code) {
-          this._logFailure(errorParsed.code as V1XCredit_ApiErrorDetail, lib);
+          this._logFailure(
+            errorParsed.code as V1XCredit_ApiErrorDetail,
+            err,
+            lib,
+          );
           return throwError(() => errorParsed.code as V1XCredit_ApiErrorDetail);
         }
-        this._logFailure(error, lib);
+        this._logFailure(error.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );

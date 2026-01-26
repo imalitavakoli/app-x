@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 
+import { V1BaseMap } from '@x/shared-util-ng-bases';
 import { v1LanguageGetCode } from '@x/shared-util-formatters';
 
 import {
@@ -24,8 +25,8 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class V1Translations {
-  private readonly _http = inject(HttpClient);
+export class V1Translations extends V1BaseMap {
+  // protected readonly _http = inject(HttpClient); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Get translations in a specific language                                  */
@@ -39,6 +40,7 @@ export class V1Translations {
    * @param {number} clientId
    * @param {string} [cultureCode='en-GB']
    * @param {string} [modules='']
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1Translations_MapTrans>}
    */
   getTranslations(
@@ -46,23 +48,28 @@ export class V1Translations {
     clientId: number,
     cultureCode = 'en-GB',
     modules: string[] = [],
+    lib = 'any',
   ): Observable<V1Translations_MapTrans> {
     // Here's the endpoint
     const modulesStr = modules.join(',');
     const endPoint = `${url}/translations?client_id=${clientId}&language_code=${cultureCode}&modules=${modulesStr}`;
 
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
-    const observable = this._http.get<V1Translations_ApiTrans>(url);
-    // const observable = this._http.get<V1Translations_ApiTrans>(endPoint);
+    const observable = this._http.get<V1Translations_ApiTrans>(url, {
+      observe: 'response',
+    });
+    // const observable = this._http.get<V1Translations_ApiTrans>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        return this._mapTranslations(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapTranslations(res.body as V1Translations_ApiTrans);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1Translations/getTranslations:', error);
+        this._logFailure(error.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
@@ -84,26 +91,39 @@ export class V1Translations {
    * Authenticated: Via 'shared-data-access-ng-auth' lib interceptor.
    *
    * @param {string} url
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1Translations_MapAllLangs>}
    */
-  getAllLangs(url: string): Observable<V1Translations_MapAllLangs> {
+  getAllLangs(
+    url: string,
+    lib = 'any',
+  ): Observable<V1Translations_MapAllLangs> {
     // Here's the endpoint
     const endPoint = `${url}/clients/info`;
 
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
-    const observable: Observable<V1Translations_ApiAllLangs> = of({
-      language_codes: ['en-GB', 'sv-SE'],
-    });
-    // const observable = this._http.get<V1Translations_ApiAllLangs>(endPoint);
+    const observable: Observable<HttpResponse<V1Translations_ApiAllLangs>> = of(
+      new HttpResponse<V1Translations_ApiAllLangs>({
+        body: {
+          language_codes: ['en-GB', 'sv-SE'],
+        },
+        status: 200,
+        statusText: 'OK',
+        url: endPoint,
+      }),
+    );
+    // const observable = this._http.get<V1Translations_ApiAllLangs>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        return this._mapAllLangs(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapAllLangs(res.body as V1Translations_ApiAllLangs);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1Translations/getAllLangs:', error);
+        this._logFailure(error.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
@@ -131,33 +151,47 @@ export class V1Translations {
    *
    * @param {string} url
    * @param {number} userId
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1Translations_MapSelectedLang>}
    */
   getSelectedLang(
     url: string,
     userId: number,
+    lib = 'any',
   ): Observable<V1Translations_MapSelectedLang> {
     // Here's the endpoint
     const endPoint = `${url}/users/${userId}`;
 
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
-    const observable: Observable<V1Translations_ApiSelectedLang> = of({
-      id: 123,
-      client_id: 1234567890,
-      ext_ref: 'external_reference',
-      language_code: 'en-GB',
-      is_integrationless_user: false,
-    });
-    // const observable = this._http.get<V1Translations_ApiSelectedLang>(endPoint);
+    const observable: Observable<HttpResponse<V1Translations_ApiSelectedLang>> =
+      of(
+        new HttpResponse<V1Translations_ApiSelectedLang>({
+          body: {
+            id: 123,
+            client_id: 1234567890,
+            ext_ref: 'external_reference',
+            language_code: 'en-GB',
+            is_integrationless_user: false,
+          },
+          status: 200,
+          statusText: 'OK',
+          url: endPoint,
+        }),
+      );
+    // const observable = this._http.get<V1Translations_ApiSelectedLang>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        return this._mapSelectedLang(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapSelectedLang(
+          res.body as V1Translations_ApiSelectedLang,
+        );
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1Translations/getSelectedLang:', error);
+        this._logFailure(error.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
@@ -175,12 +209,14 @@ export class V1Translations {
    * @param {string} url
    * @param {number} userId
    * @param {string} [cultureCode='en-GB']
+   * @param {string} [lib='any'] Lib's name that requested an API endpoint.
    * @returns {Observable<V1Translations_MapSelectedLang>}
    */
   patchSelectedLang(
     url: string,
     userId: number,
     cultureCode = 'en-GB',
+    lib = 'any',
   ): Observable<V1Translations_MapSelectedLang> {
     // Here's the endpoint
     const endPoint = `${url}/users/${userId}`;
@@ -195,23 +231,35 @@ export class V1Translations {
     ];
 
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
-    const observable: Observable<V1Translations_ApiSelectedLang> = of({
-      id: 123,
-      client_id: 1234567890,
-      ext_ref: 'external_reference',
-      language_code: cultureCode,
-      is_integrationless_user: false,
-    });
-    // const observable = this._http.patch<V1Translations_ApiSelectedLang>(endPoint, payload);
+    const observable: Observable<HttpResponse<V1Translations_ApiSelectedLang>> =
+      of(
+        new HttpResponse<V1Translations_ApiSelectedLang>({
+          body: {
+            id: 123,
+            client_id: 1234567890,
+            ext_ref: 'external_reference',
+            language_code: cultureCode,
+            is_integrationless_user: false,
+          },
+          status: 200,
+          statusText: 'OK',
+          url: endPoint,
+        }),
+      );
+    // const observable = this._http.patch<V1Translations_ApiSelectedLang>(endPoint, payload, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        return this._mapSelectedLang(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapSelectedLang(
+          res.body as V1Translations_ApiSelectedLang,
+        );
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1Translations/patchSelectedLang:', error);
+        this._logFailure(error.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );

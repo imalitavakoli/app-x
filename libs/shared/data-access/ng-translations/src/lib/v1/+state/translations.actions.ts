@@ -11,6 +11,7 @@ export const TranslationsActions = createActionGroup({
     /* Get translations in a specific language ////////////////////////////// */
 
     getTranslations: props<{
+      lib: string;
       url: string;
       clientId: number;
       cultureCode: string;
@@ -19,13 +20,14 @@ export const TranslationsActions = createActionGroup({
 
     /* Get client all available langs & user selected lang ////////////////// */
 
-    getAllLangs: props<{ url: string }>(),
+    getAllLangs: props<{ lib: string; url: string }>(),
 
-    getSelectedLang: props<{ url: string; userId: number }>(),
+    getSelectedLang: props<{ lib: string; url: string; userId: number }>(),
 
     /* Set user selected lang /////////////////////////////////////////////// */
 
     patchSelectedLang: props<{
+      lib: string;
       url: string;
       userId: number;
       cultureCode: string;

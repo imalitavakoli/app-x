@@ -20,9 +20,9 @@ export class V1TranslationsEffects {
   getTranslations$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TranslationsActions.getTranslations),
-      concatMap(({ url, clientId, cultureCode, modules }) => {
+      concatMap(({ lib, url, clientId, cultureCode, modules }) => {
         return this._map
-          .getTranslations(url, clientId, cultureCode, modules)
+          .getTranslations(url, clientId, cultureCode, modules, lib)
           .pipe(
             map((data) =>
               TranslationsActions.success({
@@ -49,8 +49,8 @@ export class V1TranslationsEffects {
   getAllLangs$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TranslationsActions.getAllLangs),
-      concatMap(({ url }) => {
-        return this._map.getAllLangs(url).pipe(
+      concatMap(({ lib, url }) => {
+        return this._map.getAllLangs(url, lib).pipe(
           map((data) =>
             TranslationsActions.success({ relatedTo: 'allLangs', data }),
           ),
@@ -70,8 +70,8 @@ export class V1TranslationsEffects {
   getSelectedLang$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TranslationsActions.getSelectedLang),
-      concatMap(({ url, userId }) => {
-        return this._map.getSelectedLang(url, userId).pipe(
+      concatMap(({ lib, url, userId }) => {
+        return this._map.getSelectedLang(url, userId, lib).pipe(
           map((data) =>
             TranslationsActions.success({
               relatedTo: 'selectedLang',
@@ -96,8 +96,8 @@ export class V1TranslationsEffects {
   patchSelectedLang$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TranslationsActions.patchSelectedLang),
-      concatMap(({ url, userId, cultureCode }) => {
-        return this._map.patchSelectedLang(url, userId, cultureCode).pipe(
+      concatMap(({ lib, url, userId, cultureCode }) => {
+        return this._map.patchSelectedLang(url, userId, cultureCode, lib).pipe(
           map((data) =>
             TranslationsActions.success({
               relatedTo: 'selectedLang',

@@ -47,9 +47,11 @@ export class V1TranslationsFacade {
     clientId: number,
     cultureCode = 'en-GB',
     modules: string[] = [],
+    lib = 'any',
   ) {
     this._store.dispatch(
       TranslationsActions.getTranslations({
+        lib,
         url,
         clientId,
         cultureCode,
@@ -58,17 +60,24 @@ export class V1TranslationsFacade {
     );
   }
 
-  getAllLangs(url: string) {
-    this._store.dispatch(TranslationsActions.getAllLangs({ url }));
+  getAllLangs(url: string, lib = 'any') {
+    this._store.dispatch(TranslationsActions.getAllLangs({ lib, url }));
   }
 
-  getSelectedLang(url: string, userId: number) {
-    this._store.dispatch(TranslationsActions.getSelectedLang({ url, userId }));
-  }
-
-  patchSelectedLang(url: string, userId: number, cultureCode: string) {
+  getSelectedLang(url: string, userId: number, lib = 'any') {
     this._store.dispatch(
-      TranslationsActions.patchSelectedLang({ url, userId, cultureCode }),
+      TranslationsActions.getSelectedLang({ lib, url, userId }),
+    );
+  }
+
+  patchSelectedLang(
+    url: string,
+    userId: number,
+    cultureCode: string,
+    lib = 'any',
+  ) {
+    this._store.dispatch(
+      TranslationsActions.patchSelectedLang({ lib, url, userId, cultureCode }),
     );
   }
 }

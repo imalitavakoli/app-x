@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 
 import { V1BaseMap } from '@x/shared-util-ng-bases';
@@ -20,7 +20,7 @@ import {
   providedIn: 'root',
 })
 export class V1XProfileInfo extends V1BaseMap {
-  private readonly _http = inject(HttpClient);
+  // protected readonly _http = inject(HttpClient); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Get data                                                                 */
@@ -45,25 +45,32 @@ export class V1XProfileInfo extends V1BaseMap {
     const endPoint = `${url}/users/${userId}/profile-info`;
 
     // MOCK TEMP CODE: Replace this with the actual HTTP request.
-    const observable: Observable<V1XProfileInfo_ApiData> = of({
-      user_id: userId,
-      full_name: 'John Doe',
-      date_of_birth: '1991-05-01T00:00:00',
-      bio: 'Software Developer',
-      country: 'USA',
-    });
-    // const observable = this._http.get<V1XProfileInfo_ApiData>(endPoint);
+    const observable: Observable<HttpResponse<V1XProfileInfo_ApiData>> = of(
+      new HttpResponse<V1XProfileInfo_ApiData>({
+        body: {
+          user_id: userId,
+          full_name: 'John Doe',
+          date_of_birth: '1991-05-01T00:00:00',
+          bio: 'Software Developer',
+          country: 'USA',
+        },
+        status: 200,
+        statusText: 'OK',
+        url: endPoint,
+      }),
+    );
+    // const observable = this._http.get<V1XProfileInfo_ApiData>(endPoint, { observe: 'response' });
 
     // Let's send the request
     return observable.pipe(
-      map((data) => {
-        this._logSuccess(data, lib);
-        return this._mapData(data);
+      map((res) => {
+        this._logSuccess(res.body, res, lib);
+        return this._mapData(res.body as V1XProfileInfo_ApiData);
       }),
       catchError((err) => {
         const error = err.message || err;
         console.error('@V1XProfileInfo/getData:', error);
-        this._logFailure(error, lib);
+        this._logFailure(error.message || undefined, err, lib);
         return throwError(() => error);
       }),
     );
