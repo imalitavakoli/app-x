@@ -1,10 +1,10 @@
 ---
-name: tools-ng-auto-build-fin-v1
-description: What? Build an NX executor in `tools/ng-auto-build` plugin, to automate the FIN PR process (if we have FIN process for our workspace). When? Asked to generate FIN PR process, or automate FIN PRs, or a similar question.
+name: x-tools-ng-auto-build-fin-v1
+description: What? This skill is specifically built for our NX workspace. Let's build an NX executor in `tools/ng-auto-build` plugin, to automate the FIN PR process (if we have FIN process for our workspace). When? Asked to generate FIN PR process, automate FIN PRs, or similar requests.
 metadata:
-  category: 'tools/ng-auto-build'
+  category: 'x/tools/ng-auto-build'
   version: '1.0.0'
-  release-date: '2025-01-25'
+  release-date: '2025-01-30'
   author: Ali
 ---
 
@@ -16,7 +16,7 @@ Build an NX executor in `tools/ng-auto-build` plugin, to automate the FIN PR pro
 
 Use this skill when:
 
-- Asked to generate FIN PR process, or automate FIN PRs, or a similar question.
+- Asked to generate FIN PR process, or automate FIN PRs, or a similar requests.
 
 ## Role
 

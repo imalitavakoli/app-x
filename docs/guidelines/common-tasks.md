@@ -220,10 +220,11 @@ To achieve this, the following files should be reviewed regularly to make sure t
 - _MCP config!_ `.mcp.json`.
 - `AGENTS.md`.
 
-For IDE-specific AI agent instructions, review the following files:
+For IDE-specific AI agent instructions, review the following directories/files:
 
-- `.github/copilot-instructions.md`.
-- `CLAUDE.md`.
+- Copilot (VSCode) — `.github/`.
+- Antigravity — `.agent/`.
+- Claude — `CLAUDE.md`.
 
 **Tip!** If you are using other IDEs that require separate files for their own AI agents, you can use the above-mentioned 'IDE-specific' AI agent instruction files as a reference for writing your own instructions. _In simple terms:_ the main AI agent instructions should always be documented in `AGENTS.md` file, while the 'IDE-specific' instruction files should simply reference that file.
 

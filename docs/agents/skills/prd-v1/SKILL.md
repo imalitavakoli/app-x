@@ -1,11 +1,10 @@
 ---
 name: prd-v1
-description: What? Generate a PRD (Product Requirements Document) for a feature (functionality) that should be built. When? Asked to generate (create) a PRD with the information that is provided.
+description: What? Generate a PRD (Product Requirements Document) for a feature (functionality) that should be built. When? Asked to generate (create) a PRD with the information that is provided, Product Strategy Document, Scope Document, Feature Document, or similar requests.
+license: Complete terms in LICENSE.txt
 metadata:
-  category: generic
   version: '1.0.0'
-  release-date: '2025-01-25'
-  author: Ali
+  release-date: '2025-01-30'
 ---
 
 # PRD Generator
@@ -16,45 +15,40 @@ Generate a PRD (Product Requirements Document) for a feature (functionality) tha
 
 Use this skill when:
 
-- Asked to generate (create) a PRD with the information that is provided.
+- Asked to generate (create) a PRD with the information that is provided, Product Strategy Document, Scope Document, Feature Document, or similar requests.
 
 ## Role
 
-You, agent, are an experienced product manager (product owner) who can write professional PRD (Product Requirements Document) for a feature (functionality) that should be built in a NX (and Angular) monorepo workspace that contains frontend codes (mostly).
+You, agent, are an experienced product manager (product owner) who can write professional PRD (Product Requirements Document) for a feature (functionality) that should be built in a frontend/backend workspace.
 
 ## Prerequisites
 
 **Important!** The following prerequisite(s) are mandatory to check, before starting the workflow. If any of the conditions are not met, inform the user about the missing prerequisite(s).
 
-- Description about the feature (functionality) that we like to write its PRD.
+- A clear **feature description** or relevant supporting documents.
 
 ## Workflow
 
-1. Describe
-2. Draft
-3. Review
-4. Generate
+1. Analyse
+2. Draft & Generate
 
-## Step 1: Describe
+### Analyse
 
-Look into [PRD Template Reference](./references/template.md) to understand what sections a PRD requires to have, and if the provided description is not good enough, suggest what parts are still lacking and ask for more explanation. Repeat suggesting and asking until you think that you have all the required info that the PRD template should cover, and then go to the next step.
+Analyse the following documents:
 
-What can be the name of the feature (functionality)? It should be something like `preloaders`, `ng-chart`, `ng-users`, etc.
+- [PRD Template Reference](./references/template.md) to understand what sections the PRD should have.
 
-When to have `ng-` prefix for the functionality (fun) name? Whenever the functionality that is going to be built has some logic, rather than having just some styling rules or animations. In such case (which is the most probable case) you should ask the user that in what frontend frameworks the fun is going to be built? Is it Angular or other frameworks? If they answer that it is Angular, then this prefix should be added to the fun name.
+- User's provided descriptions to understand how to map the provided description to the template.
+  **If any section lacks sufficient info, specify which and request more details.**
 
-## Step 2: Draft
+### Draft & Generate
 
-Based on the provided descriptions, use [PRD Template Reference](./references/template.md) to fill out its boilerplate content with the real info that is gathered.
+1. Generate a draft PRD using available content & the template, and save the `.md` file.
+2. Present the draft to the user for review.
+3. Incorporate any requested changes until the user confirms satisfaction.
 
-**Tip!** You do NOT touch or modify the template, just provide the draft on the fly, so that you can show it to the user in the next step.
+**Where to save the draft? Ask the user** for:
 
-## Step 3: Review
-
-Show the PRD draft to the user, and ask them if they like it, or need to change something. They may ask for a modification... Then you modify and show the new version of the draft to them. Repeat this, until they are satisfied with the draft to go to the next step.
-
-## Step 4: Generate
-
-Generate the PRD under `/docs/agents/funs/{fun-name}.md`.
-
-**Tip!** If the PRD file is already existed in the same directory, before overriding it, let the user know about it, so that they can decide.
+- Target directory. e.g., `/docs/agents/funs/`.
+- File name. Recommended: `PRD_{functionality-name}.md`.
+  **If a file already exists, notify the user before overwriting.**

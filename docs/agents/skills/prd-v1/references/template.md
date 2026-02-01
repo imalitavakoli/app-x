@@ -1,22 +1,40 @@
 # Product Requirements Document (PRD)
 
-**Purpose**: This PRD defines _what_ needs to be built and _why_, from a business and user perspective. It intentionally avoids technical implementation details. Frontend developers will later derive a **Technical Functional Specification (TFS)** from this PRD, aligned with our NX + Angular apps/libs architecture.
+**Purpose**: This PRD defines _what_ needs to be built and _why_, from a business and user perspective. It intentionally avoids technical implementation details. Frontend developers will later derive a **Technical Functional Specification (TFS)** from this PRD.
 
 ---
+
+- **PRD Status** (Draft / Reviewed / Approved): …
+- **Last Updated** (YYYY‑MM‑DD): …
+- **Owner**: …
+
+---
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
 
 ## Overview
 
 ### 1. Feature Name
 
-{name}
-
 > Clear, human‑readable name of the functionality.
+
+{name}
 
 ### 2. Problem Statement
 
 - What user or business problem does this feature solve?
+  - …
 - Why is this problem important _now_?
+  - …
 - What happens if we don't solve it?
+  - …
 
 ### 3. Goals & Success Metrics
 
@@ -28,18 +46,82 @@
 **Success Metrics (KPIs)**
 
 - Quantitative: (e.g., conversion rate, error reduction, load time)
+  - …
 - Qualitative: (e.g., user satisfaction, usability feedback)
+  - …
 
 ### 4. Non‑Goals / Out of Scope
 
-Explicitly list what is _not_ included to avoid scope creep.
+> Explicitly list what is _not_ included to avoid scope creep.
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
 
 &nbsp;
 
 ## Users
 
-- **Persona 1**: description, needs, pain points
-- **Persona 2** (if applicable)
+- **Persona 1** (description, needs, pain points) — …
+- **Persona 2** (if applicable) — …
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+## Permissions & Security
+
+- Who can access this feature? …
+- Role‑based or condition‑based visibility? …
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+## Data Requirements
+
+> What information must exist? Define inputs, outputs, and facts the feature needs. Think nouns. They mostly help in building all types of libs. e.g., "Currency code", or "Location Profile answers".
+
+- …
+- …
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+## Functional Requirements
+
+> What must the feature do (goals)? Define observable behaviour. Think verbs. They mostly help in building 'ui' libs. e.g., "Feature must show user's energy consumption". Functional requirement IDs (e.g., NAME-FR-01) can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. Typically map to **unit tests `describe()` blocks**.
+
+Each requirement should be atomic, testable, and ordered based on priority.
+
+1. {NAME-FR-01} — {description}
+2. {NAME-FR-02} — {description}
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
 
 &nbsp;
 
@@ -56,21 +138,46 @@ Describe the happy path step‑by‑step:
 ### 2. Alternative / Edge Flows
 
 - Empty states
+  - If …; then …
 - Error scenarios
+  - If …; then …
 - Permission‑restricted scenarios
+  - …
 - First‑time vs returning user
+  - First‑time? …; returning user? …
+
+### 3. UI Responsibilities
+
+- What the UI MUST display
+  - …
+- What the UI must _not_ do (e.g., no data fetching, no business decisions)
+  - …
+
+### 4. Accessibility & Localization
+
+- Accessibility requirements (WCAG, keyboard navigation)
+  - …
+- Localization / i18n expectations
+  - …
 
 > Diagrams or Figma links can be referenced here.
 
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
 &nbsp;
 
-## Business Logic Breakdown (Critical Section)
+## Business Rule Breakdown
 
-> **This section is mandatory.** Each subsection represents a **testable business rule** (Unit tests source of truth, based on AAA pattern). Rule IDs (e.g., BR-01) can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. They usually map to `it`. Frontend developers will later map these rules to unit tests across `util`, `map`, `data-access`, `ui`, and `feature` libraries.
+> Each subsection represents a **testable business rule**. Rule IDs (e.g., NAME-BR-01) can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. Each item should map to **unit tests `it`**. Frontend developers will later map these rules to unit tests across `ui` libraries.
 
 Each business rule must be written in a way that it can be validated via Given / When / Then scenarios, testable, and ordered based on priority.
 
-### 1. {BR-01} — {Short Name}
+### 1. {NAME-BR-01}
 
 **Description** (Test intent / scenario name)
 Explain the rule in plain business language.
@@ -83,71 +190,43 @@ Explain the rule in plain business language.
 
 - What should happen when the rule is applied?
 
-**Edge Cases / Exceptions** (Negative & boundary tests)
+**Edge Cases / Exceptions** (Negative & boundary)
 
 - What happens when data is missing, invalid, or partial?
 
-### 2. {BR-02} — {Short Name}
+### 2. {NAME-BR-02}
 
 _(Repeat the same structure for each rule)_
 
-&nbsp;
-
-## Data Requirements
-
-> What information must exist? Define inputs, outputs, and facts the feature needs. Think nouns. They mostly help in building 'ui', 'map', and 'data-access' libs. e.g., Currency code, or Location Profile answers.
-
-- ...
-- ...
-
-&nbsp;
-
-## Functional Requirements
-
-> What must the feature do (goals)? Define observable behaviour. Think verbs. They mostly help in building 'feature' libs. e.g., Feature must show user's energy consumption. Functional requirement IDs (e.g., FR-01) can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. They usually map to `describe`.
-
-Each requirement should be atomic, testable, and ordered based on priority.
-
-1. {FR-01} — {description}
-2. {FR-02} — {description}
-
-&nbsp;
-
-## UI & Content Requirements
-
-### 1. UI Responsibilities
-
-- What the UI must display
-- What the UI must _not_ do (e.g., no data fetching, no business decisions)
-
-### 2. States
-
-- Loading
-- Empty
-- Error
-- Success
-
-### 3. Accessibility & Localization
-
-- Accessibility requirements (WCAG, keyboard navigation)
-- Localization / i18n expectations
-
-&nbsp;
-
-## Permissions & Security
-
-- Who can access this feature?
-- Role‑based or condition‑based visibility
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
 
 &nbsp;
 
 ## Analytics & Tracking
 
-> These help in defining Firebase Analytics logs.
+> These help in defining Analytics logs (e.g., Firebase Analytics).
 
 - Events to be tracked
+  - When …; log …
 - Success / failure signals
+  - … succeeds; log …
+  - … fails; log …
 - Funnel or journey tracking
+  - View → Interact → Submit → Success
+  - View → Interact → Submit → Failure
+  - …
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
 
 &nbsp;
 
@@ -165,6 +244,13 @@ Each requirement should be atomic, testable, and ordered based on priority.
   **Impact:** High  
   **Mitigation:** Show a clear message in the empty state.
 
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
 &nbsp;
 
 ## Acceptance Criteria (High‑Level)
@@ -174,12 +260,26 @@ Each requirement should be atomic, testable, and ordered based on priority.
 - Given … when … then …
 - Given … when … then …
 
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
 &nbsp;
 
 ## Open Questions
 
 - …
 - …
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
 
 &nbsp;
 
@@ -188,11 +288,3 @@ Each requirement should be atomic, testable, and ordered based on priority.
 - Figma links
 - API references (high‑level)
 - Related PRDs
-
-&nbsp;
-
----
-
-**PRD Status**: Draft / Reviewed / Approved  
-**Last Updated**: YYYY‑MM‑DD  
-**Owner**: Product Manager / Product Owner

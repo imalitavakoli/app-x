@@ -73,7 +73,7 @@
 
 ### Other considerations
 
-- Do not ask the user for clarification about the meaning of a request if a relevant skill exists—always follow the skill’s documented approach first.
+- Do not ask the user for clarification about the meaning of a request if a relevant skill exists—always follow the skill's documented approach first.
 - If multiple skills seem relevant: Choose the one that most directly addresses the primary request.
 - If there are multiple versions for the chosen skill: Choose the latest version.
 - If no skill matches: Inform that no existing skill covers this scenario and continue to proceed with general knowledge.

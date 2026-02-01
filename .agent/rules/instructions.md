@@ -1,6 +1,8 @@
-# Copilot Instructions for AI Coding Agents
+---
+trigger: always_on
+---
 
-## Key References
+# Key References
 
 - `README.md` (workspace overview)
 - `AGENTS.md` (AI agent guidelines)
