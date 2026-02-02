@@ -27,20 +27,29 @@ You, agent, are a senior frontend developer (experienced in monorepo + Angular w
 
 - PRD file of the feature (functionality) MUST be attached as a context.
 - **Optional!** Screenshots of pages/screens (helpful for UI specs).
+- **Optional!** user-provided sample libs for each type ('map', 'data-access', 'ui', 'feature').
+
+## Mandatory Agent Instructions
+
+- You MUST use the official template structure and section order exactly as provided in the template reference.
+- Do NOT add, remove, or rename sections.
+- If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
+- Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
 
 ## Workflow
 
 1. Analyse
-2. Technical Name
-3. Fill "_Existing Dependencies & Reuse_" TFS section
-4. Fill "_Functionality Classification_" TFS section
-5. Fill "_'map' Library Specification (if applicable)_" TFS section
-6. Fill "_'data-access' Library Specification (if applicable)_" TFS section
-7. Fill "_'ui' Library Specification (if applicable)_" TFS section
-8. Fill "_'feature' Library Specification (if applicable)_" TFS section
-9. Fill "_User Experience & Flows (Technical & Frontend Perspective)_" TFS section
-10. Try to map remaining TFS sections
-11. Draft & Generate
+2. Prepare Draft
+   1. Technical Name
+   2. Fill "_Existing Dependencies & Reuse_" TFS section
+   3. Fill "_Functionality Classification_" TFS section
+   4. Fill "_'map' Library Specification (if applicable)_" TFS section
+   5. Fill "_'data-access' Library Specification (if applicable)_" TFS section
+   6. Fill "_'ui' Library Specification (if applicable)_" TFS section
+   7. Fill "_'feature' Library Specification (if applicable)_" TFS section
+   8. Fill "_User Experience & Flows (Technical & Frontend Perspective)_" TFS section
+   9. Try to map remaining TFS sections
+3. Generate Draft
 
 ### Analyse
 
@@ -52,13 +61,16 @@ Analyse the following documents:
   - 'library types and their relationship' (helpful for '_Functionality Classification_' TFS section).
   - 'naming conventions'.
   - 'best practices'.
-- **Identify sample libs for each type** ('map', 'data-access', 'ui', 'feature') **or request user-provided samples, if too many exist (i.e., more than 20 libs)**.
+
+### Prepare Draft
+
+Prepare a draft using available PRD description and TFS template.
 
 **Consider this, when preparing the TFS draft:**
 Of course each lib type specification in the TFS should exist ONLY IF that lib type should be built for the functionality.  
 e.g., if there's NO API endpoint to call for the functionality, or there are some API endpoints to call, but such APIs are already implemented in the 'map' libs that are defined in '_Existing Dependencies & Reuse_' section, then there's no need to have '_'map' Library Specification (if applicable)_' section of the TFS at all.
 
-### Technical Name
+#### 1. Technical Name
 
 1. Convert PRD feature name to kebab-case.
 
@@ -66,7 +78,7 @@ e.g., if there's NO API endpoint to call for the functionality, or there are som
 
 3. Confirm with the user.
 
-### Fill "_Existing Dependencies & Reuse_" TFS section
+#### 2. Fill "_Existing Dependencies & Reuse_" TFS section
 
 1. Ask which libs to use, including lib types, file names, class names, and functions. Format to use: `Question → Suggested answer`.  
    e.g., "Which 'util' lib(s) should be used for this functionality? Please provide the lib name(s), lib type(s), and any relevant file names, class names, or function names.".
@@ -76,11 +88,11 @@ e.g., if there's NO API endpoint to call for the functionality, or there are som
 
 3. Add approved libs to the section.
 
-### Fill "_Functionality Classification_" TFS section
+#### 3. Fill "_Functionality Classification_" TFS section
 
 Determine type (e.g., Hybrid) based on the libs that the functionality requires to have for its own.
 
-### Fill "_'map' Library Specification (if applicable)_" TFS section
+#### 4. Fill "_'map' Library Specification (if applicable)_" TFS section
 
 1. Ask API endpoints, HTTP methods, headers, body, responses. Format to use: `Question → Suggested answer`.  
    e.g., "Which API endpoints should be called? Please provide the HTTP method (e.g., GET), endpoint, authorization type (public or protected), required headers, request body, and sample response(s).".
@@ -89,37 +101,37 @@ Determine type (e.g., Hybrid) based on the libs that the functionality requires 
 
 3. Based on '_Alternative / Edge Flows_' section of PRD, write '_Error Handling_' section for each method.
 
-### Fill "_'data-access' Library Specification (if applicable)_" TFS section
+#### 5. Fill "_'data-access' Library Specification (if applicable)_" TFS section
 
 Infer from 'map' section, and ensure at least one method per API call.
 
-### Fill "_'ui' Library Specification (if applicable)_" TFS section
+#### 6. Fill "_'ui' Library Specification (if applicable)_" TFS section
 
 1. Based on '_User Experience & Flows_' section of PRD, understand how many components should be exported. If more than 1, confirm with the user. Format to use: `Recommendation → Reason → Question → Options`.  
    e.g., "I recommend exporting two components; because according to the 'User Experience & Flows' section of the PRD, the user should be navigated to another screen or page. Do you agree? (Y/N)".
 
-2. Based on step 1, and '_User Experience & Flows_' section of PRD, write '_Rendering Rules_' section for each exported component. Consider HTML hierarchy, semantics, and accessibility.
+2. Based on sub step 1, and '_User Experience & Flows_' section of PRD, write '_Rendering Rules_' section for each exported component. Consider HTML hierarchy, semantics, and accessibility.
 
-3. Based on step 1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
+3. Based on sub step 1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
 
-4. Based on step 1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
+4. Based on sub step 1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
 
-5. Based on step 1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
+5. Based on sub step 1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
 
 6. Complete writing other sections for each exported component.
 
-### Fill "_'feature' Library Specification (if applicable)_" TFS section
+#### 7. Fill "_'feature' Library Specification (if applicable)_" TFS section
 
 1. Infer from 'ui' section, understand how many components should be exported. If more than 1confirm with the user. Format to use: `Recommendation → Reason → Question → Options`.  
    e.g., "I recommend exporting two components; because according to the 'ui' lib specification, we agreed to export two UI components. It also makes sense to have the corresponding 'feature' versions of those components as well. Do you agree? (Y/N)".
 
-2. Based on step 1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
+2. Based on sub step 1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
 
-3. Based on step 1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
+3. Based on sub step 1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
 
 4. Complete writing other sections for each exported component.
 
-### Fill "_User Experience & Flows (Technical & Frontend Perspective)_" TFS section
+#### 8. Fill "_User Experience & Flows (Technical & Frontend Perspective)_" TFS section
 
 When you're in this step, you already know:
 
@@ -133,16 +145,15 @@ So you're ready to:
 
 2. Add additional flows (if necessarily) according to '_Rendering Rules_' section of the 'ui' lib specification.
 
-### Try to map remaining TFS sections
+#### 9. Try to map remaining TFS sections
 
 - Use PRD, workspace docs, and MCPs to populate each section.
 - If info is missing, request details from the user.
 
-### Draft & Generate
+### Generate Draft
 
-1. Generate a draft TFS using available PRD & the template.
-2. Present the draft to the user for review.
-3. Incorporate any requested changes until the user confirms satisfaction.
+1. Present the draft to the user for review.
+2. Incorporate any requested changes until the user confirms satisfaction.
 
 **Where to save the draft? Ask the user** for:
 

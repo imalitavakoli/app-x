@@ -30,7 +30,8 @@ You, agent, are an experienced product manager (product owner) who can write pro
 ## Workflow
 
 1. Analyse
-2. Draft & Generate
+2. Prepare Draft
+3. Generate Draft
 
 ### Analyse
 
@@ -41,11 +42,14 @@ Analyse the following documents:
 - User's provided descriptions to understand how to map the provided description to the template.
   **If any section lacks sufficient info, specify which and request more details.**
 
-### Draft & Generate
+### Prepare Draft
 
-1. Generate a draft PRD using available content & the template, and save the `.md` file.
-2. Present the draft to the user for review.
-3. Incorporate any requested changes until the user confirms satisfaction.
+Prepare a draft using available content and PRD template.
+
+### Generate Draft
+
+1. Present the draft to the user for review.
+2. Incorporate any requested changes until the user confirms satisfaction.
 
 **Where to save the draft? Ask the user** for:
 
