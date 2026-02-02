@@ -21,13 +21,13 @@
 
 ## Overview
 
-### 1. Functionality Name
+### Functionality Name
 
 > kebab-case name of the functionality, with prefix such as 'ng-' (which stands for Angular), if it's a technology-specific fun.
 
 {name}
 
-### 2. Functionality Classification
+### Functionality Classification
 
 Choose **exactly one** type.
 
@@ -37,7 +37,7 @@ Choose **exactly one** type.
 
 **Selected type**: …
 
-### 3. Rationale
+### Rationale
 
 > Explain _why_ this classification applies (data fetching, UI presentation, reuse of existing APIs, etc.).
 
@@ -60,7 +60,7 @@ Choose **exactly one** type.
 >
 > Reuse decisions are based on developer knowledge of the workspace.
 
-### 1. Used map / data-access libs
+### Used map / data-access libs
 
 - 'map' libs:
   - …
@@ -68,7 +68,7 @@ Choose **exactly one** type.
 - 'data-access' libs:
   - …
 
-### 2. Used ui / feature libs
+### Used ui / feature libs
 
 - 'ui' libs:
   - …
@@ -76,7 +76,7 @@ Choose **exactly one** type.
 - 'feature' libs:
   - …
 
-### 3. Used util libs
+### Used util libs
 
 > Functionalities **must not create their own 'util' libs**. Instead they reuse existing 'util' libs. And if something should be built that is NOT already existed in a 'util' lib, then again the developer must mention that 'util' lib name here and build it later.
 
@@ -114,7 +114,7 @@ Include **only** libs relevant to the selected functionality classification.
 
 ---
 
-### 1. 'map' Library Specification (if applicable)
+### 'map' Library Specification
 
 #### Lib Name
 
@@ -212,7 +212,7 @@ _(Repeat the same structure for each method)_
 
 ---
 
-### 2. 'data-access' Library Specification (if applicable)
+### 'data-access' Library Specification
 
 #### Lib Name
 
@@ -292,7 +292,7 @@ Based on how this 'data-access' lib is going to be used, its 'state object struc
 
 ---
 
-### 3. 'ui' Library Specification (if applicable)
+### 'ui' Library Specification
 
 #### Lib Name
 
@@ -337,7 +337,7 @@ export class V1Name1Component {}
   Default: `'loading'` — …
 - `iconInfo: InputSignal<string>`
   Default: `'./assets/images/libs/shared/icon-info.svg'` — …
-- `showReadMore: InputSignal<boolean>`
+- `showBtnReadMore: InputSignal<boolean>`
   Default: `true` — …
 
 ###### Outputs
@@ -350,9 +350,9 @@ export class V1Name1Component {}
 
 ###### Externally Callable Methods
 
-| Method      | Returns | Description              |
-| ----------- | ------- | ------------------------ |
-| `resetUI()` | `void`  | Resets internal UI state |
+| Method    | Returns | Description                                          |
+| --------- | ------- | ---------------------------------------------------- |
+| `reset()` | `void`  | Resets all inputs/properties to their default values |
 
 ##### Rendering Rules
 
@@ -399,14 +399,14 @@ Define what should be rendered in HTML template based on `state` and `dataType`.
 > **Tip!** Components can simply have a `log` method to prepare logging to different analytic services, which can be implemented later.
 
 - Events to be tracked
-  - When user clicks `button[aria-label="View details"]`; log `{name: 'view_details', params: {com: 'V1Name1Component'}}`
+  - When user clicks `button[aria-label="View details"]`; log `{name: 'clicked_view_details', params: {com: 'V1Name1Component'}}`
   - …
 
 ###### Error Handling & Edge Cases
 
 In 'ui' components, we mention the edge case scenarios which lead to showing an empty state or a message in the UI.
 
-- When `showReadMore = false`; then `[data-cy="data-btn-placeholder"]` is shown.
+- When `showBtnReadMore = false`; then `[data-cy="data-btn-placeholder"]` is shown.
 
 &nbsp;
 
@@ -423,7 +423,7 @@ _(Repeat the same structure for each component)_
 
 ---
 
-### 4. 'feature' Library Specification (if applicable)
+### 'feature' Library Specification
 
 #### Lib Name
 
@@ -461,7 +461,7 @@ export class V1Name1FeaComponent {}
 
 - `showErrors: InputSignal<boolean>`
   Default: `true` — …
-- `showReadMore: InputSignal<boolean>`
+- `showBtnReadMore: InputSignal<boolean>`
   Default: `true` — …
 
 ###### Outputs
@@ -477,9 +477,9 @@ export class V1Name1FeaComponent {}
 
 ###### Externally Callable Methods
 
-| Method            | Returns | Description                |
-| ----------------- | ------- | -------------------------- |
-| `resetChildren()` | `void`  | Resets child UI components |
+| Method    | Returns | Description                                          |
+| --------- | ------- | ---------------------------------------------------- |
+| `reset()` | `void`  | Resets all inputs/properties to their default values |
 
 ###### Analytics & Tracking
 
@@ -488,9 +488,9 @@ export class V1Name1FeaComponent {}
 > **Tip!** Components can simply have a `log` method to prepare logging to different analytic services, which can be implemented later.
 
 - Events to be tracked
-  - When `resetChildren` method is called; log `{name: 'reset_children', params: {com: 'V1Name1FeaComponent'}}`
+  - When `reset` method is called (externally); log `{name: 'called_reset', params: {com: 'V1Name1FeaComponent'}}`
 - Success / failure signals
-  - `_xInitOrUpdateAfterAllDataReady` is called, i.e., facade method call succeeds; log `{name: 'all_data_is_ready', params: {com: 'V1Name1FeaComponent'}}`
+  - `_xInitOrUpdateAfterAllDataReady` is called (internally), i.e., facade method(s) call(s) succeeds; log `{name: 'all_data_is_ready', params: {com: 'V1Name1FeaComponent'}}`
   - …
 
 ###### Error Handling & Edge Cases
@@ -500,7 +500,7 @@ In 'feature' components, `hasError` output will be emitted, whenever an error is
 - Consider the following as error exceptions:
   - When listening to `V1NameFacade.entity$(id = 'V1NameFeaComponent_main')`; if `state.errors.info = 'ERROR_CODE_SOMETHING'`.
 - Consider the following as edge cases
-  - When `showReadMore = false`; then `[data-cy="data-btn-placeholder"]` is shown.
+  - When `showBtnReadMore = false`; then `[data-cy="data-btn-placeholder"]` is shown.
 
 &nbsp;
 

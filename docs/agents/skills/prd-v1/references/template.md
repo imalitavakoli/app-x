@@ -21,13 +21,13 @@
 
 ## Overview
 
-### 1. Feature Name
+### Feature Name
 
 > Clear, human‑readable name of the functionality.
 
 {name}
 
-### 2. Problem Statement
+### Problem Statement
 
 - What user or business problem does this feature solve?
   - …
@@ -36,7 +36,7 @@
 - What happens if we don't solve it?
   - …
 
-### 3. Goals & Success Metrics
+### Goals & Success Metrics
 
 **Primary Goals**
 
@@ -50,7 +50,7 @@
 - Qualitative: (e.g., user satisfaction, usability feedback)
   - …
 
-### 4. Non‑Goals / Out of Scope
+### Non‑Goals / Out of Scope
 
 > Explicitly list what is _not_ included to avoid scope creep.
 
@@ -127,7 +127,7 @@ Each requirement should be atomic, testable, and ordered based on priority.
 
 ## User Experience & Flows
 
-### 1. User Journey
+### User Journey
 
 Describe the happy path step‑by‑step:
 
@@ -135,7 +135,7 @@ Describe the happy path step‑by‑step:
 2. User performs …
 3. System responds …
 
-### 2. Alternative / Edge Flows
+### Alternative / Edge Flows
 
 - Empty states
   - If …; then …
@@ -146,14 +146,14 @@ Describe the happy path step‑by‑step:
 - First‑time vs returning user
   - First‑time? …; returning user? …
 
-### 3. UI Responsibilities
+### UI Responsibilities
 
 - What the UI MUST display
   - …
 - What the UI must _not_ do (e.g., no data fetching, no business decisions)
   - …
 
-### 4. Accessibility & Localization
+### Accessibility & Localization
 
 - Accessibility requirements (WCAG, keyboard navigation)
   - …
@@ -232,13 +232,13 @@ _(Repeat the same structure for each rule)_
 
 ## Dependencies & Risks
 
-### 1. Dependencies
+### Dependencies
 
 - Backend docs
 - UI/UX
 - External services
 
-### 2. Risks & Mitigations
+### Risks & Mitigations
 
 - **Risk:** User didn't fill out Location Profile  
   **Impact:** High  
