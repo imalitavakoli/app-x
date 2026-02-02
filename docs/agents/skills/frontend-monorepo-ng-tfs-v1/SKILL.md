@@ -42,7 +42,8 @@ You, agent, are a senior frontend developer (experienced in monorepo + Angular w
 ## Workflow
 
 1. Analyse
-2. Prepare Draft
+2. Generate Draft
+3. Update Draft
    1. Technical Name
    2. Fill "_Existing Dependencies & Reuse_" TFS section
    3. Fill "_Functionality Classification_" TFS section
@@ -52,10 +53,9 @@ You, agent, are a senior frontend developer (experienced in monorepo + Angular w
    7. Fill "_'feature' Library Specification_" TFS section
    8. Fill "_User Experience & Flows (Technical & Frontend Perspective)_" TFS section
    9. Try to map remaining TFS sections
-3. Validate Draft
+4. Validate Draft
    - Review Checklist
    - Validation Process (Iterative Loop)
-4. Generate Draft
 5. Summary
 
 ### 1. Analyse
@@ -69,7 +69,15 @@ Analyse the following documents:
   - 'naming conventions'.
   - 'best practices'.
 
-### 2. Prepare Draft
+### 2. Generate Draft
+
+**Where to save the draft? Ask the user** for:
+
+- Target directory. e.g., `/docs/agents/funs/`.
+- File name. Recommended: `TFS_{functionality-name}.md`.
+  **If a file already exists, notify the user before overwriting.**
+
+### 3. Update Draft
 
 > ⚠️ **IMPORTANT:** Only include lib type specifications that are NEEDED for this functionality.
 >
@@ -78,7 +86,7 @@ Analyse the following documents:
 > - Skip 'ui' section if: Only abstract functionality (no visual components) OR reusing existing 'ui' libs
 > - Skip 'feature' section if: Only abstract functionality OR reusing existing 'feature' libs
 
-Prepare a draft using available PRD description and TFS template.
+Update the draft using available PRD description and TFS template.
 
 #### 1. Technical Name
 
@@ -170,32 +178,32 @@ So you're ready to:
 - Use PRD, workspace docs, and MCPs to populate each section.
 - If info is missing, request details from the user.
 
-### 3. Validate Draft
+### 4. Validate Draft
 
 #### Review Checklist
 
-**Before proceeding to generate the final draft, you MUST verify the following checklist:**
+**Before finalization, you MUST verify the following checklist:**
 
 Review each item and confirm that it is satisfied:
 
-- [ ] **Have you obtained user approval in: Technical Name (step 2.1)**
+- [ ] **Have you obtained user approval in: Technical Name (step 3.1)**
   - ✅ Confirmed: Technical name proposed and user approved?
 
-- [ ] **Have you obtained user approval in: Existing Dependencies (step 2.2)**
+- [ ] **Have you obtained user approval in: Existing Dependencies (step 3.2)**
   - ✅ Asked: Which 'util' libs to use?
   - ✅ Asked: Which 'map'/'data-access' libs to reuse?
   - ✅ Asked: Which 'ui'/'feature' libs to reuse?
   - ✅ Recommended: Any parts worth sharing across features?
   - ✅ Confirmed: User approved recommended shared libs (if any)?
 
-- [ ] **Have you obtained user approval in: 'map' Library (step 2.4)**
+- [ ] **Have you obtained user approval in: 'map' Library (step 3.4)**
   - ✅ Asked: API endpoints, methods, headers, body, responses?
   - ✅ Confirmed: CRUD operation determination?
 
-- [ ] **Have you obtained user approval in: 'ui' Library (step 2.6)**
+- [ ] **Have you obtained user approval in: 'ui' Library (step 3.6)**
   - ✅ Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
 
-- [ ] **Have you obtained user approval in: 'feature' Library (step 2.7)**
+- [ ] **Have you obtained user approval in: 'feature' Library (step 3.7)**
   - ✅ Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
 
 - [ ] **Do CRITICAL section(s) in the template exist in the draft**
@@ -219,23 +227,12 @@ Review each item and confirm that it is satisfied:
 
 > ⚠️ **IMPORTANT:** Do NOT proceed to Generate Draft until this validation loop confirms ALL items are ✅.
 
-### 4. Generate Draft
-
-1. Present the draft to the user for review.
-2. Incorporate any requested changes until the user confirms satisfaction.
-
-**Where to save the draft? Ask the user** for:
-
-- Target directory. e.g., `/docs/agents/funs/`.
-- File name. Recommended: `TFS_{functionality-name}.md`.
-  **If a file already exists, notify the user before overwriting.**
-
 ### 5. Summary
 
-Provide a structured summary of any side-effects or follow-up actions:
-
-1.  **New Libraries Identification:**
-    - If you recommended new shared libs (in Step 2.2), remind the user that they require their own PRD & TFS.
-
-2.  **PRD Updates (New Scenarios):**
-    - If you added new IDs/scenarios (in Step 2.6), list them (IDs + brief description) and suggest updating the PRD to reflect these technical discoveries.
+1. Present the draft to the user for review.
+2. Provide a structured summary of any side-effects or follow-up actions:
+   1. **New Libraries Identification:**
+      - If you recommended new shared libs (in Step 2.2), remind the user that they require their own PRD & TFS.
+   2. **PRD Updates (New Scenarios):**
+      - If you added new IDs/scenarios (in Step 2.6), list them (IDs + brief description) and suggest updating the PRD to reflect these technical discoveries.
+3. Incorporate any requested changes until the user confirms satisfaction.
