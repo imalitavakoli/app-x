@@ -385,12 +385,12 @@ Define what should be rendered in HTML template based on `state` and `dataType`.
 > 3. Re-phrase 'Functional Requirement' & 'Business Rule' items to reflect to the correct rendered UI elements, input, outputs, and methods.
 
 - **NAME-FR-01**: Test 'state'; component SHALL render elements correctly.
-  - **NAME-BR-01**: Given none/some required inputs _(Arrange)_; When `state = loading` — no interactive elements are rendered _(Negative & boundary)_.
-  - **NAME-BR-02**: Given ALL required inputs _(Arrange)_; When `state = empty` — `[data-cy="empty"]` must be displayed _(Negative & boundary)_.
+  - **NAME-BR-01**: Given none/some required inputs _(Arrange)_; When `state = loading` _(Act)_; no interactive elements are rendered _(Negative & boundary)_.
+  - **NAME-BR-02**: Given ALL required inputs _(Arrange)_; When `state = empty` _(Act)_; `[data-cy="empty"]` must be displayed _(Negative & boundary)_.
 - **NAME-FR-02**: Test 'dataType = all'; component SHALL render elements correctly.
-  - **NAME-BR-03**: Given ALL required inputs _(Arrange)_; When `state = data` & `dataType = all` — `[data-cy="data-list"]` must be displayed _(Act + Assert)_.
+  - **NAME-BR-03**: Given ALL required inputs _(Arrange)_; When `state = data` & `dataType = all` _(Act)_; `[data-cy="data-list"]` must be displayed _(Assert)_.
 - **NAME-FR-03**: Test 'dataType = all'; clicked 'View details'; component MUST emit 'clickedDetails'.
-  - **NAME-BR-04**: Given ALL required inputs _(Arrange)_; When `state = data` & `dataType = all` — clicking `button[aria-label="View details"]` must call `onClickedDetails` and emit `clickedDetails` _(Act + Assert)_.
+  - **NAME-BR-04**: Given ALL required inputs _(Arrange)_; When `state = data` & `dataType = all` _(Act)_; clicking `button[aria-label="View details"]` must call `onClickedDetails` and emit `clickedDetails` _(Assert)_.
 
 ###### Analytics & Tracking
 

@@ -4,7 +4,7 @@ description: What? Generate a TFS (Technical Functional Specification) for a fea
 license: Complete terms in LICENSE.txt
 metadata:
   version: '1.0.0'
-  release-date: '2025-01-30'
+  release-date: '2026-02-02'
 ---
 
 # TFS Generator
@@ -23,14 +23,15 @@ You, agent, are a senior frontend developer (experienced in monorepo + Angular w
 
 ## Prerequisites
 
-**Mandatory Prerequisites** The following prerequisite(s) are MANDATORY to check, before starting the workflow. **If any of the conditions are not met, inform the user to provide them**.
+**Mandatory Prerequisites**
+The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask the user to provide them and STOP until provided.**
 
-- PRD file of the feature (functionality) MUST be attached as a context.
+- PRD file of the feature (functionality) attached as context.
 
-**Optional Prerequisites** The following prerequisite(s) are OPTIONAL to check, before starting the workflow. **If any of the conditions are not met, suggest providing them to the user**.
+**Discovery Questions (Optional Inputs)**
+You **MUST** ask the user for the following items. If the user does not provide them, you may proceed without them.
 
 - Screenshots of pages/screens (helpful for UI specs).
-- user-provided sample libs for each type (map, data-access, ui, feature).
 
 ## Mandatory Agent Instructions
 
@@ -38,6 +39,7 @@ You, agent, are a senior frontend developer (experienced in monorepo + Angular w
 - Do NOT add, remove, or rename sections.
 - If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
 - Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
+- **Crucial:** You MUST follow the _exact_ granularity and style of the examples in the template (e.g., use `[data-cy="..."]` selectors in Rendering Rules, not generic descriptions).
 
 ## Workflow
 
@@ -62,12 +64,18 @@ You, agent, are a senior frontend developer (experienced in monorepo + Angular w
 
 Analyse the following documents:
 
-- [TFS Template Reference](./references/template.md) to understand what sections the TFS should have, and also read the guidelines and descriptions mentioned in it to help you prepare the TFS draft better and fill different sections more accurately.
+- [TFS Template Reference](./references/template.md) to understand what sections the TFS should have, and also read the guidelines and descriptions mentioned in it to help you prepare the TFS draft better and fill different sections more accurately.  
+   **Crucial:** You must follow the _exact_ granularity and style of the examples in this template.
 - PRD.
-- Workspace documents (if available) to learn more about:
-  - 'library types and their relationship' (helpful for '_Functionality Classification_' TFS section).
-  - 'naming conventions'.
-  - 'best practices'.
+- Workspace documents to learn more about the following:
+  - `/docs/getting-started/library-types-and-their-relationship.md` (helpful for '_Functionality Classification_' TFS section).
+  - `/docs/guidelines/naming-conventions.md`.
+  - `/docs/guidelines/best-practices.md`.
+- Existing sample libs for each type (map, data-access, ui, feature) to serve as coding style references:
+  - 'map' libs: `shared-map-ng-x-credit`, `shared-map-ng-x-profile-info`, `shared-map-ng-x-users`.
+  - 'data-access' libs: `shared-data-access-ng-x-credit`, `shared-data-access-ng-x-profile-info`, `shared-data-access-ng-x-users`.
+  - 'ui' libs: `shared-ui-ng-x-profile-image`, `shared-ui-ng-x-profile-info`, `shared-ui-ng-x-users`.
+  - 'feature' libs: `shared-feature-ng-x-profile-image`, `shared-feature-ng-x-profile-info`, `shared-feature-ng-x-users`.
 
 ### 2. Generate Draft
 
@@ -134,11 +142,18 @@ Infer from 'map' section, and ensure at least one method per API call.
 1. Based on '_User Experience & Flows_' section of PRD, understand how many components should be exported. If more than 1, confirm with the user. Format to use: `Recommendation → Reason → Question → Options`.  
    e.g., "I recommend exporting two components; because according to the 'User Experience & Flows' section of the PRD, the user should be navigated to another screen or page. Do you agree? (Y/N)".
 
-2. Based on step 1, and '_User Experience & Flows_' section of PRD, write '_Rendering Rules_' section for each exported component. Consider HTML hierarchy, semantics, and accessibility.
+2. Based on step 1, and '_User Experience & Flows_' section of PRD, write '_Rendering Rules_' section for each exported component.
+   - Consider HTML hierarchy, semantics, and accessibility.
+   - **Crucial:** You MUST use specific HTML selectors and attributes (e.g., `button[aria-label="Save"]`, `[data-cy="error-message"]`) as seen in the Template reference. Do NOT use generic terms like "Show a button" or "Render a list".
 
 3. Based on step 1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
-   - **Crucial:** You must respect the IDs from the PRD's '_Functional Requirements_' & '_Business Rule Breakdown_'.
-   - **New Scenarios:** If you identify necessary scenarios not covered in the PRD, add them with **new, unique IDs** in the draft.
+   - **Crucial:** You must respect the IDs from the PRD's '_Functional Requirements_' & '_Business Rule Breakdown_'. Usage of a PRD ID (e.g., `NAME-BR-01`) signifies you are implementing THAT specific rule. **Do NOT repurpose PRD IDs** for unrelated technical checks (e.g., do not use `NAME-BR-01` for a "loading state" check if `NAME-BR-01` in PRD is about "User permissions").
+   - **Global Uniqueness:** IDs must be unique across the **ENTIRE** TFS document. **Do NOT reset numbering** for each component (e.g., you cannot have `NAME-BR-01` in Component A and `NAME-BR-01` in Component B describing different things).
+   - **New Scenarios:** For technical scenarios (loading, error states, specific UI interactions) not explicitly covered in the PRD, you MUST generate **NEW, UNIQUE IDs** (e.g., if PRD ends at `05`, start your technical rules at `06`).
+   - **Test-Ready Syntax (Crucial):** Your output MUST serve as a direct blueprint for Unit Tests.
+     - **Strict Structure:** Use `Given [Arrange]; When [Act]; Then [Assert]` syntax.
+     - **Technical Specificity:** Reference exact Input signals (e.g., `state = loading`), DOM selectors (e.g., `[data-cy="error"]`), and Output emitters.
+     - **Forbidden:** Generic natural language like "User sees the list" or "Show an error" is BANNED. Use "Render `[data-cy='list-container']`" instead.
 
 4. Based on step 1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
 
@@ -186,24 +201,24 @@ So you're ready to:
 
 Review each item and confirm that it is satisfied:
 
-- [ ] **Have you obtained user approval in: Technical Name (step 3.1)**
+- [ ] **Have you obtained user approval for: Technical Name (step 3.1)**
   - ✅ Confirmed: Technical name proposed and user approved?
 
-- [ ] **Have you obtained user approval in: Existing Dependencies (step 3.2)**
+- [ ] **Have you obtained user approval for: Existing Dependencies (step 3.2)**
   - ✅ Asked: Which 'util' libs to use?
   - ✅ Asked: Which 'map'/'data-access' libs to reuse?
   - ✅ Asked: Which 'ui'/'feature' libs to reuse?
   - ✅ Recommended: Any parts worth sharing across features?
   - ✅ Confirmed: User approved recommended shared libs (if any)?
 
-- [ ] **Have you obtained user approval in: 'map' Library (step 3.4)**
+- [ ] **Have you obtained user approval for: 'map' Library (step 3.4)**
   - ✅ Asked: API endpoints, methods, headers, body, responses?
   - ✅ Confirmed: CRUD operation determination?
 
-- [ ] **Have you obtained user approval in: 'ui' Library (step 3.6)**
+- [ ] **Have you obtained user approval for: 'ui' Library (step 3.6)**
   - ✅ Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
 
-- [ ] **Have you obtained user approval in: 'feature' Library (step 3.7)**
+- [ ] **Have you obtained user approval for: 'feature' Library (step 3.7)**
   - ✅ Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
 
 - [ ] **Do CRITICAL section(s) in the template exist in the draft**
@@ -232,7 +247,7 @@ Review each item and confirm that it is satisfied:
 1. Present the draft to the user for review.
 2. Provide a structured summary of any side-effects or follow-up actions:
    1. **New Libraries Identification:**
-      - If you recommended new shared libs (in Step 2.2), remind the user that they require their own PRD & TFS.
+      - If you recommended new shared libs (in Step 3.2), remind the user that they require their own PRD & TFS.
    2. **PRD Updates (New Scenarios):**
-      - If you added new IDs/scenarios (in Step 2.6), list them (IDs + brief description) and suggest updating the PRD to reflect these technical discoveries.
+      - If you added new **Functional Requirement** or **Business Rule** IDs (in Step 3.6.3), list them (IDs + brief description) and suggest updating the PRD to reflect these technical discoveries.
 3. Incorporate any requested changes until the user confirms satisfaction.

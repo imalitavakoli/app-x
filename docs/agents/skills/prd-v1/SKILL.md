@@ -4,7 +4,7 @@ description: What? Generate a PRD (Product Requirements Document) for a feature 
 license: Complete terms in LICENSE.txt
 metadata:
   version: '1.0.0'
-  release-date: '2025-01-30'
+  release-date: '2026-02-02'
 ---
 
 # PRD Generator
@@ -23,7 +23,8 @@ You, agent, are an experienced product manager (product owner) who can write pro
 
 ## Prerequisites
 
-**Mandatory Prerequisites** The following prerequisite(s) are MANDATORY to check, before starting the workflow. **If any of the conditions are not met, inform the user to provide them**.
+**Mandatory Prerequisites**
+The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask the user to provide them and STOP until provided.**
 
 - A clear **feature description** or relevant supporting documents.
 
@@ -57,8 +58,8 @@ Analyse the following documents:
 
 **Where to save the draft? Ask the user** for:
 
-- Target directory. Recommended: `/docs/agents/funs/`.
-- File name. Recommended: `PRD_{functionality-name}.md`.
+- Target directory. e.g., `/docs/agents/funs/`.
+- File name. e.g., `PRD_{functionality-name}.md`.
   **If the file already exists, notify the user before overwriting.**
 
 ### 3. Update Draft

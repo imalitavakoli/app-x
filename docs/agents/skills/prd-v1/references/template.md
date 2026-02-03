@@ -1,6 +1,6 @@
 # Product Requirements Document (PRD)
 
-**Purpose**: This PRD defines _what_ needs to be built and _why_, from a business and user perspective. It intentionally avoids technical implementation details. Frontend developers will later derive a **Technical Functional Specification (TFS)** from this PRD.
+**Purpose**: This PRD defines _what_ needs to be built and _why_, from a business and user perspective. It intentionally avoids technical implementation details. Developers will later derive a **Technical Functional Specification (TFS)** from this PRD.
 
 ---
 
@@ -186,7 +186,7 @@ Explain the rule in plain business language.
 
 - What information does this rule rely on? (user input, backend data, configuration)
 
-**Expected Behavior** (Act + Assert)
+**Expected Behaviour** (Act + Assert)
 
 - What should happen when the rule is applied?
 
