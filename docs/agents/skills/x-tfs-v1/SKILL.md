@@ -1,10 +1,11 @@
 ---
-name: frontend-monorepo-ng-tfs-v1
-description: What? Generate a TFS (Technical Functional Specification) for a feature (functionality) that should be built aligned with monorepo + Angular apps/libs architecture. When? Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
-license: Complete terms in LICENSE.txt
+name: x-tfs-v1
+description: What? This skill is specifically built for our NX workspace. Generate a TFS (Technical Functional Specification) for a feature (functionality) that should be built aligned with monorepo + Angular apps/libs architecture. When? Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
 metadata:
+  category: 'generic'
   version: '1.0.0'
   release-date: '2026-02-02'
+  author: Ali
 ---
 
 # TFS Generator
