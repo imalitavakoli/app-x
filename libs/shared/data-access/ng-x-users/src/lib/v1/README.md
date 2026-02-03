@@ -36,24 +36,20 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import {
-  TranslocoPipe,
-  TranslocoDirective,
-  TranslocoService,
-} from '@jsverse/transloco';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1XUsersFacade } from '@x/shared-data-access-ng-x-users';
 
 @Component({
-  selector: 'x-test',
+  selector: 'x-test-page-v1',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoPipe, TranslocoDirective],
+  imports: [CommonModule, RouterModule, TranslocoDirective],
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
-export class TestComponent implements OnInit {
+export class V1TestPageComponent implements OnInit {
   readonly configFacade = inject(V2ConfigFacade);
   readonly xUsersFacade = inject(V1XUsersFacade);
 

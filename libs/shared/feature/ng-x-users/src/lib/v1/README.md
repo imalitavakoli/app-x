@@ -15,7 +15,7 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1XUsersFeaComponent } from '@x/shared-feature-ng-x-users';
 
 @Component({
-  selector: 'x-test',
+  selector: 'x-test-page-v1',
   standalone: true,
   imports: [
     CommonModule,

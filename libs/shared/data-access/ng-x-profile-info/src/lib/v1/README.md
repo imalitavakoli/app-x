@@ -36,23 +36,19 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import {
-  TranslocoPipe,
-  TranslocoDirective,
-  TranslocoService,
-} from '@jsverse/transloco';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1XProfileInfoFacade } from '@x/shared-data-access-ng-x-profile-info';
 
 @Component({
-  selector: 'x-test',
+  selector: 'x-test-page-v1',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoPipe, TranslocoDirective],
+  imports: [CommonModule, RouterModule, TranslocoDirective],
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
-export class TestComponent implements OnInit {
+export class V1TestPageComponent implements OnInit {
   readonly configFacade = inject(V2ConfigFacade);
   readonly xProfileInfoFacade = inject(V1XProfileInfoFacade);
   private _xProfileInfoSub!: Subscription;
@@ -89,15 +85,17 @@ export class TestComponent implements OnInit {
 And here's how to show probable errors that may happen while fetching data from server.
 
 ```html
-<ng-container *ngIf="(xProfileInfoFacade.errors$ | async)?.data">
+@if ((xProfileInfoFacade.errors$ | async)?.data) {
+<ng-container>
   <div class="text-center">
     <h1 class="h1 text-lg">Oops! Something went wrong.</h1>
     <p class="p">
       Data could not be loaded
-      <small class="e-ecode">V1XProfileInfoFacade.data</small>
+      <small class="e-ecode">V1XProfileInfoFacade/data</small>
     </p>
   </div>
 </ng-container>
+}
 ```
 
 ## Important requirements
