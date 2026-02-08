@@ -71,6 +71,10 @@ export class V1XCredit extends V1BaseMap {
         return this._mapSummary(res.body as V1XCredit_ApiSummary);
       }),
       catchError((err) => {
+        // NOTE: In this `catchError` we don't need to parse the errors, as we
+        // don't have any error exceptions for the already called API endpoint.
+        // So we just simply log the error.
+
         const error = err.message || err;
         console.error('@V1XCredit/getSummary:', error);
         this._logFailure(error.message || undefined, err, lib);
@@ -137,6 +141,14 @@ export class V1XCredit extends V1BaseMap {
         return this._mapDetail(res.body as V1XCredit_ApiDetail);
       }),
       catchError((err) => {
+        // NOTE: In this `catchError` we need to parse the errors, as we have
+        // some error exceptions for the already called API endpoint. So parse
+        // the error, and if it could get parsed via our Base class's function
+        // `_parsedError`, it means that we've received an error which is
+        // already handled by the server (i.e., it is an custom error), and we
+        // can identify its `code` property to see if it should be considered as
+        // an exception or not.
+
         const error = err.message || err;
         let errorParsed: any = false;
 
