@@ -36,7 +36,7 @@ You **MUST** ask the user for the following items. If the user does not provide 
 
 ## Mandatory Agent Instructions
 
-- You MUST use the official template structure and section order exactly as provided in the template reference.
+- You MUST use the official template structure and section order exactly as provided in the template.
 - Do NOT add, remove, or rename sections.
 - If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
 - Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
@@ -65,25 +65,25 @@ You **MUST** ask the user for the following items. If the user does not provide 
 
 Analyse the following documents:
 
-- [TFS Template Reference](./references/template.md) to understand what sections the TFS should have, and also read the guidelines and descriptions mentioned in it to help you prepare the TFS draft better and fill different sections more accurately.  
+- [TFS Template](./assets/template.md) to understand what sections the TFS should have, and also read the guidelines and descriptions mentioned in it to help you prepare the TFS draft better and fill different sections more accurately.  
    **Crucial:** You must follow the _exact_ granularity and style of the examples in this template.
 - PRD.
 - Workspace documents to learn more about the following:
   - `/docs/getting-started/library-types-and-their-relationship.md` (helpful for '_Functionality Classification_' TFS section).
   - `/docs/guidelines/naming-conventions.md`.
   - `/docs/guidelines/best-practices.md`.
-- Existing sample libs for each type (map, data-access, ui, feature) to serve as coding style references:
-  - 'map' libs: `shared-map-ng-x-credit`, `shared-map-ng-x-profile-info`, `shared-map-ng-x-users`.
-  - 'data-access' libs: `shared-data-access-ng-x-credit`, `shared-data-access-ng-x-profile-info`, `shared-data-access-ng-x-users`.
-  - 'ui' libs: `shared-ui-ng-x-profile-image`, `shared-ui-ng-x-profile-info`, `shared-ui-ng-x-users`.
-  - 'feature' libs: `shared-feature-ng-x-profile-image`, `shared-feature-ng-x-profile-info`, `shared-feature-ng-x-users`.
+- Sample libs for each type (map, data-access, ui, feature) to serve as coding style references:
+  - 'map': [ng-x-credit](../../_shared/assets/lib-samples/map/map.md).
+  - 'data-access': [ng-x-users](../../_shared/assets/lib-samples/data-access/data-access_entity.md), [ng-x-credit](../../_shared/assets/lib-samples/data-access/data-access_multi-instance.md), [ng-x-profile-info](../../_shared/assets/lib-samples/data-access/data-access_single-instance.md).
+  - 'ui': [ng-x-profile-info](../../_shared/assets/lib-samples/ui/ui.md).
+  - 'feature': [ng-x-profile-info](../../_shared/assets/lib-samples/feature/feature.md).
 
 ### 2. Generate Draft
 
 **Where to save the draft? Ask the user** for:
 
-- Target directory. e.g., `/docs/agents/funs/`.
-- File name. Recommended: `TFS_{functionality-name}.md`.
+- Target directory. Recommended `/docs/agents/funs/`.
+- File name. Recommended `TFS_{functionality-name}.md`. e.g., `TFS_ng-chart.md`, `TFS_animation.md`.
   **If a file already exists, notify the user before overwriting.**
 
 ### 3. Update Draft
@@ -145,7 +145,7 @@ Infer from 'map' section, and ensure at least one method per API call.
 
 2. Based on step 1, and '_User Experience & Flows_' section of PRD, write '_Rendering Rules_' section for each exported component.
    - Consider HTML hierarchy, semantics, and accessibility.
-   - **Crucial:** You MUST use specific HTML selectors and attributes (e.g., `button[aria-label="Save"]`, `[data-cy="error-message"]`) as seen in the Template reference. Do NOT use generic terms like "Show a button" or "Render a list".
+   - **Crucial:** You MUST use specific HTML selectors and attributes (e.g., `button[aria-label="Save"]`, `[data-cy="error-message"]`) as seen in the Template. Do NOT use generic terms like "Show a button" or "Render a list".
 
 3. Based on step 1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
    - **Crucial:** You must respect the IDs from the PRD's '_Functional Requirements_' & '_Business Rule Breakdown_'. Usage of a PRD ID (e.g., `NAME-BR-01`) signifies you are implementing THAT specific rule. **Do NOT repurpose PRD IDs** for unrelated technical checks (e.g., do not use `NAME-BR-01` for a "loading state" check if `NAME-BR-01` in PRD is about "User permissions").

@@ -1,10 +1,11 @@
 ---
-name: prd-v1
-description: What? Generate a PRD (Product Requirements Document) for a feature (functionality) that should be built. When? Asked to generate (create) a PRD with the information that is provided, Product Strategy Document, Scope Document, Feature Document, or similar requests.
-license: Complete terms in LICENSE.txt
+name: x-prd-v1
+description: What? This skill is specifically built for our NX workspace. Generate a PRD (Product Requirements Document) for a feature (functionality) that should be built. When? Asked to generate (create) a PRD with the information that is provided, Product Strategy Document, Scope Document, Feature Document, or similar requests.
 metadata:
+  category: 'generic'
   version: '1.0.0'
   release-date: '2026-02-02'
+  author: Ali
 ---
 
 # PRD Generator
@@ -30,7 +31,7 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 
 ## Mandatory Agent Instructions
 
-- You MUST use the official template structure and section order exactly as provided in the template reference.
+- You MUST use the official template structure and section order exactly as provided in the template.
 - Do NOT add, remove, or rename sections.
 - If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
 - Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
@@ -49,7 +50,7 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 
 Analyse the following documents:
 
-- [PRD Template Reference](./references/template.md) to understand what sections the PRD should have, and also read the guidelines and descriptions mentioned in it to help you prepare the PRD draft better and fill different sections more accurately.
+- [PRD Template](./assets/template.md) to understand what sections the PRD should have, and also read the guidelines and descriptions mentioned in it to help you prepare the PRD draft better and fill different sections more accurately.
 
 - User's provided 'feature description' to understand how to map it to the template.
   **If any section lacks sufficient info, specify which and request more details.**
@@ -58,8 +59,8 @@ Analyse the following documents:
 
 **Where to save the draft? Ask the user** for:
 
-- Target directory. e.g., `/docs/agents/funs/`.
-- File name. e.g., `PRD_{functionality-name}.md`.
+- Target directory. Recommended `/docs/agents/funs/`.
+- File name. Recommended `PRD_{functionality-name}.md`. e.g., `PRD_ng-chart.md`, `PRD_animation.md`.
   **If the file already exists, notify the user before overwriting.**
 
 ### 3. Update Draft
