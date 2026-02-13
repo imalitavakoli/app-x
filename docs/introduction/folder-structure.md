@@ -24,11 +24,11 @@ x/
 │   │   └── util/             // Holds 'util' lib of an app (holds e.g., 'users.service.ts' file).
 │   └── shared/               // Holds shared libs (such as 'feature', 'ui', 'data-access', 'util', and 'map') across apps & other libs.
 │       └── api/              // Holds shared 'api' libs.
-├── tools/                    // Holds our probable NX workspace related codes.
-├── .eslintrc.json            // Defines the Eslint rules.
-├── CODEOWNERS                // Defines individuals or teams that are expert in a specific code area.
-├── nx.json                   // Defines the workspace default configurations.
-└── tsconfig.base.json        // Defines the TypeScript configurations.
+├── tools/                    // Holds the NX workspace executors, generators, and some useful scripts that can act on our code base.
+├── .eslintrc.json            // Defines the Eslint rules (library types constraints).
+├── CODEOWNERS                // Defines individuals or teams (code-owners) who are expert in a specific code area.
+├── nx.json                   // Defines the NX workspace default configurations.
+└── tsconfig.base.json        // Defines the TypeScript configurations and importable libraries alias paths.
 ```
 
 [🔙](../../README.md#introduction)

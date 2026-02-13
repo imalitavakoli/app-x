@@ -12,12 +12,12 @@ Here we wanna talk about our naming conventions.
 
 For folders (and files) we basically consider the following:
 
-- **Technology prefix**: When we generate an app or a library, if it's made for a specific technology, we start its folder name with that technology's name, like '_ng_'. This helps us know what's inside the project right away.  
-  e.g., if we like to generate an app which has a basic setup for other Angular apps, we name it '_ng-boilerplate_'.
+- **Technology prefix**: When we generate an app or a library, if it's made for a specific technology, we start its folder name with that technology's name, like '_ng_' which stands for Angular. This helps us know what's inside the project right away.  
+  e.g., an app which has a basic setup for other Angular apps can be named '_ng-boilerplate_'.
 - **Underscore prefix**: When we like to have more files inside of a library (rather than the required files) which are NOT going to exposed globally, we start those files or folders names with '\_'.  
   e.g., '_\_util_', '_\_chart.interfaces.ts_'.
 
-**Tip!** If a library only uses `.css` or `.js` files (or even `.scss` or `.ts` files), we don't need to add any prefix. These can be used in different types of projects.
+**Tip!** If a library only uses `.css` or `.js` files (or even `.scss` or `.ts` files), we don't need to add any prefix, because they can be used in projects with any technology.
 
 **Tip!** If a library is already inside a folder named after a technology, we don't need to prefix its name again. For instance, if `HomeComponent` is an Angular component in the `libs/ng-boilerplate/page/home` directory, we don't add '_ng_' to its name since its location already tells us it's for Angular.
 
