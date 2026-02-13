@@ -1,7 +1,10 @@
 # shared-map-ng-x-users
 
-This library was generated with [Nx](https://nx.dev).
+Holds Angular apps' x-users http loader.  
+We receive JSON responses, modify them (if needed), and return an Observable which holds the results.
 
-## Running unit tests
+**For what functionality this lib is for?**
+ng-x-users.
 
-Run `nx test shared-map-ng-x-users` to execute the unit tests.
+**What data this lib fetches?**
+Take care of CRUD operations for users.

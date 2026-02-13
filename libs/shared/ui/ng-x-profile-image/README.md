@@ -1,7 +1,6 @@
 # shared-ui-ng-x-profile-image
 
-This library was generated with [Nx](https://nx.dev).
+UI of the functionality.
 
-## Running unit tests
-
-Run `nx test shared-ui-ng-x-profile-image` to execute the unit tests.
+**For what functionality this lib is for?**
+ng-x-profile-image.

@@ -1,7 +1,10 @@
 # shared-map-ng-x-profile-info
 
-This library was generated with [Nx](https://nx.dev).
+Holds Angular apps' x-profile-info http loader.  
+We receive JSON responses, modify them (if needed), and return an Observable which holds the results.
 
-## Running unit tests
+**For what functionality this lib is for?**
+ng-x-profile-info.
 
-Run `nx test shared-map-ng-x-profile-info` to execute the unit tests.
+**What data this lib fetches?**
+User's profile data.

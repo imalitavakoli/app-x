@@ -1,7 +1,8 @@
 # shared-data-access-ng-x-credit
 
-Holds Angular apps' XCredit NgRx state.  
-In simple terms, these are one of our app's feature states. What feature state? `XCredit` state!
-Most of our apps need to deal with the XCredit API to show the energy XCredit of the logged in user's locations.
+Holds Angular apps' x-credit NgRx state management codes for controlling x-credit state of the app.  
+In simple terms, what this lib exports, will be used in the app's `src/app/+state/index.ts` file.  
+i.e., exports will be the app's global provided store & effects.
 
-With the help of XCredit (NgRx related state management codes for controlling this state of the app), users can see their energy XCredit visually.
+**For what functionality this lib is for?**
+ng-x-credit.
