@@ -2,6 +2,166 @@
 
 Here we share the sample files of a functionality called 'ng-x-profile-info', just for you as a source of inspiration.
 
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+## `README.md` (outer) file
+
+Outer `README.md` file of a lib is the one which rests outside of the `src` folder.
+It just mentions a high-level explanation of what the lib holds and does.
+
+```md
+# shared-feature-ng-x-profile-info
+
+This lib is the last piece of the puzzle for the functionality to get fully implemented.
+
+- It initializes the required '_data-access_' lib(s) to call their actions and update their state object.
+- It initializes the required '_ui_' lib(s) to provide the updated state object properties as input values for the lib(s).
+
+By initializing this lib in a '_page_', we will have a real-world working UI which also deals with API for our functionality. Cheers 🍺
+
+**For what functionality this lib is for?**
+ng-x-profile-info.
+```
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+## `README.md` (inner) file
+
+Inner `README.md` file of a lib is the one which rests inside of the `src` folder.
+It MUST include a ready-to-use code for copy-paste in the Test page of the Boilerplate app(s).
+
+````md
+# shared-feature-ng-x-profile-info
+
+x-profile-info v1.
+
+## Implementation guide
+
+Here's a simple example of how to use the lib:
+
+```ts
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { TranslocoDirective } from '@jsverse/transloco';
+import { V1XCredit_Style } from '@x/shared-map-ng-x-credit';
+import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
+import { V1XProfileInfoFeaComponent } from '@x/shared-feature-ng-x-profile-info';
+
+/**
+ * NOTE: When calling the lib's methods, we assume the following:
+ *
+ * The following properties are defined as the following for the app that is being served:
+ * - In `apps/{app-name}/src/proxy.conf.json`:
+ *   - For all API calls, `target = https://client-x-api.x.com`.
+ * - In `apps/{app-name}/{assets-folder}/DEP_config.development.json`:
+ *   - `general.environment.environment.items.base_url = /v1`.
+ *   - `general.environment.environment.items.client_id = 1234567890`.
+ *
+ * For authenticated API requests, we assume that the following user is already logged in:
+ * - https://admin.x.com/admin/users/123456
+ *
+ * @export
+ * @class V1TestPageComponent
+ * @typedef {V1TestPageComponent}
+ */
+@Component({
+  selector: 'x-test-page-v1',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslocoDirective,
+    V1XProfileInfoFeaComponent,
+  ],
+  templateUrl: './test.component.html',
+  styleUrls: ['./test.component.scss'],
+})
+export class V1TestPageComponent {
+  readonly configFacade = inject(V2ConfigFacade);
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Outputs                                                                  */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  /**
+   * It will be emitted ONLY after all the lib's data is ready!
+   *
+   * NOTE: Only after this event, we can call the lib's methods successfully :)
+   */
+  onReady() {
+    console.log('onReady');
+  }
+
+  /**
+   * It will be emitted if there's any error.
+   */
+  onError(error: { key: string; value: string }) {
+    console.log('onError:', error.key);
+  }
+
+  onClickedReadMore() {
+    console.log('onClickedReadMore');
+  }
+
+  onClickedStyle(style: V1XCredit_Style) {
+    console.log('onClickedStyle:', style);
+  }
+}
+```
+
+```html
+<x-x-profile-info-fea-v1
+  [userId]="123"
+  [showErrors]="false"
+  (ready)="onReady()"
+  (hasError)="onError($event)"
+  [showBtnReadMore]="true"
+  (clickedReadMore)="onClickedReadMore()"
+  (clickedStyle)="onClickedStyle($event)"
+></x-x-profile-info-fea-v1>
+```
+
+## More
+
+**Considerations before implementing this lib:**
+
+You should NOT initialize this lib at all, if:
+
+- User is NOT authenticated in the app (logged in).
+
+## Important requirements
+
+_None._
+
+## Running unit tests
+
+Run `nx test shared-feature-ng-x-profile-info` to execute the unit tests.
+````
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
 ## `x-profile-info.component.ts` file
 
 It's the component file which gets exported.
@@ -258,5 +418,80 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
       this.nameThis,
     );
   }
+}
+```
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+## `x-profile-info.component.html` file
+
+`x-profile-info.component.ts` component's HTML template.
+
+```html
+<x-x-profile-info-v1
+  [data]="$any((xProfileInfoFacade.datas$ | async)?.data)"
+  [creditDetail]="
+    $any((xCreditFacade.entityDatas$(nameInstance_main) | async)?.detail)
+  "
+  [icoInfo]="$any($dataConfigDep()?.assets?.libXprofileInfoIcoInfo)"
+  [langCultureCode]="
+    $any(translationsFacade.lastLoadedLangCultureCode$ | async)
+  "
+  [defaultStyle]="$any(xCreditFacade.lastSetStyle$ | async)"
+  [showIcoInfo]="$any($dataConfigDep()?.libs?.xProfileInfoV1?.hasInfoIcon)"
+  [showBg]="$any($dataConfigDep()?.libs?.xProfileInfoV1?.hasBg)"
+  [showBtnReadMore]="showBtnReadMore()"
+  (clickedReadMore)="clickedReadMore.emit()"
+  (clickedStyle)="xCreditFacade.setStyle($event); clickedStyle.emit($event)"
+></x-x-profile-info-v1>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Show an error if something happens in the 'data-access' lib             -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if ( showErrors() && ((xCreditFacade.entityHasError$(nameInstance_main) |
+async) || (xProfileInfoFacade.hasError$ | async)) ) {
+<x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
+  <div slot="head">
+    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+    <span class="font-semibold">{{ t('common.error') }}</span>
+  </div>
+
+  <div slot="body">
+    <ng-lottie
+      width="100%"
+      height="180px"
+      containerClass="e-ani"
+      [options]="{
+          path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+          loop: false,
+        }"
+    ></ng-lottie>
+    <p class="p m-6 text-center">
+      {{ t('common.error_desc') }}
+
+      <!-- xCreditFacade ///////////////////////////////////////////////// -->
+
+      @if ((xCreditFacade.entityErrors$(nameInstance_main) | async)?.detail) {
+      <small class="e-ecode">
+        V1XCreditFacade({{ nameInstance_main }})/detail
+      </small>
+      }
+
+      <!-- xProfileInfoFacade //////////////////////////////////////////// -->
+
+      @if ((xProfileInfoFacade.errors$ | async)?.data) {
+      <small class="e-ecode"> V1XProfileInfoFacade/data </small>
+      }
+    </p>
+  </div>
+</x-popup-v1>
 }
 ```

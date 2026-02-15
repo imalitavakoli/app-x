@@ -109,7 +109,9 @@
 
 ## Functional Requirements
 
-> What must the feature do (goals)? Define observable behaviour. Think verbs. They mostly help in building 'ui' libs. e.g., "Feature must show user's energy consumption". Functional requirement IDs (e.g., NAME-FR-01) can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. Typically map to **unit tests `describe()` blocks**.
+> What must the feature do (goals)? Define observable behaviour. Think verbs. They mostly help in building 'ui' libs. e.g., "Feature must show user's energy consumption". Functional requirement IDs can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. Typically map to **unit tests `describe()` blocks**.
+>
+> Tip! If functionality name is `ng-posts` or `posts`, a functional requirement ID can be `POSTS-FR-01`.
 
 Each requirement should be atomic, testable, and ordered based on priority.
 

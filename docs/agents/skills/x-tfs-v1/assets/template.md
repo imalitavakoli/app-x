@@ -60,6 +60,8 @@ Choose **exactly one** type.
 >
 > Reuse decisions are based on developer knowledge of the workspace.
 
+> Tip! Recommended libs to be mentioned in this section, but are NOT already available in the workspace, MUST be flagged with `[RECOMMENDED]` keyword to emphasize that by the time that the TFS is approved, the lib was not still created.
+
 ### Used map / data-access libs
 
 - 'map' libs:
@@ -71,6 +73,7 @@ Choose **exactly one** type.
 ### Used ui / feature libs
 
 - 'ui' libs:
+  - [RECOMMENDED] `shared-ui-ng-modal` lib.
   - …
 
 - 'feature' libs:
@@ -305,11 +308,11 @@ Based on how this 'data-access' lib is going to be used, its 'state object struc
 >
 > **What's a complex functionality?** In most cases, if the functionality requires more than 1 screens/pages to display its content, or requires to show a list of something which each item in the list is clickable/selectable... Then such functionality should be considered as a complex one! For building the 'ui' lib of such functionalities, it's better to have 2 components for each screen/page, instead of implementing everything in one single component that needs to change its `dataType` input based on other inputs to switch between screens/pages.
 >
-> **What's a simple functionality?** In most cases, if the functionality doesn't need to navigate/switch between different contents, then it's a simple functionality. When building the 'ui' lib of such functionalities, the `dataType` input NEVER changes.
+> **What's a simple functionality?** In most cases, if the functionality doesn't need to navigate/switch between different contents, then it's a simple functionality. When building the 'ui' lib of such functionalities, the `dataType` input NEVER changes, and it won't be a required input, but it is an optional one with a predefined value. e.g., if the functionality is going to show a list payments, then `dataType = all`; and if it's going to show user's info, then `dataType = one`.
 >
 > **How to decide whether the functionality is simple or complex?** It's up to the developer to choose how they want to organize their UI, lib's content, and components. This decision affects how other libs (e.g., the 'feature' lib that is going to initialize this 'ui' lib) interact with this lib.
 
-> **Note!** Component's input/output/property/method/ descriptions will be used as part of their JSDoc description.
+> **Note!** Component's input/output/property/method descriptions will be used as part of their JSDoc description.
 
 &nbsp;
 
@@ -326,27 +329,36 @@ export class V1Name1Component {}
 
 ###### Inputs
 
+Here are the inputs that are common to all 'ui' components:
+
+- `state` defines what elements should be shown in general, based on the value of the component's inputs. Accepted values: `"loading" | "empty" | "data" | "success" | "failure"`.
+- `dataType` defines what type of data should be shown, when `state = data`. Accepted values: `"all" | "one" | "new" | "edit"`.
+
 **Required**
 
-- `data: InputSignal<V1Name_MapData>` — …
-- `dataType: InputSignal<UiDataType>` — …
+- `dataType: InputSignal<UiDataType>`.
+- `data: InputSignal<V1Name_MapData[]>` — …
+- …
 
 **Optional**
 
 - `state: InputSignal<UiState>`
-  Default: `'loading'` — …
+  Default: `'loading'`.
 - `iconInfo: InputSignal<string>`
   Default: `'./assets/images/libs/shared/icon-info.svg'` — …
 - `showBtnReadMore: InputSignal<boolean>`
   Default: `true` — …
+- …
 
 ###### Outputs
 
 - `clickedDetails: OutputEmitterRef<void>` — …
+- …
 
 ###### Externally Read Properties
 
 - `isUpdateNeeded: boolean` — …
+- …
 
 ###### Externally Callable Methods
 
@@ -357,9 +369,6 @@ export class V1Name1Component {}
 ##### Rendering Rules
 
 Define what should be rendered in HTML template based on `state` and `dataType`.
-
-- `state` defines what elements should be shown in general, based on the value of the component's inputs: `"loading" | "empty" | "data" | "success" | "failure"`
-- `dataType` defines what type of data should be shown, when `state = data`: `"all" | "one" | "new" | "edit"`
 
 > Complementing PRD 'User Experience & Flows'.
 
@@ -382,15 +391,17 @@ Define what should be rendered in HTML template based on `state` and `dataType`.
 >
 > 1. Pick the most related 'Functional Requirement' & 'Business Rule' for this component.
 > 2. Put the picked 'Business Rule' items under the most related picked 'Functional Requirement' items.
-> 3. Re-phrase 'Functional Requirement' & 'Business Rule' items to reflect to the correct rendered UI elements, input, outputs, and methods.
+> 3. Re-phrase 'Functional Requirement' & 'Business Rule' items to reflect to the correct rendered UI elements, inputs, outputs, and methods.
 
-- **NAME-FR-01**: Test 'state'; component SHALL render elements correctly.
-  - **NAME-BR-01**: Given none/some required inputs _(Arrange)_; When `state = loading` _(Act)_; no interactive elements are rendered _(Negative & boundary)_.
-  - **NAME-BR-02**: Given ALL required inputs _(Arrange)_; When `state = empty` _(Act)_; `[data-cy="empty"]` must be displayed _(Negative & boundary)_.
-- **NAME-FR-02**: Test 'dataType = all'; component SHALL render elements correctly.
-  - **NAME-BR-03**: Given ALL required inputs _(Arrange)_; When `state = data` & `dataType = all` _(Act)_; `[data-cy="data-list"]` must be displayed _(Assert)_.
-- **NAME-FR-03**: Test 'dataType = all'; clicked 'View details'; component MUST emit 'clickedDetails'.
-  - **NAME-BR-04**: Given ALL required inputs _(Arrange)_; When `state = data` & `dataType = all` _(Act)_; clicking `button[aria-label="View details"]` must call `onClickedDetails` and emit `clickedDetails` _(Assert)_.
+- **NAME-FR-01**: Test 'state'; Based on defined inputs.
+  - **NAME-BR-01**: Given none/some required inputs _(Arrange)_; Then `state = loading` _(Negative & boundary)_.
+  - **NAME-BR-02**: Given ALL required inputs _(Arrange)_; When `data = []` _(Act)_; Then `state = empty` _(Assert)_.
+  - **NAME-BR-03**: Given ALL required inputs _(Arrange)_; When `data != []` _(Act)_; Then `state = data` _(Assert)_.
+- **NAME-FR-02**: Test rendered elements; Based on 'state'.
+  - **NAME-BR-04**: Given `state = empty` _(Arrange)_; Then `[data-cy="empty"]` must be displayed _(Act + Assert)_.
+  - **NAME-BR-05**: Given `state = data` & `dataType = all` _(Arrange)_; Then `[data-cy="data-list"]` must be displayed _(Act + Assert)_.
+- **NAME-FR-03**: Test output emits; Based on interactions.
+  - **NAME-BR-06**: Given `state = data` & `dataType = all` _(Arrange)_; When `button[aria-label="View details"]` is clicked _(Act)_; Then `clickedDetails` must be emitted _(Assert)_.
 
 ###### Analytics & Tracking
 
@@ -436,7 +447,7 @@ _(Repeat the same structure for each component)_
 >
 > **How to decide whether the 'feature' lib should export more than 1 component?** It's up to the developer to choose how they want to initialize and interact with the 'ui' components in their 'feature' lib. This decision affects how other libs (e.g., the 'page' lib that is going to initialize this 'feature' lib) interact with this lib.
 
-> **Note!** Component's input/output/property/method/ descriptions will be used as part of their JSDoc description.
+> **Note!** Component's input/output/property/method descriptions will be used as part of their JSDoc description.
 
 &nbsp;
 
@@ -453,33 +464,61 @@ export class V1Name1FeaComponent {}
 
 ###### Inputs
 
+Here are the inputs that are common to all 'feature' components:
+
+- `showErrors` defines whether probable errors should be shown or not.
+
 **Required**
 
 - `userId: InputSignal<number>` — …
+- …
 
 **Optional**
 
 - `showErrors: InputSignal<boolean>`
-  Default: `true` — …
+  Default: `true`.
 - `showBtnReadMore: InputSignal<boolean>`
   Default: `true` — …
+- …
 
 ###### Outputs
 
-- `ready: OutputEmitterRef<void>` — …
-- `allDataIsReady: OutputEmitterRef<void>` — …
-- `hasError: OutputEmitterRef<{ key: string; value: string; }>` — …
+Here are the outputs that are common to all 'feature' components:
+
+- `ready` emits only one time! When `_xInitOrUpdateAfterAllDataReady` is already called for the very first time.
+- `allDataIsReady` Emits each time (when an inputs is changed)! When `_xInitOrUpdateAfterAllDataReady` is already called.
+- `hasError` emits when an error occurs while fetching data from a 'data-access' lib.
+
+- `ready: OutputEmitterRef<void>`.
+- `allDataIsReady: OutputEmitterRef<void>`.
+- `hasError: OutputEmitterRef<{ key: string; value: string; }>`.
 - `clickedDetails: OutputEmitterRef<void>` — …
+- …
 
 ###### Externally Read Properties
 
 - `isUpdateNeeded: boolean` — …
+- …
 
 ###### Externally Callable Methods
 
 | Method    | Returns | Description                                          |
 | --------- | ------- | ---------------------------------------------------- |
 | `reset()` | `void`  | Resets all inputs/properties to their default values |
+
+###### Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)
+
+> 'Functional Requirements' (e.g., NAME-FR-01) is complementing PRD 'Functional Requirements'. Typically map to **unit tests `describe()` blocks**.  
+> 'Business Rule Breakdown' (e.g., NAME-BR-01) is complementing PRD 'Business Rule Breakdown'. Each item should map to **unit tests `it`**.
+>
+> Based on this component's responsibility, read PRD and do the following:
+>
+> 1. Pick the most related 'Functional Requirement' & 'Business Rule' for this component.
+> 2. Put the picked 'Business Rule' items under the most related picked 'Functional Requirement' items.
+> 3. Re-phrase 'Functional Requirement' & 'Business Rule' items to reflect to the correct rendered UI elements, inputs, outputs, and methods.
+
+- **NAME-FR-03**: Test facade method calls; Based on interactions.
+  - **NAME-BR-06**: Given ALL required inputs _(Arrange)_; When `V1Name1Component` emits `clickedDetails` _(Act)_; Then `V1NameFacade` facade's `getInfo` method must be called _(Assert)_.
 
 ###### Analytics & Tracking
 

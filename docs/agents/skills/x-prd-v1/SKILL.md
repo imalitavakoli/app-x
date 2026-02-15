@@ -50,7 +50,8 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 
 Analyse the following documents:
 
-- [PRD Template](./assets/template.md) to understand what sections the PRD should have, and also read the guidelines and descriptions mentioned in it to help you prepare the PRD draft better and fill different sections more accurately.
+- [PRD Template](./assets/template.md) to understand what sections the PRD should have, and how to prepare the PRD draft.  
+  **Important:** You must read the quotes in the template. They are guidelines and descriptions to help you fill different sections more accurately, but they don't need to be in the draft.
 
 - User's provided 'feature description' to understand how to map it to the template.
   **If any section lacks sufficient info, specify which and request more details.**
@@ -75,7 +76,7 @@ Update the draft using available 'feature description' and PRD template.
 
 Review each item and confirm that it is satisfied:
 
-- [ ] **Do CRITICAL section(s) in the template exist in the draft**
+- [ ] **Section(s): Do CRITICAL section(s) in the template exist in the draft**
   - ✅ Exists: "Overview" section and sub sections?
   - ✅ Exists: "Users" section and sub sections?
   - ✅ Exists: "Permissions & Security" section and sub sections?
@@ -89,14 +90,14 @@ Review each item and confirm that it is satisfied:
 #### Validation Process (Iterative Loop)
 
 1. **Check all items** - Go through the entire checklist above
-2. **If ANY item which required 'CRITICAL section(s) in the template to exist in the draft' is NOT checked ✅:**
+2. **If ANY item which is under 'Section(s)' is NOT checked ✅:**
    - Stop and edit the draft to fill the missing section(s)
    - **Return to step 1** (re-check the entire checklist)
 3. **If ALL items are checked ✅:**
-   - Present summary: "I have confirmed all requirements are met. Ready to generate the final draft."
-   - Proceed to step 4 (Generate Draft)
+   - Present summary: "I have confirmed all requirements are met. The final draft is ready."
+   - Proceed to step 5 (Summary)
 
-> ⚠️ **IMPORTANT:** Do NOT proceed to Generate Draft until this validation loop confirms ALL items are ✅.
+> ⚠️ **IMPORTANT:** Do NOT proceed to Summary until this validation loop confirms ALL items are ✅.
 
 ### 5. Summary
 
