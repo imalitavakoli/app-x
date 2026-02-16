@@ -428,9 +428,10 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *   they are not defined, it means that there's no data to load, so we just
    *   return `true` (i.e., all data is ready); otherwise, we continue to the
    *   next step.
-   *   Tip! If you know that you will definitely call one or more API endpoints
+   *   TIP: If you know that you will definitely call one or more API endpoints
    *   and your 'requested API calls arrays' of facades are always defined (as
-   *   empty arrays), then you don't need to do this check here.
+   *   empty arrays), then you don't need to do this check here (skip it). You
+   *   can read more about this in `_xDataFetch` function's documentation.
    * - Check every key that exists in a 'requested API calls object' (an item of
    *   `loadedsArr` argument) to see if that key is `true`.
    * - If all keys for all of the 'requested API calls arrays' (`loadedsArr`
@@ -566,7 +567,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * ALL required inputs are defined (i.e., when `_xHasRequiredInputs` returns
    * true) & each time an inputs is changed.
    *
-   * **Who calls it?** `_xInit`  & `_xUpdate` right before calling `_xDataFetch`.
+   * **Who calls it?** `_xInit` & `_xUpdate` right before calling `_xDataFetch`.
    *
    * **Useful for?** Resetting all 'requested API calls arrays' (if they are
    * defined), resetting any probable old data of a 'data-access' lib.
@@ -600,16 +601,17 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * ALL required inputs are defined (i.e., when `_xHasRequiredInputs` returns
    * true) & each time an input is changed.
    *
-   * **Who calls it?** `_xInit` & `_xUpdate`.
+   * **Who calls it?** `_xInit` & `_xUpdate` (and based on your logic, maybe
+   * `_xUpdateAfterAllDataReady`).
    *
    * **Useful for?** Fetching new data from a 'data-access' lib.
    *
-   * NOTE: Based on your logic, (1) you know that you will definitely call one
+   * NOTE: Based on your logic, (1) you know that you WILL definitely call one
    * or more API endpoints (by calling the 'data-acces' lib's facade functions);
-   * (2) or you may call one or more API endpoints (based on some conditions,
+   * (2) or you MAY call one or more API endpoints (based on some conditions,
    * such as the presence of some inputs); So if condition (1) is true, then the
    * related 'requested API calls array' (e.g., `_insightsRequestedData_main`)
-   * should NOT be undefined in your child class initially, instead consider to
+   * should NOT be undefined in your child class initially! Instead consider to
    * define it as an empty array... In this way, you make sure that the
    * `_xFacadesLoadesValidation` function works properly, because a defined
    * 'requested API calls array' indicates that you DO NEED some data to fetch,
@@ -617,6 +619,32 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * data) are NOT all loaded yet, then the function will return `false`,
    * instead of assuming that because the array is undefined, there's no data to
    * load, so it would return `true` by mistake.
+   *
+   * NOTE: Based on your logic, `_xUpdateAfterAllDataReady` can also call this
+   * function. e.g., if some of your API calls depend on some other ones, you
+   * can do the following:
+   * - Define the dependant 'requested API calls arrays' as undefined initially
+   *   (e.g., `_insightsRequestedData_main`), and do the checking step for them
+   *   in `_xFacadesLoadesValidation`, so that the function can skip checking
+   *   those arrays (i.e., the function can assume that there's no data to load
+   *   related to those arrays).
+   * - Wait for the independent API call responses, so that
+   *   `_xUpdateAfterAllDataReady` can be called, and in that function subscribe
+   *   to the indepndant facade's observable (e.g., subscribe to `allEntities$`
+   *   for an entity 'data-access' lib, `entity$('V1BaseFeatureComponent_main')`
+   *   for a multi-instance 'data-access' lib, or `datas$` for a single-instance
+   *   'data-access' lib) to take its data once and check if you have the
+   *   required data (that was necessary for the dependant API call(s)) or not.
+   * - If you had the data, (1) define the dependant 'requested API calls arrays'
+   *   to an empty array; (2) set a flag, that the necessary data is in place
+   *   for the very first time, so that if next times,
+   *   `_xUpdateAfterAllDataReady` function was called again, you won't do the
+   *   checking step again; (3) call this function (i.e., `_xDataFetch`), if you
+   *   like to call ALL API endpoints (even the indepndant one that you just
+   *   fetched the necessary data from it), OR call directly the function(s)
+   *   which call the dependant API endpoint(s) specifically (e.g.,
+   *   `_callInsights_getLocations`), if you're just interested to ONLY call the
+   *   API endpoint(s) which were dependant on the data that you just fetched.
    *
    * @example
    * ```ts
