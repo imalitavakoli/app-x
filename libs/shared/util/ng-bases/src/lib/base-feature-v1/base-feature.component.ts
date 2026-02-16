@@ -567,7 +567,8 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * ALL required inputs are defined (i.e., when `_xHasRequiredInputs` returns
    * true) & each time an inputs is changed.
    *
-   * **Who calls it?** `_xInit` & `_xUpdate` right before calling `_xDataFetch`.
+   * **Who calls it?** `_xInit` & `_xUpdate`  (and based on your logic, maybe
+   * `_xUpdateAfterAllDataReady`) right before calling `_xDataFetch`.
    *
    * **Useful for?** Resetting all 'requested API calls arrays' (if they are
    * defined), resetting any probable old data of a 'data-access' lib.
@@ -575,6 +576,24 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * NOTE: Creating a new instance for the 'data-access' lib (if it is a
    * multi-instance one) MUST happen in `ngOnInit` or `_xInitPreBeforeDom`
    * functions BEFORE the DOM is initialized.
+   *
+   * NOTE: Based on your logic, `_xUpdateAfterAllDataReady` can also call this
+   * function. You can read more about this in `_xDataFetch` function's
+   * documentation.
+   *
+   * TIP: Calling the facade's `reset` function causes the 'data-access' lib's
+   * state object to be reset (i.e., makes the previously loaded data to be
+   * undefined), which accordingly causes the the initialized 'ui'
+   * component's input values that are reading their data from the facade's
+   * observables (e.g., reading data like
+   * `$any((insightsFacade.entityDatas$('V1BaseFeatureComponent_main') | async)?.locations)`
+   * ) to be undefined, which eventually causes the 'ui' component to go back to
+   * 'loading' state... So if you like to prevent that (i.e., keep showing the
+   * old data for the 'ui' component, while the new data is being fetched), you
+   * can skip resetting the 'data-access' lib's state object (by calling the
+   * facade's `reset` function)! BUT you still have to reset the facade's
+   * related 'requested API calls arrays' (if they are defined), because
+   * `_xFacadesLoadesValidation` depends on them!
    *
    * @example
    * ```ts
@@ -639,12 +658,13 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *   to an empty array; (2) set a flag, that the necessary data is in place
    *   for the very first time, so that if next times,
    *   `_xUpdateAfterAllDataReady` function was called again, you won't do the
-   *   checking step again; (3) call this function (i.e., `_xDataFetch`), if you
-   *   like to call ALL API endpoints (even the indepndant one that you just
-   *   fetched the necessary data from it), OR call directly the function(s)
-   *   which call the dependant API endpoint(s) specifically (e.g.,
-   *   `_callInsights_getLocations`), if you're just interested to ONLY call the
-   *   API endpoint(s) which were dependant on the data that you just fetched.
+   *   checking step again; (3) call `_xDataReset` & this function (i.e.,
+   *   `_xDataFetch`), if you like to call ALL API endpoints (even the
+   *   indepndant one that you just fetched the necessary data from it), OR call
+   *   directly the function(s) which call the dependant API endpoint(s)
+   *   specifically (e.g., `_callInsights_getLocations`), if you're just
+   *   interested to ONLY call the API endpoint(s) which were dependant on the
+   *   data that you just fetched.
    *
    * @example
    * ```ts
