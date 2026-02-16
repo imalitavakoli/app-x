@@ -49,7 +49,9 @@ export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
   constructor() {
     // This effect will run whenever a required/optional input changes. How?
     // Because we are actually reading ALL inputs inside `_xHasRequiredInputs`
-    // to track them! In other words, this effect is reading ALL inputs indirectly.
+    // to track them, `_xHasRequiredInputs` is called in `ngOnChanges`, and
+    // `ngOnChanges` is called here! In other words, this effect is reading ALL
+    // inputs indirectly.
     effect(() => {
       // NOTE: So why we're NOT calling `ngOnChanges` to do the very same things
       // that Angular's change detection does, when classic `@Input` properties
