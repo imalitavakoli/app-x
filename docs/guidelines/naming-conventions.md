@@ -27,7 +27,7 @@ For folders (and files) we basically consider the following:
 
 ## Coding
 
-We recommend some naming conventions for different types of variables/functions to quickly understand their purpose when we encounter them in our code.
+We recommend some naming conventions for different types of interfaces/components/variables/functions to quickly understand their purpose, when we encounter them in our code.
 
 **Tip!** These are just suggestions and not strict rules. Naming conventions may vary based on the language or technology we're using.
 
@@ -59,12 +59,18 @@ We recommend some naming conventions for different types of variables/functions 
 
 &nbsp;
 
-- **'ui' lib's Components class name**: Use `V{x}{Name}Component` schema. For example, `V2ChartComponent`.
-- **'ui' lib's Components selector name**: Use `x-{name}-v{x}` schema. For example, `x-chart-v2`.
-- **'feature' lib's Components class name**: Use `V{x}{Name}FeaComponent` schema. For example, `V2ChartFeaComponent`.
-- **'feature' lib's Components selector name**: Use `x-{name}-fea-v{x}` schema. For example, `x-chart-fea-v2`.
-- **'page' lib's Components class name**: Use `V{x}{Name}PageComponent` schema. For example, `V1DashboardPageComponent`.
-- **'page' lib's Components selector name**: Use `x-{name}-page-v{x}` schema. For example, `x-dashboard-page-v1`.
+- **'ui' lib's components class name**: Use `V{x}{Name}Component` schema. For example, `V2ChartComponent`.
+- **'ui' lib's components selector name**: Use `x-{name}-v{x}` schema. For example, `x-chart-v2`.
+- **'feature' lib's components class name**: Use `V{x}{Name}FeaComponent` schema. For example, `V2ChartFeaComponent`.
+- **'feature' lib's components selector name**: Use `x-{name}-fea-v{x}` schema. For example, `x-chart-fea-v2`.
+- **'page' lib's components class name**: Use `V{x}{Name}PageComponent` schema. For example, `V1DashboardPageComponent`.
+- **'page' lib's components selector name**: Use `x-{name}-page-v{x}` schema. For example, `x-dashboard-page-v1`.
+
+&nbsp;
+
+- **Cypress selectors (`data-cy` attributes)**: Use `{lib-name}-v{x}_{short-component-name}_{selector-name}` schema. For example, `profile-image-v1_profile-image_loading`.
+
+**Note!** Wherever you see that we've mentioned a versioning number in the names, it means that we're working on a shared lib. app-specific libs (i.e., a lib which rests under the app's domain folder directory such as `ng-x-boilerplate-mobile-map-config`) don't have the versioning number in their names. e.g., for app-specific libs, _Cypress selectors_ can be `profile-image_profile-image_loading`; _'ui' lib's components class name_ can be `ChartComponent`, and etc.
 
 &nbsp;
 
