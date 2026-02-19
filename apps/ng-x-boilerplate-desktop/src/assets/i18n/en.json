@@ -7,6 +7,12 @@
     "error": "Error",
     "error_desc": "Oops! Something went wrong."
   },
+  "x_profile_info": {
+    "country": "Country",
+    "balance": "Balance",
+    "btn_change_style": "Change Style",
+    "btn_read_more": "Read More"
+  },
   "menu_options": {
     "dashboard": "Dashboard",
     "x_users": "Users",

@@ -7,6 +7,12 @@
     "error": "Fel",
     "error_desc": "Oj! Något gick fel."
   },
+  "x_profile_info": {
+    "country": "Land",
+    "balance": "Saldo",
+    "btn_change_style": "Byt stil",
+    "btn_read_more": "Läs mer"
+  },
   "menu_options": {
     "dashboard": "Instrumentbräda",
     "x_users": "Användare",
