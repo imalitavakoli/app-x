@@ -1,0 +1,13 @@
+.e-x-profile-info {
+  --e-x-profile-info--bg-color--gradient-a: var(--e-primary-color);
+  --e-x-profile-info--bg-color--gradient-b: var(--e-accent-color);
+  --e-x-profile-info--color: var(--e-night-color);
+
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--e-x-profile-info--bg-color--gradient-a) / 0.6),
+    rgb(var(--e-x-profile-info--bg-color--gradient-b) / 0.6)
+  );
+
+  color: rgb(var(--e-x-profile-info--color));
+}

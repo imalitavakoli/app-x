@@ -8,7 +8,7 @@
     [ngClass]="{
       'rounded-3xl': style() === 'rounded',
       'rounded-none': style() === 'sharp',
-      'bg-einformative bg-opacity-40': showBg(),
+      'e-x-profile-info': showBg(),
     }"
     class="p-4"
   >
@@ -43,52 +43,62 @@
 
 <!-- data-body (main content) ////////////////////////////////////////////// -->
 <ng-template #dataBodyTpl>
-  <!-- country -->
-  @if (data().country) {
-    Country:
-    <span data-cy="x-profile-info-v1_profile-info_data-body-country">
-      {{ data().country }}
-    </span>
-  }
+  <section *transloco="let t; prefix: 'x_profile_info'">
+    <!-- country -->
+    @if (data().country) {
+      {{ t('country') }}:
+      <span data-cy="x-profile-info-v1_profile-info_data-body-country">
+        {{ data().country }}
+      </span>
+    }
 
-  <!-- Bio -->
-  @if (data().bio) {
-    <p data-cy="x-profile-info-v1_profile-info_data-body-bio">
-      {{ data().bio }}
-    </p>
-  }
+    <!-- Bio -->
+    @if (data().bio) {
+      <p data-cy="x-profile-info-v1_profile-info_data-body-bio">
+        {{ data().bio }}
+      </p>
+    }
 
-  <hr class="opacity-25" />
+    <hr class="opacity-25" />
 
-  <!-- Balance -->
-  <div data-cy="x-profile-info-v1_profile-info_data-body-balance" class="my-2">
-    Balance:
-    {{
-      creditDetail().balance
-        | currencyV1: creditDetail().balanceCurrency : langCultureCode()
-    }}
-  </div>
+    <!-- Balance -->
+    <div
+      data-cy="x-profile-info-v1_profile-info_data-body-balance"
+      class="my-2"
+    >
+      {{ t('balance') }}:
+      {{
+        creditDetail().balance
+          | currencyV1: creditDetail().balanceCurrency : langCultureCode()
+      }}
+    </div>
+  </section>
 </ng-template>
 
 <!-- data-foot (actions) /////////////////////////////////////////////////// -->
 <ng-template #dataFootTpl>
   <div
+    *transloco="let t; prefix: 'x_profile_info'"
     data-cy="x-profile-info-v1_profile-info_data-foot"
     class="flex justify-stretch gap-4"
   >
     <button
-      title="Change style"
-      (click)="onClickedStyle()"
+      data-cy="x-profile-info-v1_profile-info_data-btn-change-style"
       class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
+      [aria-label]="t('btn_change_style')"
+      [title]="t('btn_change_style')"
+      (click)="onClickedStyle()"
     >
       <i class="bi bi-circle-square"></i>
     </button>
 
     @if (showBtnReadMore()) {
       <button
-        title="Read more"
-        (click)="clickedReadMore.emit()"
+        data-cy="x-profile-info-v1_profile-info_data-btn-read-more"
         class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
+        [aria-label]="t('btn_read_more')"
+        [title]="t('btn_read_more')"
+        (click)="clickedReadMore.emit()"
       >
         <i class="bi bi-book"></i>
       </button>
