@@ -59,6 +59,10 @@
   --e-accent-darker-color: 153 150 135;
 }
 
+/* ////////////////////////////////////////////////////////////////////////// */
+/* preloader                                                                  */
+/* ////////////////////////////////////////////////////////////////////////// */
+
 .e-preloader {
   --e-preloader--bg-color: 51 170 222 !important;
 }
@@ -66,7 +70,12 @@
   --e-preloader__bar--color: 255 255 255 !important;
 }
 
-.e-fader {
-  --e-fader--bg-color--light: 255 255 255 !important;
-  --e-fader--bg-color--dark: 69 69 69 !important;
+/* ////////////////////////////////////////////////////////////////////////// */
+/* x-profile-info                                                             */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+.e-x-profile-info {
+  --e-x-profile-info--bg-color--gradient-a: var(--e-primary-color) !important;
+  --e-x-profile-info--bg-color--gradient-b: var(--e-accent-color) !important;
+  --e-x-profile-info--color: var(--e-dark-color) !important;
 }
