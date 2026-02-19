@@ -60,7 +60,7 @@ export class V1TrackingService {
    *
    * NOTE: MUST be called BEFORE calling `initOrUpdate`.
    *
-   * NOTE: It will be called in `app.component.ts` of the app (after user logs in).
+   * NOTE: It will be called in `app.component.ts` of the app.
    *
    * NOTE: This method can be called multiple times! If it's called before user
    * login, it only collects (prepares) DEP and Firebase configs. If it's called
@@ -140,11 +140,11 @@ export class V1TrackingService {
    *
    * NOTE: It will be called from the 'feature' libs most of the times.
    *
-   * NOTE: Event name should follow 'GA4' naming rules. schema is: `libName_eventName`.
-   * e.g., `advisoryCard_init`, `advisoryCard_clickedAdvice`.
+   * NOTE: Event name should follow 'GA4' naming rules. schema is: `verb_name`.
+   * e.g., `init`, `clicked_readMore`.
    *
    * @example
-   * this._trackingService.logEvent('advisoryCard_loadedAdvice', { data: 'something' });
+   * this._trackingService.logEvent('handled_loadedAdvice', { com: 'V1Name1FeaComponent' });
    *
    * @param {string} name
    * @param {*} [data=undefined]
