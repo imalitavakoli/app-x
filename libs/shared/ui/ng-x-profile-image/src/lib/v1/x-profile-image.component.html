@@ -1,8 +1,12 @@
-@if (state() === 'data') {
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <!-- Data                                                                  -->
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <section class="bg-einformative bg-opacity-40 p-4">
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- state = data                                                            -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #dataTpl>
+  <section
+    data-cy="x-profile-image-v1_profile-image_data"
+    class="bg-einformative bg-opacity-40 p-4"
+  >
     <figure class="bg-eneutral flex justify-center">
       <img class="h-32 w-32" alt="avatar" [src]="imgAvatar()" />
     </figure>
@@ -12,9 +16,25 @@
       {{ creditSummary().status }}
     </div>
   </section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- state = loading                                                         -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #loadingTpl>
+  <div
+    data-cy="x-profile-image-v1_profile-image_loading"
+    class="skeleton h-52"
+  ></div>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- STRUCTURE                                                               -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (state() === 'data') {
+  <ng-container *ngTemplateOutlet="dataTpl"></ng-container>
 } @else if (state() === 'loading') {
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <!-- Loading                                                               -->
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <div class="skeleton h-52"></div>
+  <ng-container *ngTemplateOutlet="loadingTpl"></ng-container>
 }

@@ -1,8 +1,10 @@
-@if (state() === 'data') {
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <!-- Data                                                                  -->
-  <!-- ///////////////////////////////////////////////////////////////////// -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- state = data                                                            -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #dataTpl>
   <section
+    data-cy="x-profile-info-v1_profile-info_data"
     [ngClass]="{
       'rounded-3xl': style() === 'rounded',
       'rounded-none': style() === 'sharp',
@@ -10,63 +12,107 @@
     }"
     class="p-4"
   >
-    <div class="flex items-center justify-start gap-4">
-      @if (showIcoInfo()) {
-        <svg-icon
-          class="e-svg fill-eprimary text-eprimary block h-5 w-5"
-          [src]="icoInfo()"
-        ></svg-icon>
-      }
-      <div>
-        <h2 class="text-lg">{{ data().fullName }}</h2>
-        <span class="text-sm opacity-50">{{ data().dateOfBirth }}</span>
-      </div>
-    </div>
+    <ng-container *ngTemplateOutlet="dataHeadTpl"></ng-container>
 
     <hr class="opacity-25" />
 
-    <!-- country -->
-    @if (data().country) {
-      Country: <span> {{ data().country }} </span>
-    }
-    <!-- Bio -->
-    @if (data().bio) {
-      <p>{{ data().bio }}</p>
-    }
+    <ng-container *ngTemplateOutlet="dataBodyTpl"></ng-container>
 
-    <hr class="opacity-25" />
+    <ng-container *ngTemplateOutlet="dataFootTpl"></ng-container>
+  </section>
+</ng-template>
 
-    <div class="my-2">
-      Balance:
-      {{
-        creditDetail().balance
-          | currencyV1: creditDetail().balanceCurrency : langCultureCode()
-      }}
+<!-- data-head (head info) ///////////////////////////////////////////////// -->
+<ng-template #dataHeadTpl>
+  <div
+    data-cy="x-profile-info-v1_profile-info_data-head"
+    class="flex items-center justify-start gap-4"
+  >
+    @if (showIcoInfo()) {
+      <svg-icon
+        class="e-svg fill-eprimary text-eprimary block h-5 w-5"
+        [src]="icoInfo()"
+      ></svg-icon>
+    }
+    <div>
+      <h2 class="text-lg">{{ data().fullName }}</h2>
+      <span class="text-sm opacity-50">{{ data().dateOfBirth }}</span>
     </div>
+  </div>
+</ng-template>
 
-    <div class="flex justify-stretch gap-4">
+<!-- data-body (main content) ////////////////////////////////////////////// -->
+<ng-template #dataBodyTpl>
+  <!-- country -->
+  @if (data().country) {
+    Country:
+    <span data-cy="x-profile-info-v1_profile-info_data-body-country">
+      {{ data().country }}
+    </span>
+  }
+
+  <!-- Bio -->
+  @if (data().bio) {
+    <p data-cy="x-profile-info-v1_profile-info_data-body-bio">
+      {{ data().bio }}
+    </p>
+  }
+
+  <hr class="opacity-25" />
+
+  <!-- Balance -->
+  <div data-cy="x-profile-info-v1_profile-info_data-body-balance" class="my-2">
+    Balance:
+    {{
+      creditDetail().balance
+        | currencyV1: creditDetail().balanceCurrency : langCultureCode()
+    }}
+  </div>
+</ng-template>
+
+<!-- data-foot (actions) /////////////////////////////////////////////////// -->
+<ng-template #dataFootTpl>
+  <div
+    data-cy="x-profile-info-v1_profile-info_data-foot"
+    class="flex justify-stretch gap-4"
+  >
+    <button
+      title="Change style"
+      (click)="onClickedStyle()"
+      class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
+    >
+      <i class="bi bi-circle-square"></i>
+    </button>
+
+    @if (showBtnReadMore()) {
       <button
-        title="Change style"
-        (click)="onClickedStyle()"
+        title="Read more"
+        (click)="clickedReadMore.emit()"
         class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
       >
-        <i class="bi bi-circle-square"></i>
+        <i class="bi bi-book"></i>
       </button>
+    }
+  </div>
+</ng-template>
 
-      @if (showBtnReadMore()) {
-        <button
-          title="Read more"
-          (click)="clickedReadMore.emit()"
-          class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
-        >
-          <i class="bi bi-book"></i>
-        </button>
-      }
-    </div>
-  </section>
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- state = loading                                                         -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #loadingTpl>
+  <div
+    data-cy="x-profile-info-v1_profile-info_loading"
+    class="skeleton h-52"
+  ></div>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- STRUCTURE                                                               -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (state() === 'data') {
+  <ng-container *ngTemplateOutlet="dataTpl"></ng-container>
 } @else if (state() === 'loading') {
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <!-- Loading                                                               -->
-  <!-- ///////////////////////////////////////////////////////////////////// -->
-  <div class="skeleton h-52"></div>
+  <ng-container *ngTemplateOutlet="loadingTpl"></ng-container>
 }

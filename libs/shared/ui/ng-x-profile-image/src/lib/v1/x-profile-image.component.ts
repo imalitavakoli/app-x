@@ -9,6 +9,7 @@ import {
   input,
   model,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -27,7 +28,7 @@ import { V1XCredit_MapSummary } from '@x/shared-map-ng-x-credit';
 @Component({
   selector: 'x-x-profile-image-v1',
   standalone: true,
-  imports: [AngularSvgIconModule],
+  imports: [CommonModule, AngularSvgIconModule],
   templateUrl: './x-profile-image.component.html',
   styleUrl: './x-profile-image.component.scss',
 })
