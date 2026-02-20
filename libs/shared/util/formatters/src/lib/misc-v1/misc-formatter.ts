@@ -58,3 +58,31 @@ export function v1MiscMakeGA4ForPageNav(input: string) {
   if (output.length > 40) output = output.slice(0, 40);
   return output;
 }
+
+/**
+ * Get the safe area insets for Ionic applications (mobile) by reading CSS
+ * variables.
+ *
+ * NOTE: This function MUST be used after that the DOM is ready (i.e., in
+ * `ngAfterViewInit` lifecycle hook in Angular), because it relies on
+ * `getComputedStyle` to read CSS variables.
+ *
+ * @example
+ * const { top, bottom } = v1MiscGetIonSafeArea();
+ * console.log('top', top);    // e.g. 47
+ * console.log('bottom', bottom); // e.g. 34
+ *
+ * @export
+ * @returns {{ top: number; bottom: number }}
+ */
+export function v1MiscGetIonSafeArea(): { top: number; bottom: number } {
+  const style = getComputedStyle(document.documentElement);
+
+  const parse = (value: string) =>
+    parseFloat(value.replace('px', '').trim()) || 0;
+
+  return {
+    top: parse(style.getPropertyValue('--ion-safe-area-top')),
+    bottom: parse(style.getPropertyValue('--ion-safe-area-bottom')),
+  };
+}
