@@ -2,6 +2,11 @@
 
 Here we share the sample files of a functionality called 'ng-x-profile-info', just for you as a source of inspiration.
 
+**Note!**  
+Based on what the functionality (lib) must do as a whole, one or more than one component should be exported out of the lib. For this functionality here are the exported components:
+
+- `V1XProfileInfoComponent`
+
 <!--
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,10 +39,21 @@ ng-x-profile-info.
 
 &nbsp;
 
-## `README.md` (inner) file
+## `V1XProfileInfoComponent` exported component files
 
-Inner `README.md` file of a lib is the one which rests inside of the `src` folder.
-It MUST include a ready-to-use code for copy-paste in the Test page of the Boilerplate app(s).
+Files related to `V1XProfileInfoComponent` exported component.
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+### `README.md` (inner) file of
+
+Inner `README.md` file of a lib is the one which rests inside of the `src` folder and for 'ui' libs, it is specific to a component.  
+It MUST include a ready-to-use code for copy-paste in the Test page of the Boilerplate app(s) to demonstrate how the component works.
 
 ````md
 # shared-ui-ng-x-profile-info
@@ -141,13 +157,11 @@ Run `nx test shared-ui-ng-x-profile-info` to execute the unit tests.
 <!--
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 -->
 
 &nbsp;
 
-## `x-profile-info.component.ts` file
+### `x-profile-info.component.ts` file
 
 It's the component file which gets exported.
 
@@ -186,7 +200,12 @@ import { V1CurrencyPipe } from '@x/shared-ui-ng-pipes';
 @Component({
   selector: 'x-x-profile-info-v1',
   standalone: true,
-  imports: [CommonModule, AngularSvgIconModule, V1CurrencyPipe],
+  imports: [
+    CommonModule,
+    TranslocoDirective,
+    AngularSvgIconModule,
+    V1CurrencyPipe,
+  ],
   templateUrl: './x-profile-info.component.html',
   styleUrl: './x-profile-info.component.scss',
 })
@@ -259,30 +278,45 @@ export class V1XProfileInfoComponent extends V1BaseUiComponent {
 <!--
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 -->
 
 &nbsp;
 
-## `x-profile-info.component.html` file
+### `x-profile-info.component.html` file
 
 `x-profile-info.component.ts` component's HTML template.
 
 ```html
-@if (state() === 'data') {
-<!-- ///////////////////////////////////////////////////////////////////// -->
-<!-- Data                                                                  -->
-<!-- ///////////////////////////////////////////////////////////////////// -->
-<section
-  [ngClass]="{
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- state = data                                                            -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #dataTpl>
+  <section
+    data-cy="x-profile-info-v1_profile-info_data"
+    [ngClass]="{
       'rounded-3xl': style() === 'rounded',
       'rounded-none': style() === 'sharp',
-      'bg-einformative bg-opacity-40': showBg(),
+      'e-x-profile-info': showBg(),
     }"
-  class="p-4"
->
-  <div class="flex items-center justify-start gap-4">
+    class="p-4"
+  >
+    <ng-container *ngTemplateOutlet="dataHeadTpl"></ng-container>
+
+    <hr class="opacity-25" />
+
+    <ng-container *ngTemplateOutlet="dataBodyTpl"></ng-container>
+
+    <ng-container *ngTemplateOutlet="dataFootTpl"></ng-container>
+  </section>
+</ng-template>
+
+<!-- data-head (head info) ///////////////////////////////////////////////// -->
+<ng-template #dataHeadTpl>
+  <div
+    data-cy="x-profile-info-v1_profile-info_data-head"
+    class="flex items-center justify-start gap-4"
+  >
     @if (showIcoInfo()) {
     <svg-icon
       class="e-svg fill-eprimary text-eprimary block h-5 w-5"
@@ -294,48 +328,120 @@ export class V1XProfileInfoComponent extends V1BaseUiComponent {
       <span class="text-sm opacity-50">{{ data().dateOfBirth }}</span>
     </div>
   </div>
+</ng-template>
 
-  <hr class="opacity-25" />
+<!-- data-body (main content) ////////////////////////////////////////////// -->
+<ng-template #dataBodyTpl>
+  <section *transloco="let t; prefix: 'x_profile_info'">
+    <!-- country -->
+    @if (data().country) { {{ t('country') }}:
+    <span data-cy="x-profile-info-v1_profile-info_data-body-country">
+      {{ data().country }}
+    </span>
+    }
 
-  <!-- country -->
-  @if (data().country) { Country: <span> {{ data().country }} </span>
-  }
-  <!-- Bio -->
-  @if (data().bio) {
-  <p>{{ data().bio }}</p>
-  }
+    <!-- Bio -->
+    @if (data().bio) {
+    <p data-cy="x-profile-info-v1_profile-info_data-body-bio">
+      {{ data().bio }}
+    </p>
+    }
 
-  <hr class="opacity-25" />
+    <hr class="opacity-25" />
 
-  <div class="my-2">
-    Balance: {{ creditDetail().balance | currencyV1:
-    creditDetail().balanceCurrency : langCultureCode() }}
-  </div>
+    <!-- Balance -->
+    <div
+      data-cy="x-profile-info-v1_profile-info_data-body-balance"
+      class="my-2"
+    >
+      {{ t('balance') }}: {{ creditDetail().balance | currencyV1:
+      creditDetail().balanceCurrency : langCultureCode() }}
+    </div>
+  </section>
+</ng-template>
 
-  <div class="flex justify-stretch gap-4">
+<!-- data-foot (actions) /////////////////////////////////////////////////// -->
+<ng-template #dataFootTpl>
+  <div
+    *transloco="let t; prefix: 'x_profile_info'"
+    data-cy="x-profile-info-v1_profile-info_data-foot"
+    class="flex justify-stretch gap-4"
+  >
     <button
-      title="Change style"
-      (click)="onClickedStyle()"
+      data-cy="x-profile-info-v1_profile-info_data-btn-change-style"
       class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
+      [aria-label]="t('btn_change_style')"
+      [title]="t('btn_change_style')"
+      (click)="onClickedStyle()"
     >
       <i class="bi bi-circle-square"></i>
     </button>
 
     @if (showBtnReadMore()) {
     <button
-      title="Read more"
-      (click)="clickedReadMore.emit()"
+      data-cy="x-profile-info-v1_profile-info_data-btn-read-more"
       class="e-btn bg-eprimary hover:bg-eprimary-lighter w-full p-2"
+      [aria-label]="t('btn_read_more')"
+      [title]="t('btn_read_more')"
+      (click)="clickedReadMore.emit()"
     >
       <i class="bi bi-book"></i>
     </button>
     }
   </div>
-</section>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- state = loading                                                         -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<ng-template #loadingTpl>
+  <div
+    data-cy="x-profile-info-v1_profile-info_loading"
+    class="skeleton h-52"
+  ></div>
+</ng-template>
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- STRUCTURE                                                               -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+@if (state() === 'data') {
+<ng-container *ngTemplateOutlet="dataTpl"></ng-container>
 } @else if (state() === 'loading') {
-<!-- ///////////////////////////////////////////////////////////////////// -->
-<!-- Loading                                                               -->
-<!-- ///////////////////////////////////////////////////////////////////// -->
-<div class="skeleton h-52"></div>
+<ng-container *ngTemplateOutlet="loadingTpl"></ng-container>
+}
+```
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+### `x-profile-info.component.scss` file
+
+`x-profile-info.component.ts` component's SCSS style.
+
+**Note!**  
+The SCSS file is usually empty, because we use Tailwind CSS classes in the HTML template. Only in the following cases it will contain some styles:
+
+- When lots of repetitive styles should be used.
+- When custom CSS variables should be implemented for some HTML elements (according to the design specifications).
+
+```scss
+.e-x-profile-info {
+  --e-x-profile-info--bg-color--gradient-a: var(--e-primary-color);
+  --e-x-profile-info--bg-color--gradient-b: var(--e-accent-color);
+  --e-x-profile-info--color: var(--e-night-color);
+
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--e-x-profile-info--bg-color--gradient-a) / 0.6),
+    rgb(var(--e-x-profile-info--bg-color--gradient-b) / 0.6)
+  );
+
+  color: rgb(var(--e-x-profile-info--color));
 }
 ```

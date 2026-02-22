@@ -2,6 +2,11 @@
 
 Here we share the sample files of a functionality called 'ng-x-profile-info', just for you as a source of inspiration.
 
+**Note!**  
+Based on what the functionality (lib) must do as a whole, one or more than one component should be exported out of the lib. For this functionality here are the exported components:
+
+- `V1XProfileInfoFeaComponent`
+
 <!--
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -39,10 +44,21 @@ ng-x-profile-info.
 
 &nbsp;
 
-## `README.md` (inner) file
+## `V1XProfileInfoFeaComponent` exported component files
 
-Inner `README.md` file of a lib is the one which rests inside of the `src` folder.
-It MUST include a ready-to-use code for copy-paste in the Test page of the Boilerplate app(s).
+Files related to `V1XProfileInfoFeaComponent` exported component.
+
+<!--
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+-->
+
+&nbsp;
+
+### `README.md` (inner) file
+
+Inner `README.md` file of a lib is the one which rests inside of the `src` folder and for 'feature' libs, it is specific to a component.  
+It MUST include a ready-to-use code for copy-paste in the Test page of the Boilerplate app(s) to demonstrate how the component works.
 
 ````md
 # shared-feature-ng-x-profile-info
@@ -156,13 +172,11 @@ Run `nx test shared-feature-ng-x-profile-info` to execute the unit tests.
 <!--
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 -->
 
 &nbsp;
 
-## `x-profile-info.component.ts` file
+### `x-profile-info.component.ts` file
 
 It's the component file which gets exported.
 
@@ -424,13 +438,11 @@ export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
 <!--
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 -->
 
 &nbsp;
 
-## `x-profile-info.component.html` file
+### `x-profile-info.component.html` file
 
 `x-profile-info.component.ts` component's HTML template.
 

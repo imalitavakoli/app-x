@@ -40,7 +40,7 @@ User's credit summary/detailed data.
 
 ## `README.md` (inner) file
 
-Inner `README.md` file of a lib is the one which rests inside of the `src` folder.
+Inner `README.md` file of a lib is the one which rests inside of the `src` folder.  
 It MUST include a ready-to-use code for copy-paste in the Test page of the Boilerplate app(s).
 
 ````md

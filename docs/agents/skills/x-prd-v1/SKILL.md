@@ -32,7 +32,7 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 ## Mandatory Agent Instructions
 
 - You MUST use the official template structure and section order exactly as provided in the template.
-- Do NOT add, remove, or rename sections.
+- Do NOT add, remove, or rename sections. **Exception:** Quotes in the template are guidelines for you, but they should be removed from the draft.
 - If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
 - Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
 
@@ -51,12 +51,14 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 Analyse the following documents:
 
 - [PRD Template](./assets/template.md) to understand what sections the PRD should have, and how to prepare the PRD draft.  
-  **Important:** You must read the quotes in the template. They are guidelines and descriptions to help you fill different sections more accurately, but they don't need to be in the draft.
+  **Important:** Quotes in the template are guidelines for you, but they should be removed from the draft.
 
 - User's provided 'feature description' to understand how to map it to the template.
   **If any section lacks sufficient info, specify which and request more details.**
 
 ### 2. Generate Draft
+
+The draft can simply look like the template. Because in the next steps you will update it.
 
 **Where to save the draft? Ask the user** for:
 
@@ -87,12 +89,12 @@ Review each item and confirm that it is satisfied:
   - ✅ Exists: "Analytics & Tracking" section and sub sections?
   - ✅ Exists: "Acceptance Criteria (High‑Level)" section and sub sections?
 
-#### Validation Process (Iterative Loop)
+#### Validation Steps (Iterative Loop)
 
 1. **Check all items** - Go through the entire checklist above
 2. **If ANY item which is under 'Section(s)' is NOT checked ✅:**
    - Stop and edit the draft to fill the missing section(s)
-   - **Return to step 1** (re-check the entire checklist)
+   - **Return to step 4.1** (re-check the entire checklist)
 3. **If ALL items are checked ✅:**
    - Present summary: "I have confirmed all requirements are met. The final draft is ready."
    - Proceed to step 5 (Summary)

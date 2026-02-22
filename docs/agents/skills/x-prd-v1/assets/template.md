@@ -19,7 +19,7 @@
 
 &nbsp;
 
-## Overview
+## ℹ️Overview
 
 ### Feature Name
 
@@ -63,7 +63,7 @@
 
 &nbsp;
 
-## Users
+## 👤Users
 
 - **Persona 1** (description, needs, pain points) — …
 - **Persona 2** (if applicable) — …
@@ -77,7 +77,7 @@
 
 &nbsp;
 
-## Permissions & Security
+## 🔐Permissions & Security
 
 - Who can access this feature? …
 - Role‑based or condition‑based visibility? …
@@ -91,7 +91,7 @@
 
 &nbsp;
 
-## Data Requirements
+## 📋Data Requirements
 
 > What information must exist? Define inputs, outputs, and facts the feature needs. Think nouns. They mostly help in building all types of libs. e.g., "Currency code", or "Location Profile answers".
 
@@ -107,7 +107,7 @@
 
 &nbsp;
 
-## Functional Requirements
+## 🛠️Functional Requirements
 
 > What must the feature do (goals)? Define observable behaviour. Think verbs. They mostly help in building 'ui' libs. e.g., "Feature must show user's energy consumption". Functional requirement IDs can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. Typically map to **unit tests `describe()` blocks**.
 >
@@ -127,7 +127,7 @@ Each requirement should be atomic, testable, and ordered based on priority.
 
 &nbsp;
 
-## User Experience & Flows
+## 🧳User Experience & Flows
 
 ### User Journey
 
@@ -173,7 +173,7 @@ Describe the happy path step‑by‑step:
 
 &nbsp;
 
-## Business Rule Breakdown
+## 💼Business Rule Breakdown
 
 > Each subsection represents a **testable business rule**. Rule IDs (e.g., NAME-BR-01) can be used in Unit tests later to create a stable, shared reference for a piece of business logic across product. Each item should map to **unit tests `it`**. Frontend developers will later map these rules to unit tests across `ui` libraries.
 
@@ -209,7 +209,7 @@ _(Repeat the same structure for each rule)_
 
 &nbsp;
 
-## Analytics & Tracking
+## 📊Analytics & Tracking
 
 > These help in defining Analytics logs (e.g., Firebase Analytics).
 
@@ -232,7 +232,7 @@ _(Repeat the same structure for each rule)_
 
 &nbsp;
 
-## Dependencies & Risks
+## 🚩Dependencies & Risks
 
 ### Dependencies
 
@@ -255,7 +255,7 @@ _(Repeat the same structure for each rule)_
 
 &nbsp;
 
-## Acceptance Criteria (High‑Level)
+## ✔️Acceptance Criteria (High‑Level)
 
 > Unlike 'Business Rules' which are Atomic and can be mapped to single lib unit tests (low-level rules), 'Acceptance Criteria' are Observable outcomes of the feature as a whole and can be mapped to E2E tests (high-level verification points). They are written from a product perspective.
 
@@ -271,7 +271,7 @@ _(Repeat the same structure for each rule)_
 
 &nbsp;
 
-## Open Questions
+## ❓Open Questions
 
 - …
 - …
@@ -285,7 +285,7 @@ _(Repeat the same structure for each rule)_
 
 &nbsp;
 
-## Appendices
+## 🔗Appendices
 
 - Figma links
 - API references (high‑level)
