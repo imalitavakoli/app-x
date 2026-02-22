@@ -112,7 +112,7 @@ export const selectEntityHasError = (id = 'g') => {
  * Factory function to create a selector that returns whether an instance
  * exists or not.
  * @param id The entity object's id.
- * @returns A selector that returns `true` if an instance with the provided is exists, otherwise `false`.
+ * @returns A selector that returns `true` if an instance with the provided id exists, otherwise `false`.
  */
 export const selectHasEntity = (id = 'g') => {
   return createSelector(selectState, (state: reducer.V1XCredit_State) => {
