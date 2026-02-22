@@ -4,6 +4,7 @@ import { createReducer, on, Action, createFeature } from '@ngrx/store';
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 
 import { XUsersActions } from './x-users.actions';
+import { V1XUsers_CrudAction } from './x-users.interfaces';
 
 export const xUsersFeatureKey = 'v1XUsers';
 
@@ -27,15 +28,7 @@ export const xUsersFeatureKey = 'v1XUsers';
  */
 export interface V1XUsers_State extends EntityState<V1XUsers_MapUser> {
   selectedId?: string | number; // which Items record has been selected
-  crudActionLatest?:
-    | 'getAll'
-    | 'addOne'
-    | 'addMany'
-    | 'updateOne'
-    | 'updateMany'
-    | 'removeOne'
-    | 'removeMany'
-    | 'removeAll'; // The last CRUD operation
+  crudActionLatest?: V1XUsers_CrudAction; // The last CRUD operation
   loaded: boolean; // has the last CRUD operation completed (loaded its result)
   error?: string; // last known error (if any)
 }
