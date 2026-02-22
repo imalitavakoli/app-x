@@ -29,6 +29,7 @@
           @for (entity of users(); track $index) {
             <li>
               <input
+                data-cy="x-users-v1_users_data-list-item-input"
                 class="e-list__input"
                 [id]="entity.id"
                 type="radio"
