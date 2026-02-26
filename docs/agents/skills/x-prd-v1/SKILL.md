@@ -32,7 +32,8 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 ## Mandatory Agent Instructions
 
 - You MUST use the official template structure and section order exactly as provided in the template.
-- Do NOT add, remove, or rename sections. **Exception:** Quotes in the template are guidelines for you, but they should be removed from the draft.
+- Do NOT add, remove, or rename sections. **Exception:**
+  - Quotes in the template are guidelines for you, but they should be removed from the draft.
 - If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
 - Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
 
@@ -51,7 +52,7 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 Analyse the following documents:
 
 - [PRD Template](./assets/template.md) to understand what sections the PRD should have, and how to prepare the PRD draft.  
-  **Important:** Quotes in the template are guidelines for you, but they should be removed from the draft.
+  **Crucial:** Quotes in the template are guidelines for you, but they should be removed from the draft.
 
 - User's provided 'feature description' to understand how to map it to the template.
   **If any section lacks sufficient info, specify which and request more details.**
