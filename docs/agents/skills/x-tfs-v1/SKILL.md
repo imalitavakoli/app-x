@@ -29,10 +29,18 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 
 - PRD file of the feature (functionality) attached as context.
 
+**Discovery Questions (Optional Inputs)**
+You **MUST** ask the user for the following items. If the user does not provide them, you may proceed without them.
+
+- Screenshots of pages/screens (helpful for UI specs and its rendering rules).
+
 ## Mandatory Agent Instructions
 
 - You MUST use the official template structure and section order exactly as provided in the template.
-- Do NOT add, remove, or rename sections.
+- Do NOT add, remove, or rename sections in the template. **Exceptions:**
+  - Quotes in the template are guidelines for you, but they should be removed from the draft.
+  - Lib type specifications that are NOT needed.
+  - If the functionality is classified as a 'abstract' one, then "_User Experience & Flows (Technical & Frontend Perspective)_" section is removed.
 - If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
 - Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
 - **Crucial:** You MUST follow the _exact_ granularity and style of the examples in the template (e.g., use `[data-cy="..."]` selectors in Rendering Rules, not generic descriptions).
@@ -61,15 +69,17 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 Analyse the following documents:
 
 - [TFS Template](./assets/template.md) to understand what sections the TFS should have, and how to prepare the TFS draft.  
-  **Important:** You must read the quotes in the template. They are guidelines and descriptions to help you fill different sections more accurately, but they don't need to be in the draft.  
-  **Crucial:** You must follow the _exact_ granularity and style of the examples in this template.
+  **Crucial:** Quotes in the template are guidelines for you, but they should be removed from the draft.  
+  **Crucial:** You must follow the _exact_ granularity and style of the examples in the template.
 - PRD.
-- Workspace documents to learn more about the following:
+- The following workspace documents:
   - `/docs/getting-started/library-types-and-their-relationship.md` (helpful for '_Functionality Classification_' TFS section).
   - `/docs/guidelines/naming-conventions.md`.
   - `/docs/guidelines/best-practices.md`.
 
 ### 2. Generate Draft
+
+The draft can simply look like the template. Because in the next steps you will update it.
 
 **Where to save the draft? Ask the user** for:
 
@@ -82,11 +92,11 @@ Analyse the following documents:
 > ⚠️ **IMPORTANT:** Only include lib type specifications that are NEEDED for this functionality.
 >
 > - Skip 'map' section if: No new APIs OR existing 'map' libs already handle all endpoints (per "Existing Dependencies & Reuse")
-> - Skip 'data-access' section if: No state management needed OR existing 'data-access' libs handle it
+> - Skip 'data-access' section if: No state management needed OR existing 'data-access' libs already handle it
 > - Skip 'ui' section if: Only abstract functionality (no visual components) OR reusing existing 'ui' libs
 > - Skip 'feature' section if: Only abstract functionality OR reusing existing 'feature' libs
 
-Update the draft using available PRD description and TFS template.
+Update the draft using available PRD description and TFS template by following the steps below:
 
 #### 1. Technical Name
 
@@ -110,7 +120,13 @@ Update the draft using available PRD description and TFS template.
 
 #### 3. Fill "_Functionality Classification_" TFS section
 
-Determine type (e.g., Hybrid) based on the libs that the functionality requires to have for its own.
+> ⚠️ **IMPORTANT:** Do not continue to the next steps before analysing the example TFS files after determining the functionality type. This will help you understand how to fill the rest of the TFS sections.
+
+1. Based on step 3.2 answers and the libs that the functionality requires to have for its own, determine type (e.g., Hybrid).
+2. Based on the chosen type, look at the corrsponding example TFS files which have been already created for some functionalities:
+   - If Abstract, look at [abstract](./assets/examples/abstract.md).
+   - If Visual, look at [visual](./assets/examples/visual.md).
+   - If Hybrid, look at [hybrid](./assets/examples/hybrid.md).
 
 #### 4. Fill "_'map' Library Specification_" TFS section
 
@@ -134,11 +150,11 @@ Infer from 'map' section, and ensure at least one method per API call.
 1. Based on '_User Experience & Flows_' section of PRD, understand how many components should be exported. If more than 1, confirm with the user. Format to use: `Recommendation → Reason → Question → Options`.  
    e.g., "I recommend exporting two components; because according to the 'User Experience & Flows' section of the PRD, the user should be navigated to another screen or page. Do you agree? (Y/N)".
 
-2. Based on step 1, and '_User Experience & Flows_' section of PRD, write '_Rendering Rules_' section for each exported component.
+2. Based on step 3.6.1, and '_User Experience & Flows_' section of PRD, write '_Rendering Rules_' section for each exported component.
    - Consider HTML hierarchy, semantics, and accessibility.
    - **Crucial:** You MUST use specific HTML selectors and attributes (e.g., `button[aria-label="Save"]`, `[data-cy="error-message"]`) as seen in the Template. Do NOT use generic terms like "Show a button" or "Render a list".
 
-3. Based on step 1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
+3. Based on step 3.6.1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
    - **Scope:** Include **ALL** Functional Requirements & Business Rules **EXCEPT** the ones related to data fetching.
    - **Crucial:** You must respect the IDs from the PRD's '_Functional Requirements_' & '_Business Rule Breakdown_'. Usage of a PRD ID (e.g., `NAME-BR-01`) signifies you are implementing THAT specific rule. **Do NOT repurpose PRD IDs** for unrelated technical checks (e.g., do not use `NAME-BR-01` for a "loading state" check, if `NAME-BR-01` in PRD is about "User permissions").
    - **Uniqueness:** IDs must be unique across the exported 'ui' components. **Do NOT reset numbering** for each component (e.g., you cannot have `NAME-BR-01` in Component A and `NAME-BR-01` in Component B describing different things).
@@ -148,9 +164,9 @@ Infer from 'map' section, and ensure at least one method per API call.
      - **Technical Specificity:** Reference exact Input signals (e.g., `state = loading`), DOM selectors (e.g., `[data-cy="error"]`), and Output emitters (e.g., `clickedDetails`).
      - **Forbidden:** Generic natural language like "User sees the list" or "Show an error" is BANNED. Use "Render `[data-cy='list-container']`" instead.
 
-4. Based on step 1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
+4. Based on step 3.6.1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
 
-5. Based on step 1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
+5. Based on step 3.6.1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
 
 6. Complete writing other sections for each exported component.
 
@@ -161,7 +177,7 @@ Infer from 'map' section, and ensure at least one method per API call.
 1. Infer from 'ui' section, understand how many components should be exported. If more than 1, confirm with the user. Format to use: `Recommendation → Reason → Question → Options`.  
    e.g., "I recommend exporting two components; because according to the 'ui' lib specification, we agreed to export two UI components. It also makes sense to have the corresponding 'feature' versions of those components as well. Do you agree? (Y/N)".
 
-2. Based on step 1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
+2. Based on step 3.7.1, and '_Functional Requirements_' & '_Business Rule Breakdown_' sections of PRD, write '_Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)_' section for each exported component.
    - **Scope:** **ONLY** include Functional Requirements & Business Rules which are related to data fetching.
    - **Crucial:** You must respect the IDs from the PRD's '_Functional Requirements_' & '_Business Rule Breakdown_'. Usage of a PRD ID (e.g., `NAME-BR-01`) signifies you are implementing THAT specific rule. **Do NOT repurpose PRD IDs** for unrelated technical checks (e.g., do not use `NAME-BR-01` for a "facade method call" check if `NAME-BR-01` in PRD is about "loading state").
    - **Uniqueness:** IDs must be unique across the exported 'feature' components. **Do NOT reset numbering** for each component (e.g., you cannot have `NAME-BR-01` in Component A and `NAME-BR-01` in Component B describing different things).
@@ -171,25 +187,27 @@ Infer from 'map' section, and ensure at least one method per API call.
      - **Technical Specificity:** Reference exact Input signals (e.g., `userId = 123`), and Output emitters (e.g., `clickedDetails`).
      - **Forbidden:** Generic natural language like "fetches the detailed data" is BANNED. Use "Call `V1NameFacade` facade's `getInfo` method" instead.
 
-3. Based on step 1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
+3. Based on step 3.7.1, and '_Analytics & Tracking_' section of PRD, write '_Analytics & Tracking_' section for each exported component.
 
-4. Based on step 1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
+4. Based on step 3.7.1, and '_Alternative / Edge Flows_' section of PRD, write '_Error Handling & Edge Cases_' section for each exported component.
 
 5. Complete writing other sections for each exported component.
 
 #### 8. Fill "_User Experience & Flows (Technical & Frontend Perspective)_" TFS section
 
+> ⚠️ **IMPORTANT:** Only include this section, if the functionality is NOT classified as a 'abstract' one.
+
 When you're in this step, you already know:
 
-- What methods 'map' libs should have.
-- What methods/observables 'data-access' libs should have.
+- What libs are going to be used for the functionality.
+- What methods 'map' libs should have (if any).
+- What methods/observables 'data-access' libs should have (if any).
 - What inputs/outputs/methods/properties 'ui' & 'feature' libs should have for any components that they export.
 
-So you're ready to:
+So do the following for each 'feature' component:
 
-1. Complete writing '_Primary flow_' section of the TFS.
-
-2. Add additional flows (if necessarily) according to '_Rendering Rules_' section of the 'ui' lib specification.
+1. Complete writing '_Primary flow_' section.
+2. Add additional flows (if necessarily) according to '_Rendering Rules_' section of the 'feature' component's corresponding 'ui' component specifications.
 
 #### 9. Try to map remaining TFS sections
 
@@ -229,16 +247,16 @@ Review each item and confirm that it is satisfied:
   - ✅ Exists: "Library Breakdown" section and sub sections?
   - ✅ Exists: "User Experience & Flows (Technical & Frontend Perspective)" section and sub sections?
 
-#### Validation Process (Iterative Loop)
+#### Validation Steps (Iterative Loop)
 
 1. **Check all items** - Go through the entire checklist above
 2. **If ANY item which is under 'Approval(s)' is NOT checked ✅:**
    - Stop and ask user for the missing approval(s)
    - Wait for user response
-   - **Return to step 1** (re-check the entire checklist)
+   - **Return to step 4.1** (re-check the entire checklist)
 3. **If ANY item which is under 'Section(s)' is NOT checked ✅:**
    - Stop and edit the draft to fill the missing section(s)
-   - **Return to step 1** (re-check the entire checklist)
+   - **Return to step 4.1** (re-check the entire checklist)
 4. **If ALL items are checked ✅:**
    - Present summary: "I have confirmed all requirements are met. The final draft is ready."
    - Proceed to step 5 (Summary)
