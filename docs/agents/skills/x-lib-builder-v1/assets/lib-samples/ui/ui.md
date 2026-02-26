@@ -396,10 +396,10 @@ export class V1XProfileInfoComponent extends V1BaseUiComponent {
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
 <ng-template #loadingTpl>
-  <div
+  <section
     data-cy="x-profile-info-v1_profile-info_loading"
     class="skeleton h-52"
-  ></div>
+  ></section>
 </ng-template>
 
 <!-- /////////////////////////////////////////////////////////////////////// -->
