@@ -41,17 +41,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
  * Base class is an easier choice compared to `V1BaseFeatureComponent` Base.
  *
  * Here's how the inherited classes use this (in most cases):
- * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `_xHasRequiredInputs`.
- * 03. Override `_xFacadesPre`.
- * 04. Override `_xFacadesLoadesValidation`.
- * 05. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
+ * 01. Override `_isDepDataAlsoReady`.
+ * 02. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 03. Override `_xHasRequiredInputs`.
+ * 04. Override `_xFacadesPre`.
+ * 05. Override `_xFacadesLoadesValidation`.
+ * 06. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
- * 06. Override `_xDataReset`. Here's the place, where You may set the 'ui'
+ * 07. Override `_xDataReset`. Here's the place, where You may set the 'ui'
  *     lib's `state` input to 'loading'.
- * 07. Override `_xDataFetch`.
- * 08. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
+ * 08. Override `_xDataFetch`.
+ * 09. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
  *     beginning). Here's the place, where You may set the 'ui' lib's `state`
  *     input to to other states, according to the fetched data. You may also
  *     change its `dataType` input to the type that explains the fetched data

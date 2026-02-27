@@ -29,40 +29,42 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * Base class for all 'feature' components.
  *
  * Here's a way (#1) that the inherited classes use this:
- * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `_xHasRequiredInputs` (with super call right at the beginning).
- * 03. Override `_xInitPre` (with super call right at the beginning).
- * 04. Override `_xFacadesPre`.
- * 05. Override `_xFacadesLoadesValidation`.
- * 06. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
+ * 01. Override `_isDepDataAlsoReady`.
+ * 02. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 03. Override `_xHasRequiredInputs` (with super call right at the beginning).
+ * 04. Override `_xInitPre` (with super call right at the beginning).
+ * 05. Override `_xFacadesPre`.
+ * 06. Override `_xFacadesLoadesValidation`.
+ * 07. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
- * 07. Override `_xInit` (with super call right at the beginning).
- * 08. Override `_xUpdate` (with super call right at the beginning). When having
+ * 08. Override `_xInit` (with super call right at the beginning).
+ * 09. Override `_xUpdate` (with super call right at the beginning). When having
  *     `@Input` (zone.js), you may use `_xIsInputChanged` inside of this function.
- * 09. Override `_xDataPre`.
- * 10. Override `_xDataReset`. Here's the place, where you may set the 'ui'
+ * 10. Override `_xDataPre`.
+ * 11. Override `_xDataReset`. Here's the place, where you may set the 'ui'
  *     lib's `state` input to 'loading'.
- * 11. Override `_xDataFetch`.
- * 12. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
+ * 12. Override `_xDataFetch`.
+ * 13. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
  *     beginning). Here's the place, where you may set the 'ui' lib's `state`
  *     input to to other states, according to the fetched data. You may also
  *     change its `dataType` input to the type that explains the fetched data
  *     the best.
  *
  * Here's also another way (#2) that the inherited classes use this (in most cases):
- * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `_xHasRequiredInputs` (with super call right at the beginning).
- * 03. Override `_xFacadesPre`.
- * 04. Override `_xFacadesLoadesValidation`.
- * 05. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
+ * 01. Override `_isDepDataAlsoReady`.
+ * 02. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * 03. Override `_xHasRequiredInputs` (with super call right at the beginning).
+ * 04. Override `_xFacadesPre`.
+ * 05. Override `_xFacadesLoadesValidation`.
+ * 06. Override `_xFacadesAddErrorListeners`. You may use `xOnError` inside of
  *     this function. And you may save your subscriptions (listeners) in
  *     private variables, so you can unsubscribe from them in `ngOnDestroy`.
- * 06. Override `_xDataPre`.
- * 07. Override `_xDataReset`. Here's the place, where you may set the 'ui'
+ * 07. Override `_xDataPre`.
+ * 08. Override `_xDataReset`. Here's the place, where you may set the 'ui'
  *     lib's `state` input to 'loading'.
- * 08. Override `_xDataFetch`.
- * 09. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
+ * 09. Override `_xDataFetch`.
+ * 10. Override `_xInitOrUpdateAfterAllDataReady` (with super call right at the
  *     beginning). Here's the place, where you may set the 'ui' lib's `state`
  *     input to to other states, according to the fetched data. You may also
  *     change its `dataType` input to the type that explains the fetched data
@@ -90,6 +92,28 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
   /* General //////////////////////////////////////////////////////////////// */
 
   private _isReadyEmitted = false;
+
+  /**
+   * Based on your logic, this flag may need to be set to 'false' initially, and
+   * then defined to 'true' in `_xInitOrUpdateAfterAllDataReady` function,
+   * WHENEVER ALL data (independent AND dependent) are already requested to be
+   * loaded.
+   *
+   * NOTE: You DO have any dependent API calls (i.e., API calls that rely on
+   * the data of some other API calls that must be called beforehand)? If so,
+   * then you MUST override this variable in your child class and set it to
+   * 'false' right at the beginning, to let `ready` and `allDataIsReady` events
+   * be emitted ONLY once ALL data (independent AND dependent) are ready.
+   *
+   * NOTE: Why we need this flag? Because in the times that we have some
+   * dependent data to be loaded (i.e., dependent API endpoints to call), we
+   * won't set this flag to 'true', until that all data for the dependent API
+   * calls are ready, and we're ready to call the last dependent API calls... So
+   * in this way, we only emit `ready` AND `allDataIsReady` events when ALL data
+   * (indepndant AND dependent) are ready, and component is in a ready stable
+   * state.
+   */
+  protected _isDepDataAlsoReady = true;
 
   // Observables
   private _isAllDataReady$!: Observable<boolean>;
@@ -230,6 +254,18 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
       .subscribe((isReady) => {
         if (!isReady) return;
 
+        // Let's save `_isDepDataAlsoReady` value, just right before
+        // calling `_xInitOrUpdateAfterAllDataReady`... Because in
+        // `_xInitOrUpdateAfterAllDataReady`, we may change the flag's value
+        // (which happens in the child class, based on its logic and whether it
+        // has dependent data or not)... So we need to make sure to use the
+        // right value of it in the `setTimeout` function below, to decide
+        // whether we should emit `ready` and `allDataIsReady` events or not.
+        // These events should only be emitted, AFTER that
+        // `_isDepDataAlsoReady` is set to 'true' AND the LAST dependent
+        // data are loaded...
+        const isDepDataAlsoReady = this._isDepDataAlsoReady;
+
         this._xInitOrUpdateAfterAllDataReady();
 
         // Why setTimeout? Because in most cases, we like the 'feature' lib to
@@ -251,11 +287,13 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
         // required inputs and be in a ready stable state (i.e., it should be in
         // any state rather than 'loading').
         setTimeout(() => {
-          if (!this._isReadyEmitted) {
-            this.ready.emit();
-            this._isReadyEmitted = true;
+          if (isDepDataAlsoReady) {
+            if (!this._isReadyEmitted) {
+              this.ready.emit();
+              this._isReadyEmitted = true;
+            }
+            this.allDataIsReady.emit();
           }
-          this.allDataIsReady.emit();
         });
       });
 
@@ -315,6 +353,15 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * subscribe and take the latest state object data of the 'data-access' lib
    * that you have already fetched its data in `_xDataFetch` function.
    *
+   * NOTE: Based on your logic, you may be have independent AND dependent data
+   * to load... And you may need to have an orchestration (order) when you wanna
+   * call different API endpoints... So in your child class, REMEMBER to define
+   * `_isDepDataAlsoReady` flag to 'true' in this function (if it's 'false'
+   * initially), WHENEVER ALL data (independent AND dependent) are already
+   * requested to be loaded... Otherwise `ready` and `allDataIsReady` events
+   * won't be emitted. You can read more about this in `_xDataFetch` function's
+   * documentation.
+   *
    * @example
    * ```ts
    * protected readonly _insightsFacade = inject(V3InsightsFacade);
@@ -332,13 +379,22 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    *         console.log('Locations:', state.datas.locations);
    *       }
    *     });
+   *
+   *   // Set the flag to 'true' (if it's 'false' initially) to indicate that
+   *   // all API endpoints (independent AND dependent) are called, so that
+   *   // `ready` and `allDataIsReady` events can be emitted.
+   *   this._isDepDataAlsoReady = true;
    * }
    * ```
    *
    * @protected
    */
   protected _xInitOrUpdateAfterAllDataReady() {
-    // ...
+    // NOTE: Based on your logic, in your child class, you may decide to set
+    // this flag to 'true' in a later time; i.e., after that you have fetched
+    // some dependent data in this function, and you have checked that all data
+    // (independent AND dependent) are ready.
+    // this._isDepDataAlsoReady = true;
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -604,7 +660,7 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * protected override _xDataReset(): void {
    *   // LIB: Insights (main)
    *   if (this._insightsRequestedData_main) this._insightsRequestedData_main = [];
-   *   this._insightsFacade.reset('V1BaseFeatureComponent_main');
+   *   this._insightsFacade.reset('V1BaseFeatureComponent_main'); // Skip this, if you don't like the 'ui' component to go back to its 'loading' state while fetching new data.
    *   // this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main'); // This should already have been done BEFORE the DOM is initialized (in `_xInitPreBeforeDom`).
    * }
    * ```
@@ -640,31 +696,46 @@ export class V1BaseFeatureComponent extends V1BaseFunComponent {
    * load, so it would return `true` by mistake.
    *
    * NOTE: Based on your logic, `_xUpdateAfterAllDataReady` can also call this
-   * function. e.g., if some of your API calls depend on some other ones, you
-   * can do the following:
-   * - Define the dependant 'requested API calls arrays' as undefined initially
-   *   (e.g., `_insightsRequestedData_main`), and do the checking step for them
-   *   in `_xFacadesLoadesValidation`, so that the function can skip checking
-   *   those arrays (i.e., the function can assume that there's no data to load
-   *   related to those arrays).
-   * - Wait for the independent API call responses, so that
-   *   `_xUpdateAfterAllDataReady` can be called, and in that function subscribe
-   *   to the indepndant facade's observable (e.g., subscribe to `allEntities$`
-   *   for an entity 'data-access' lib, `entity$('V1BaseFeatureComponent_main')`
-   *   for a multi-instance 'data-access' lib, or `datas$` for a single-instance
-   *   'data-access' lib) to take its data once and check if you have the
-   *   required data (that was necessary for the dependant API call(s)) or not.
-   * - If you had the data, (1) define the dependant 'requested API calls arrays'
-   *   to an empty array; (2) set a flag, that the necessary data is in place
-   *   for the very first time, so that if next times,
-   *   `_xUpdateAfterAllDataReady` function was called again, you won't do the
-   *   checking step again; (3) call `_xDataReset` & this function (i.e.,
-   *   `_xDataFetch`), if you like to call ALL API endpoints (even the
-   *   indepndant one that you just fetched the necessary data from it), OR call
-   *   directly the function(s) which call the dependant API endpoint(s)
-   *   specifically (e.g., `_callInsights_getLocations`), if you're just
-   *   interested to ONLY call the API endpoint(s) which were dependant on the
-   *   data that you just fetched.
+   * function! That's when some of your API calls depend on some other ones...
+   * In such case, you can do the following:
+   * - In the component: Set `_isDepDataAlsoReady` to 'false' initially.
+   * - In the component: Define the dependant 'requested API calls arrays' as
+   *   undefined initially (e.g., `_insightsRequestedData_main`).
+   * - In `_xFacadesLoadesValidation`: Check if dependant 'requested API calls
+   *   arrays' of facades are defined or not, and yes! Because they are
+   *   undefined, then we're basically letting the function to assume that
+   *   there's no data to load related to those arrays... In other words, we're
+   *   basically letting the logic to load ALL the indepndant data only, and
+   *   once that data is ready, `_xUpdateAfterAllDataReady` will be called.
+   * - In `_xUpdateAfterAllDataReady`: Subscribe to the indepndant facade's
+   *   observable (e.g., subscribe to `allEntities$` for an entity 'data-access'
+   *   lib, `entity$('V1BaseFeatureComponent_main')` for a multi-instance
+   *   'data-access' lib, or `datas$` for a single-instance 'data-access' lib)
+   *   to take its data once and check if you have the required data (that was
+   *   necessary for the dependant API call(s)) or not.
+   *     - If you had the data, then do the following:
+   *       1. Define the dependant 'requested API calls arrays' to an empty
+   *          array (so that in `_xFacadesLoadesValidation`, it will be treated
+   *          as if there ARE some data to load related to those arrays).
+   *       2. Set a flag (e.g., `_isFirstDepDataReady = true`), indicating that
+   *          the necessary data is in place, so that if next times,
+   *          `_xUpdateAfterAllDataReady` function was called again, you won't
+   *          need to check the presence of the necessary data again.
+   *       3. Do one of the following:
+   *          - If you like to call ALL API endpoints (even the indepndant one
+   *            that you just fetched the necessary data from it): Call
+   *            `_xDataReset` & this function (i.e., `_xDataFetch`). This
+   *            scanario rarely happens, because in most cases, we just need to
+   *            call the dependant API endpoint(s).
+   *          - If you're just interested to ONLY call the API endpoint(s) which
+   *            were dependant on the data that you just fetched: Call directly
+   *            the function(s) which call the dependant API endpoint(s)
+   *            specifically (e.g., `_callInsights_getLocations`).
+   *       4. Do this step ONLY once you're going to call the LAST dependant API
+   *          calls (which causes `_xUpdateAfterAllDataReady` to be called one
+   *          more time): Set `_isDepDataAlsoReady` flag to `true`, so
+   *          that the next time that `_isAllDataReady$` observable emits
+   *          `true`, we will also emit `ready` & `allDataIsReady` events.
    *
    * @example
    * ```ts
