@@ -28,7 +28,7 @@ Here are good examples of `README.md` files:
 - for a '_ui_' lib: `libs/shared/ui/ng-x-profile-info/src/lib/v1/README.md`.
 - for a '_feature_' lib: `libs/shared/feature/ng-x-profile-info/src/lib/v1/README.md`.
 
-**Note!** In order to build '_ui_', '_feature_', or '_page_' libs easier, feel free to extend your lib's component class from the base classes that are available in `shared-util-ng-bases` lib.
+**Note!** In order to build different types of libs easier, feel free to extend your lib's class from the base classes that are available in `shared-util-ng-bases` lib.
 
 &nbsp;
 
@@ -215,16 +215,17 @@ As the workspace grows, its documentation evolves as well. AI agents rely on the
 
 To achieve this, the following files should be reviewed regularly to make sure they reflect the latest workspace standards.
 
-- _MCP config!_ `.gemini/settings.json`.
-- _MCP config!_ `.vscode/mcp.json`.
-- _MCP config!_ `.mcp.json`.
 - `AGENTS.md`.
 
-For IDE-specific AI agent instructions, review the following directories/files:
+For IDE or AI agent specific instructions, review the following directories/files:
 
-- Copilot (VSCode) — `.github/`.
-- Antigravity — `.agent/`.
-- Claude — `CLAUDE.md`.
+- Antigravity — `.agent/`, `.agent/workflows/skills.md` (_Skills references_).
+- Claude Code — `.claude/`, `.mcp.json` (_MCP config_), `CLAUDE.md`.
+- OpenAI Codex — `.codex/`, `.codex/config.toml` (_MCP config_).
+- Gemini — `.gemini/`, `.gemini/settings.json` (_MCP config_), `.gemini/skills/README.md` (_Skills references_).
+- Github Copilot — `.github/`, `.github/skills/README.md` (_Skills references_).
+- OpenCode — `.opencode/`, `.opencode/skills/README.md` (_Skills references_), `opencode.json` (_MCP config_).
+- VSCode — `.vscode/mcp.json` (_MCP config_).
 
 **Tip!** If you are using other IDEs that require separate files for their own AI agents, you can use the above-mentioned 'IDE-specific' AI agent instruction files as a reference for writing your own instructions. _In simple terms:_ the main AI agent instructions should always be documented in `AGENTS.md` file, while the 'IDE-specific' instruction files should simply reference that file.
 
