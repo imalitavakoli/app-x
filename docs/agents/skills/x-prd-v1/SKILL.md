@@ -1,6 +1,6 @@
 ---
 name: x-prd-v1
-description: What? This skill is specifically built for our NX workspace. Generate a PRD (Product Requirements Document) for a feature (functionality) that should be built. When? Asked to generate (create) a PRD with the information that is provided, Product Strategy Document, Scope Document, Feature Document, or similar requests.
+description: What? Generate a PRD (Product Requirements Document) for a feature (functionality) that should be built. When? Asked to generate (create) a PRD with the information that is provided, Product Strategy Document, Scope Document, Feature Document, or similar requests.
 metadata:
   category: 'generic'
   version: '1.0.0'
@@ -28,6 +28,8 @@ You, agent, are an experienced product manager (product owner) who can write pro
 The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask the user to provide them and STOP until provided.**
 
 - A clear **feature description** or relevant supporting documents.
+
+> ⚠️ **IMPORTANT:** You yourself DO NOT need to research for the prerequisites. You only need to ask the user for it.
 
 ## Mandatory Agent Instructions
 

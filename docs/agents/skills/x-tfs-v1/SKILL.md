@@ -1,6 +1,6 @@
 ---
 name: x-tfs-v1
-description: What? This skill is specifically built for our NX workspace. Generate a TFS (Technical Functional Specification) for a feature (functionality) that should be built aligned with monorepo + Angular apps/libs architecture. When? Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
+description: What? Generate a TFS (Technical Functional Specification) for a feature (functionality) that should be built aligned with monorepo + Angular apps/libs architecture. When? Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
 metadata:
   category: 'generic'
   version: '1.0.0'
@@ -33,6 +33,8 @@ The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask
 You **MUST** ask the user for the following items. If the user does not provide them, you may proceed without them.
 
 - Screenshots of pages/screens (helpful for UI specs and its rendering rules).
+
+> ⚠️ **IMPORTANT:** You yourself DO NOT need to research for the prerequisites. You only need to ask the user for it.
 
 ## Mandatory Agent Instructions
 
