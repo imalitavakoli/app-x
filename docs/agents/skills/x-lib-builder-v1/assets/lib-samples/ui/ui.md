@@ -181,7 +181,10 @@ import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { V1BaseUi_DataType } from '@x/shared-util-ng-bases-model';
+import {
+  V1BaseUi_HasIt,
+  V1BaseUi_DataType,
+} from '@x/shared-util-ng-bases-model';
 import { V1BaseUiComponent } from '@x/shared-util-ng-bases';
 import {
   V1XCredit_MapDetail,
@@ -209,8 +212,11 @@ import { V1CurrencyPipe } from '@x/shared-ui-ng-pipes';
   templateUrl: './x-profile-info.component.html',
   styleUrl: './x-profile-info.component.scss',
 })
-export class V1XProfileInfoComponent extends V1BaseUiComponent {
-  style = signal<V1XCredit_Style>('rounded');
+export class V1XProfileInfoComponent
+  extends V1BaseUiComponent
+  implements V1BaseUi_HasIt
+{
+  $style = signal<V1XCredit_Style>('rounded');
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
@@ -237,9 +243,9 @@ export class V1XProfileInfoComponent extends V1BaseUiComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   onClickedStyle() {
-    if (this.style() === 'rounded') this.style.set('sharp');
-    else this.style.set('rounded');
-    this.clickedStyle.emit(this.style());
+    if (this.$style() === 'rounded') this.$style.set('sharp');
+    else this.$style.set('rounded');
+    this.clickedStyle.emit(this.$style());
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -266,8 +272,8 @@ export class V1XProfileInfoComponent extends V1BaseUiComponent {
     super._xSetState();
 
     // Set default style.
-    if (!this.defaultStyle()) this.style.set('rounded');
-    else this.style.set(this.defaultStyle() as V1XCredit_Style);
+    if (!this.defaultStyle()) this.$style.set('rounded');
+    else this.$style.set(this.defaultStyle() as V1XCredit_Style);
 
     // Set state.
     this.state.set('data');
@@ -295,8 +301,8 @@ export class V1XProfileInfoComponent extends V1BaseUiComponent {
   <section
     data-cy="x-profile-info-v1_profile-info_data"
     [ngClass]="{
-      'rounded-3xl': style() === 'rounded',
-      'rounded-none': style() === 'sharp',
+      'rounded-3xl': $style() === 'rounded',
+      'rounded-none': $style() === 'sharp',
       'e-x-profile-info': showBg(),
     }"
     class="p-4"

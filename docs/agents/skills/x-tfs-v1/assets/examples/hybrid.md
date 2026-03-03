@@ -119,7 +119,7 @@ Include **only** libs relevant to the selected functionality classification.
 #### Exported Class
 
 ```ts
-export class V1XUsers {}
+export class V1XUsers extends V1BaseMap {}
 ```
 
 #### Methods (API Endpoints)
@@ -511,7 +511,7 @@ N/A
 #### Exported Facade Class
 
 ```ts
-export class V1XUsersFacade {}
+export class V1XUsersFacade extends V1BaseFacade {}
 ```
 
 #### 'State object structure' type
@@ -588,7 +588,7 @@ Currently we only build the users dropdown visually. New/Edit/Delete user abilit
 
 ```ts
 @Component(...)
-export class V1XUsersComponent {}
+export class V1XUsersComponent extends V1BaseUiComponent implements V1BaseUi_HasIt {}
 ```
 
 ###### Responsibility
@@ -686,7 +686,7 @@ Currently we only build the users dropdown visually. New/Edit/Delete user abilit
 
 ```ts
 @Component(...)
-export class V1XUsersFeaComponent {}
+export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent implements V2BaseFeature_ExtHasIt {}
 ```
 
 ###### Responsibility
@@ -797,7 +797,7 @@ The following properties exist in this component to help us not to repeat oursel
 7. 'map' class: Its method(s) calls API and wait for response/error.
 8. 'map' class: As soon as API response/error is ready, 'map' invokes 'data-access' effect(s), which leads to state object change that 'feature' is listening to.
 9. 'feature' component: **If API response was successful, `_xInitOrUpdateAfterAllDataReady` is called and we continue the flow**, otherwise `_xFacadesAddErrorListeners` is called and the flow stops.
-10. _This step is skipped for this 'feature' component!_ 'feature' component: By now, SOME data is already fetched successfully. Now, if some more data are required to be fetched, which were dependant to the already fetched data, then right from `_xInitOrUpdateAfterAllDataReady`, we start the following steps again (BEFORE we continue the flow): 3, 4, 5, 6, 7, 8, 9.  
+10. _This step is skipped for this 'feature' component!_ 'feature' component: By now, SOME data is already fetched successfully. Now, if some more data are required to be fetched, which were dependant to the already fetched data, then right from `_xInitOrUpdateAfterAllDataReady`, we start 3-9 steps again (BEFORE we continue the flow).  
     **Note!** In step 3, we **ONLY call dependent data request(s)**. This loop continues until no more dependent data requests are needed.
 11. 'feature' component: By now, ALL data is already fetched successfully. Now, we update the corresponding 'ui' component's inputs based on state object changes — The following input(s) will be updated:
     - If `V1XUsersFacade` → `allEntities$` observable is changed, `users` input is updated.

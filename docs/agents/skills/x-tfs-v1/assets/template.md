@@ -137,7 +137,7 @@ Include **only** libs relevant to the selected functionality classification.
 #### Exported Class
 
 ```ts
-export class V1Name {}
+export class V1Name extends V1BaseMap {}
 ```
 
 #### Methods (API Endpoints)
@@ -223,7 +223,7 @@ _(Repeat the same structure for each method)_
 #### Exported Facade Class
 
 ```ts
-export class V1NameFacade {}
+export class V1NameFacade extends V1BaseFacade {}
 ```
 
 #### 'State object structure' type
@@ -302,7 +302,7 @@ All actions (and accordingly the facade's methods) are considered to NOT have 'a
 
 ```ts
 @Component(...)
-export class V1Name1Component {}
+export class V1Name1Component extends V1BaseUiComponent implements V1BaseUi_HasIt {}
 ```
 
 ###### Responsibility
@@ -445,7 +445,7 @@ _(Repeat the same structure for each component)_
 
 ```ts
 @Component(...)
-export class V1Name1FeaComponent {}
+export class V1Name1FeaComponent extends V1BaseFeatureExtComponent implements V2BaseFeature_ExtHasIt {}
 ```
 
 ###### Responsibility
@@ -521,9 +521,9 @@ Here's the list of **this** component's outputs:
 > **Tip!** Components can simply have a `log` method to prepare logging to different analytic services, which can be implemented later.
 
 - Events to be tracked:
-  - When `reset` method is called (externally called); log `{name: 'called_reset', params: {com: 'V1Name1FeaComponent'}}`
+  - When `reset` method is called (externally/internally); log `{name: 'called_reset', params: {com: 'V1Name1FeaComponent'}}`
 - Success / failure signals:
-  - `_xInitOrUpdateAfterAllDataReady` is called (internally handled), i.e., facade method(s) API call(s) succeeds; log `{name: 'handled_xInitOrUpdateAfterAllDataReady', params: {com: 'V1Name1FeaComponent'}}`
+  - `_xInitOrUpdateAfterAllDataReady` is called (handled), i.e., facade method(s) API call(s) succeeds; log `{name: 'handled_xInitOrUpdateAfterAllDataReady', params: {com: 'V1Name1FeaComponent'}}`
   - …
 
 ###### Error Handling & Edge Cases
@@ -601,6 +601,7 @@ If it's an 'abstract' functionality, they will initialize the 'data-access' faca
        Dependent data request(s):
        - `V1Something2Facade` → `getSomething2(this._baseUrl, alreadyFetchedData.blahblah, 'V1Name1FeaComponent')`
    - `V1SomethingFacade` → `getSomething(this._baseUrl, 'V1Name1FeaComponent')`
+   - `V1SomethingElseFacade` → `getSomethingElse(this._baseUrl, 'V1Name1FeaComponent')`
    - …
 
 4. 'feature' component: It is already listening (waiting) for 'data-access' object state changes (in `_xFacadesPre`) — Listening to the following observable(s):
@@ -622,7 +623,7 @@ If it's an 'abstract' functionality, they will initialize the 'data-access' faca
 7. 'map' class: Its method(s) calls API and wait for response/error.
 8. 'map' class: As soon as API response/error is ready, 'map' invokes 'data-access' effect(s), which leads to state object change that 'feature' is listening to.
 9. 'feature' component: **If API response was successful, `_xInitOrUpdateAfterAllDataReady` is called and we continue the flow**, otherwise `_xFacadesAddErrorListeners` is called and the flow stops.
-10. 'feature' component: By now, SOME data is already fetched successfully. Now, if some more data are required to be fetched, which were dependant to the already fetched data, then right from `_xInitOrUpdateAfterAllDataReady`, we start the following steps again (BEFORE we continue the flow): 3, 4, 5, 6, 7, 8, 9.  
+10. 'feature' component: By now, SOME data is already fetched successfully. Now, if some more data are required to be fetched, which were dependant to the already fetched data, then right from `_xInitOrUpdateAfterAllDataReady`, we start 3-9 steps again (BEFORE we continue the flow).  
     **Note!** In step 3, we **ONLY call dependent data request(s)**. This loop continues until no more dependent data requests are needed.
 11. 'feature' component: By now, ALL data is already fetched successfully. Now, we update the corresponding 'ui' component's inputs based on state object changes — The following input(s) will be updated:
     - If `V1NameFacade` → `entityDatas$('V1Name1FeaComponent_main')?.info` state object property is changed, `data` input is updated.

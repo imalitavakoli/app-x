@@ -113,7 +113,7 @@ Include **only** libs relevant to the selected functionality classification.
 #### Exported Class
 
 ```ts
-export class V1XCredit {}
+export class V1XCredit extends V1BaseMap {}
 ```
 
 #### Methods (API Endpoints)
@@ -227,7 +227,7 @@ N/A
 #### Exported Facade Class
 
 ```ts
-export class V1XCreditFacade {}
+export class V1XCreditFacade extends V1BaseFacade {}
 ```
 
 #### 'State object structure' type
