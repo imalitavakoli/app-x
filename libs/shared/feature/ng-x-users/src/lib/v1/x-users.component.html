@@ -1,6 +1,6 @@
 <x-x-users-v1
   #xUsers
-  [defaultSelectedUser]="defaultSelectedUser()"
+  [defaultSelectedUser]="$defaultSelectedUser()"
   [users]="$any(xUsersFacade.allEntities$ | async)"
   (selectedUser)="selectedUser.emit($event)"
 ></x-x-users-v1>

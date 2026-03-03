@@ -25,6 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LottieComponent } from 'ngx-lottie';
 
+import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
 import { V1BaseFeatureExtXCreditComponent } from '@x/shared-util-ng-bases';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';
@@ -43,7 +44,10 @@ import { V1XProfileImageComponent } from '@x/shared-ui-ng-x-profile-image';
   templateUrl: './x-profile-image.component.html',
   styleUrl: './x-profile-image.component.scss',
 })
-export class V1XProfileImageFeaComponent extends V1BaseFeatureExtXCreditComponent {
+export class V1XProfileImageFeaComponent
+  extends V1BaseFeatureExtXCreditComponent
+  implements V2BaseFeature_ExtHasIt
+{
   readonly nameThis: string = 'V1XProfileImageFeaComponent'; // Name of this component
   override readonly nameInstance_main: string =
     'V1XProfileImageFeaComponent_main';

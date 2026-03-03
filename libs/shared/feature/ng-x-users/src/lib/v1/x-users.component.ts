@@ -28,11 +28,12 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { LottieComponent } from 'ngx-lottie';
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
+import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { V1BaseFeatureExtComponent } from '@x/shared-util-ng-bases';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { V1XUsersComponent } from '@x/shared-ui-ng-x-users';
 import {
   V1XUsers_State,
@@ -52,14 +53,17 @@ import {
   templateUrl: './x-users.component.html',
   styleUrl: './x-users.component.scss',
 })
-export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
+export class V1XUsersFeaComponent
+  extends V1BaseFeatureExtComponent
+  implements V2BaseFeature_ExtHasIt
+{
   @ViewChild('xUsers') xUsersCom!: V1XUsersComponent;
   protected readonly _router = inject(Router);
   private _route = inject(ActivatedRoute);
 
   readonly xUsersFacade = inject(V1XUsersFacade);
 
-  defaultSelectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
+  $defaultSelectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
 
   readonly nameThis: string = 'V1XUsersFeaComponent'; // Name of this component
 
@@ -92,7 +96,7 @@ export class V1XUsersFeaComponent extends V1BaseFeatureExtComponent {
     // Try setting the following URL Query Param input: 'user-id'
     if (defUserId && xUsers) {
       xUsers = xUsers as V1XUsers_MapUser[];
-      this.defaultSelectedUser.set(
+      this.$defaultSelectedUser.set(
         xUsers.find((user) => user.id === defUserId),
       );
     }

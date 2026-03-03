@@ -27,6 +27,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LottieComponent } from 'ngx-lottie';
 
+import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
 import { V1BaseFeatureExtComponent } from '@x/shared-util-ng-bases';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V1XCredit_Style } from '@x/shared-map-ng-x-credit';
@@ -57,7 +58,10 @@ import {
   templateUrl: './x-profile-info.component.html',
   styleUrl: './x-profile-info.component.scss',
 })
-export class V1XProfileInfoFeaComponent extends V1BaseFeatureExtComponent {
+export class V1XProfileInfoFeaComponent
+  extends V1BaseFeatureExtComponent
+  implements V2BaseFeature_ExtHasIt
+{
   readonly xCreditFacade = inject(V1XCreditFacade);
   readonly xProfileInfoFacade = inject(V1XProfileInfoFacade);
 
