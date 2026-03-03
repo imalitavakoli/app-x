@@ -1,3 +1,6 @@
+import { Signal } from '@angular/core';
+import { V2Config_MapDep } from '@x/shared-map-ng-config';
+
 /**
  * It's one of the probable `value` types of a 'Communication Event' interface
  * (`V1Communication_Event`).
@@ -54,4 +57,22 @@ export interface V2BasePage_Error {
    * @type {{key: string; value: string;}}
    */
   error: { key: string; value: string };
+}
+
+export interface V2BasePage_HasIt {
+  $dataConfigDep: Signal<V2Config_MapDep | undefined>;
+  $hasRequiredInputs: Signal<boolean>;
+  $appVersion: Signal<string>;
+}
+
+export interface V2BasePage_ParentHasIt extends V2BasePage_HasIt {
+  $errors: Signal<V2BasePage_Error[]>;
+
+  xOnError(error: V2BasePage_Error): void;
+}
+
+export interface V2BasePage_ChildHasIt extends V2BasePage_HasIt {
+  $id: Signal<string | number | undefined>;
+
+  xOnError(error: V2BasePage_Error): void;
 }
