@@ -145,6 +145,14 @@ e.g., `$any((configFacade.dataConfigDep$ | async)?.libs?.xProfileInfoV1?.hasBg)`
 ></x-x-profile-info-v1>
 ```
 
+```css
+.e-x-profile-info {
+  --e-x-profile-info--bg-color--gradient-a: var(--e-primary-color) !important;
+  --e-x-profile-info--bg-color--gradient-b: var(--e-accent-color) !important;
+  --e-x-profile-info--color: var(--e-night-color) !important;
+}
+```
+
 ## Important requirements
 
 _NONE_
