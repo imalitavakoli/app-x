@@ -69,6 +69,9 @@ We recommend some naming conventions for different types of interfaces/component
 &nbsp;
 
 - **Cypress selectors (`data-cy` attributes)**: Use `{lib-name}-v{x}_{short-component-name}_{selector-name}` schema. For example, `profile-image-v1_profile-image_loading`.
+- **Analytics logs**: Should follow 'GA4' naming rules, and use past tense verbs. For example, `called_reset` when `reset` method (public function) is called externally/internally; `handled_xInitOrUpdateAfterAllDataReady` when `_xInitOrUpdateAfterAllDataReady` private/protected function is handled (called) internally by the component itself; `clicked_viewDetails` (when 'View Details' button is clicked).
+
+&nbsp;
 
 **Note!** Wherever you see that we've mentioned a versioning number in the names, it means that we're working on a shared lib. app-specific libs (i.e., a lib which rests under the app's domain folder directory such as `ng-x-boilerplate-mobile-map-config`) don't have the versioning number in their names. e.g., for app-specific libs, _Cypress selectors_ can be `profile-image_profile-image_loading`; _'ui' lib's components class name_ can be `ChartComponent`, and etc.
 
