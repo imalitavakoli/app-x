@@ -18,6 +18,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { exhaustMap, skip, Subscription, take } from 'rxjs';
 
+import { V2BasePage_HasIt } from '@x/shared-util-ng-bases-model';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V2ConfigFacade } from '@x/shared-api-data-access-ng-config';
 import { V1TranslationsFacade } from '@x/shared-api-data-access-ng-translations';
@@ -34,8 +35,8 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * 03. Override `_xInitPre` (with super call right at the beginning).
  * 04. Override `_xInit` (with super call right at the beginning).
  * 05. Override `_xUpdate` (with super call right at the beginning).
- * 06. Optional! In HTML, you can use `hasRequiredInputs`.
- * 07. Optional! In HTML, you can use `appVersion`.
+ * 06. Optional! In HTML, you can use `$hasRequiredInputs`.
+ * 07. Optional! In HTML, you can use `$appVersion`.
  *
  * @export
  * @class V2BasePageComponent
@@ -46,7 +47,10 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
   standalone: true,
   template: '',
 })
-export class V2BasePageComponent extends V1BaseFunComponent {
+export abstract class V2BasePageComponent
+  extends V1BaseFunComponent
+  implements V2BasePage_HasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   protected readonly _route = inject(ActivatedRoute);
@@ -54,15 +58,18 @@ export class V2BasePageComponent extends V1BaseFunComponent {
 
   // 'data-access' libs
   readonly configFacade = inject(V2ConfigFacade);
+  /** DEP config. */
   $dataConfigDep = toSignal(this.configFacade.dataConfigDep$);
   protected readonly _translationsFacade = inject(V1TranslationsFacade);
   protected readonly _authFacade = inject(V1AuthFacade);
 
   // Flags
-  hasRequiredInputs = signal(false);
+  /** Indicates if all required inputs are available. */
+  $hasRequiredInputs = signal(false);
 
   // Fetched data from route
-  appVersion = signal('');
+  /** The app version from the route snapshot or Auth 'data-access' lib. */
+  $appVersion = signal('');
 
   // Fetched data from 'data-access' libs
   protected _configDep!: V2Config_MapDep;
@@ -93,7 +100,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
     // Get the app version from the route snapshot (if it's already provided)!
     // NOTE: It can be provided by `app.routes.ts` file of the app.
     this._route.data.pipe(take(1)).subscribe((data) => {
-      if (data['appVersion']) this.appVersion.set(data['appVersion']);
+      if (data['appVersion']) this.$appVersion.set(data['appVersion']);
     });
 
     // Get all initial required data from 'data-access' libs.
@@ -122,6 +129,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
         // Save required data.
         this._userId = state.datas.getToken?.userId as number;
         this._protectedInitialPath = state.protectedInitialPath;
+        if (state.appVersion) this.$appVersion.set(state.appVersion);
       });
 
     // Subscribe to the route query params to understand when all required
@@ -158,7 +166,7 @@ export class V2BasePageComponent extends V1BaseFunComponent {
     // NOTE: As this flag determines that everything is ready for the page to
     // start initializing its libs (even the starter libs), maybe it can be
     // useful in HTML.
-    this.hasRequiredInputs.set(true);
+    this.$hasRequiredInputs.set(true);
   }
 
   /**

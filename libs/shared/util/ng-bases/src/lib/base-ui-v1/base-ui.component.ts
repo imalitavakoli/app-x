@@ -16,8 +16,9 @@ import {
 } from '@angular/core';
 
 import {
-  V1BaseUi_DataType,
+  V1BaseUi_HasIt,
   V1BaseUi_State,
+  V1BaseUi_DataType,
 } from '@x/shared-util-ng-bases-model';
 
 import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
@@ -64,7 +65,10 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
   standalone: true,
   template: '',
 })
-export class V1BaseUiComponent extends V1BaseFunComponent implements OnChanges {
+export abstract class V1BaseUiComponent
+  extends V1BaseFunComponent
+  implements OnChanges, V1BaseUi_HasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   // ...

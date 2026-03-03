@@ -8,6 +8,6 @@ import { select, Store } from '@ngrx/store';
  * @class V1BaseFacade
  * @typedef {V1BaseFacade}
  */
-export class V1BaseFacade {
+export abstract class V1BaseFacade {
   protected readonly _store = inject(Store);
 }

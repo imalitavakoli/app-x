@@ -23,6 +23,8 @@ import {
   Subscription,
 } from 'rxjs';
 
+import { V1BaseFeature_HasIt } from '@x/shared-util-ng-bases-model';
+
 import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
 
 /**
@@ -88,7 +90,10 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
   standalone: true,
   template: '',
 })
-export class V1BaseFeatureComponent extends V1BaseFunComponent {
+export abstract class V1BaseFeatureComponent
+  extends V1BaseFunComponent
+  implements V1BaseFeature_HasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   private _isReadyEmitted = false;

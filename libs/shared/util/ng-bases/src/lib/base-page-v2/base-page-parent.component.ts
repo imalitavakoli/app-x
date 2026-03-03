@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 
 import { V1CommunicationService } from '@x/shared-util-ng-services';
 import {
+  V2BasePage_ParentHasIt,
   V1Communication_Data,
   V1Communication_Event,
   V2BasePage_Error,
@@ -39,11 +40,11 @@ import { V2BasePageComponent } from './base-page.component';
  * 06. Override `_xInitOtherLibs`.
  * 07. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
  *     it may throw (by its `hasError` output): `xOnError({page: 'parent', lib: 'blahblah', error: $event})`.
- * 08. In HTML, use `errors` array to show the errors that 'feature' libs may
+ * 08. In HTML, use `$errors` array to show the errors that 'feature' libs may
  *     emit (e.g., in a popup), and also reset the array (e.g., when the user
  *     closes the popup).
- * 09. Optional! In HTML, you can use `hasRequiredInputs`.
- * 10. Optional! In HTML, you can use `appVersion`.
+ * 09. Optional! In HTML, you can use `$hasRequiredInputs`.
+ * 10. Optional! In HTML, you can use `$appVersion`.
  *
  * Here's also another way (#2) that the inherited classes use this (in most cases):
  * 01. Override `_xHasRequiredInputs`.
@@ -51,21 +52,22 @@ import { V2BasePageComponent } from './base-page.component';
  * 03. Override `_xInitOtherLibs`.
  * 04. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
  *     it may throw (by its `hasError` output): `xOnError({page: 'parent', lib: 'blahblah', error: $event})`.
- * 05. In HTML, use `errors` array to show the errors that 'feature' libs may
+ * 05. In HTML, use `$errors` array to show the errors that 'feature' libs may
  *     emit (e.g., in a popup), and also reset the array (e.g., when the user
  *     closes the popup).
- * 06. Optional! In HTML, you can use `hasRequiredInputs`.
- * 07. Optional! In HTML, you can use `appVersion`.
+ * 06. Optional! In HTML, you can use `$hasRequiredInputs`.
+ * 07. Optional! In HTML, you can use `$appVersion`.
  *
  * IMPORTANT: In HTML, where we wanna initialize the child routes, we should
  * do that ONLY after starter libs are ready:
  * `<div *ngIf="isReadyStarterLib1"><router-outlet></router-outlet></div>`.
  *
  * Here's how other libs ('ui', 'feature', or `page`) may interacts with this:
- * 01. Optional! The lib can fetch `appVersion` via the communication service
+ * 01. Optional! The lib can fetch `$appVersion` via the communication service
  *     (if this parent page itself already had access to it by `app.routes.ts`
- *     file of the app.). e.g., the child routes which are defined in the 'page'
- *     lib (and not straightly in the app) can use this data.
+ *     file of the app or Auth 'data-access' lib). e.g., the child routes which
+ *     are defined in the 'page' lib (and not straightly in the app) can use
+ *     this data.
  * 02. Optional! The lib can listen to `@V2BasePageParentComponent:Init` event
  *     which gets emitted via the communication service. e.g., the mobile-header
  *     can listen to this event to update its UI layout to 'base', as we are in
@@ -81,18 +83,22 @@ import { V2BasePageComponent } from './base-page.component';
   standalone: true,
   template: '',
 })
-export class V2BasePageParentComponent extends V2BasePageComponent {
+export abstract class V2BasePageParentComponent
+  extends V2BasePageComponent
+  implements V2BasePage_ParentHasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   protected _communicationService = inject(V1CommunicationService);
 
-  errors = signal<V2BasePage_Error[]>([]);
+  /** List of errors that 'feature' libs or child routes may emit. */
+  $errors = signal<V2BasePage_Error[]>([]);
 
   // Flags
-  // hasRequiredInputs = signal(false); // Introduced in the Base.
+  // $hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion = signal(''); // Introduced in the Base.
+  // $appVersion = signal(''); // Introduced in the Base.
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -119,7 +125,7 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
     // Save the required data to `communicationService` for child routes.
     this._communicationService.storedData = {
       ...this._communicationService.storedData,
-      appVersion: this.appVersion(),
+      appVersion: this.$appVersion(),
     } as V1Communication_Data;
 
     // Listen to the error events that child routes may emit.
@@ -272,7 +278,7 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
   /**
    * When a 'feature' lib in this (parent) page throws an error (by its
    * `hasError` output), this function should be called (as the lib's output
-   * callback) to save the error in the `errors` array to show it in HTML.
+   * callback) to save the error in the `$errors` array to show it in HTML.
    *
    * NOTE: If the error happens in the child pages, as they are emitting an
    * `error` typed event (`V1Communication_Event`) by the communication
@@ -297,6 +303,6 @@ export class V2BasePageParentComponent extends V2BasePageComponent {
     libTemplate = undefined,
     error,
   }: V2BasePage_Error): void {
-    this.errors().push({ page, pageTemplate, lib, libTemplate, error });
+    this.$errors().push({ page, pageTemplate, lib, libTemplate, error });
   }
 }

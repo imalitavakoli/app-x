@@ -19,6 +19,7 @@ import { Subscription, take } from 'rxjs';
 
 import { V1CommunicationService } from '@x/shared-util-ng-services';
 import {
+  V2BasePage_ChildHasIt,
   V1Communication_Data,
   V1Communication_Event,
   V1Communication_Event_Util_V2_BasePage_Child,
@@ -39,18 +40,18 @@ import { V2BasePageComponent } from './base-page.component';
  * 05. Override `_xUpdate` (with super call right at the beginning).
  * 06. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
  *     it may throw (by its `hasError` output): `xOnError({page: 'one', lib: 'blahblah', error: $event})`.
- * 07. Optional! In HTML, you can Use `hasRequiredInputs`.
- * 08. Optional! In HTML, you can use `appVersion`.
- * 09. Optional! In HTML, you can use `id`.
+ * 07. Optional! In HTML, you can Use `$hasRequiredInputs`.
+ * 08. Optional! In HTML, you can use `$appVersion`.
+ * 09. Optional! In HTML, you can use `$id`.
  *
  * Here's also another way (#2) that the inherited classes use this (in most cases):
  * 01. Override `_pageName` & `_urlRoot`.
  * 02. Override `_xHasRequiredInputs`.
  * 03. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
  *     it may throw (by its `hasError` output): `xOnError({page: 'one', lib: 'blahblah', error: $event})`.
- * 04. Optional! In HTML, you can Use `hasRequiredInputs`.
- * 05. Optional! In HTML, you can use `appVersion`.
- * 06. Optional! In HTML, you can use `id`.
+ * 04. Optional! In HTML, you can Use `$hasRequiredInputs`.
+ * 05. Optional! In HTML, you can use `$appVersion`.
+ * 06. Optional! In HTML, you can use `$id`.
  *
  * Here's how other libs ('ui', 'feature', or `page`) may interacts with this:
  * 01. Optional! The lib can listen to `@V2BasePageChildComponent:Init` event
@@ -67,7 +68,10 @@ import { V2BasePageComponent } from './base-page.component';
   standalone: true,
   template: '',
 })
-export class V2BasePageChildComponent extends V2BasePageComponent {
+export abstract class V2BasePageChildComponent
+  extends V2BasePageComponent
+  implements V2BasePage_ChildHasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   protected _communicationService = inject(V1CommunicationService);
@@ -91,13 +95,12 @@ export class V2BasePageChildComponent extends V2BasePageComponent {
   protected _urlRoot = '/dashboard';
 
   // Flags
-  // hasRequiredInputs = signal(false); // Introduced in the Base.
+  // $hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion = signal(''); // Introduced in the Base.
-
+  // $appVersion = signal(''); // Introduced in the Base.
   /** In edit/one pages, there's always ID parameter. */
-  id = signal<string | number | undefined>(undefined);
+  $id = signal<string | number | undefined>(undefined);
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -123,16 +126,19 @@ export class V2BasePageChildComponent extends V2BasePageComponent {
 
     // Get the page current ID (if it's already provided)!
     this._route.params.pipe(take(1)).subscribe((params: Params) => {
-      if (params['id']) this.id.set(params['id']);
+      if (params['id']) this.$id.set(params['id']);
     });
 
     // NOTE: If this is a child route that is defined in the 'page' lib
     // `lib.routes.ts` file (and not the app's `app.routes.ts` file), then
-    // `appVersion` cannot be fetched from the route snapshot... Instead, we can
-    // get it from parent via the communication service.
-    this.appVersion.set(
-      this._communicationService.storedData?.appVersion ?? '',
-    );
+    // `$appVersion` cannot be fetched from the route snapshot... Instead, we
+    // can get it from parent via the communication service.
+    // NOTE: We should also consider that it might have been set from Auth
+    // 'data-access' lib... That's why we're checking if it's truthy in the
+    // communication service, only then, we set it for our `$appVersion` signal.
+    if (this._communicationService.storedData?.appVersion) {
+      this.$appVersion.set(this._communicationService.storedData?.appVersion);
+    }
 
     // Emit an event when this page is initialized.
     // NOTE: Such event can be useful for the mobile-header to update its UI

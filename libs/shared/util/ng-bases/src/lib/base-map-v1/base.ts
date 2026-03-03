@@ -15,7 +15,8 @@ import { inject } from '@angular/core';
  *
  * Why `_logSuccess` & `_logFailure` functions accept a `lib` parameter, even
  * for the times that the 'map' lib belongs to a specific functionality and it's
- * NOT going to be used by other functionalities (i.e., it's not shared)?
+ * NOT going to be used by other functionalities (i.e., it's not shared across
+ * multiple functionalities)?
  * Because, although 'map' & 'data-access' libs may belong to a specific
  * functionality, but over time, the 'feature' lib which imports and use them,
  * may get updated, while these libs are not required to be updated... So in
@@ -26,7 +27,7 @@ import { inject } from '@angular/core';
  * @class V1BaseMap
  * @typedef {V1BaseMap}
  */
-export class V1BaseMap {
+export abstract class V1BaseMap {
   protected readonly _http = inject(HttpClient);
 
   /* //////////////////////////////////////////////////////////////////////// */

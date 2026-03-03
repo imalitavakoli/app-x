@@ -20,6 +20,7 @@ import { Subscription, take } from 'rxjs';
 
 import { V1CommunicationService } from '@x/shared-util-ng-services';
 import {
+  V2BasePage_ChildHasIt,
   V1Communication_Data,
   V1Communication_Data_Util_V2_BasePage_ParentExtU,
   V1Communication_Event,
@@ -46,10 +47,10 @@ import { V2BasePageChildComponent } from './base-page-child.component';
  * 03. Override `onXUsersSelectedUser` (with super call right at the beginning).
  * 04. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
  *     it may throw (by its `hasError` output): `xOnError({page: 'one', lib: 'blahblah', error: $event})`.
- * 05. Optional! In HTML, you can Use `hasRequiredInputs`.
- * 06. Optional! In HTML, you can use `appVersion`.
- * 07. Optional! In HTML, you can use `id`.
- * 08. Optional! In HTML, you can use `selectedUserId`, and `selectedUser` for
+ * 05. Optional! In HTML, you can Use `$hasRequiredInputs`.
+ * 06. Optional! In HTML, you can use `$appVersion`.
+ * 07. Optional! In HTML, you can use `$id`.
+ * 08. Optional! In HTML, you can use `$selectedUserId`, and `$selectedUser` for
  *     any other 'feature' lib inputs.
  *
  * Here's how other libs ('ui', 'feature', or `page`) may interacts with this:
@@ -67,18 +68,21 @@ import { V2BasePageChildComponent } from './base-page-child.component';
   standalone: true,
   template: '',
 })
-export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent {
+export abstract class V2BasePageChildExtXUsersComponent
+  extends V2BasePageChildComponent
+  implements V2BasePage_ChildHasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   // protected _pageName = ''; // Introduced in the Base.
   // protected _urlRoot = '/dashboard'; // Introduced in the Base.
 
   // Flags
-  // hasRequiredInputs = signal(false); // Introduced in the Base.
+  // $hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion = signal(''); // Introduced in the Base.
-  // id = signal<string | number | undefined>(undefined); // Introduced in the Base.
+  // $appVersion = signal(''); // Introduced in the Base.
+  // $id = signal<string | number | undefined>(undefined); // Introduced in the Base.
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -88,8 +92,8 @@ export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent 
 
   /* Lib: Users ///////////////////////////////////////////////////////////// */
 
-  selectedUserId = signal<number | undefined>(undefined);
-  selectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
+  $selectedUserId = signal<number | undefined>(undefined);
+  $selectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X lifecycle                                                              */
@@ -106,8 +110,8 @@ export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent 
     const extraFromParent = this._communicationService.storedData
       ?.extra as V1Communication_Data_Util_V2_BasePage_ParentExtU;
     if (extraFromParent) {
-      this.selectedUserId.set(extraFromParent.initialUserId);
-      this.selectedUser.set(extraFromParent.initialUser);
+      this.$selectedUserId.set(extraFromParent.initialUserId);
+      this.$selectedUser.set(extraFromParent.initialUser);
     }
 
     // Listen to the events that parent may emit.
@@ -140,7 +144,7 @@ export class V2BasePageChildExtXUsersComponent extends V2BasePageChildComponent 
 
   /** This function is called by 'X Users' lib, when a new user is selected in the UI. */
   onXUsersSelectedUser(user: V1XUsers_MapUser) {
-    this.selectedUserId.set(user.id as number);
-    this.selectedUser.set(user);
+    this.$selectedUserId.set(user.id as number);
+    this.$selectedUser.set(user);
   }
 }

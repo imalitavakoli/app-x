@@ -23,6 +23,7 @@ import {
   take,
 } from 'rxjs';
 
+import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V2ConfigFacade } from '@x/shared-api-data-access-ng-config';
 import { V1TranslationsFacade } from '@x/shared-api-data-access-ng-translations';
@@ -75,18 +76,22 @@ import { toSignal } from '@angular/core/rxjs-interop';
   standalone: true,
   template: '',
 })
-export class V1BaseFeatureExtComponent extends V1BaseFeatureComponent {
+export abstract class V1BaseFeatureExtComponent
+  extends V1BaseFeatureComponent
+  implements V2BaseFeature_ExtHasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   // 'data-access' libs
   readonly configFacade = inject(V2ConfigFacade);
+  /** DEP config. */
   $dataConfigDep = toSignal(this.configFacade.dataConfigDep$);
   readonly translationsFacade = inject(V1TranslationsFacade);
   protected readonly _authFacade = inject(V1AuthFacade);
 
   // Fetched data from 'data-access' libs
-  configDep = signal<V2Config_MapDep>(null as unknown as V2Config_MapDep);
-  lastLoadedLang = signal<string>(null as unknown as string);
+  $lastLoadedLang = signal<string>(null as unknown as string);
+  protected _configDep!: V2Config_MapDep;
   protected _baseUrl!: string;
   protected _userId!: number;
 
@@ -110,7 +115,7 @@ export class V1BaseFeatureExtComponent extends V1BaseFeatureComponent {
         take(1),
         exhaustMap((state) => {
           // Save required data.
-          this.configDep.set(state.dataConfigDep as V2Config_MapDep);
+          this._configDep = state.dataConfigDep as V2Config_MapDep;
           this._baseUrl = state.dataConfigDep?.general.baseUrl as string;
 
           // Switch to the `translationsState$` Observable.
@@ -119,7 +124,7 @@ export class V1BaseFeatureExtComponent extends V1BaseFeatureComponent {
         take(1),
         exhaustMap((state) => {
           // Save required data.
-          this.lastLoadedLang.set(state.lastLoadedLangCultureCode as string);
+          this.$lastLoadedLang.set(state.lastLoadedLangCultureCode as string);
 
           // Switch to the `authState$` Observable.
           return this._authFacade.authState$;

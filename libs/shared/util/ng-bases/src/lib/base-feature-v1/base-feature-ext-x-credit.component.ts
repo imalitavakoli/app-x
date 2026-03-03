@@ -23,6 +23,7 @@ import {
   take,
 } from 'rxjs';
 
+import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
 import {
   V1XCredit_Datas,
   V1XCredit_Loadeds,
@@ -71,7 +72,10 @@ import { V1BaseFeatureExtComponent } from './base-feature-ext.component';
   standalone: true,
   template: '',
 })
-export class V1BaseFeatureExtXCreditComponent extends V1BaseFeatureExtComponent {
+export abstract class V1BaseFeatureExtXCreditComponent
+  extends V1BaseFeatureExtComponent
+  implements V2BaseFeature_ExtHasIt
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   // 'data-access' libs

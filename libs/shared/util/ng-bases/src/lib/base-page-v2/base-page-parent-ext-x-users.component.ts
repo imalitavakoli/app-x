@@ -17,6 +17,7 @@ import {
 import { Subscription } from 'rxjs';
 
 import {
+  V2BasePage_ParentHasIt,
   V1Communication_Data,
   V1Communication_Event,
   V1Communication_Data_Util_V2_BasePage_ParentExtU,
@@ -47,30 +48,30 @@ import { V2BasePageParentComponent } from './base-page-parent.component';
  * 02. Override `_xHasRequiredInputs`.
  * 03. Override `_xInitOtherLibs`.
  * 04. Override `_xUpdateOtherLibs`.
- * 05. In HTML, use `isReadyStarterLib1` to init any other 'feature' lib as soon
+ * 05. In HTML, use `$isReadyStarterLib1` to init any other 'feature' lib as soon
  *     as this flag is set to true.
  * 06. In HTML, use `onReadyStarterLib1` as the starter lib #1 `isReady` output
  *     callback, and use `onXUsersSelectedUser` as its `selectedUser`
  *     output callback.
  * 07. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
  *     it may throw (by its `hasError` output): `xOnError({page: 'parent', lib: 'blahblah', error: $event})`.
- * 08. In HTML, use `errors` array to show the errors that 'feature' libs may
+ * 08. In HTML, use `$errors` array to show the errors that 'feature' libs may
  *     emit (e.g., in a popup), and also reset the array (e.g., when the user
  *     closes the popup).
- * 09. Optional! In HTML, you can use `hasRequiredInputs`.
- * 10. Optional! In HTML, you can use `appVersion`.
- * 11. Optional! In HTML, you can use `selectedUserId`, and `selectedUser` for
+ * 09. Optional! In HTML, you can use `$hasRequiredInputs`.
+ * 10. Optional! In HTML, you can use `$appVersion`.
+ * 11. Optional! In HTML, you can use `$selectedUserId`, and `$selectedUser` for
  *     any other 'feature' lib inputs.
  *
  * IMPORTANT: In HTML, where you wanna initialize the child routes, you should
  * do that ONLY after starter libs are ready:
- * `<div *ngIf="isReadyStarterLib1"><router-outlet></router-outlet></div>`.
+ * `<div *ngIf="$isReadyStarterLib1"><router-outlet></router-outlet></div>`.
  *
  * IMPORTANT: In the HTML of the class that is extending this base class, you
  * should make a reference to `V1XUsersFeaComponent` with 'xUsersFea' name.
  *
  * Here's how other libs ('ui', 'feature', or `page`) may interacts with this:
- * 01. Optional! The lib can fetch `appVersion` via the communication service
+ * 01. Optional! The lib can fetch `$appVersion` via the communication service
  *     (if this parent page itself already had access to it by `app.routes.ts`
  *     file of the app.). e.g., the child routes which are defined in a 'page'
  *     lib (and not directly in the app) can use this data.
@@ -93,9 +94,9 @@ import { V2BasePageParentComponent } from './base-page-parent.component';
   standalone: true,
   template: '',
 })
-export class V2BasePageParentExtXUsersComponent
+export abstract class V2BasePageParentExtXUsersComponent
   extends V2BasePageParentComponent
-  implements AfterContentChecked
+  implements AfterContentChecked, V2BasePage_ParentHasIt
 {
   /* General //////////////////////////////////////////////////////////////// */
 
@@ -103,13 +104,13 @@ export class V2BasePageParentExtXUsersComponent
 
   // protected _communicationService = inject(V1CommunicationService); // Introduced in the Base.
 
-  // errors = signal<V2BasePage_Error[]>([]); // Introduced in the Base.
+  // $errors = signal<V2BasePage_Error[]>([]); // Introduced in the Base.
 
   // Flags
-  // hasRequiredInputs = signal(false); // Introduced in the Base.
+  // $hasRequiredInputs = signal(false); // Introduced in the Base.
 
   // Fetched data from route
-  // appVersion = signal(''); // Introduced in the Base.
+  // $appVersion = signal(''); // Introduced in the Base.
 
   // Fetched data from 'data-access' libs
   // protected _configDep!: V2Config_MapDep; // Introduced in the Base.
@@ -121,9 +122,9 @@ export class V2BasePageParentExtXUsersComponent
 
   starterLib1_xUsersFeaCom!: V1XUsersFeaComponent;
 
-  isReadyStarterLib1 = signal(false);
-  selectedUserId = signal<number | undefined>(undefined);
-  selectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
+  $isReadyStarterLib1 = signal(false);
+  $selectedUserId = signal<number | undefined>(undefined);
+  $selectedUser = signal<V1XUsers_MapUser | undefined>(undefined);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* lifecycle                                                                */
@@ -183,7 +184,7 @@ export class V2BasePageParentExtXUsersComponent
   protected override _xHasInitStarterLibs(): boolean {
     // Check if the starter lib #1 is ready or not. If it's not ready, then
     // run its initializer function & return false.
-    if (!this.isReadyStarterLib1()) {
+    if (!this.$isReadyStarterLib1()) {
       this._initStarterLib1();
       return false;
     }
@@ -204,8 +205,8 @@ export class V2BasePageParentExtXUsersComponent
   /** This function is called by the starter lib #1, when lib is ready. */
   onReadyStarterLib1() {
     // Set latest user ID.
-    this.selectedUserId.set(this.starterLib1_xUsersFeaCom.getSelectedUserId());
-    this.selectedUser.set(this.starterLib1_xUsersFeaCom.getSelectedUser());
+    this.$selectedUserId.set(this.starterLib1_xUsersFeaCom.getSelectedUserId());
+    this.$selectedUser.set(this.starterLib1_xUsersFeaCom.getSelectedUser());
 
     // Save the required data to `communicationService` for child routes.
     this._communicationService.storedData = {
@@ -218,14 +219,14 @@ export class V2BasePageParentExtXUsersComponent
 
     // Set ready flag of this lib to true & call `_xInitAllLibs` to init rest of
     // the libs.
-    this.isReadyStarterLib1.set(true);
+    this.$isReadyStarterLib1.set(true);
     this._xInitAllLibs();
   }
 
   /** This function is called by the starter lib #1, when a new user is selected by the user. */
   onXUsersSelectedUser(user: V1XUsers_MapUser) {
-    this.selectedUserId.set(user.id as number);
-    this.selectedUser.set(user);
+    this.$selectedUserId.set(user.id as number);
+    this.$selectedUser.set(user);
 
     // Emit the change for child routes.
     this._communicationService.emitChange({

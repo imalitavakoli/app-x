@@ -35,7 +35,9 @@ import {
   standalone: true,
   template: '',
 })
-export class V1BaseFunComponent implements OnInit, AfterViewInit, OnChanges {
+export abstract class V1BaseFunComponent
+  implements OnInit, AfterViewInit, OnChanges
+{
   /* General //////////////////////////////////////////////////////////////// */
 
   protected readonly _destroyRef = inject(DestroyRef);
