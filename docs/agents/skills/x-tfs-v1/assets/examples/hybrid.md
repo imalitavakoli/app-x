@@ -783,7 +783,7 @@ The following properties exist in this component to help us not to repeat oursel
 
 2. 'feature' component: It prepares multi-instance 'data-access' facade by creating new state object instances (in `_xInitPreBeforeDom`) — The following method(s) will be called: _NONE_ (because there's NO multi-instance 'data-access' facade in this 'feature' component)
 
-3. 'feature' component: It (in `_xDataFetch`) calls 'data-access' facade method(s) — The following method(s) will be called (**ONLY call independent data request(s)**):
+3. 'feature' component: It (in `_xDataFetch`) calls 'data-access' facade method(s) — The following method(s) will be called (**First time in this step? Then ONLY call independent data request(s)**):
    - `V1XUsersFacade` → `getAll(this._baseUrl, this.nameThis)`
 
 4. 'feature' component: It is already listening (waiting) for 'data-access' object state changes (in `_xFacadesPre`) — Listening to the following observable(s):
@@ -798,7 +798,7 @@ The following properties exist in this component to help us not to repeat oursel
 8. 'map' class: As soon as API response/error is ready, 'map' invokes 'data-access' effect(s), which leads to state object change that 'feature' is listening to.
 9. 'feature' component: **If API response was successful, `_xInitOrUpdateAfterAllDataReady` is called and we continue the flow**, otherwise `_xFacadesAddErrorListeners` is called and the flow stops.
 10. _This step is skipped for this 'feature' component!_ 'feature' component: By now, SOME data is already fetched successfully. Now, if some more data are required to be fetched, which were dependant to the already fetched data, then right from `_xInitOrUpdateAfterAllDataReady`, we start 3-9 steps again (BEFORE we continue the flow).  
-    **Note!** In step 3, we **ONLY call dependent data request(s)**. This loop continues until no more dependent data requests are needed.
+    **Note!** In step 3, this time, we **ONLY call dependent data request(s)**. This loop continues until no more dependent data requests are needed.
 11. 'feature' component: By now, ALL data is already fetched successfully. Now, we update the corresponding 'ui' component's inputs based on state object changes — The following input(s) will be updated:
     - If `V1XUsersFacade` → `allEntities$` observable is changed, `users` input is updated.
 

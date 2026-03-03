@@ -594,7 +594,7 @@ If it's an 'abstract' functionality, they will initialize the 'data-access' faca
    - `V1NameFacade` → `createIfNotExists('V1Name1FeaComponent_main')`
    - …
 
-3. 'feature' component: It (in `_xDataFetch`) calls 'data-access' facade method(s) — The following method(s) will be called (**ONLY call independent data request(s)**):
+3. 'feature' component: It (in `_xDataFetch`) calls 'data-access' facade method(s) — The following method(s) will be called (**First time in this step? Then ONLY call independent data request(s)**):
    - `V1NameFacade` → `getInfo(this._baseUrl, this._userId, 'V1Name1FeaComponent_main', 'V1Name1FeaComponent')`  
      Dependent data request(s):
      - `V1Something1Facade` → `getSomething1(this._baseUrl, alreadyFetchedData.blahblah, 'V1Name1FeaComponent')`  
@@ -624,7 +624,7 @@ If it's an 'abstract' functionality, they will initialize the 'data-access' faca
 8. 'map' class: As soon as API response/error is ready, 'map' invokes 'data-access' effect(s), which leads to state object change that 'feature' is listening to.
 9. 'feature' component: **If API response was successful, `_xInitOrUpdateAfterAllDataReady` is called and we continue the flow**, otherwise `_xFacadesAddErrorListeners` is called and the flow stops.
 10. 'feature' component: By now, SOME data is already fetched successfully. Now, if some more data are required to be fetched, which were dependant to the already fetched data, then right from `_xInitOrUpdateAfterAllDataReady`, we start 3-9 steps again (BEFORE we continue the flow).  
-    **Note!** In step 3, we **ONLY call dependent data request(s)**. This loop continues until no more dependent data requests are needed.
+    **Note!** In step 3, this time, we **ONLY call dependent data request(s)**. This loop continues until no more dependent data requests are needed.
 11. 'feature' component: By now, ALL data is already fetched successfully. Now, we update the corresponding 'ui' component's inputs based on state object changes — The following input(s) will be updated:
     - If `V1NameFacade` → `entityDatas$('V1Name1FeaComponent_main')?.info` state object property is changed, `data` input is updated.
     - If `V1Something` → `datas$?.something` state object property is changed, … input is updated.
