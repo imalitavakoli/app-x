@@ -40,7 +40,7 @@ export class V2AuthPageTplClassicComponent extends V2AuthPageTplComponent {
 
   // platform!: 'ios' | 'android' | 'desktop'; // Introduced in the Base.
   // nativeAppInfo: V1CapacitorCore_AppInfo | null = null; // Introduced in the Base.
-  // appVersion!: string; // Introduced in the Base.
+  // $appVersion = signal(''); // Introduced in the Base.
   // waitingType?: V2Auth_Submit['type']; // Introduced in the Base.
 
   showPopup_troubleLogin = false;

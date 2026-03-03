@@ -276,7 +276,7 @@ have it :)
 
       <!-- App version text -->
       <div class="text-eneutral-darker mt-6 text-sm">
-        <span>V{{ appVersion() }}</span>
+        <span>V{{ $appVersion() }}</span>
         <br />
         @if ($any(configFacade.dataDataBuild$ | async)?.buildId) {
           <span>

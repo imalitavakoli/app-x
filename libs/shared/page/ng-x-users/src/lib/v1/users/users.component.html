@@ -45,7 +45,7 @@
   </section>
 
   <section class="e-container mt-8">
-    @if (isReadyStarterLib1()) {
+    @if ($isReadyStarterLib1()) {
       <!-- Sub page -->
       <router-outlet></router-outlet>
     }
@@ -56,12 +56,12 @@
 <!-- Show errors                                                             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (errors() && errors().length > 0) {
+@if ($errors() && $errors().length > 0) {
   <x-popup-v1
     *transloco="let t"
     [isHeadEnable]="true"
     [isOpen]="true"
-    (closed)="errors.set([])"
+    (closed)="$errors.set([])"
   >
     <div slot="head">
       <i class="bi bi-exclamation-triangle-fill mr-2"></i>
@@ -81,7 +81,7 @@
       <p class="p m-6 text-center">
         {{ t('common.error_desc') }}
 
-        @for (error of errors(); track $index) {
+        @for (error of $errors(); track $index) {
           <!-- Parent page ///////////////////////////////////////////////// -->
 
           @if (error.page === 'parent') {

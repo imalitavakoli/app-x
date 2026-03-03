@@ -27,7 +27,7 @@
 <ng-template #xProfileImageFeaTpl>
   <section class="col-span-1">
     <x-x-profile-image-fea-v1
-      [userId]="$any(selectedUserId())"
+      [userId]="$any($selectedUserId())"
       [showErrors]="false"
       (hasError)="
         xOnError({ page: 'parent', lib: 'xProfileImageFea', error: $event })
@@ -69,9 +69,9 @@
   <section class="e-container mt-8">
     <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
       @if (
-        isReadyStarterLib1() && funsToShowArr() && funsToShowArr().length > 0
+        $isReadyStarterLib1() && $funsToShowArr() && $funsToShowArr().length > 0
       ) {
-        @for (item of funsToShowArr(); track $index) {
+        @for (item of $funsToShowArr(); track $index) {
           <!--
           Although we're in a loop, but let's add the items by checking them
           in a IF statment one by one. Why? Because we should show them based on 
@@ -104,12 +104,12 @@
 <!-- Show errors                                                             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (errors() && errors().length > 0) {
+@if ($errors() && $errors().length > 0) {
   <x-popup-v1
     *transloco="let t"
     [isHeadEnable]="true"
     [isOpen]="true"
-    (closed)="errors.set([])"
+    (closed)="$errors.set([])"
   >
     <div slot="head">
       <i class="bi bi-exclamation-triangle-fill mr-2"></i>
@@ -129,7 +129,7 @@
       <p class="p m-6 text-center">
         {{ t('common.error_desc') }}
 
-        @for (error of errors(); track $index) {
+        @for (error of $errors(); track $index) {
           <!-- Starter lib #1: X Users -->
           @if (error.lib === 'xUsersFea') {
             <small class="e-ecode">
