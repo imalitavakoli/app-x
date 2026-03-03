@@ -17,7 +17,10 @@ import { TranslocoDirective } from '@jsverse/transloco';
 
 import { V1ToggleMeDirective } from '@x/shared-ui-ng-directives';
 
-import { V1BaseUi_DataType } from '@x/shared-util-ng-bases-model';
+import {
+  V1BaseUi_HasIt,
+  V1BaseUi_DataType,
+} from '@x/shared-util-ng-bases-model';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { V1BaseUiComponent } from '@x/shared-util-ng-bases';
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
@@ -36,8 +39,11 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
   templateUrl: './x-users.component.html',
   styleUrl: './x-users.component.scss',
 })
-export class V1XUsersComponent extends V1BaseUiComponent {
-  curr = signal<V1XUsers_MapUser | undefined>(undefined);
+export class V1XUsersComponent
+  extends V1BaseUiComponent
+  implements V1BaseUi_HasIt
+{
+  $curr = signal<V1XUsers_MapUser | undefined>(undefined);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
@@ -57,11 +63,11 @@ export class V1XUsersComponent extends V1BaseUiComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   getSelectedUserId() {
-    return (this.curr() as V1XUsers_MapUser).id as number;
+    return (this.$curr() as V1XUsers_MapUser).id as number;
   }
 
   getSelectedUser() {
-    return this.curr();
+    return this.$curr();
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -69,7 +75,7 @@ export class V1XUsersComponent extends V1BaseUiComponent {
   /* //////////////////////////////////////////////////////////////////////// */
 
   onSelectedUser(user: V1XUsers_MapUser) {
-    this.curr.set(user);
+    this.$curr.set(user);
     this.selectedUser.emit(user);
   }
 
@@ -92,8 +98,8 @@ export class V1XUsersComponent extends V1BaseUiComponent {
     super._xSetState();
 
     // Set currently selected user.
-    if (!this.defaultSelectedUser()) this.curr.set(this.users()[0]);
-    else this.curr.set(this.defaultSelectedUser());
+    if (!this.defaultSelectedUser()) this.$curr.set(this.users()[0]);
+    else this.$curr.set(this.defaultSelectedUser());
 
     // Set state.
     this.state.set('data');

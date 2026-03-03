@@ -13,10 +13,10 @@
         [closer]="dropdownList"
         [isOpen]="false"
         targetOpenClass="f8-dropdown__container--state-open"
-        [title]="curr()?.name"
+        [title]="$curr()?.name"
       >
         <span class="pointer-events-none truncate">
-          {{ curr()?.name }}
+          {{ $curr()?.name }}
         </span>
         <i class="bi bi-chevron-down pointer-events-none"></i>
       </button>
@@ -36,7 +36,7 @@
                 name="entity"
                 role="combobox"
                 [attr.aria-label]="entity.name"
-                [checked]="curr()?.id === entity.id"
+                [checked]="$curr()?.id === entity.id"
                 (change)="onSelectedUser(entity)"
               />
               <label [for]="entity.id" class="e-list__btn">

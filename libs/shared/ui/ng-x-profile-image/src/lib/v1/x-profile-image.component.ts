@@ -14,7 +14,10 @@ import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { V1BaseUi_DataType } from '@x/shared-util-ng-bases-model';
+import {
+  V1BaseUi_HasIt,
+  V1BaseUi_DataType,
+} from '@x/shared-util-ng-bases-model';
 import { V1BaseUiComponent } from '@x/shared-util-ng-bases';
 import { V1XCredit_MapSummary } from '@x/shared-map-ng-x-credit';
 
@@ -32,7 +35,10 @@ import { V1XCredit_MapSummary } from '@x/shared-map-ng-x-credit';
   templateUrl: './x-profile-image.component.html',
   styleUrl: './x-profile-image.component.scss',
 })
-export class V1XProfileImageComponent extends V1BaseUiComponent {
+export class V1XProfileImageComponent
+  extends V1BaseUiComponent
+  implements V1BaseUi_HasIt
+{
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
