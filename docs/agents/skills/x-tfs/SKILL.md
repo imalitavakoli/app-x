@@ -1,11 +1,9 @@
 ---
-name: x-tfs-v1
-description: What? Generate a TFS (Technical Functional Specification) for a feature (functionality) that should be built aligned with monorepo + Angular apps/libs architecture. When? Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
+name: x-tfs
+description: WHAT? Generate a TFS (Technical Functional Specification) for a feature (functionality) that should be built aligned with monorepo + Angular apps/libs architecture. WHEN? Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
 metadata:
-  category: 'generic'
-  version: '1.0.0'
-  release-date: '2026-02-02'
-  author: Ali
+  modifies-in: '/docs/agents/funs/'
+  version: '1.1.0'
 ---
 
 # TFS Generator
@@ -14,37 +12,33 @@ Generate a TFS (Technical Functional Specification) for a feature (functionality
 
 ## When to Use This Skill
 
-Use this skill when:
-
-- Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
+Asked to generate (create) a TFS with the information that is provided, Technical Document, Frontend Architecture, System Requirements Specification, Technical Design Document, or similar requests.
 
 ## Role
 
-You, agent, are a senior frontend developer (experienced in monorepo + Angular workspaces), capable of producing complete technical documents.
+You are a senior frontend developer (monorepo + Angular) who produces complete, implementation-ready technical specs.
 
 ## Prerequisites
 
-**Mandatory Prerequisites**
-The following prerequisite(s) are MANDATORY to check. **If not met, you MUST ask the user to provide them and STOP until provided.**
+**Mandatory Prerequisites**: If missing, ask the user and STOP.
 
-- PRD file of the feature (functionality) attached as context.
+- PRD file for the feature (functionality) attached as context.
 
-**Discovery Questions (Optional Inputs)**
-You **MUST** ask the user for the following items. If the user does not provide them, you may proceed without them.
+**Discovery Questions (Optional Inputs)**: You **MUST** ask the user. If not provided, you may proceed without them.
 
-- Screenshots of pages/screens (helpful for UI specs and its rendering rules).
+- Screenshots of the relevant pages/screens (helps with UI rendering rules).
 
-> ⚠️ **IMPORTANT:** You yourself DO NOT need to research for the prerequisites. You only need to ask the user for it.
+> ⚠️ **IMPORTANT:** Do not research the prerequisites; only use user-provided info.
 
 ## Mandatory Agent Instructions
 
 - You MUST use the official template structure and section order exactly as provided in the template.
-- Do NOT add, remove, or rename sections in the template. **Exceptions:**
-  - Quotes in the template are guidelines for you, but they should be removed from the draft.
-  - Lib type specifications that are NOT needed.
-  - If the functionality is classified as a 'abstract' one, then "_User Experience & Flows (Technical & Frontend Perspective)_" section is removed.
-- If a step (or sub step) requires user input or confirmation, you MUST ask and wait for a response before proceeding.
-- Do NOT merge, skip, or improvise steps. Follow the workflow strictly.
+- Do NOT add/remove/rename template sections. **Allowed exceptions:**
+  - "quote" helper texts are guidelines for you, but remove them from the final draft.
+  - Omit lib-type specification sections that are not needed.
+  - If the functionality is classified as **abstract**, remove the "_User Experience & Flows (Technical & Frontend Perspective)_" section.
+- Any step/sub-step that requires user input or approval is a hard gate: ask, wait, then continue.
+- Do NOT merge/skip/improvise steps. Follow the workflow strictly.
 - **Crucial:** You MUST follow the _exact_ granularity and style of the examples in the template (e.g., use `[data-cy="..."]` selectors in Rendering Rules, not generic descriptions).
 
 ## Workflow
@@ -68,11 +62,9 @@ You **MUST** ask the user for the following items. If the user does not provide 
 
 ### 1. Analyse
 
-Analyse the following documents:
+Analyse:
 
-- [TFS Template](./assets/template.md) to understand what sections the TFS should have, and how to prepare the TFS draft.  
-  **Crucial:** Quotes in the template are guidelines for you, but they should be removed from the draft.  
-  **Crucial:** You must follow the _exact_ granularity and style of the examples in the template.
+- [TFS Template](./assets/template.md).
 - PRD.
 - The following workspace documents:
   - `/docs/getting-started/library-types-and-their-relationship.md` (helpful for '_Functionality Classification_' TFS section).
@@ -81,13 +73,14 @@ Analyse the following documents:
 
 ### 2. Generate Draft
 
-The draft can simply look like the template. Because in the next steps you will update it.
+Create a draft that mirrors the template headings (content can be incomplete initially).
 
-**Where to save the draft? Ask the user** for:
+Ask the user where to save it:
 
-- Target directory. Recommended `/docs/agents/funs/`.
-- File name. Recommended `TFS_{functionality-name}.md`. e.g., `TFS_ng-chart.md`, `TFS_animation.md`.
-  **If a file already exists, notify the user before overwriting.**
+- Target directory. Default: `/docs/agents/funs/`.
+- File name. Default: `TFS_{functionality-name}.md`. e.g., `TFS_ng-chart.md`, `TFS_animation.md`.
+
+If the file exists, ask before overwriting.
 
 ### 3. Update Draft
 
@@ -98,44 +91,51 @@ The draft can simply look like the template. Because in the next steps you will 
 > - Skip 'ui' section if: Only abstract functionality (no visual components) OR reusing existing 'ui' libs
 > - Skip 'feature' section if: Only abstract functionality OR reusing existing 'feature' libs
 
-Update the draft using available PRD description and TFS template by following the steps below:
+Fill the draft using the PRD, mapping details into the correct template sections.
+
+General rules while filling:
+
+- Replace placeholders (e.g., `{name}`, `{NAME-FR-01}`, `{NAME-BR-01}`) with one consistent feature key.
+- Keep requirements and rules atomic + testable.
+- Do not invent facts; if unsure, mark as an open question and ask.
 
 #### 1. Technical Name
 
 1. Convert PRD feature name to kebab-case.
-
-2. Prefix with `ng-` (which stands for Angular), if the feature has logic. e.g., `ng-chart`.
-
-3. Confirm with the user.
+2. If the feature has logic, prefix with `ng-` (Angular). Example: `ng-chart`.
+3. Ask the user to confirm the technical name.
 
 #### 2. Fill "_Existing Dependencies & Reuse_" TFS section
 
-> ⚠️ **CONFIRM:** Ask user about existing libs (util, map, data-access, ui, feature) & recommendations for shared logic.
+> ⚠️ **CONFIRM:** Ask what existing libs to reuse (util/map/data-access/ui/feature) and what should be shared.
 
-1. Ask which libs to use, including lib types, file names, class names, and functions. Format to use: `Question → Suggested answer`.  
-   e.g., "Which 'util' lib(s) should be used for this functionality? Please provide the lib name(s), lib type(s), and any relevant file names, class names, or function names.".
+1. Ask which libs to use (lib type + lib name + key files/classes/functions).
+   - Format: `Question → Suggested answer`.
+   - Example: "Which util lib(s) should we reuse? Provide lib name/type and any relevant files/classes/functions."
 
-2. Recommend what other parts of the business logic (according to the PRD) worth to be shared across other features (functionalities) in the workspace. Format to use: `Recommendation → Reason → Question → Options`.  
-   e.g., "I recommend using a shared 'map' / 'data-access' lib called 'ng-meter' to fetch the list of meters; because according to the 'Overview' section of the PRD, this functionality will not be used only by this functionality (ng-chart). Would you like to implement this part of the logic as a separate functionality? (Y/N)".
+2. Recommend which parts should become shared functionality across the workspace.
+   - Format: `Recommendation → Reason → Question → Options`.
+   - Example: "I recommend extracting meter fetching into shared map/data-access called 'ng-meter'; Because because according to the 'Overview' section of the PRD, this functionality will not be used only by this functionality (ng-chart); Would you like to implement this part of the logic as a separate functionality? (Y/N)"
 
 3. Add approved libs to the section. If a lib is recommended but not available, flag it with `[RECOMMENDED]` keyword.
 
 #### 3. Fill "_Functionality Classification_" TFS section
 
-> ⚠️ **IMPORTANT:** Do not continue to the next steps before analysing the example TFS files after determining the functionality type. This will help you understand how to fill the rest of the TFS sections.
+> ⚠️ **IMPORTANT:** After determining the type, read the matching example before continuing.
 
-1. Based on step 3.2 answers and the libs that the functionality requires to have for its own, determine type (e.g., Hybrid).
-2. Based on the chosen type, look at the corrsponding example TFS files which have been already created for some functionalities:
+1. Based on step 3.2 and required libs, determine the functionality type (e.g., Hybrid).
+2. Read the corresponding example TFS:
    - If Abstract, look at [abstract](./assets/examples/abstract.md).
    - If Visual, look at [visual](./assets/examples/visual.md).
    - If Hybrid, look at [hybrid](./assets/examples/hybrid.md).
 
 #### 4. Fill "_'map' Library Specification_" TFS section
 
-> ⚠️ **CONFIRM:** Ask user about API endpoints (method, URL, auth, headers, body, response) & CRUD determination.
+> ⚠️ **CONFIRM:** Ask for API contract details and confirm CRUD determination.
 
-1. Ask API endpoints, HTTP methods, headers, body, responses. Format to use: `Question → Suggested answer`.  
-   e.g., "Which API endpoints should be called? Please provide the HTTP method (e.g., GET), endpoint, authorization type (public or protected), required headers, request body, and sample response(s).".
+1. Ask for endpoints (method, URL, auth, headers, body, sample responses).
+   - Format: `Question → Suggested answer`.
+   - Example: "Which API endpoints should the 'map' library have? Please provide method (e.g., GET), URL, auth (public or protected), headers, body, and sample responses for each endpoint."
 
 2. Determine whether a CRUD operation is going to be made, and confirm with the user.
 
@@ -143,11 +143,11 @@ Update the draft using available PRD description and TFS template by following t
 
 #### 5. Fill "_'data-access' Library Specification_" TFS section
 
-Infer from 'map' section, and ensure at least one method per API call.
+Infer from the 'map' section; ensure at least one method per API call.
 
 #### 6. Fill "_'ui' Library Specification_" TFS section
 
-> ⚠️ **CONFIRM:** If MORE THAN 1 'ui' component, ask user approval before proceeding.
+> ⚠️ **CONFIRM:** If exporting more than 1 'ui' component, ask for explicit approval.
 
 1. Based on '_User Experience & Flows_' section of PRD, understand how many components should be exported. If more than 1, confirm with the user. Format to use: `Recommendation → Reason → Question → Options`.  
    e.g., "I recommend exporting two components; because according to the 'User Experience & Flows' section of the PRD, the user should be navigated to another screen or page. Do you agree? (Y/N)".
@@ -174,7 +174,7 @@ Infer from 'map' section, and ensure at least one method per API call.
 
 #### 7. Fill "_'feature' Library Specification_" TFS section
 
-> ⚠️ **CONFIRM:** If MORE THAN 1 'feature' component, ask user approval before proceeding.
+> ⚠️ **CONFIRM:** If exporting more than 1 'feature' component, ask for explicit approval.
 
 1. Infer from 'ui' section, understand how many components should be exported. If more than 1, confirm with the user. Format to use: `Recommendation → Reason → Question → Options`.  
    e.g., "I recommend exporting two components; because according to the 'ui' lib specification, we agreed to export two UI components. It also makes sense to have the corresponding 'feature' versions of those components as well. Do you agree? (Y/N)".
@@ -197,9 +197,9 @@ Infer from 'map' section, and ensure at least one method per API call.
 
 #### 8. Fill "_User Experience & Flows (Technical & Frontend Perspective)_" TFS section
 
-> ⚠️ **IMPORTANT:** Only include this section, if the functionality is NOT classified as a 'abstract' one.
+> ⚠️ **IMPORTANT:** Only include this section if the functionality is NOT classified as abstract.
 
-When you're in this step, you already know:
+At this point you already know:
 
 - What libs are going to be used for the functionality.
 - What methods 'map' libs should have (if any).
@@ -209,7 +209,7 @@ When you're in this step, you already know:
 So do the following for each 'feature' component:
 
 1. Complete writing '_Primary flow_' section.
-2. Add additional flows (if necessarily) according to '_Rendering Rules_' section of the 'feature' component's corresponding 'ui' component specifications.
+2. Add additional flows (if necessary) based on the corresponding 'ui' component rendering rules.
 
 #### 9. Try to map remaining TFS sections
 
@@ -220,50 +220,46 @@ So do the following for each 'feature' component:
 
 #### Review Checklist
 
-**Before finalization, you MUST verify the following checklist:**
+Before finalization, verify the following:
 
-Review each item and confirm that it is satisfied:
+- [ ] **Approval(s):** Have you obtained user approval(s) for Technical Name (step 3.1)
+  - Confirmed: Technical name proposed and user approved?
 
-- [ ] **Approval(s): Have you obtained user approval(s) for Technical Name (step 3.1)**
-  - ✅ Confirmed: Technical name proposed and user approved?
+- [ ] **Approval(s):** Have you obtained user approval(s) for Existing Dependencies (step 3.2)
+  - Asked: Which 'util' libs to use?
+  - Asked: Which 'map'/'data-access' libs to reuse?
+  - Asked: Which 'ui'/'feature' libs to reuse?
+  - Recommended: Any parts worth sharing across features?
+  - Confirmed: User approved recommended shared libs (if any)?
 
-- [ ] **Approval(s): Have you obtained user approval(s) for Existing Dependencies (step 3.2)**
-  - ✅ Asked: Which 'util' libs to use?
-  - ✅ Asked: Which 'map'/'data-access' libs to reuse?
-  - ✅ Asked: Which 'ui'/'feature' libs to reuse?
-  - ✅ Recommended: Any parts worth sharing across features?
-  - ✅ Confirmed: User approved recommended shared libs (if any)?
+- [ ] **Approval(s):** Have you obtained user approval(s) for 'map' Library (step 3.4)
+  - Asked: API endpoints, methods, headers, body, responses?
+  - Confirmed: CRUD operation determination?
 
-- [ ] **Approval(s): Have you obtained user approval(s) for 'map' Library (step 3.4)**
-  - ✅ Asked: API endpoints, methods, headers, body, responses?
-  - ✅ Confirmed: CRUD operation determination?
+- [ ] **Approval(s):** Have you obtained user approval(s) for 'ui' Library (step 3.6)
+  - Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
 
-- [ ] **Approval(s): Have you obtained user approval(s) for 'ui' Library (step 3.6)**
-  - ✅ Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
+- [ ] **Approval(s):** Have you obtained user approval(s) for 'feature' Library (step 3.7)
+  - Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
 
-- [ ] **Approval(s): Have you obtained user approval(s) for 'feature' Library (step 3.7)**
-  - ✅ Confirmed: If MORE THAN 1 component should be exported, did you ask user to confirm? **(CRITICAL)**
-
-- [ ] **Section(s): Do CRITICAL section(s) in the template exist in the draft**
-  - ✅ Exists: "Overview" section and sub sections?
-  - ✅ Exists: "Library Breakdown" section and sub sections?
-  - ✅ Exists: "User Experience & Flows (Technical & Frontend Perspective)" section and sub sections?
+- [ ] **Section(s):** All template sections exist (with their subsections), including:
+  - Overview
+  - Library Breakdown
+  - User Experience & Flows (Technical & Frontend Perspective)
 
 #### Validation Steps (Iterative Loop)
 
-1. **Check all items** - Go through the entire checklist above
-2. **If ANY item which is under 'Approval(s)' is NOT checked ✅:**
-   - Stop and ask user for the missing approval(s)
-   - Wait for user response
-   - **Return to step 4.1** (re-check the entire checklist)
-3. **If ANY item which is under 'Section(s)' is NOT checked ✅:**
-   - Stop and edit the draft to fill the missing section(s)
-   - **Return to step 4.1** (re-check the entire checklist)
-4. **If ALL items are checked ✅:**
-   - Present summary: "I have confirmed all requirements are met. The final draft is ready."
-   - Proceed to step 5 (Summary)
+1. Check the checklist above.
+2. If any 'Approval(s)' item fails:
+   - Stop and ask user for the missing approval(s).
+   - Wait for user response.
+   - Re-run step 4.1 (re-check the entire checklist).
+3. If any 'Section(s)' item fails:
+   - Stop and edit the draft to fill the missing section(s).
+   - Re-run step 4.1 (re-check the entire checklist).
+4. If all pass: state that validation passed and continue to step 5 (Summary).
 
-> ⚠️ **IMPORTANT:** Do NOT proceed to Summary until this validation loop confirms ALL items are ✅.
+> ⚠️ **IMPORTANT:** Do NOT proceed to step 5 (Summary) until this validation loop confirms ALL checklist items are satisfied.
 
 ### 5. Summary
 
