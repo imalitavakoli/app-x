@@ -2,9 +2,16 @@
 
 # Folder structure 📁
 
-**How the workspace apps run?** The building tool (CLI), reads `apps/{app-name}/project.json`, and that file has already defined the following inside of itself: `apps/{app-name}/src/main.ts` as the main file to load the app codes, and `apps/{app-name}/src/index.html` as the index file to bring up the app itself.
+**How the workspace apps get compiled?**  
+The building tool (CLI), reads `apps/{app-name}/project.json`, and that file has already defined the following inside of itself:
 
-Below we have drawn only the map of important files and directories.
+- `apps/{app-name}/src/main.ts` as the main file to load the app codes.
+- `apps/{app-name}/src/index.html` as the index file to bring up the app itself.
+
+**What are the workspace most important files and directories?**  
+Although we may have many apps and libraries in the workspace, when building new functionality or updating existing code, it's important to understand the **high-level structure** of the workspace's files and directories.
+
+This helps us identify where apps and libs are located, what types of libraries exist, where application assets and configurations (e.g., DEP configs) are stored, as well as where shared resources such as Base CSS styles, TailwindCSS configurations, and other core setup files reside.
 
 ```
 x/
@@ -33,7 +40,12 @@ x/
 │   │   ├── ui/                                     // Holds 'ui' lib (sometimes non-technology related lib) of an app (holds e.g., 'header.scss' file).
 │   │   └── util/                                   // Holds 'util' lib of an app (holds e.g., 'users.service.ts' file).
 │   └── shared/                                     // Holds shared libs (such as 'feature', 'ui', 'data-access', 'util', and 'map') across apps & other libs.
-│       └── api/                                    // Holds shared 'api' libs.
+│       ├── api/                                    // Holds shared 'api' libs.
+│       ├── map/ng-config                           // Holds shared DEP config API & Map interfaces (holds e.g., `V2Config_ApiDep` and `V2Config_MapDep`).
+│       ├── ui/base                                 // Holds shared Base CSS styles. i.e., the styles that are applied on `html` and `body`, and available root CSS variables (such as `--e-primary-color`)
+│       ├── ui/tailwindcss                          // Holds shared Base TailwindCSS config (`preset-tailwind.config.js`) and Base CSS styles and classes that use TailwindCSS `@apply` (such as `.e-container`).
+│       ├── util/ng-bases                           // Holds shared Base classes for different types of libs.
+│       └── util/ng-bases-model                     // Holds shared Base interfaces/types/mocks for different types of libs.
 ├── tools/                                          // Holds the NX workspace executors, generators, and some useful scripts that can act on our code base.
 ├── .eslintrc.json                                  // Defines the Eslint rules (library types constraints).
 ├── CODEOWNERS                                      // Defines individuals or teams (code-owners) who are expert in a specific code area.

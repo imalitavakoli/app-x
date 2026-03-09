@@ -95,7 +95,15 @@ To improve teamwork, we follow some best practices:
 
 &nbsp;
 
-- **Component's HTML template make the decisions to what to render & how to style**. So decisions to (1) show a content by `@if` blocks, (2) use some CSS classes or styles by `[ngClass]` or `[ngStyle]`, and (3) DEP config reading (e.g., `(configFacade.dataConfigDep$ | async)?.assets?.thisAuthImgBg`), all should happen in your component templates. But some other stuff, like calculating two values and returning a new value, should happen in your component logic itself.
+- **Decision about which version of shared libs to import**. When building different types of libraries, you may need to import other shared libraries that already exist in the workspace. If multiple versions of a library are available, you should generally use the latest version, unless there is a clear and justified reason not to do so.
+
+&nbsp;
+
+- **Component's HTML template is the one who makes the decisions to what to render & how to style**. So decisions to (1) show a content by `@if` blocks, (2) use some CSS classes or styles by `[ngClass]` or `[ngStyle]`, and (3) DEP config reading (e.g., `(configFacade.dataConfigDep$ | async)?.assets?.thisAuthImgBg`), all should happen in your component templates. But some other stuff, like calculating two values and returning a new value, should happen in your component logic itself.
+
+&nbsp;
+
+- **When writing styles, use TailwindCSS directly in HTML**. If the styles are repetitive, define a CSS class for the component's HTML element and use TailwindCSS `@apply`. If you need to define custom CSS variables (for example, when requested by a designer), only then use vanilla CSS where necessary.
 
 &nbsp;
 
