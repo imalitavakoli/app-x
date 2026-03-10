@@ -321,6 +321,7 @@ Here's the list of **this** component's inputs:
 **Required**
 
 - `data: InputSignal<V1Name_MapInfo[]>` — …
+- `userId: InputSignal<number>` — …
 - …
 
 **Optional**
@@ -359,17 +360,19 @@ Define what should be rendered in HTML template based on `state` and `dataType`.
   - `section[data-cy="lib-name-v1_component-name_loading"]` — Loader / skeleton only
 
 - `state = empty`:
-  - Heading
+  - `h2[data-cy="lib-name-v1_component-name_empty-h2"]` — H2. e.g., "Hello No.123" (using `lib_name.h2` translation key with `userId`).
   - `section[data-cy="lib-name-v1_component-name_empty"]` — Holds the whole empty section
 
 - `state = data`:
   - `dataType = all`:
-    - Heading
-    - `[data-cy="lib-name-v1_component-name_data-list"]` — Data list section
-    - `button[data-cy="lib-name-v1_component-name_data-btn-view-details"]` — Button to view details
+    - `h2[data-cy="lib-name-v1_component-name_data-all-h2"]` — H2. e.g., "Hello No.123" (using `lib_name.h2` translation key with `userId`).
+    - `h3[data-cy="lib-name-v1_component-name_data-all-h3"]` — H3. e.g., "All" (using `lib_name.all_h3` translation key).
+    - `[data-cy="lib-name-v1_component-name_data-all-list"]` — Data list section
+    - `button[data-cy="lib-name-v1_component-name_data-all-btn-view-details"]` — Button to view details
   - `dataType = one`:
-    - Heading
-    - `[data-cy="lib-name-v1_component-name_data-item"]` — Data item section
+    - `h2[data-cy="lib-name-v1_component-name_data-one-h2"]` — H2. e.g., "Hello No.123" (using `lib_name.h2` translation key with `userId`).
+    - `h3[data-cy="lib-name-v1_component-name_data-one-h3"]` — H3. e.g., "Details: Item Name" (using `lib_name.one_h3` translation key with `data[id].name`).
+    - `[data-cy="lib-name-v1_component-name_data-one-item"]` — Data item section
 
 ###### Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)
 
@@ -381,17 +384,25 @@ Define what should be rendered in HTML template based on `state` and `dataType`.
 > 1. Pick the most related 'Functional Requirement' & 'Business Rule' for this component.
 > 2. Put the picked 'Business Rule' items under the most related picked 'Functional Requirement' items.
 > 3. Re-phrase 'Functional Requirement' & 'Business Rule' items to reflect to the correct rendered UI elements, inputs, outputs, and methods.
+>
+> Tip! Based on the technical specifications (rendered UI elements, inputs, outputs, and methods), sometimes it makes sense to break one single PRD 'Functional Requirement' into more items. In such cases, do it and add more required 'Business Rule' items under each new 'Functional Requirement' item. e.g., 'NAME-FR-03' PRD's 'Functional Requirement' may need to be broken into 2 items, 'NAME-FR-03a' & 'NAME-FR-03b', in order to cover more related scenarios (e.g., related rendered UI elements) based on the component's different input values.
 
-- **NAME-FR-01**: Test 'state'; Based on defined inputs.
+In test cases, you may need to verify whether an element renders the correct translation key. In such situations, you can mock `TranslocoService`, since the component may use `TranslocoDirective` or `TranslocoService` to apply translation keys to its elements. This applies when translation keys are specified in the '_Rendering Rules_' section of the component.
+
+- **NAME-FR-01** _(maps to PRD FR-01)_: Test 'state'; Based on defined inputs.
   - **NAME-BR-01**: Given none/some required inputs _(Arrange)_; Then `state = loading` _(Negative & boundary)_.
   - **NAME-BR-02**: Given ALL required inputs _(Arrange)_; When `data = []` _(Act)_; Then `state = empty` _(Assert)_.
   - **NAME-BR-03**: Given ALL required inputs _(Arrange)_; When `data != []` _(Act)_; Then `state = data` _(Assert)_.
-- **NAME-FR-02**: Test rendered elements; Based on 'state'.
+- **NAME-FR-02** _(maps to PRD FR-02)_: Test rendered elements; Based on 'state' & 'dataType'.
   - **NAME-BR-04**: Given `state = loading` _(Arrange)_; Then `[data-cy="lib-name-v1_component-name_loading"]` must be displayed _(Act + Assert)_.
   - **NAME-BR-05**: Given `state = empty` _(Arrange)_; Then `[data-cy="lib-name-v1_component-name_empty"]` must be displayed _(Act + Assert)_.
   - **NAME-BR-06**: Given `state = data` & `dataType = all` _(Arrange)_; Then `[data-cy="lib-name-v1_component-name_data-list"]` must be displayed _(Act + Assert)_.
-- **NAME-FR-03**: Test output emits; Based on interactions.
-  - **NAME-BR-07**: Given `state = data` & `dataType = all` _(Arrange)_; When `button[data-cy="lib-name-v1_component-name_data-btn-view-details"]` is clicked _(Act)_; Then `clickedDetails` must be emitted _(Assert)_.
+- **NAME-FR-03a** _(maps to PRD FR-03)_: Test rendered element 'H3'; Based on 'state' & 'dataType'.
+  - **NAME-BR-07**: Given `state = data` & `dataType = all` _(Arrange)_; Then `h3[data-cy="lib-name-v1_component-name_data-all-h3"]` must use `lib_name.all_h3` translation key _(Act + Assert)_.
+- **NAME-FR-03b** _(maps to PRD FR-03)_: Test rendered element 'H3'; Based on 'state' & 'dataType'.
+  - **NAME-BR-08**: Given `state = data` & `dataType = one` _(Arrange)_; Then `h3[data-cy="lib-name-v1_component-name_data-one-h3"]` must use `lib_name.one_h3` translation key _(Act + Assert)_.
+- **NAME-FR-04** _(maps to PRD FR-04)_: Test output emits; Based on interactions.
+  - **NAME-BR-09**: Given `state = data` & `dataType = all` _(Arrange)_; When `button[data-cy="lib-name-v1_component-name_data-btn-view-details"]` is clicked _(Act)_; Then `clickedDetails` must be emitted _(Assert)_.
 
 ###### Analytics & Tracking
 
@@ -509,10 +520,10 @@ Here's the list of **this** component's outputs:
 > 2. Put the picked 'Business Rule' items under the most related picked 'Functional Requirement' items.
 > 3. Re-phrase 'Functional Requirement' & 'Business Rule' items to reflect to the correct rendered UI elements, inputs, outputs, and methods.
 
-- **NAME-FR-01**: Test facade method calls; Based on defined inputs.
+- **NAME-FR-01** _(maps to PRD FR-01)_: Test facade method calls; Based on defined inputs.
   - **NAME-BR-03**: Given ALL required inputs _(Arrange)_; Then `V1NameFacade` facade's `getInfo` method must be called _(Act + Assert)_.
-- **NAME-FR-03**: Test facade method calls; Based on interactions.
-  - **NAME-BR-07**: Given ALL required inputs _(Arrange)_; When `V1Name1Component` emits `clickedDetails` _(Act)_; Then `V1NameFacade` facade's `getInfo` method must be called _(Assert)_.
+- **NAME-FR-04** _(maps to PRD FR-04)_: Test facade method calls; Based on interactions.
+  - **NAME-BR-09**: Given ALL required inputs _(Arrange)_; When `V1Name1Component` emits `clickedDetails` _(Act)_; Then `V1NameFacade` facade's `getInfo` method must be called _(Assert)_.
 
 ###### Analytics & Tracking
 

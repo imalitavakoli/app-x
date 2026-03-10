@@ -170,10 +170,12 @@ Define what should be rendered in HTML template based on `state` and `dataType`.
 
 ###### Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)
 
-- **XPROFILEIMAGE-FR-01**: Test 'state'; Based on defined inputs.
+In test cases, you may need to verify whether an element renders the correct translation key. In such situations, you can mock `TranslocoService`, since the component may use `TranslocoDirective` or `TranslocoService` to apply translation keys to its elements. This applies when translation keys are specified in the '_Rendering Rules_' section of the component.
+
+- **XPROFILEIMAGE-FR-01** _(maps to PRD FR-01)_: Test 'state'; Based on defined inputs.
   - **XPROFILEIMAGE-BR-01**: Given none/some required inputs _(Arrange)_; Then `state = loading` _(Negative & boundary)_.
   - **XPROFILEIMAGE-BR-02**: Given ALL required inputs _(Arrange)_; Then `state = data` _(Act + Assert)_.
-- **XPROFILEIMAGE-FR-02**: Test rendered elements; Based on 'state'.
+- **XPROFILEIMAGE-FR-02** _(maps to PRD FR-02)_: Test rendered elements; Based on 'state'.
   - **XPROFILEIMAGE-BR-03**: Given `state = loading` _(Arrange)_; Then `[data-cy="x-profile-image-v1_profile-image_loading"]` must be displayed _(Act + Assert)_.
   - **XPROFILEIMAGE-BR-04**: Given `state = data` _(Arrange)_; Then `[data-cy="x-profile-image-v1_profile-image_data"]` must be displayed _(Act + Assert)_.
 
@@ -245,7 +247,7 @@ Here's the list of **this** component's outputs:
 
 ###### Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)
 
-- **XPROFILEIMAGE-FR-01**: Test facade method calls; Based on defined inputs.
+- **XPROFILEIMAGE-FR-01** _(maps to PRD FR-01)_: Test facade method calls; Based on defined inputs.
   - **XPROFILEIMAGE-BR-02**: Given ALL required inputs _(Arrange)_; Then `V1XUsersFacade` facade's `getAll` method must be called _(Act + Assert)_.
 
 ###### Analytics & Tracking

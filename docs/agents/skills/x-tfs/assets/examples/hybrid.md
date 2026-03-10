@@ -642,15 +642,17 @@ Define what should be rendered in HTML template based on `state` and `dataType`.
 
 ###### Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)
 
-- **XUSERS-FR-01**: Test 'state'; Based on defined inputs.
+In test cases, you may need to verify whether an element renders the correct translation key. In such situations, you can mock `TranslocoService`, since the component may use `TranslocoDirective` or `TranslocoService` to apply translation keys to its elements. This applies when translation keys are specified in the '_Rendering Rules_' section of the component.
+
+- **XUSERS-FR-01** _(maps to PRD FR-01)_: Test 'state'; Based on defined inputs.
   - **XUSERS-BR-01**: Given none/some required inputs _(Arrange)_; Then `state = loading` _(Negative & boundary)_.
   - **XUSERS-BR-02**: Given ALL required inputs _(Arrange)_; When `users = []` _(Act)_; Then `state = empty` _(Assert)_.
   - **XUSERS-BR-03**: Given ALL required inputs _(Arrange)_; When `users != []` _(Act)_; Then `state = data` _(Assert)_.
-- **XUSERS-FR-02**: Test rendered elements; Based on 'state'.
+- **XUSERS-FR-02** _(maps to PRD FR-02)_: Test rendered elements; Based on 'state'.
   - **XUSERS-BR-04**: Given `state = loading` _(Arrange)_; Then `[data-cy="x-users-v1_users_loading"]` must be displayed _(Act + Assert)_.
   - **XUSERS-BR-05**: Given `state = empty` _(Arrange)_; Then `[data-cy="x-users-v1_users_empty"]` must be displayed _(Act + Assert)_.
   - **XUSERS-BR-06**: Given `state = data` _(Arrange)_; Then `[data-cy="x-users-v1_users_data"]` must be displayed _(Act + Assert)_.
-- **XUSERS-FR-03**: Test output emits; Based on interactions.
+- **XUSERS-FR-03** _(maps to PRD FR-03)_: Test output emits; Based on interactions.
   - **XUSERS-BR-07**: Given `state = data` _(Arrange)_; When `input[data-cy="x-users-v1_users_data-list-item-input"]` is clicked _(Act)_; Then `selectedUser` must be emitted _(Assert)_.
 
 ###### Analytics & Tracking
@@ -726,9 +728,9 @@ Here's the list of **this** component's outputs:
 
 ###### Functional Requirements & Business Rule Breakdown (Technical & Frontend Perspective)
 
-- **XUSERS-FR-01**: Test facade method calls; Based on defined inputs.
+- **XUSERS-FR-01** _(maps to PRD FR-01)_: Test facade method calls; Based on defined inputs.
   - **XUSERS-BR-03**: Given ALL required inputs _(Arrange)_; Then `V1XUsersFacade` facade's `getAll` method must be called _(Act + Assert)_.
-- **XUSERS-FR-03**: Test facade method calls; Based on interactions.
+- **XUSERS-FR-03** _(maps to PRD FR-03)_: Test facade method calls; Based on interactions.
   - **XUSERS-BR-07**: Given ALL required inputs _(Arrange)_; When `V1XUsersComponent` emits `selectedUser` _(Act)_; Then `V1XUsersFacade` facade's `setSelectedId` method must be called _(Assert)_.
 
 ###### Analytics & Tracking
