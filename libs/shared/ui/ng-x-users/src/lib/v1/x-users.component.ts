@@ -34,7 +34,6 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
  */
 @Component({
   selector: 'x-x-users-v1',
-  standalone: true,
   imports: [CommonModule, FormsModule, V1ToggleMeDirective],
   templateUrl: './x-users.component.html',
   styleUrl: './x-users.component.scss',

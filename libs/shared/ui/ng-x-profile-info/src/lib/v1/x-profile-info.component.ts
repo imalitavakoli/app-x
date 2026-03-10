@@ -34,7 +34,6 @@ import { V1CurrencyPipe } from '@x/shared-ui-ng-pipes';
  */
 @Component({
   selector: 'x-x-profile-info-v1',
-  standalone: true,
   imports: [
     CommonModule,
     TranslocoDirective,

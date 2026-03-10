@@ -42,7 +42,6 @@ import {
 
 @Component({
   selector: 'x-x-users-fea-v1',
-  standalone: true,
   imports: [
     CommonModule,
     TranslocoDirective,

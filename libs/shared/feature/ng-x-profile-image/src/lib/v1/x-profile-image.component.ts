@@ -33,7 +33,6 @@ import { V1XProfileImageComponent } from '@x/shared-ui-ng-x-profile-image';
 
 @Component({
   selector: 'x-x-profile-image-fea-v1',
-  standalone: true,
   imports: [
     CommonModule,
     TranslocoDirective,

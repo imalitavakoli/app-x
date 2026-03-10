@@ -19,7 +19,6 @@ import { V1XUsersFeaComponent } from '@x/shared-feature-ng-x-users';
 
 @Component({
   selector: 'x-x-users-page-v1',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,

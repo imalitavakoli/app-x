@@ -230,7 +230,6 @@ import {
 
 @Component({
   selector: 'x-x-profile-info-fea-v1',
-  standalone: true,
   imports: [
     CommonModule,
     TranslocoDirective,

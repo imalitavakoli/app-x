@@ -7,7 +7,6 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 
 @Component({
   selector: 'x-x-users-all-page-v1',
-  standalone: true,
   imports: [RouterModule],
   templateUrl: './users-all.component.html',
   styleUrls: ['./users-all.component.scss'],

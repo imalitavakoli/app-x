@@ -30,7 +30,6 @@ import { V1XCredit_MapSummary } from '@x/shared-map-ng-x-credit';
  */
 @Component({
   selector: 'x-x-profile-image-v1',
-  standalone: true,
   imports: [CommonModule, AngularSvgIconModule],
   templateUrl: './x-profile-image.component.html',
   styleUrl: './x-profile-image.component.scss',
