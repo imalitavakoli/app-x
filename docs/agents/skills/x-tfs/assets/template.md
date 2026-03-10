@@ -407,8 +407,6 @@ In test cases, you may need to verify whether an element renders the correct tra
 ###### Analytics & Tracking
 
 > These help in defining Analytics logs (e.g., Firebase Analytics).
->
-> **Tip!** Components can simply have a `log` method to prepare logging to different analytic services, which can be implemented later.
 
 - Events to be tracked:
   - When user clicks `button[data-cy="lib-name-v1_component-name_data-btn-view-details"]`; log `{name: 'clicked_viewDetails', params: {com: 'V1Name1Component'}}`
@@ -528,8 +526,6 @@ Here's the list of **this** component's outputs:
 ###### Analytics & Tracking
 
 > These help in defining Analytics logs (e.g., Firebase Analytics).
->
-> **Tip!** Components can simply have a `log` method to prepare logging to different analytic services, which can be implemented later.
 
 - Events to be tracked:
   - When `reset` method is called (externally/internally); log `{name: 'called_reset', params: {com: 'V1Name1FeaComponent'}}`
