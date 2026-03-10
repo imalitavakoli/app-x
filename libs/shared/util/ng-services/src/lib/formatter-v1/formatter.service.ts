@@ -19,18 +19,21 @@ import {
 export class V1FormatterService {
   private readonly _configFacade = inject(V2ConfigFacade);
   private _configDep?: V2Config_MapDep;
+  private _isInitPrePre = false;
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Constructor                                                              */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  constructor() {
+  private _initPrePre() {
     // Get the DEP config data.
     // NOTE: Rxjs take(1) and first() operators are synchronous, so we can
     // immediatly use the extracted data from the subscription right after it.
     this._configFacade.dataConfigDep$.pipe(take(1)).subscribe((data) => {
       this._configDep = data;
     });
+
+    this._isInitPrePre = true;
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -76,6 +79,8 @@ export class V1FormatterService {
    * @returns {{ str: any; num: number; }}
    */
   formatNumForCost(value: number, locale = 'en-GB', currencyCode = 'GBP') {
+    if (!this._isInitPrePre) this._initPrePre();
+
     // Format `value` by Angular function.
     // NOTE: We don't use this method, because it doesn't support some languages.
     // const digitsInfo = v1NumberGetDigitsInfo(value, 'cost');
@@ -114,6 +119,8 @@ export class V1FormatterService {
    * @returns {*}
    */
   getUnitCost(currencyCode = 'GBP') {
+    if (!this._isInitPrePre) this._initPrePre();
+
     // Format by Angular function.
     // NOTE: We don't use this method, because it's deprecated.
     // return getCurrencySymbol(currencyCode, 'narrow');
