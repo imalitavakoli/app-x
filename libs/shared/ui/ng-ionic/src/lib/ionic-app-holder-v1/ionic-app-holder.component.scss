@@ -1,0 +1,9 @@
+::ng-deep {
+  // NOTE: This is required to fix Ionic's known 'white flash bug'!
+  // Actually when page transtion animation happens on iOS, `.ion-page` white bg
+  // color covers the whole screen, and the content of the previous page (where
+  // we're navigating to) won't be shown, as they are under the `.ion-page`.
+  .ion-page {
+    background: transparent !important;
+  }
+}
