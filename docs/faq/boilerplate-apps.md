@@ -189,6 +189,11 @@ What Capacitor sync process does basically? It puts the latest build web files (
 
 **iOS `Podfile`:** Some plugins require us to manually add their Pods in our `ios/App/Podfile`. If the installed plugin's package version (folder) is updated at the root of our workspace, and we also have already manually added its Pod in `ios/App/Podfile` (such as `CapacitorFirebaseAnalytics` Pod), then we need to update our Pod's path to refer to the correct installed package... Otherwise, we might get duplication error, when syncing the iOS native project.
 
+**Running the native project:** After building (via `app-shell` command) your app and syncing it with the native Android/iOS project, you may need to clean the native project to see your latest built (compiled) version of the app in AndroidStudio/XCode. So here's what you can do:
+
+- **In AndroidStudio:** Go to "Build > Clean Project", and then "File > Sync Project with Gradle Files".
+- **In XCode:** Go to "Product > Clean Build Files".
+
 **Utilize `ngZone`:** When dealing with Capacitor plugins (in '_util_' libs most of the times), it's recommended to utilize `ngZone` when listening to plugin's events. [Click here](https://capacitorjs.com/docs/guides/angular) to read more.
 
 **Firebase-Analytics:** If we like to implement firebase-analytics for our app to track user's activities (log events when user is interacting with the UI in different libs), in our [Firebase Console](https://console.firebase.google.com/), we should (1) add a project and add iOS/Android app, (2) enter app's package name ('_Android package name_' or '_iOS bundle ID_' that is mentioned in in `apps/{app-name}/capacitor.config.ts` file) or optionally more info about our app, (3) register our app. Eventually, `google-services` file should be created and placed somewhere in our native projects. [Click here](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/analytics) to read more.
