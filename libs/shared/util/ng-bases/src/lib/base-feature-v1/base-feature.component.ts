@@ -268,7 +268,7 @@ export abstract class V1BaseFeatureComponent
         // whether we should emit `ready` and `allDataIsReady` events or not.
         // These events should only be emitted, AFTER that
         // `_isDepDataAlsoReady` is set to 'true' AND the LAST dependent
-        // data are loaded...
+        // data is loaded...
         const isDepDataAlsoReady = this._isDepDataAlsoReady;
 
         this._xInitOrUpdateAfterAllDataReady();
@@ -348,7 +348,8 @@ export abstract class V1BaseFeatureComponent
   /**
    * A callback method that is invoked once all requested API calls data are
    * ready. This happens once at the Initialization phase & each time an inputs
-   * is changed.
+   * is changed (and based on your logic, if you have dependent data to load,
+   * then when a dependent data is loaded).
    *
    * **Who calls it?** `_xInitPre` once all requested API calls data are ready
    * (i.e., `_isAllDataReady$` Observable returns `true`).
@@ -377,17 +378,18 @@ export abstract class V1BaseFeatureComponent
    *
    *   // LIB: Insights (main)
    *   this._insightsFacade
-   *     .entity$('V1BaseFeatureComponent_main')
+   *     .entityDatas$('V1BaseFeatureComponent_main')
    *     .pipe(take(1))
-   *     .subscribe((state) => {
-   *       if (state.loadedLatest.locations && state.datas.locations) {
-   *         console.log('Locations:', state.datas.locations);
+   *     .subscribe((datas) => {
+   *       if (datas.locations) {
+   *         console.log('Locations:', datas.locations);
    *       }
    *     });
    *
-   *   // Set the flag to 'true' (if it's 'false' initially) to indicate that
-   *   // all API endpoints (independent AND dependent) are called, so that
-   *   // `ready` and `allDataIsReady` events can be emitted.
+   *   // If you have dependent data: Set this flag to 'true', whenever you
+   *   // called your last dependent API endpoint to indicate that all API
+   *   // endpoints (independent AND dependent) are called, so that `ready` and
+   *   // `allDataIsReady` events can be emitted, once all data is ready.
    *   this._isDepDataAlsoReady = true;
    * }
    * ```
@@ -395,11 +397,7 @@ export abstract class V1BaseFeatureComponent
    * @protected
    */
   protected _xInitOrUpdateAfterAllDataReady() {
-    // NOTE: Based on your logic, in your child class, you may decide to set
-    // this flag to 'true' in a later time; i.e., after that you have fetched
-    // some dependent data in this function, and you have checked that all data
-    // (independent AND dependent) are ready.
-    // this._isDepDataAlsoReady = true;
+    // ...
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -504,7 +502,7 @@ export abstract class V1BaseFeatureComponent
    *
    * @example
    * ```ts
-   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[];
+   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[]; // The 'requested API calls array'.
    *
    * // Here's an example of how to override this function in a child class.
    * protected override _xFacadesLoadesValidation(
@@ -557,7 +555,7 @@ export abstract class V1BaseFeatureComponent
    * @example
    * ```ts
    * protected readonly _insightsFacade = inject(V3InsightsFacade);
-   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[];
+   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[]; // The 'requested API calls array'.
    * private _insightsSub_main!: Subscription;
    *
    * // Here's an example of how to override this function in a child class.
@@ -626,9 +624,10 @@ export abstract class V1BaseFeatureComponent
   /**
    * A callback method that is invoked right at the Initialization phase, once
    * ALL required inputs are defined (i.e., when `_xHasRequiredInputs` returns
-   * true) & each time an inputs is changed.
+   * true) & each time an inputs is changed (and based on your logic, maybe
+   * `_xUpdateAfterAllDataReady`).
    *
-   * **Who calls it?** `_xInit` & `_xUpdate`  (and based on your logic, maybe
+   * **Who calls it?** `_xInit` & `_xUpdate`  (and maybe
    * `_xUpdateAfterAllDataReady`) right before calling `_xDataFetch`.
    *
    * **Useful for?** Resetting all 'requested API calls arrays' (if they are
@@ -659,7 +658,7 @@ export abstract class V1BaseFeatureComponent
    * @example
    * ```ts
    * protected readonly _insightsFacade = inject(V3InsightsFacade);
-   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[];
+   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[]; // The 'requested API calls array'.
    *
    * // Here's an example of how to override this function in a child class.
    * protected override _xDataReset(): void {
@@ -667,6 +666,18 @@ export abstract class V1BaseFeatureComponent
    *   if (this._insightsRequestedData_main) this._insightsRequestedData_main = [];
    *   this._insightsFacade.reset('V1BaseFeatureComponent_main'); // Skip this, if you don't like the 'ui' component to go back to its 'loading' state while fetching new data.
    *   // this._insightsFacade.createIfNotExists('V1BaseFeatureComponent_main'); // This should already have been done BEFORE the DOM is initialized (in `_xInitPreBeforeDom`).
+   *
+   *   // If you have dependent data: Reset this flag and any other flags that
+   *   // are related to dependent data (e.g., `_isFirstDepDataReady`) to
+   *   // 'false', to inidicate that NO data (independent or dependent) is not
+   *   // ready anymore, and whenever `_xInitOrUpdateAfterAllDataReady` is
+   *   // called again (once independent data is ready), it can continue its
+   *   // logic to call the dependent API endpoint(s) as well.
+   *   this._isDepDataAlsoReady = false;
+   *
+   *   // If you have dependent data: Define the dependant 'requested API calls
+   *   // arrays' to undefined again (if they have been defined before).
+   *   if (this._somethingRequestedData) this._somethingRequestedData = undefined;
    * }
    * ```
    *
@@ -679,9 +690,10 @@ export abstract class V1BaseFeatureComponent
   /**
    * A callback method that is invoked right at the Initialization phase, once
    * ALL required inputs are defined (i.e., when `_xHasRequiredInputs` returns
-   * true) & each time an input is changed.
+   * true) & each time an input is changed (and based on your logic, maybe
+   * `_xUpdateAfterAllDataReady`).
    *
-   * **Who calls it?** `_xInit` & `_xUpdate` (and based on your logic, maybe
+   * **Who calls it?** `_xInit` & `_xUpdate` (and maybe
    * `_xUpdateAfterAllDataReady`).
    *
    * **Useful for?** Fetching new data from a 'data-access' lib.
@@ -714,7 +726,7 @@ export abstract class V1BaseFeatureComponent
    *   once that data is ready, `_xUpdateAfterAllDataReady` will be called.
    * - In `_xUpdateAfterAllDataReady`: Subscribe to the indepndant facade's
    *   observable (e.g., subscribe to `allEntities$` for an entity 'data-access'
-   *   lib, `entity$('V1BaseFeatureComponent_main')` for a multi-instance
+   *   lib, `entityDatas$('V1BaseFeatureComponent_main')` for a multi-instance
    *   'data-access' lib, or `datas$` for a single-instance 'data-access' lib)
    *   to take its data once and check if you have the required data (that was
    *   necessary for the dependant API call(s)) or not.
@@ -745,7 +757,7 @@ export abstract class V1BaseFeatureComponent
    * @example
    * ```ts
    * protected readonly _insightsFacade = inject(V3InsightsFacade);
-   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[];
+   * protected _insightsRequestedData_main?: (keyof V3Insights_Datas)[]; // The 'requested API calls array'.
    *
    * private _callInsights_getLocations(instance: string) {
    *   // NOTE: Based on some conditions, we may decide to just return here
