@@ -6,6 +6,7 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
+import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 
 /**
  * V1FormValidateEmailOrTelDirective is a template-driven form validator that
@@ -13,9 +14,9 @@ import {
  *
  * When enabled, it:
  * 1. Validates the control value against Angular's built-in email validator
- *    first. If that fails, it falls back to a telephone pattern (digits,
- *    spaces, dashes, dots, parentheses, and an optional leading `+`, with
- *    a minimum of 7 and maximum of 15 digit characters).
+ *    first. If that fails, it falls back to telephone validation using
+ *    `libphonenumber-js` (the value must be at least 11 characters long
+ *    and pass `isValidPhoneNumber`).
  * 2. Keeps the host input as `type="text"` to avoid caret-jumping issues
  *    and instead switches the `inputmode` attribute (`email` / `tel`) so
  *    mobile users get the appropriate virtual keyboard.
@@ -27,6 +28,12 @@ import {
  * When disabled (`false`), no validation, inputmode switching, or native
  * validity syncing is applied.
  *
+ * An optional `forceEmailInputMode` input can be set to `true` to lock
+ * the `inputmode` attribute to `"email"`, bypassing the automatic
+ * email / tel detection heuristic. This is useful when both email and
+ * phone are accepted but the majority of users are expected to enter an
+ * email address.
+ *
  * Usage:
  * ```html
  * <input [xFormValidateEmailOrTelV1]="true" ngModel name="input" />
@@ -36,21 +43,17 @@ import {
  * ```html
  * <input [xFormValidateEmailOrTelV1]="shouldValidate" ngModel name="input" />
  * ```
+ *
+ * Example forcing email inputmode:
+ * ```html
+ * <input [xFormValidateEmailOrTelV1]="true" [forceEmailInputMode]="true" ngModel name="input" />
+ * ```
+ *
+ * Example with custom default countries:
+ * ```html
+ * <input [xFormValidateEmailOrTelV1]="true" [defaultCountries]="['SE', 'GB']" ngModel name="input" />
+ * ```
  */
-
-const TEL_PATTERN = /^\+?[\d\s\-().]{7,15}$/;
-
-/**
- * Heuristic: returns `true` when the trimmed value starts with `+` or a digit
- * and more than half of its characters are digits.
- */
-function _looksLikeTel(value: string): boolean {
-  if (!value) return false;
-  const trimmed = value.trim();
-  if (!/^\+?\d/.test(trimmed)) return false;
-  const digitCount = (trimmed.match(/\d/g) || []).length;
-  return digitCount > trimmed.length / 2;
-}
 
 @Directive({
   selector: '[xFormValidateEmailOrTelV1]',
@@ -66,6 +69,12 @@ function _looksLikeTel(value: string): boolean {
 export class V1FormValidateEmailOrTelDirective implements Validator {
   @Input() xFormValidateEmailOrTelV1: boolean | string = true;
 
+  /** When `true`, locks `inputmode` to `"email"` instead of auto-detecting. */
+  @Input() forceEmailInputMode: boolean | string = false;
+
+  /** Default countries for local phone number validation (without `+` prefix). */
+  @Input() defaultCountries: CountryCode[] = [];
+
   constructor(private _el: ElementRef<HTMLInputElement>) {}
 
   private get _isEnabled(): boolean {
@@ -73,6 +82,12 @@ export class V1FormValidateEmailOrTelDirective implements Validator {
     return (
       this.xFormValidateEmailOrTelV1 !== false &&
       this.xFormValidateEmailOrTelV1 !== 'false'
+    );
+  }
+
+  private get _isForceEmail(): boolean {
+    return (
+      this.forceEmailInputMode !== false && this.forceEmailInputMode !== 'false'
     );
   }
 
@@ -87,11 +102,11 @@ export class V1FormValidateEmailOrTelDirective implements Validator {
     const value = input.value || '';
 
     // Switch inputmode so mobile keyboards adapt (no caret issues with this)
-    input.inputMode = value.trim()
-      ? _looksLikeTel(value)
-        ? 'tel'
-        : 'email'
-      : 'text';
+    if (this._isForceEmail) {
+      input.inputMode = 'email';
+    } else {
+      input.inputMode = /^\+?\d/.test(value.trim()) ? 'tel' : 'email';
+    }
   }
 
   /**
@@ -123,8 +138,14 @@ export class V1FormValidateEmailOrTelDirective implements Validator {
       return null;
     }
 
-    // Check if it's a valid telephone number
-    if (TEL_PATTERN.test(value)) {
+    // Check if it's a valid telephone number with an international prefix.
+    if (isValidPhoneNumber(value)) {
+      this._syncNativeValidity(false);
+      return null;
+    }
+
+    // Check local numbers against default countries (e.g., 0735551234 → SE).
+    if (this.defaultCountries.some((cc) => isValidPhoneNumber(value, cc))) {
       this._syncNativeValidity(false);
       return null;
     }

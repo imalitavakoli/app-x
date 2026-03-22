@@ -224,6 +224,9 @@ importers:
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
+      libphonenumber-js:
+        specifier: ^1.12.40
+        version: 1.12.40
       load-awesome:
         specifier: ^1.1.0
         version: 1.1.0
@@ -8543,6 +8546,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  libphonenumber-js@1.12.40:
+    resolution: {integrity: sha512-HKGs7GowShNls3Zh+7DTr6wYpPk5jC78l508yQQY3e8ZgJChM3A9JZghmMJZuK+5bogSfuTafpjksGSR3aMIEg==}
 
   license-webpack-plugin@4.0.2:
     resolution: {integrity: sha512-771TFWFD70G1wLTC4oU2Cw4qvtmNrIw+wRvBtn+okgHl7slJVi7zfNcdmqDL72BojM30VNJ2UHylr1o77U37Jw==}
@@ -23329,6 +23335,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  libphonenumber-js@1.12.40: {}
 
   license-webpack-plugin@4.0.2(webpack@5.101.2(@swc/core@1.5.7(@swc/helpers@0.5.15))(esbuild@0.25.9)):
     dependencies:

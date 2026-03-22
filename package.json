@@ -81,6 +81,7 @@
     "ionicons": "^7.4.0",
     "jeep-sqlite": "^2.8.0",
     "jquery": "^3.7.1",
+    "libphonenumber-js": "^1.12.40",
     "load-awesome": "^1.1.0",
     "localstorage-polyfill": "^1.0.1",
     "lottie-web": "^5.12.2",
