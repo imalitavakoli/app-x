@@ -22,5 +22,7 @@ export * from './lib/capacitor-firebase-firestore-v1/capacitor-firebase-firestor
 
 export * from './lib/capacitor-firebase-remote-config-v1/capacitor-firebase-remote-config.service';
 
+export * from './lib/capacitor-keyboard-v1/capacitor-keyboard.service';
+
 export * from './lib/capacitor-notification-v1/capacitor-notification.service';
 export * from './lib/capacitor-notification-v1/capacitor-notification.interfaces';
