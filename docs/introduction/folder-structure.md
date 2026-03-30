@@ -16,6 +16,9 @@ This helps us identify where apps and libs are located, what types of libraries 
 ```
 x/
 ├── _OBS/                                           // Individuals or teams can freely put any unused files of their own in here.
+│   ├── obs.settings (or __obs.settings)            // Holds the settings for `_OBS` directory.
+│   └── {developer-name}/                           // Holds the individuals or teams' OBS files.
+│       └── AGENTS.md (or __AGENTS.md)              // Holds the individuals or teams' personalized agent file.
 ├── apps/                                           // Holds our apps.
 ├── apps/{app-name}/
 │        └── src/                                   // Holds the app's web source files (holds e.g., `index.html`, `main.ts`, and etc.)
