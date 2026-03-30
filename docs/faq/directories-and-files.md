@@ -46,4 +46,6 @@ Some directories & files are familiar to all of us right at the beginning! But t
 - `apps/{app-name}/src/assets/DEP_config.json`: It's the app's configuration file, and our app loads it on initialization (i.e., in `apps/{app-name}/src/app/app.config.ts` file) to define its important configs, such as '_BaseURL_', '_ClientID_', and etc.  
   **Note!** Some app's config JSON file may also have an `extra` property. This property contains that app's specific configs. So it means that the app needs to have its own specific '_map_' lib to map (proxify) the data that is in that property as well, and use that lib as soon as the JSON file is loaded on initialization.
 
+- `_OBS/obs.settings` (or `_OBS/__obs.settings`): A simple key-value settings file used by AI agents to identify the current developer. It contains the variable `MY_NAME` (e.g., `MY_NAME=ali`), which the agent reads at the start of every conversation to locate the developer's personal override file at `_OBS/{MY_NAME}/AGENTS.md`. If both `obs.settings` and `__obs.settings` exist, the `__` prefixed version takes priority. Note that the `__` prefixed variant is git-ignored (as with all `__` prefixed items inside `_OBS/`), making it suitable for local-only, per-machine configuration.
+
 [🔙](../../README.md#faq)
