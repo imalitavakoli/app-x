@@ -6,7 +6,7 @@ v1.
 
 A template-driven form validator that accepts either a valid email address or a valid telephone number. Telephone validation uses `libphonenumber-js` — values must be at least 11 characters long and pass `isValidPhoneNumber`.
 
-It dynamically switches the host input's `inputmode` attribute (`email` / `tel`) as the user types, giving mobile users the right virtual keyboard. An optional `forceEmailInputMode` input can lock the `inputmode` to `"email"`, bypassing the automatic detection.
+It dynamically switches the host input's `inputmode` attribute (`email` / `tel`) as the user types, giving mobile users the right virtual keyboard. An optional `defaultInputMode` input can lock the `inputmode` to a specific value (e.g. `"email"`), bypassing the automatic detection. When empty, the inputmode switches automatically.
 
 It also syncs the validation result to the native Constraint Validation API via `setCustomValidity()`, so CSS pseudo-classes (`:valid` / `:invalid`) react live alongside Angular's `ng-valid` / `ng-invalid` classes.
 
@@ -37,12 +37,12 @@ export class TestComponent {}
 <input [xFormValidateEmailOrTelV1]="true" ngModel name="input" />
 ```
 
-Force email keyboard on mobile:
+Lock inputmode to email on mobile:
 
 ```html
 <input
   [xFormValidateEmailOrTelV1]="true"
-  [forceEmailInputMode]="true"
+  defaultInputMode="email"
   ngModel
   name="input"
 />

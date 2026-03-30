@@ -1,4 +1,10 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  OnInit,
+} from '@angular/core';
 import {
   AbstractControl,
   NG_VALIDATORS,
@@ -7,6 +13,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
+
+export enum InputMode {
+  None = 'none',
+  Text = 'text',
+  Decimal = 'decimal',
+  Numeric = 'numeric',
+  Tel = 'tel',
+  Search = 'search',
+  Email = 'email',
+  Url = 'url',
+}
 
 /**
  * V1FormValidateEmailOrTelDirective is a template-driven form validator that
@@ -28,11 +45,10 @@ import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
  * When disabled (`false`), no validation, inputmode switching, or native
  * validity syncing is applied.
  *
- * An optional `forceEmailInputMode` input can be set to `true` to lock
- * the `inputmode` attribute to `"email"`, bypassing the automatic
- * email / tel detection heuristic. This is useful when both email and
- * phone are accepted but the majority of users are expected to enter an
- * email address.
+ * An optional `defaultInputMode` input can be set to a specific
+ * inputmode value (e.g. `"email"`) to lock the `inputmode` attribute,
+ * bypassing the automatic email / tel detection heuristic. When empty
+ * (default), the inputmode switches automatically based on the input value.
  *
  * Usage:
  * ```html
@@ -44,14 +60,19 @@ import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
  * <input [xFormValidateEmailOrTelV1]="shouldValidate" ngModel name="input" />
  * ```
  *
- * Example forcing email inputmode:
+ * Example with a default inputmode:
  * ```html
- * <input [xFormValidateEmailOrTelV1]="true" [forceEmailInputMode]="true" ngModel name="input" />
+ * <input [xFormValidateEmailOrTelV1]="true" defaultInputMode="email" ngModel name="input" />
  * ```
  *
- * Example with custom default countries:
+ * Example with allowed country codes:
  * ```html
- * <input [xFormValidateEmailOrTelV1]="true" [defaultCountries]="['SE', 'GB']" ngModel name="input" />
+ * <input [xFormValidateEmailOrTelV1]="true" [allowedCountryCodes]="['SE', 'GB']" ngModel name="input" />
+ * ```
+ *
+ * Example requiring production-grade email addresses (with domain dot):
+ * ```html
+ * <input [xFormValidateEmailOrTelV1]="true" [allowLocalEmails]="false" ngModel name="input" />
  * ```
  */
 
@@ -66,16 +87,39 @@ import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
     },
   ],
 })
-export class V1FormValidateEmailOrTelDirective implements Validator {
+export class V1FormValidateEmailOrTelDirective implements Validator, OnInit {
   @Input() xFormValidateEmailOrTelV1: boolean | string = true;
 
-  /** When `true`, locks `inputmode` to `"email"` instead of auto-detecting. */
-  @Input() forceEmailInputMode: boolean | string = false;
+  /**
+   * When set (e.g. `InputMode.Email` or `"email"`), locks `inputmode` to that value instead of auto-detecting.
+   *
+   * Note: The type uses `` `${InputMode}` `` instead of `InputMode` so that Angular templates can assign
+   * plain string attributes (e.g. `defaultInputMode="email"`) without a type error.
+   */
+  @Input() defaultInputMode: `${InputMode}` | '' = '';
 
-  /** Default countries for local phone number validation (without `+` prefix). */
-  @Input() defaultCountries: CountryCode[] = [];
+  /** When `true` (default), Angular's built-in email validator is used, which accepts local emails like `user@localhost`. When `false`, a stricter pattern is applied that requires a dot in the domain part (e.g. `user@example.com`). */
+  @Input() allowLocalEmails = true;
+
+  /** Allowed country codes for phone validation (e.g. `['SE', 'GB']`). When empty, all countries are accepted. */
+  @Input() allowedCountryCodes: CountryCode[] = [];
+
+  /**
+   * Strict email pattern used when `allowLocalEmails` is `false`.
+   * - Local part: 1-256 alphanumeric chars plus `+`, `.`, `_`, `%`, `-`, `'`
+   * - Domain: at least two dot-separated labels, each starting and ending with
+   *   an alphanumeric character (hyphens allowed in between).
+   */
+  private static readonly _STRICT_EMAIL_RE =
+    /^[a-zA-Z0-9+._%\-']{1,256}@[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,63}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,25}[a-zA-Z0-9])?)+$/;
 
   constructor(private _el: ElementRef<HTMLInputElement>) {}
+
+  ngOnInit() {
+    if (this._isEnabled && this._hasDefaultInputMode) {
+      this._el.nativeElement.inputMode = this.defaultInputMode;
+    }
+  }
 
   private get _isEnabled(): boolean {
     // Handle both boolean and string "true"/"false" from template bindings
@@ -85,10 +129,8 @@ export class V1FormValidateEmailOrTelDirective implements Validator {
     );
   }
 
-  private get _isForceEmail(): boolean {
-    return (
-      this.forceEmailInputMode !== false && this.forceEmailInputMode !== 'false'
-    );
+  private get _hasDefaultInputMode(): boolean {
+    return !!this.defaultInputMode;
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -102,8 +144,8 @@ export class V1FormValidateEmailOrTelDirective implements Validator {
     const value = input.value || '';
 
     // Switch inputmode so mobile keyboards adapt (no caret issues with this)
-    if (this._isForceEmail) {
-      input.inputMode = 'email';
+    if (this._hasDefaultInputMode) {
+      input.inputMode = this.defaultInputMode;
     } else {
       input.inputMode = /^\+?\d/.test(value.trim()) ? 'tel' : 'email';
     }
@@ -132,20 +174,26 @@ export class V1FormValidateEmailOrTelDirective implements Validator {
     const value = (control.value as string).trim();
 
     // Check if it's a valid email
-    const emailError = Validators.email(control);
-    if (!emailError) {
+    const isValidEmail = this.allowLocalEmails
+      ? !Validators.email(control)
+      : V1FormValidateEmailOrTelDirective._STRICT_EMAIL_RE.test(value);
+
+    if (isValidEmail) {
       this._syncNativeValidity(false);
       return null;
     }
 
-    // Check if it's a valid telephone number with an international prefix.
-    if (isValidPhoneNumber(value)) {
-      this._syncNativeValidity(false);
-      return null;
-    }
-
-    // Check local numbers against default countries (e.g., 0735551234 → SE).
-    if (this.defaultCountries.some((cc) => isValidPhoneNumber(value, cc))) {
+    // Phone validation: when allowedCountryCodes is set, only those countries
+    // are accepted. Otherwise any valid phone number is accepted.
+    if (this.allowedCountryCodes.length > 0) {
+      for (const country of this.allowedCountryCodes) {
+        if (isValidPhoneNumber(value, country)) {
+          this._syncNativeValidity(false);
+          return null;
+        }
+      }
+    } else if (isValidPhoneNumber(value)) {
+      // No country restriction — accept any valid international number
       this._syncNativeValidity(false);
       return null;
     }
