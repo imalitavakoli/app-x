@@ -38,7 +38,7 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
   templateUrl: './app-header.component.html',
   styleUrl: './app-header.component.scss',
 })
-export class V1AppHeaderFeaComponent implements OnInit {
+export class V1AppHeaderFeaComponent implements OnInit, OnDestroy {
   /* General //////////////////////////////////////////////////////////////// */
 
   protected _destroyRef = inject(DestroyRef);
@@ -77,6 +77,10 @@ export class V1AppHeaderFeaComponent implements OnInit {
 
     // Init.
     this._init();
+  }
+
+  ngOnDestroy(): void {
+    this._capacitorCoreService.appRemoveAllListeners();
   }
 
   private _init() {
@@ -157,7 +161,9 @@ export class V1AppHeaderFeaComponent implements OnInit {
   onClickedGoBack(emit = true): void {
     // Check what to do based on `mobileLayout`.
     if (this.mobileLayout === 'inner') {
-      this.mobileLayout = 'base';
+      setTimeout(() => {
+        this.mobileLayout = 'base';
+      });
       this._router.navigate([this._mobileLayoutBackUrl]);
     } else {
       this._capacitorCoreService.exitApp();
