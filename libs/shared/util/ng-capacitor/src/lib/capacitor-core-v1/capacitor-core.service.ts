@@ -188,6 +188,11 @@ export class V1CapacitorCoreService {
   /* App: Methods                                                             */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  /** Remove all native listeners for 'App' plugin. */
+  appRemoveAllListeners() {
+    App.removeAllListeners();
+  }
+
   exitApp() {
     App.exitApp();
   }

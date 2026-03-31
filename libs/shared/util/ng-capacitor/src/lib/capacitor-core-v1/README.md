@@ -39,6 +39,7 @@ const isNativePlatform = this._capacitorCoreService.isNativePlatform();
 
 /* App: Methods ///////////////////////////////////////////////////////////// */
 
+this._capacitorCoreService.appRemoveAllListeners(); // Useful when everything should be destroyed.
 this._capacitorCoreService.exitApp();
 
 let appInfo: V1CapacitorCore_AppInfo | null = null;
