@@ -38,7 +38,7 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
   templateUrl: './app-header.component.html',
   styleUrl: './app-header.component.scss',
 })
-export class V1AppHeaderFeaComponent implements OnInit, OnDestroy {
+export class V1AppHeaderFeaComponent implements OnInit {
   /* General //////////////////////////////////////////////////////////////// */
 
   protected _destroyRef = inject(DestroyRef);
@@ -77,10 +77,6 @@ export class V1AppHeaderFeaComponent implements OnInit, OnDestroy {
 
     // Init.
     this._init();
-  }
-
-  ngOnDestroy(): void {
-    this._capacitorCoreService.appRemoveAllListeners();
   }
 
   private _init() {
