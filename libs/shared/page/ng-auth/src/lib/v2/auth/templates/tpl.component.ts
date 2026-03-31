@@ -65,8 +65,6 @@ export class V2AuthPageTplComponent
   /* //////////////////////////////////////////////////////////////////////// */
 
   ngOnDestroy(): void {
-    this._capacitorCoreService.appRemoveAllListeners();
-
     if (this._translationsSub) this._translationsSub.unsubscribe();
   }
 
