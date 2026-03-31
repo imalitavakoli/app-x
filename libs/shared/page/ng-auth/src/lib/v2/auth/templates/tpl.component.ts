@@ -65,6 +65,8 @@ export class V2AuthPageTplComponent
   /* //////////////////////////////////////////////////////////////////////// */
 
   ngOnDestroy(): void {
+    this._capacitorCoreService.appRemoveAllListeners();
+
     if (this._translationsSub) this._translationsSub.unsubscribe();
   }
 
@@ -86,6 +88,13 @@ export class V2AuthPageTplComponent
     this._capacitorCoreService.appGetInfo().then((info) => {
       this.nativeAppInfo = info;
     });
+
+    // Listen to the Android native back button event.
+    this._capacitorCoreService.onBack
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((e) => {
+        this._capacitorCoreService.exitApp();
+      });
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
