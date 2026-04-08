@@ -24,6 +24,30 @@
 
 &nbsp;
 
+# Developer-Specific Overrides — MANDATORY FIRST STEP
+
+> **⚠️ NON-NEGOTIABLE:** Every agent **MUST** complete these steps **before doing any work.** Failure to do so is a workspace-rule violation.
+
+Developers may have a personal agent file (`AGENTS.md` or `__AGENTS.md`) under `/_OBS/{developer-name}/` that **extends or overrides** this root file. **The developer file always wins on conflicts.**
+
+## Steps (execute in order, every conversation)
+
+1. **Read `/_OBS/obs.settings`** (or `/_OBS/__obs.settings`) in the workspace root. Either file may exist; if both exist, `__obs.settings` has higher priority.
+2. **Extract `MY_NAME`** from that file.
+3. **Read `/_OBS/{MY_NAME}/AGENTS.md`** (or `__AGENTS.md`).
+4. **Apply** — treat its instructions as overrides on top of this root file.
+
+**Skip only if** neither `/_OBS/obs.settings` nor `/_OBS/__obs.settings` exists, `MY_NAME` is unset, or the developer folder/agent file is missing.
+
+### Rules
+
+- ✅ Always check `/_OBS/__obs.settings` (preferred) or `/_OBS/obs.settings` at conversation start — no exceptions.
+- ✅ Always read **and follow** the developer's agent file before proceeding.
+- ❌ Never skip, ignore, or deprioritize the developer override file.
+- ❌ Never start work before completing the steps above.
+
+&nbsp;
+
 # Big Picture & Architecture
 
 - This is an Nx-managed monorepo (see `nx.json`, `apps/`, `libs/`).
