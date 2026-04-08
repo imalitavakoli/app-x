@@ -50,6 +50,12 @@ this._firebaseService.analyticsLogEvent('libName_init', {data: 'something'});
 // MUST be called after that user allows the Consent.
 this._firebaseService.analyticsSetUserId(123);
 
+// After that user logs in, optionally, you can set some custom properties for her.
+this._firebaseService.analyticsSetUserProperty({
+  key: 'something',
+  value: 'blahblah',
+});
+
 /* Realtime Database //////////////////////////////////////////////////////// */
 
 this._firebaseService.dbGet('users/user1')

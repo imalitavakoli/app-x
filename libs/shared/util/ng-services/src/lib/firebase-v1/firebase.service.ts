@@ -151,6 +151,16 @@ export class V1FirebaseService {
     fireAnalytics.setUserId(this._analytics, id.toString());
   }
 
+  analyticsSetUserProperty({
+    key,
+    value,
+  }: {
+    key: string;
+    value: string | null;
+  }) {
+    fireAnalytics.setUserProperties(this._analytics, { [key]: value });
+  }
+
   /** Call `analyticsLogScreen` when page navigation (routing) happens automatically */
   analyticsAutoScreenTracking() {
     this._analyticsAutoScreenTracking(false);
@@ -269,6 +279,17 @@ export class V1FirebaseService {
   analyticsSetUserIdByCdn(id: number) {
     const w = window as any;
     w.eFireAnalytics.setUserId(w.eAnalytics, id.toString());
+  }
+
+  analyticsSetUserPropertyByCdn({
+    key,
+    value,
+  }: {
+    key: string;
+    value: string | null;
+  }) {
+    const w = window as any;
+    w.eFireAnalytics.setUserProperties(w.eAnalytics, { [key]: value });
   }
 
   /** Call `analyticsLogScreenByCdn` when page navigation (routing) happens automatically */

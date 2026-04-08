@@ -56,6 +56,13 @@ export class V1CapacitorFirebaseAnalyticsService {
     });
   }
 
+  async setUserProperty({ key, value }: { key: string; value: string | null }) {
+    await FirebaseAnalytics.setUserProperty({
+      key,
+      value,
+    });
+  }
+
   /** Call `logScreen` when page navigation (routing) happens automatically */
   autoScreenTracking() {
     this._router.events.subscribe((event) => {

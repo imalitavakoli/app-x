@@ -48,6 +48,7 @@ export class V1TrackingService {
   private _dataConfigDep!: V2Config_MapDep;
   private _dataConfigFirebase?: V2Config_MapFirebase;
   private _userId?: number;
+  private _buildId?: string;
 
   private _appVersion = '0.0.0';
 
@@ -91,6 +92,9 @@ export class V1TrackingService {
           }
           if (state.dataConfigFirebase) {
             this._dataConfigFirebase = state.dataConfigFirebase;
+          }
+          if (state.dataDataBuild) {
+            this._buildId = state.dataDataBuild.buildId;
           }
 
           // Switch to the `authState$` Observable.
@@ -191,6 +195,15 @@ export class V1TrackingService {
     // Update...
     if (this._userId)
       this.capacitorFirebaseAnalyticsService.setUserId(this._userId);
+
+    // NOTE: Because 'buildId' is not an user-scoped property, we set it even if
+    // `_userId` is undefined, as we are only interested to attach this
+    // attribute to the current analytics context.
+    if (this._buildId)
+      this.capacitorFirebaseAnalyticsService.setUserProperty({
+        key: 'buildId',
+        value: this._buildId,
+      });
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -258,6 +271,15 @@ export class V1TrackingService {
 
     // Update...
     if (this._userId) this.firebaseService.analyticsSetUserId(this._userId);
+
+    // NOTE: Because 'buildId' is not an user-scoped property, we set it even if
+    // `_userId` is undefined, as we are only interested to attach this
+    // attribute to the current analytics context.
+    if (this._buildId)
+      this.firebaseService.analyticsSetUserProperty({
+        key: 'buildId',
+        value: this._buildId,
+      });
   }
 
   /* //////////////////////////////////////////////////////////////////////// */

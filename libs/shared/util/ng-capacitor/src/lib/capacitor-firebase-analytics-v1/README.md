@@ -34,4 +34,10 @@ this._capacitorFirebaseAnalyticsService.logEvent('libName_init', {data: 'somethi
 // NOTE: If you're going to collect Consent from the logged in user, this method
 // MUST be called after that user allows the Consent.
 this._capacitorFirebaseAnalyticsService.setUserId(123);
+
+// After that user logs in, optionally, you can set some custom properties for her.
+this._capacitorFirebaseAnalyticsService.setUserProperty({
+  key: 'something',
+  value: 'blahblah',
+});
 ```
