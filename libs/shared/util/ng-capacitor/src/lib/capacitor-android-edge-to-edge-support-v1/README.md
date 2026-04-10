@@ -20,7 +20,7 @@ this._capacitorAndroidEdgeToEdgeSupportService.disable();
 // Get safe area margins.
 // NOTE: Because this plugin is ONLY for Android deevices, we check the platform.
 if (this._capacitorCoreService.isNativePlatform() && this._capacitorCoreService.getPlatform() === 'android') {
-  const insets = this._capacitorAndroidEdgeToEdgeSupportService.getInsets();
+  const insets = await this._capacitorAndroidEdgeToEdgeSupportService.getInsets();
   const safeAreaTop = insets.top;
   const safeAreaBottom = insets.bottom;
 }
