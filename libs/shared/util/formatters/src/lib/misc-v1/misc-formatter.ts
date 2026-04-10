@@ -68,21 +68,42 @@ export function v1MiscMakeGA4ForPageNav(input: string) {
  * `getComputedStyle` to read CSS variables.
  *
  * @example
- * const { top, bottom } = v1MiscGetIonSafeArea();
+ * const { top, bottom } = v1MiscGetIonSafeArea(false);
  * console.log('top', top);    // e.g. 47
  * console.log('bottom', bottom); // e.g. 34
  *
  * @export
+ * @param {boolean} [calcDpr=false] Default: `false`. Whether to calculate the safe area insets based on the device pixel ratio (DPR) or not. It should be `true` for Android devices, because of the Android edge-to-edge issues.
  * @returns {{ top: number; bottom: number }}
  */
-export function v1MiscGetIonSafeArea(): { top: number; bottom: number } {
+export function v1MiscGetIonSafeArea(calcDpr = false): {
+  top: number;
+  bottom: number;
+} {
+  // Ratio between physical pixels on the screen and CSS (logical) pixels.
+  // For example, a Retina display typically has a DPR of 2 or 3, meaning each
+  // CSS pixel is rendered using 2×2 or 3×3 physical pixels, whereas a standard
+  // desktop monitor usually has a DPR of 1.
+  // NOTE: Ionic already provides safe area values in CSS/logical pixels via
+  // `env(safe-area-inset-*)`, so no DPR math should be needed... But it's still
+  // required for Android devices, because of the Android edge-to-edge issues.
+  const dpr = window.devicePixelRatio || 1;
+
   const style = getComputedStyle(document.documentElement);
 
   const parse = (value: string) =>
     parseFloat(value.replace('px', '').trim()) || 0;
 
+  let top = parse(style.getPropertyValue('--ion-safe-area-top'));
+  let bottom = parse(style.getPropertyValue('--ion-safe-area-bottom'));
+
+  if (calcDpr) {
+    top = Math.round(top * dpr);
+    bottom = Math.round(bottom * dpr);
+  }
+
   return {
-    top: parse(style.getPropertyValue('--ion-safe-area-top')),
-    bottom: parse(style.getPropertyValue('--ion-safe-area-bottom')),
+    top,
+    bottom,
   };
 }
