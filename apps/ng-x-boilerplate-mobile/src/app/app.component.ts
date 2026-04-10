@@ -8,6 +8,7 @@ import {
   Inject,
   DestroyRef,
   isDevMode,
+  AfterViewInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -28,6 +29,7 @@ import {
   V1CapacitorAttService,
   V1CapacitorCoreService,
   V1CapacitorNotificationService,
+  V1CapacitorKeyboardService,
 } from '@x/shared-util-ng-capacitor';
 import {
   V1FirebaseService,
@@ -54,7 +56,7 @@ import { environment } from '../environments/environment';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   /* General //////////////////////////////////////////////////////////////// */
 
   private readonly _platformId = inject(PLATFORM_ID);
@@ -71,6 +73,9 @@ export class AppComponent implements OnInit {
   private readonly _capacitorCoreService = inject(V1CapacitorCoreService);
   private readonly _capacitorNotificationService = inject(
     V1CapacitorNotificationService,
+  );
+  private readonly _capacitorKeyboardService = inject(
+    V1CapacitorKeyboardService,
   );
   private readonly _authAutoService = inject(V1AuthAutoService);
 
@@ -141,12 +146,16 @@ export class AppComponent implements OnInit {
     this._xInit();
   }
 
+  ngAfterViewInit(): void {
+    this._xInitAfterView();
+  }
+
   /* //////////////////////////////////////////////////////////////////////// */
   /* X Lifecycle                                                              */
   /* //////////////////////////////////////////////////////////////////////// */
 
   /**
-   * Init the libs EVEN BEFORE the user is logged in.
+   * Init the libs that can run right at the app's initialization phase and BEFORE the user is logged in.
    *
    * @private
    */
@@ -155,12 +164,21 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * Init the libs that MUST be initialized after `ngAfterViewInit`.
+   *
+   * @private
+   */
+  private _xInitAfterView() {
+    this._initServicesAfterView();
+  }
+
+  /**
    * Init the libs that MUST be initialized after the user is logged in.
    *
    * @private
    */
   private _xInitAfterAuth() {
-    this._initServicesAfterAuth(); // The services (specially the Tracking service) MUST be initialized (prepared) BEFORE any other lib.
+    this._initServicesAfterAuth();
     this._initBlahBlah();
   }
 
@@ -173,6 +191,11 @@ export class AppComponent implements OnInit {
     this._initTracking(); // Prepare & init the tracking service.
     this._initAuthAuto(); // Init the auto-login service.
     this._initCapCoreDeepLinkingListener(); // Listen to deep-linking.
+  }
+
+  /** Init the services that MUST start after `ngAfterViewInit`. */
+  private _initServicesAfterView(): void {
+    this._initCapKeyboardListener(); // Listen to Capacitor Keyboard plugin listner to reset the `ion-content``element's scroll position, when it gets closed (This is a known issue in Android devices).
   }
 
   /** Init the services that MUST start after the user is logged in. */
@@ -271,6 +294,27 @@ export class AppComponent implements OnInit {
       })
       .catch((error) => {
         return; // Just return if we couldn't get the required data.
+      });
+  }
+
+  private _initCapKeyboardListener(): void {
+    // Helper function to reset the scroll position of the `ion-content` element.
+    const resetScroll = () => {
+      const ionApp = document.querySelector('ion-app') as HTMLElement;
+      if (!ionApp) return;
+
+      // Force a synchronous reflow by reading a layout property
+      // between the two writes — no timeout needed
+      ionApp.style.height = '99.99%';
+      // Reading offsetHeight forces the browser to compute the layout NOW
+      void ionApp.offsetHeight;
+      ionApp.style.height = '';
+    };
+
+    this._capacitorKeyboardService.onKeyboardWillHide
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        resetScroll();
       });
   }
 
