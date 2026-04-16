@@ -298,6 +298,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private _initCapKeyboardListener(): void {
+    // If we are on browser or `Keyboard` plugin is not available, simply return.
+    if (!this.isNative) return;
+    if (!this._capacitorCoreService.isPluginAvailable('Keyboard')) return;
+    
     // Helper function to reset the scroll position of the `ion-content` element.
     const resetScroll = () => {
       const ionApp = document.querySelector('ion-app') as HTMLElement;
