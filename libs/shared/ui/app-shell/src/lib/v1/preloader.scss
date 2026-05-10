@@ -31,6 +31,7 @@
   height: 100vh;
   padding: 2rem;
   background-color: rgb(var(--e-preloader--bg-color)) !important;
+  z-index: 10000;
 }
 
 .e-preloader__bar {
