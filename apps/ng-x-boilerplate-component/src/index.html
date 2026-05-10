@@ -38,6 +38,25 @@
     `./index.iframe-v1.html` file as an example to learn more. Cheers!
     -->
 
+    <!-- App-Shell: START ////////////////////////////////////////////////// -->
+
+    <!-- prettier-ignore -->
+    <style>.e-preloader{--e-preloader__bar--color:255 255 255;--e-preloader--bg-color:136 136 136}.e-preloader{position:fixed;display:flex;justify-content:center;align-items:center;top:0;left:0;width:100vw;height:100vh;background-color:rgb(var(--e-preloader--bg-color));z-index:3000;transition:visibility .4s,opacity .4s}.e-preloader--loaded{visibility:hidden;opacity:0}.e-preloader__bar{min-width:100px;min-height:100px;color:rgb(var(--e-preloader__bar--color));user-select:none;pointer-events:none}.e-preloader__bar svg{animation:spin-preloader 1.5s linear infinite}.e-preloader__bar svg circle,.e-preloader__bar svg path,.e-preloader__bar svg rect{fill:rgb(var(--e-preloader__bar--color))}@keyframes spin-preloader{100%{transform:rotate(360deg)}}</style>
+
+    <!-- prettier-ignore -->
+    <div class="e-preloader" id="loader">
+      <div class="e-preloader__bar">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" style="stroke:none">
+          <path d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- prettier-ignore -->
+    <script>window.addEventListener("load",function(){setTimeout(function(){document.getElementById("loader").classList.add("e-preloader--loaded")},100)})</script>
+
+    <!-- App-Shell: END //////////////////////////////////////////////////// -->
+
     <x-root></x-root>
     <noscript>
       Please enable JavaScript to continue using this application.
