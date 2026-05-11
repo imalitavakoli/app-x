@@ -80,7 +80,7 @@ export class AppComponent implements AfterViewInit {
 
     // Let's initialize the core component(s) by parsing the URL query
     // parameters.
-    this._routeSub = this._route.queryParams.subscribe((params) => {
+    this._routeSub = this._route.queryParams.subscribe(async (params) => {
       // if `params.com` is not available, then we don't need to do anything...
       // Because we actually need it to understand which one of our components
       // (web-components) must be lazy-loaded.
@@ -90,23 +90,25 @@ export class AppComponent implements AfterViewInit {
       // So let's parse it and see which component(s) we need to load.
       const coms: ComType[] = params['com'].split(',');
 
+      const loads: Promise<void>[] = [];
+
       // Loop through `coms` to load the required components.
       for (const com of coms) {
         switch (com) {
           case 'initializer-v1':
-            this.loadComInitializer();
+            loads.push(this.loadComInitializer());
             break;
 
           case 'x-profile-image-v1':
-            this.loadComXProfileImage();
+            loads.push(this.loadComXProfileImage());
             break;
 
           case 'x-profile-info-v1':
-            this.loadComXProfileInfo();
+            loads.push(this.loadComXProfileInfo());
             break;
 
           case 'x-full-dashboard-v1':
-            this.loadComXFullDashboard();
+            loads.push(this.loadComXFullDashboard());
             break;
 
           default:
@@ -115,16 +117,21 @@ export class AppComponent implements AfterViewInit {
         }
       }
 
+      await Promise.all(loads);
+
       // Now that we've already lazy-loaded all of the required components, we
       // unsubscribe from the `queryParams` observable. Why? Because we don't
       // want to load the components again and again, whenever the URL query
       // parameters change!
       this._routeSub.unsubscribe();
 
-      // Finally, let's subscribe to the the `queryParams` observable once
-      // again, but this time, we only change the inputs of the already loaded
-      // component(s).
+      // Let's subscribe to the the `queryParams` observable once again, but
+      // this time, we only change the inputs of the already loaded component(s).
       this._init();
+
+      // Finally, now that we've already lazy-loaded all of the required
+      // components, let's hide the app-shell in `index.html`.
+      this._hidePreloader();
     });
   }
 
@@ -143,6 +150,12 @@ export class AppComponent implements AfterViewInit {
   /* //////////////////////////////////////////////////////////////////////// */
   /* Functions, Methods                                                       */
   /* //////////////////////////////////////////////////////////////////////// */
+
+  private _hidePreloader() {
+    const appReady = (window as any).appReady;
+    if (typeof appReady !== 'function') return;
+    appReady();
+  }
 
   /**
    * Update the URL query parameter with the given key and value. This method
@@ -165,15 +178,15 @@ export class AppComponent implements AfterViewInit {
   /* Initializer component                                                    */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  loadComInitializer() {
-    import('@x/ng-x-boilerplate-component-feature-core-initializer').then(
-      (module) => {
-        this.comInitializer = this.com.createComponent(
-          module.V1CoreInitializerComponent,
-        );
-        this.setComInitializer();
-      },
-    );
+  loadComInitializer(): Promise<void> {
+    return import(
+      '@x/ng-x-boilerplate-component-feature-core-initializer'
+    ).then((module) => {
+      this.comInitializer = this.com.createComponent(
+        module.V1CoreInitializerComponent,
+      );
+      this.setComInitializer();
+    });
   }
 
   setComInitializer() {
@@ -199,15 +212,15 @@ export class AppComponent implements AfterViewInit {
   /* X Profile Image component                                                */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  loadComXProfileImage() {
-    import('@x/ng-x-boilerplate-component-feature-core-x-profile-image').then(
-      (module) => {
-        this.comXProfileImage = this.com.createComponent(
-          module.V1CoreXProfileImageComponent,
-        );
-        this.setComXProfileImage();
-      },
-    );
+  loadComXProfileImage(): Promise<void> {
+    return import(
+      '@x/ng-x-boilerplate-component-feature-core-x-profile-image'
+    ).then((module) => {
+      this.comXProfileImage = this.com.createComponent(
+        module.V1CoreXProfileImageComponent,
+      );
+      this.setComXProfileImage();
+    });
   }
 
   setComXProfileImage() {
@@ -224,15 +237,15 @@ export class AppComponent implements AfterViewInit {
   /* X Profile Info component                                                 */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  loadComXProfileInfo() {
-    import('@x/ng-x-boilerplate-component-feature-core-x-profile-info').then(
-      (module) => {
-        this.comXProfileInfo = this.com.createComponent(
-          module.V1CoreXProfileInfoComponent,
-        );
-        this.setComXProfileInfo();
-      },
-    );
+  loadComXProfileInfo(): Promise<void> {
+    return import(
+      '@x/ng-x-boilerplate-component-feature-core-x-profile-info'
+    ).then((module) => {
+      this.comXProfileInfo = this.com.createComponent(
+        module.V1CoreXProfileInfoComponent,
+      );
+      this.setComXProfileInfo();
+    });
   }
 
   setComXProfileInfo() {
@@ -257,15 +270,15 @@ export class AppComponent implements AfterViewInit {
   /* X Full Dashboard component                                               */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  loadComXFullDashboard() {
-    import('@x/ng-x-boilerplate-component-feature-core-x-full-dashboard').then(
-      (module) => {
-        this.comXFullDashboard = this.com.createComponent(
-          module.V1CoreXFullDashboardComponent,
-        );
-        this.setComXFullDashboard();
-      },
-    );
+  loadComXFullDashboard(): Promise<void> {
+    return import(
+      '@x/ng-x-boilerplate-component-feature-core-x-full-dashboard'
+    ).then((module) => {
+      this.comXFullDashboard = this.com.createComponent(
+        module.V1CoreXFullDashboardComponent,
+      );
+      this.setComXFullDashboard();
+    });
   }
 
   setComXFullDashboard() {

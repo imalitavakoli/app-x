@@ -53,7 +53,7 @@
     </div>
 
     <!-- prettier-ignore -->
-    <script>window.addEventListener("load",function(){setTimeout(function(){document.getElementById("loader").classList.add("e-preloader--loaded")},100)})</script>
+    <script>window.appReady = function () {const loader = document.getElementById('loader');if (loader) {loader.classList.add('e-preloader--loaded');}};</script>
 
     <!-- App-Shell: END //////////////////////////////////////////////////// -->
 
