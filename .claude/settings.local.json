@@ -1,0 +1,12 @@
+{
+  "enabledMcpjsonServers": [
+    "angular-cli",
+    "figma-mcp",
+    "context7"
+  ],
+  "permissions": {
+    "allow": [
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute"
+    ]
+  }
+}

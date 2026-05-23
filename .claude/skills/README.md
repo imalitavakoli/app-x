@@ -1,6 +1,4 @@
----
-description: Skills
----
+# Skills Directories Reference
 
 **IDE, LLM, or workspace skills** (e.g., Gemini, Github Copilot, etc.) can be found **in `.agents/skills/`**. If you are looking for skill definitions, please refer to that directory.
 

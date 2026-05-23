@@ -1,4 +1,24 @@
 {
+  "permissions": {
+    "deny": ["Read(./.env)", "Read(./.env.*)"]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"MANDATORY: Before acting on ANY request, you MUST fully read AGENTS.md then AGENTS.local.md (if it exists).\"}}'",
+            "shell": "bash"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "nx@nx-claude-plugins": true,
+    "context-mode@context-mode": true
+  },
   "extraKnownMarketplaces": {
     "nx-claude-plugins": {
       "source": {
@@ -6,8 +26,5 @@
         "repo": "nrwl/nx-ai-agents-config"
       }
     }
-  },
-  "enabledPlugins": {
-    "nx@nx-claude-plugins": true
   }
 }
