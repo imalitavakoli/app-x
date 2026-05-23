@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'shared-ui-framework8',
   preset: '../../../../jest.preset.js',
   testEnvironment: 'node',

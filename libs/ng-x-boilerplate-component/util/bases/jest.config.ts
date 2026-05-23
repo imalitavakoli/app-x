@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'ng-x-boilerplate-component-util-bases',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'ng-x-boilerplate-desktop-util-facade',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],

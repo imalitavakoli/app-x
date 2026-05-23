@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'ng-x-boilerplate-desktop-data-access-native-bridge',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],

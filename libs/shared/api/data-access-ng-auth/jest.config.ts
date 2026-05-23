@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'shared-api-data-access-ng-auth',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],

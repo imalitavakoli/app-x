@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'ng-x-boilerplate-desktop-desktop',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

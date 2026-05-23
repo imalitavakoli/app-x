@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'ng-auto-build',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',

@@ -6,7 +6,7 @@ import {
   ViewContainerRef,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { take } from 'rxjs';
 
 import { V1CapacitorCoreService } from '@x/shared-util-ng-capacitor';
@@ -26,7 +26,7 @@ import { IonContent } from '@ionic/angular/standalone';
 @Component({
   selector: 'x-auth-page-v2',
   standalone: true,
-  imports: [IonContent, CommonModule],
+  imports: [IonContent],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })
