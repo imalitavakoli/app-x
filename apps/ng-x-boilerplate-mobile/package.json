@@ -7,11 +7,13 @@
     "@capacitor/browser": "../../node_modules/@capacitor/browser",
     "@capacitor/core": "../../node_modules/@capacitor/core",
     "@capacitor/device": "../../node_modules/@capacitor/device",
+    "@capacitor/file-viewer": "../../node_modules/@capacitor/file-viewer",
     "@capacitor/filesystem": "../../node_modules/@capacitor/filesystem",
     "@capacitor/haptics": "../../node_modules/@capacitor/haptics",
     "@capacitor/ios": "../../node_modules/@capacitor/ios",
     "@capacitor/keyboard": "../../node_modules/@capacitor/keyboard",
     "@capacitor/local-notifications": "../../node_modules/@capacitor/local-notifications",
+    "@capacitor/network": "../../node_modules/@capacitor/network",
     "@capacitor/preferences": "../../node_modules/@capacitor/preferences",
     "@capacitor/push-notifications": "../../node_modules/@capacitor/push-notifications",
     "@capacitor/share": "../../node_modules/@capacitor/share",
@@ -39,8 +41,8 @@
     "Chrome >=115",
     "Edge >=115",
     "Firefox >=115",
-    "Safari >=16",
-    "iOS >=16",
+    "Safari >=16.4",
+    "iOS >=16.4",
     "not IE 11"
   ]
 }
