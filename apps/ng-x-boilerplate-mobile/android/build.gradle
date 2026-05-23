@@ -7,8 +7,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.2'
-        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.android.tools.build:gradle:8.13.2'
+        classpath 'com.google.gms:google-services:4.4.4'
 
         // https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/crashlytics
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
