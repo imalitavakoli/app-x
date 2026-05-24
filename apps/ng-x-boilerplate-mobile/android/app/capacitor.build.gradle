@@ -13,10 +13,12 @@ dependencies {
     implementation project(':capacitor-app-launcher')
     implementation project(':capacitor-browser')
     implementation project(':capacitor-device')
+    implementation project(':capacitor-file-viewer')
     implementation project(':capacitor-filesystem')
     implementation project(':capacitor-haptics')
     implementation project(':capacitor-keyboard')
     implementation project(':capacitor-local-notifications')
+    implementation project(':capacitor-network')
     implementation project(':capacitor-preferences')
     implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-share')
@@ -34,7 +36,7 @@ dependencies {
     implementation project(':capawesome-capacitor-app-review')
     implementation project(':capawesome-capacitor-app-update')
     implementation project(':capawesome-capacitor-live-update')
-    implementation "com.android.billingclient:billing:7.1.1"
+    implementation "com.android.billingclient:billing:8.3.0"
 }
 
 
