@@ -221,14 +221,6 @@ In the workspace, I've added specific comments as keywords. These make it easier
 
 &nbsp;
 
-# Skills
-
-- ## `1` [PRD](./docs/agents/skills/prd-v1/SKILL.md)
-- ## `2` [TFS](./docs/agents/skills/x-tfs-v1/SKILL.md)
-- ## `3` [tools/ng-auto-build: fin-v1 (executor)](./docs/agents/skills/x-tools-ng-auto-build-fin-v1/SKILL.md)
-
-&nbsp;
-
 # FAQ
 
 - ## `1` [Directories & files](./docs/faq/directories-and-files.md)
