@@ -17,7 +17,8 @@
   },
   "enabledPlugins": {
     "nx@nx-claude-plugins": true,
-    "context-mode@context-mode": true
+    "context-mode@context-mode": true,
+    "superpowers@superpowers-marketplace": true
   },
   "extraKnownMarketplaces": {
     "nx-claude-plugins": {
@@ -25,6 +26,17 @@
         "source": "github",
         "repo": "nrwl/nx-ai-agents-config"
       }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    }
+  },
+  "sandbox": {
+    "network": {
+      "allowedDomains": ["www.google-analytics.com"]
     }
   }
 }
