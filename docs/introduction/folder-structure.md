@@ -16,9 +16,8 @@ This helps us identify where apps and libs are located, what types of libraries 
 ```
 x/
 ├── _OBS/                                           // Individuals or teams can freely put any unused files of their own in here.
-│   ├── obs.settings (or __obs.settings)            // Holds the settings for `_OBS` directory.
 │   └── {developer-name}/                           // Holds the individuals or teams' OBS files.
-│       └── AGENTS.md (or __AGENTS.md)              // Holds the individuals or teams' personalized agent file.
+├── .agents/                                        // Holds AI Agents related files (holds e.g., Skills).
 ├── apps/                                           // Holds our apps.
 ├── apps/{app-name}/
 │        └── src/                                   // Holds the app's web source files (holds e.g., `index.html`, `main.ts`, and etc.)
@@ -51,6 +50,8 @@ x/
 │       └── util/ng-bases-model                     // Holds shared Base interfaces/types/mocks for different types of libs.
 ├── tools/                                          // Holds the NX workspace executors, generators, and some useful scripts that can act on our code base.
 ├── .eslintrc.json                                  // Defines the Eslint rules (library types constraints).
+├── AGENTS.md                                       // Defines the AI agents' settings and instructions.
+├── AGENTS.local.md                                 // Defines the AI agents' local (personal) settings and instructions (overrides `AGENTS.md` if exists).
 ├── CODEOWNERS                                      // Defines individuals or teams (code-owners) who are expert in a specific code area.
 ├── nx.json                                         // Defines the NX workspace default configurations.
 └── tsconfig.base.json                              // Defines the TypeScript configurations and importable libraries alias paths.

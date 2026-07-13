@@ -145,8 +145,10 @@ In the workspace, I've added specific comments as keywords. These make it easier
 - ## `1` [Setting up the repository on a new machine](./docs/getting-started/setting-up-the-repository.md)
   - ### `— a` [Installing global dependencies](./docs/getting-started/setting-up-the-repository.md#installing-global-dependencies)
   - ### `— b` [Installing local dependencies](./docs/getting-started/setting-up-the-repository.md#installing-local-dependencies)
-  - ### `— c` [Serve/build the Projects](./docs/getting-started/setting-up-the-repository.md#servebuild-the-projects)
-  - ### `— d` [Opening the workspace (monorepo) in VSCode](./docs/getting-started/setting-up-the-repository.md#opening-the-workspace-monorepo-in-vscode)
+  - ### `— c` [Installing AI tools](./docs/getting-started/setting-up-the-repository.md#installing-ai-tools)
+  - ### `— d` [FAQ](./docs/getting-started/setting-up-the-repository.md#faq)
+  - ### `— e` [Serve/build the Projects](./docs/getting-started/setting-up-the-repository.md#servebuild-the-projects)
+  - ### `— f` [Opening the workspace (monorepo) in VSCode](./docs/getting-started/setting-up-the-repository.md#opening-the-workspace-monorepo-in-vscode)
 
 - ## `2` [Library types & their relationship](./docs/getting-started/library-types-and-their-relationship.md)
   - ### `— a` [Types](./docs/getting-started/library-types-and-their-relationship.md#types)
