@@ -67,10 +67,13 @@
   </section>
 
   <section class="e-container mt-8">
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-      @if (
-        $isReadyStarterLib1() && $funsToShowArr() && $funsToShowArr().length > 0
-      ) {
+    @if (
+      $isReadyStarterLib1() && $funsToShowArr() && $funsToShowArr().length > 0
+    ) {
+      <div
+        data-cy="dashboard-v1_widgets"
+        class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+      >
         @for (item of $funsToShowArr(); track $index) {
           <!--
           Although we're in a loop, but let's add the items by checking them
@@ -95,8 +98,8 @@
             <ng-container *ngTemplateOutlet="xProfileInfoFeaTpl"></ng-container>
           }
         }
-      }
-    </div>
+      </div>
+    }
   </section>
 </main>
 
