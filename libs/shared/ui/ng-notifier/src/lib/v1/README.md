@@ -9,7 +9,7 @@ Here's a simple example of how to use the notifier when the app cannot load data
 ```ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { V1NotifierComponent } from '@x/shared-ui-ng-notifier';
+import { V1NotifierComponent } from '@eliq/shared-ui-ng-notifier';
 
 @Component({
   selector: 'x-core',
@@ -31,6 +31,7 @@ export class CoreComponent {
 
 ```html
 <x-notifier-v1
+  holderClasses="z-50"
   [show]="myFacade.error$ | async"
   [closeAfter]="3000"
   (opened)="onNotifierOpened()"

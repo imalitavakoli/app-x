@@ -76,3 +76,5 @@ Steps to do that:
 - Mobile apps, Firebase plugins: For Firebase Capacitor plugins (Push-notification, Analytics, or Remote-config), `google-services` file should be created and placed in native Android (`android/app/google-services.json`) & iOS (`ios/App/App/GoogleService-Info.plist`) projects.
 
 - Mobile apps, placeholders: To prepare the native Android/iOS projects for a specific app ID & name, remember to replace the probable `X`, `com.x`, and `com.x.xxx` placeholders in the project files. For the Android project, remember to have a correct path to the `MainActivity.java` file (`android/app/src/main/java/com/x/nativeApp`).
+
+- iOS mobile, syncing: The iOS sync command (i.e. `nx run ng-x-boilerplate-mobile:sync:ios`) MUST be run on MacOS only, because PNPM folders are named and structured differently in Windows & MacOS.

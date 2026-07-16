@@ -94,6 +94,9 @@
       "@x/shared-feature-ng-app-header": [
         "libs/shared/feature/ng-app-header/src/index.ts"
       ],
+      "@x/shared-feature-ng-modal": [
+        "libs/shared/feature/ng-modal/src/index.ts"
+      ],
       "@x/shared-feature-ng-translations": [
         "libs/shared/feature/ng-translations/src/index.ts"
       ],
@@ -149,6 +152,7 @@
         "libs/shared/ui/ng-directives/src/index.ts"
       ],
       "@x/shared-ui-ng-ionic": ["libs/shared/ui/ng-ionic/src/index.ts"],
+      "@x/shared-ui-ng-modal": ["libs/shared/ui/ng-modal/src/index.ts"],
       "@x/shared-ui-ng-notifier": ["libs/shared/ui/ng-notifier/src/index.ts"],
       "@x/shared-ui-ng-pipes": ["libs/shared/ui/ng-pipes/src/index.ts"],
       "@x/shared-ui-ng-popup": ["libs/shared/ui/ng-popup/src/index.ts"],
@@ -171,6 +175,9 @@
         "libs/shared/util/local-storage/src/index.ts"
       ],
       "@x/shared-util-ng-bases": ["libs/shared/util/ng-bases/src/index.ts"],
+      "@x/shared-util-ng-bases-consumer": [
+        "libs/shared/util/ng-bases-consumer/src/index.ts"
+      ],
       "@x/shared-util-ng-bases-model": [
         "libs/shared/util/ng-bases-model/src/index.ts"
       ],

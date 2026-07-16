@@ -22,7 +22,7 @@ export interface V1BaseFeature_HasIt {
   ): void;
 }
 
-export interface V2BaseFeature_ExtHasIt extends V1BaseFeature_HasIt {
+export interface V1BaseFeature_ExtHasIt extends V1BaseFeature_HasIt {
   $dataConfigDep: Signal<V2Config_MapDep | undefined>;
   $lastLoadedLang: Signal<string>;
 }

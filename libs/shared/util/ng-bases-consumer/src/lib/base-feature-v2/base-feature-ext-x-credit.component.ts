@@ -30,7 +30,7 @@ import {
   V1XCreditFacade,
 } from '@x/shared-api-data-access-ng-x-credit';
 
-import { V1BaseFeatureExtComponent } from './base-feature-ext.component';
+import { V2BaseFeatureExtComponent } from './base-feature-ext.component';
 
 /**
  * Base class for all 'feature' components (extended-x-credit version).
@@ -40,7 +40,7 @@ import { V1BaseFeatureExtComponent } from './base-feature-ext.component';
  * its state object for our 'feature' lib. As it already takes care of
  * validating XCredit facade API calls and also emitting its probable errors,
  * this Base class is an easier choice compared to other 'feature' Bases. If you
- * need multiple instances, then `V1BaseFeatureExtComponent` Base is a better
+ * need multiple instances, then `V2BaseFeatureExtComponent` Base is a better
  * choice.
  *
  * Here's how the inherited classes use this (in most cases):
@@ -64,16 +64,16 @@ import { V1BaseFeatureExtComponent } from './base-feature-ext.component';
  * 04. Optional! The lib listens to `ready` or `allDataIsReady` outputs.
  *
  * @export
- * @class V1BaseFeatureExtXCreditComponent
- * @typedef {V1BaseFeatureExtXCreditComponent}
+ * @class V2BaseFeatureExtXCreditComponent
+ * @typedef {V2BaseFeatureExtXCreditComponent}
  */
 @Component({
   selector: 'x-feature-base-ext-x-credit-v1',
   standalone: true,
   template: '',
 })
-export abstract class V1BaseFeatureExtXCreditComponent
-  extends V1BaseFeatureExtComponent
+export abstract class V2BaseFeatureExtXCreditComponent
+  extends V2BaseFeatureExtComponent
   implements V2BaseFeature_ExtHasIt
 {
   /* General //////////////////////////////////////////////////////////////// */
@@ -101,7 +101,7 @@ export abstract class V1BaseFeatureExtXCreditComponent
    * lib... In order to do that, we need to create a new instance of the state
    * object with the component name as its ID.
    */
-  readonly nameInstance_main: string = 'V1BaseFeatureExtXCreditComponent_main';
+  readonly nameInstance_main: string = 'V2BaseFeatureExtXCreditComponent_main';
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* X lifecycle                                                              */

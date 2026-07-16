@@ -1,0 +1,45 @@
+@if (show) {
+  <div
+    class="bg-eday-lighter fixed inset-0 z-[9999] flex items-center justify-center"
+  >
+    <div class="flex flex-col items-center gap-5 px-8 text-center">
+      <!-- Icon inside a soft blue circle -->
+      <div
+        class="bg-eprimary/10 flex h-24 w-24 items-center justify-center rounded-full"
+      >
+        @if (connected) {
+          <i class="bi bi-wifi text-eprimary text-4xl"></i>
+        } @else {
+          <i class="bi bi-wifi-off text-eprimary text-4xl"></i>
+        }
+      </div>
+
+      <!-- Heading -->
+      @if (connected) {
+        <h2 class="m-0 text-xl font-bold">Connection Restored</h2>
+      } @else {
+        <h2 class="m-0 text-xl font-bold">No Internet Connection</h2>
+      }
+
+      <!-- Subtitle -->
+      @if (connected) {
+        <p class="m-0 text-sm leading-relaxed opacity-50">
+          You're back online. Tap Refresh to continue.
+        </p>
+      } @else {
+        <p class="m-0 text-sm leading-relaxed opacity-50">
+          Please check your network settings and try again.
+        </p>
+      }
+
+      <!-- Refresh button -->
+      <button
+        class="e-btn e-btn--base"
+        [disabled]="!connected"
+        (click)="clickedRefresh.emit()"
+      >
+        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+      </button>
+    </div>
+  </div>
+}

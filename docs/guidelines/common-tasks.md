@@ -217,16 +217,4 @@ To achieve this, the following files should be reviewed regularly to make sure t
 
 - `AGENTS.md`.
 
-For IDE or AI agent specific instructions, review the following directories/files:
-
-- Antigravity — `.agent/`, `.agent/workflows/skills.md` (_Skills references_).
-- Claude Code — `.claude/`, `.mcp.json` (_MCP config_), `CLAUDE.md`.
-- OpenAI Codex — `.codex/`, `.codex/config.toml` (_MCP config_).
-- Gemini — `.gemini/`, `.gemini/settings.json` (_MCP config_), `.gemini/skills/README.md` (_Skills references_).
-- Github Copilot — `.github/`, `.github/skills/README.md` (_Skills references_).
-- OpenCode — `.opencode/`, `.opencode/skills/README.md` (_Skills references_), `opencode.json` (_MCP config_).
-- VSCode — `.vscode/mcp.json` (_MCP config_).
-
-**Tip!** If you are using other IDEs that require separate files for their own AI agents, you can use the above-mentioned 'IDE-specific' AI agent instruction files as a reference for writing your own instructions. _In simple terms:_ the main AI agent instructions should always be documented in `AGENTS.md` file, while the 'IDE-specific' instruction files should simply reference that file.
-
 [🔙](../../README.md#guidelines)

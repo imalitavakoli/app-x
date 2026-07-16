@@ -1,10 +1,13 @@
 <div
+  data-cy="notifier-v1_container"
   class="f8-bar f8-bar--pos-fixed-bottom-left min-w-[260px] max-w-sm"
   [ngClass]="{ 'f8-bar--effect-hide-to-fade': !isOpen }"
 >
-  <div class="f8-bar__perspective">
+  <div data-cy="notifier-v1_perspective" class="f8-bar__perspective">
     <div
-      class="bg-eday-darker/90 dark:bg-enight-darker/80 text-enight dark:text-eday-lighter m-6 rounded p-4 font-semibold"
+      [ngClass]="holderClasses"
+      data-cy="notifier-v1_message"
+      class="dark:bg-eday-darker/90 bg-enight-darker/80 dark:text-enight text-eday-lighter m-6 rounded p-4 font-semibold shadow-xl"
     >
       <ng-content></ng-content>
     </div>

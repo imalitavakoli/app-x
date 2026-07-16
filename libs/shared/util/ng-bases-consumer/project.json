@@ -1,0 +1,21 @@
+{
+  "name": "shared-util-ng-bases-consumer",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/util/ng-bases-consumer/src",
+  "prefix": "x",
+  "projectType": "library",
+  "tags": ["type:util", "domain:shared"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/shared/util/ng-bases-consumer/jest.config.ts",
+        "tsConfig": "libs/shared/util/ng-bases-consumer/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -64,14 +64,16 @@ export class V1XProfileInfo extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapData(res.body as V1XProfileInfo_ApiData);
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@V1XProfileInfo/getData:', error);
-        this._logFailure(error.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
+        console.error('@V1XProfileInfo/getData:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }

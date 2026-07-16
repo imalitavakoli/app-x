@@ -63,14 +63,16 @@ export class V1Translations extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapTranslations(res.body as V1Translations_ApiTrans);
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@V1Translations/getTranslations:', error);
-        this._logFailure(error.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
+        console.error('@V1Translations/getTranslations:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -117,14 +119,16 @@ export class V1Translations extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapAllLangs(res.body as V1Translations_ApiAllLangs);
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@V1Translations/getAllLangs:', error);
-        this._logFailure(error.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
+        console.error('@V1Translations/getAllLangs:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -183,16 +187,18 @@ export class V1Translations extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapSelectedLang(
           res.body as V1Translations_ApiSelectedLang,
         );
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@V1Translations/getSelectedLang:', error);
-        this._logFailure(error.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
+        console.error('@V1Translations/getSelectedLang:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -251,16 +257,18 @@ export class V1Translations extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'PATCH', payload, lib);
         return this._mapSelectedLang(
           res.body as V1Translations_ApiSelectedLang,
         );
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@V1Translations/patchSelectedLang:', error);
-        this._logFailure(error.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'PATCH', payload, lib);
+        console.error('@V1Translations/patchSelectedLang:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }

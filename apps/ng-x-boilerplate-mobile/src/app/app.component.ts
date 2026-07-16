@@ -41,6 +41,7 @@ import { V1IonicAppHolderComponent } from '@x/shared-ui-ng-ionic';
 import { V1DaylightComponent } from '@x/shared-ui-ng-daylight';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1AuthFacade } from '@x/shared-data-access-ng-auth';
+import { V1ModalNetworkFeaComponent } from '@x/shared-feature-ng-modal';
 
 import { environment } from '../environments/environment';
 
@@ -51,6 +52,7 @@ import { environment } from '../environments/environment';
     RouterModule,
     V1IonicAppHolderComponent,
     V1DaylightComponent,
+    V1ModalNetworkFeaComponent,
   ],
   selector: 'x-root',
   templateUrl: './app.component.html',
@@ -301,7 +303,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // If we are on browser or `Keyboard` plugin is not available, simply return.
     if (!this.isNative) return;
     if (!this._capacitorCoreService.isPluginAvailable('Keyboard')) return;
-    
+
     // Helper function to reset the scroll position of the `ion-content` element.
     const resetScroll = () => {
       const ionApp = document.querySelector('ion-app') as HTMLElement;
@@ -319,6 +321,49 @@ export class AppComponent implements OnInit, AfterViewInit {
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => {
         resetScroll();
+      });
+
+    // iOS only: when the keyboard is fully shown, scroll the focused input
+    // into view if it is obscured by the keyboard.
+    //
+    // Why iOS only? Android's WKWebView handles this automatically. On iOS,
+    // the WKWebView does NOT scroll the focused element into view until the
+    // user starts typing — hence we must do it manually here.
+    //
+    // Why `keyboardDidShow` (not `keyboardWillShow`)? Because we need the
+    // keyboard height to be final before we can calculate whether the element
+    // is hidden beneath it. `keyboardWillShow` fires too early.
+    if (this.platform !== 'ios') return;
+
+    this._capacitorKeyboardService.onKeyboardDidShow
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(({ keyboardHeight }) => {
+        // Delay slightly to let the WKWebView finish propagating the new
+        // viewport height to the layout engine. Even though `keyboardDidShow`
+        // fires after the keyboard animation completes, `getBoundingClientRect`
+        // and `window.innerHeight` may still reflect stale values without this.
+        setTimeout(() => {
+          // Resolve the actual focusable element. For Ionic web-components
+          // (e.g. `ion-input`), `document.activeElement` points to the host
+          // element, not the inner `<input>`. We walk into the shadow DOM to
+          // find the real input so that `getBoundingClientRect` is accurate.
+          let el = document.activeElement as HTMLElement | null;
+          if (!el) return;
+
+          // Unwrap shadow-DOM hosts (ion-input, ion-textarea, etc.)
+          const inner =
+            el.shadowRoot?.querySelector<HTMLElement>('input, textarea');
+          if (inner) el = inner;
+
+          const rect = el.getBoundingClientRect();
+          const visibleBottom = window.innerHeight - keyboardHeight;
+
+          // Only scroll if the element's bottom edge is actually hidden
+          // underneath the keyboard.
+          if (rect.bottom > visibleBottom) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 250);
       });
   }
 

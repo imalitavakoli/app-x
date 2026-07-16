@@ -419,8 +419,8 @@ export class V1BaseCoreComponent
     // Make up the error key & key prefix.
     let keyPrefix = `${this._coreName}: `; // e.g., 'V1CoreFullInsightsComponent: '
     if (childComName) keyPrefix = `${this._coreName}/`; // e.g., 'V1CoreFullInsightsComponent/'
-    let key = `${error.key}`; // e.g., 'V3InsightsFacade(V1BaseFeatureComponent_main)/locations'
-    if (childComName) key = `${childComName}: ${error.key}`; // e.g., 'co2: V3InsightsFacade(V1BaseFeatureComponent_main)/locations'
+    let key = `${error.key}`; // e.g., 'V3InsightsFacade(V2BaseFeatureComponent_main)/locations'
+    if (childComName) key = `${childComName}: ${error.key}`; // e.g., 'co2: V3InsightsFacade(V2BaseFeatureComponent_main)/locations'
 
     // Make sure key & value exist and their type is string. If not, then
     // create your own sample error object. Why we do this check? Because this
@@ -445,7 +445,7 @@ export class V1BaseCoreComponent
       value: error.value,
     });
     v1LocalWebcomSetOneError({
-      key: `${keyPrefix}${key}`, // e.g., 'V1CoreFullInsightsComponent: V3InsightsFacade(V1BaseFeatureComponent_main)/locations', 'V1CoreFullInsightsComponent/co2: V3InsightsFacade(V1BaseFeatureComponent_main)/locations'
+      key: `${keyPrefix}${key}`, // e.g., 'V1CoreFullInsightsComponent: V3InsightsFacade(V2BaseFeatureComponent_main)/locations', 'V1CoreFullInsightsComponent/co2: V3InsightsFacade(V2BaseFeatureComponent_main)/locations'
       value: error.value,
     });
   }

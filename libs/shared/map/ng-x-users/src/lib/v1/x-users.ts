@@ -48,14 +48,16 @@ export class V1XUsers extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapAll(res.body as V1XUsers_ApiUser[]);
       }),
       catchError((err: HttpErrorResponse) => {
-        const error = err.message || err;
-        console.error('@V1XUsers/getAll:', error);
-        this._logFailure(err.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
+        console.error('@V1XUsers/getAll:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -114,14 +116,16 @@ export class V1XUsers extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'POST', payload, lib);
         return this._mapOne(res.body as V1XUsers_ApiUser);
       }),
       catchError((err: HttpErrorResponse) => {
-        const error = err.message || err;
-        console.error('@V1XUsers/addOne:', error);
-        this._logFailure(err.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'POST', payload, lib);
+        console.error('@V1XUsers/addOne:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -165,14 +169,16 @@ export class V1XUsers extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'PUT', payload, lib);
         return this._mapOne(res.body as V1XUsers_ApiUser);
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@V1XUsers/updateOne:', error);
-        this._logFailure(err.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'PUT', payload, lib);
+        console.error('@V1XUsers/updateOne:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -203,14 +209,16 @@ export class V1XUsers extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(id, res, lib);
+        this._logSuccess(id, res, 'DELETE', undefined, lib);
         return id;
       }),
       catchError((err: HttpErrorResponse) => {
-        const error = err.message || err;
-        console.error('@V1XUsers/removeOne:', error);
-        this._logFailure(err.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'DELETE', undefined, lib);
+        console.error('@V1XUsers/removeOne:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }

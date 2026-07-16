@@ -7,7 +7,7 @@ import { Injectable, inject, isDevMode } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 
-import { V1BaseAppInitService } from '@x/shared-util-ng-bases';
+import { V1BaseAppInitService } from '@x/shared-util-ng-bases-consumer';
 import { v1LocalWebcomClearAll } from '@x/shared-util-local-storage';
 import { V1HtmlEditorService } from '@x/shared-util-ng-services';
 import {

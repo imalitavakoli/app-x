@@ -1,7 +1,7 @@
 # shared-util-ng-bases
 
-In this lib we ONLY hold the shared useful base components that can be used in different libs. e.g., the base classes for pages.  
-i.e., this lib is not functional independently.
+This lib is meant to ONLY hold Base TS classes.  
+It's a PURELY independent lib.
 
 ## Running unit tests
 

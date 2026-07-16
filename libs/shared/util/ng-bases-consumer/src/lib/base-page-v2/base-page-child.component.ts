@@ -29,35 +29,59 @@ import {
 import { V2BasePageComponent } from './base-page.component';
 
 /**
- * Base class for 'page' components that act as a child (i.e., pages that are
- * child of a parent route).
+ * Base class for 'page' components that act as a child (i.e., pages that
+ * are children of a parent route).
  *
- * Here's a way (#1) that the inherited classes use this:
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HOW TO INHERIT
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * NOTE: Most subclasses only need steps 01–02 below. Steps 03–05 are for
+ * advanced cases that require custom lifecycle logic.
+ *
  * 01. Override `_pageName` & `_urlRoot`.
- * 02. Override `_xHasRequiredInputs`.
- * 03. Override `_xInitPre` (with super call right at the beginning).
- * 04. Override `_xInit` (with super call right at the beginning).
- * 05. Override `_xUpdate` (with super call right at the beginning).
- * 06. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
- *     it may throw (by its `hasError` output): `xOnError({page: 'one', lib: 'blahblah', error: $event})`.
- * 07. Optional! In HTML, you can Use `$hasRequiredInputs`.
- * 08. Optional! In HTML, you can use `$appVersion`.
- * 09. Optional! In HTML, you can use `$id`.
+ *     → Identify this child page and its root URL segment.
  *
- * Here's also another way (#2) that the inherited classes use this (in most cases):
- * 01. Override `_pageName` & `_urlRoot`.
  * 02. Override `_xHasRequiredInputs`.
- * 03. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
- *     it may throw (by its `hasError` output): `xOnError({page: 'one', lib: 'blahblah', error: $event})`.
- * 04. Optional! In HTML, you can Use `$hasRequiredInputs`.
- * 05. Optional! In HTML, you can use `$appVersion`.
- * 06. Optional! In HTML, you can use `$id`.
+ *     → Return whether all required route/query params are present.
  *
- * Here's how other libs ('ui', 'feature', or `page`) may interacts with this:
- * 01. Optional! The lib can listen to `@V2BasePageChildComponent:Init` event
- *     which gets emitted via the communication service. e.g., the mobile-header
- *     can listen to this event to update its UI layout to 'inner', as we are in
- *     a child page.
+ * 03. Override `_xInitPre` (optional, with super call).
+ *     → Run setup logic before the main init phase.
+ *
+ * 04. Override `_xInit` (optional, with super call).
+ *     → Run logic during the main init phase (dispatches, subscriptions).
+ *
+ * 05. Override `_xUpdate` (optional, with super call).
+ *     → React to input / route-param changes after init.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ERROR HANDLING
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * In HTML, bind `xOnError` as the callback for every child 'feature'
+ * lib's `hasError` output. Errors are forwarded to the parent page via
+ * the communication service.
+ *
+ * Example:
+ *   `xOnError({page: 'one', lib: 'blahblah', error: $event})`
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * COMMUNICATION EVENTS
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * • `@V2BasePageChildComponent:Init` — emitted via the communication
+ *   service when this child page initialises. Other libs (ui, feature,
+ *   page) can listen to update their layout (e.g., the mobile-header
+ *   switches to an 'inner' layout when a child page is active).
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HTML HELPERS
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * • `$hasRequiredInputs` — boolean signal; guards rendering until all
+ *   required inputs are available.
+ * • `$appVersion` — current application version string.
+ * • `$id` — unique identifier for this page instance.
  *
  * @export
  * @class V2BasePageChildComponent

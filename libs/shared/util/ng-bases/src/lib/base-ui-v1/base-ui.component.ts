@@ -24,37 +24,51 @@ import {
 import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
 
 /**
- * Base class for all 'ui' components.
+ * Base class for 'ui' components.
  *
- * Here's a way (#1) that the inherited classes use this:
- * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * Provides a standardised lifecycle skeleton that every UI component
+ * extends. The parent 'feature' component drives this component's
+ * `state` and `dataType` inputs from the outside.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HOW TO INHERIT
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * NOTE: Steps 05 and 06 are optional — most UI components only need steps
+ * 01-04 + 07.
+ *
+ * 01. Override `_xInitPreBeforeDom` (with super call).
+ *     → Early setup that runs before the DOM is available.
+ *
  * 02. Override `dataType`.
- * 03. Override `_xHasRequiredInputs` (with super call right at the beginning).
- * 04. Override `_xInitPre` (with super call right at the beginning).
- * 05. Override `_xInit` (with super call right at the beginning).
- * 06. Override `_xUpdate` (with super call right at the beginning). When having
- *     `@Input` (zone.js), you may use `_xIsInputChanged` inside of this function.
- * 07. Override `_xSetState` (with super call right at the beginning). Here you
- *     change `state` & `dataType` inputs.
+ *     → Declare the component's default data-type identifier.
  *
- * Here's also another way (#2) that the inherited classes use this (in most cases):
- * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `dataType`.
- * 03. Override `_xHasRequiredInputs` (with super call right at the beginning).
- * 04. Override `_xInitPre` (with super call right at the beginning).
- * 05. Override `_xSetState` (with super call right at the beginning). Here you
- *     change `state` & `dataType` inputs.
+ * 03. Override `_xHasRequiredInputs` (with super call).
+ *     → Return `false` to block initialisation until all inputs arrive.
  *
- * Here's how the 'feature' lib interacts with this:
+ * 04. Override `_xInitPre` (with super call).
+ *     → Pre-initialisation logic (runs once, after inputs are ready).
+ *
+ * 05. Override `_xInit` (with super call, optional).
+ *     → Main initialisation logic (runs once, after `_xInitPre`).
+ *
+ * 06. Override `_xUpdate` (with super call, optional).
+ *     → Reacts to input changes. Use `_xIsInputChanged` inside when
+ *       working with `@Input` (zone.js).
+ *
+ * 07. Override `_xSetState` (with super call).
+ *     → Respond to `state` & `dataType` input changes.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HOW THE 'FEATURE' LIB INTERACTS WITH THIS
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
  * 01. The lib initializes this component in its HTML.
  * 02. The lib provides this component's required inputs.
- * 03. When the lib calls its API endpoints (at initialization phase or whenever
- *     its inputs are changed), while it's waiting for the data, it defines
- *     this component's `state` input to 'loading'.
- * 04. When the lib's API endpoints return data, it changes this component's
- *     `state` input to other states, according to the fetched data. According
- *     to the lib's logic, it may also define the `dataType` input to the type
- *     that explains the fetched data the best.
+ * 03. While the lib awaits API data (on init or input change), it sets this
+ *     component's `state` input to `'loading'`.
+ * 04. When API data arrives, the lib updates `state` (and optionally
+ *     `dataType`) to reflect the fetched result.
  *
  * @export
  * @class V1BaseUiComponent

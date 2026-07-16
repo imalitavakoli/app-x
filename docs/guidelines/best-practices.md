@@ -25,6 +25,14 @@ To improve teamwork, we follow some best practices:
 
 &nbsp;
 
+- **Always use 'Abstract' libs when fetching data from the outside world**. So if you want to load a JSON file or call API endpoints, NEVER use TS classes, services, or even creating a '_util_' lib! Fetching data from the outside world MUST always happen through this funnel: '_map_' lib → '_data-access_' lib. '_map_' lib fetches the data (and maps it, if necessary), then '_data-access_' lib stores the data and makes it available to other libs. In this way, updating/maintaining such behaviours would be consitant and easy across the workspace.
+
+&nbsp;
+
+- **Only '_page_' libs' inputs come as URL Query Params**. So NEVER read URL Query Params in '_feature_' or '_ui_' libs! If you need that, you read them in your '_page_' lib, and pass them to other libs through its inputs.
+
+&nbsp;
+
 [🔝](#best-practices-👌)
 
 ## Documenting
@@ -107,11 +115,18 @@ To improve teamwork, we follow some best practices:
 
 &nbsp;
 
-- **Have consistent folder/file structure for globally exposed components in '_ui_' or '_feature_' libs**. If the lib needs to expose more than one main component, each component should have its own folder directly within the version folder (e.g., v1). So basically there's no component files (`.ts`, `.html`, `.scss`, etc.) directly inside of the version folder. This structure keeps internal component files organized and makes it clear how many components the lib is exposing globally right at the first glance.  
+- **Have consistent folder/file structure for globally exposed files in '_ui_' or '_feature_' libs**. If the lib needs to expose more than one main component, each component should have its own folder directly in the version folder (e.g., v1). So basically there's no component files (`.ts`, `.html`, `.scss`, etc.) directly inside of the version folder. This structure keeps internal component files organized and makes it clear how many components the lib is exposing globally right at the first glance. And if the lib also exposes other files (e.g., interfaces, mocks, or utility functions), they can rest in either the version folder or a `util` sub-folder.  
   **Tip!** If your lib has technology related prefix (e.g., `ng-`), then you don't need to repeat the prefix for the inner folders. So the lib's main folder (which hold all of the lib files including `project.json` and others) can be `ng-chart`, but inner folder names (which hold the globally exposed components) can be `chart-wizard` or `chart-popup`.  
   For example:
   - `v1/libname-wizard/libname-wizard.component.ts`
   - `v1/libname-popup/libname-popup.component.ts`
+  - `v1/util/funcs/libname-formatters.func.ts`
+  - `v1/util/funcs/libname-validators.func.ts`
+  - `v1/util/mocks/libname-something1.mocks.ts`
+  - `v1/util/mocks/libname-something2.mocks.ts`
+  - `v1/libname.interfaces.ts`
+
+&nbsp;
 
 - **Have consistent folder/file structure for private internal files in '_ui_' or '_feature_' libs**. If the lib needs to be broken down into smaller components (or has lots of TS code files to hold different interfaces, mocks, or utility functions), but all of those files are meant to be for internal usage of the lib itself (i.e., they are NOT useful to be exposed globally across the workspace), then the ones which exist directly in the version folder of the lib should have '\_' prefix for their file name (e.g., `_libname.interfaces.ts`), and the ones which rest in their own respective folder should have '\_' prefix for their folder name (e.g., `_feature`).  
   **Tip!** If your lib has technology related prefix (e.g., `ng-`), then you don't need to repeat the prefix for the inner folders. So the lib's main folder (which hold all of the lib files including `project.json` and others) can be `ng-chart`, but inner folder names (which hold the globally or internally exposed components) can be `chart` or `wizard`.  
@@ -126,11 +141,19 @@ To improve teamwork, we follow some best practices:
   - `v1/_util/mocks/something1.mocks.ts`
   - `v1/_util/mocks/something2.mocks.ts`
 
+&nbsp;
+
 - **If texts, numbers, or dates should get manipulated, it's better to do that inside of '_ui_' libs**, rather than '_feature_' libs! Most of the times '_feature_' libs would get complicated as they're dealing with data... So it's always better to simplify their job as much as possible and put any kind of UI related logic right inside of '_ui_' libs.
+
+&nbsp;
 
 - **Use String, Number, and Boolean types for inputs of '_feature_' libs** as much as possible, and NOT Arrays or Objects, unlike '_ui_' libs' inputs! ! Because it simplifies building their web-component Core '_feature_' lib (if the lib is going to be a web-component).
 
+&nbsp;
+
 - **In mobile app development, use our own '_ui_' Ionic lib** (`shared-ui-ng-ionic`) as a wrapper to use the original Ionic components. This approach reduces other lib's dependencies to Ionic and eases updating Ionic components.
+
+&nbsp;
 
 - **In mobile app development, use our own '_util_' Capacitor lib** (`shared-util-ng-capacitor`) as a wrapper to use the original Capacitor classes. This approach reduces other lib's dependencies to Capacitor and eases updating Capacitor classes.
 
@@ -145,15 +168,25 @@ Here's the data-flow, when you wanna show real (NOT mock) data in your '_ui_' co
 
 &nbsp;
 
-**When should we include certain mapped API response properties in '_map_' libs?**  
+### When should we include certain mapped API response properties in '_map_' libs?
+
 You should do this when the values of those properties directly originate from the API response. In simpler terms, in '_map_' libraries, you retrieve data from the API and then map (proxy) that data. This involves: (1) Removing any unnecessary properties; (2) renaming certain properties for clarity, if necessary; (3) adding new properties by extracting data from the fetched information, making it easier to use them in the components' HTML templates later.
 
-**When should we incorporate selectors in '_data-access_' libs?**  
+&nbsp;
+
+### When should we incorporate selectors in '_data-access_' libs?
+
 You should do this when you require computed selectors based on the available feature state object. e.g., In Angular '_data-access_' libraries, you primarily integrate NgRx codes, such as reducers, actions, selectors, and effects.
 
 &nbsp;
 
+### Handling multiple API endpoints
+
 If you need to make calls to multiple API endpoints (for example, if these calls are related, like various authentication API endpoints residing in a single '_map_' library), then you should define multiple mapped interfaces within that single '_map_' library. Subsequently, in your '_data-access_' lib, you save each received data from these API calls as a new property in the 'reducer' file.
+
+&nbsp;
+
+### Sync/async jobs
 
 In your '_data-access_' lib, if you need to modify additional properties in your state object (**synchronous job**) when success/failure actions related to another property are dispatched, you should handle this in the **'reducer' file**.
 
@@ -161,7 +194,7 @@ In your '_data-access_' lib, if you need to call other actions or store somethin
 
 &nbsp;
 
-**Here's how to use the state object properties**:
+### How to use the state object properties?
 
 You can update different parts of your component's HTML template easier, by using some simple `@if` blocks. As an example, for showing `data1` in your '_page_' lib, here's what you can do:
 
@@ -222,9 +255,12 @@ getSomething(
         return this._mapSomething(data);
       }),
       catchError((err) => {
-        const error = err.message || err;
-        console.error('@LibName/getSomething:', error);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
+        console.error('@LibName/getSomething:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -239,6 +275,124 @@ onError({ key, value }: { key: string; value: string }) {
   this.hasError.emit({ key, value });
   v1LocalWebcomSetOneError({ key: `core-lib-name: ${key}`, value: value });
 }
+```
+
+&nbsp;
+
+[🔝](#best-practices-👌)
+
+## Ionic & Capacitor (mobile apps)
+
+**In mobile apps, we use Ionic & Capacitor.**  
+Ionic components are used to make our app's UI feel more like native.  
+Capacitor plugins are used to let our app access native functionalities of the device, like camera, GPS, etc.
+
+So in such apps, we should consider some more extra considerations regarding setting up our DOM elements and page navigations. Here's we're going to mention these guidelines.
+
+&nbsp;
+
+### `app.component.html` structure
+
+In mobile, the structure should look like similar to the below one. So basically ALL pages (libs) should be inside `ion-router-outlet`.
+
+```html
+<ion-app>
+  <ion-router-outlet>
+    <!-- Page libs (base or child) go here -->
+  </ion-router-outlet>
+</ion-app>
+```
+
+&nbsp;
+
+### Page libs with a common shell
+
+If a group of page libs share a common shell (like header/footer), based on DRY (Don't Repeat Yourself) principles they should be child of a **base page**.  
+Base page holds the shared elements (header, footer, etc.) and the router-outlet, and child pages hold their own specific content.
+
+The structure of the base page lib should look like similar to the below one.
+
+```html
+<x-header-fea-v1>
+  <ion-header></ion-header>
+</x-header-fea-v1>
+
+<ion-content>
+  <!-- router-outlet go here -->
+</ion-content>
+
+<x-footer-fea-v1>
+  <ion-footer></ion-footer>
+</x-footer-fea-v1>
+```
+
+&nbsp;
+
+### Page libs without a common shell
+
+```html
+<ion-content>
+  <!-- router-outlet go here -->
+</ion-content>
+```
+
+&nbsp;
+
+### `router-outlet` vs `ion-router-outlet`
+
+Basically in mobile apps, ALL pages (whether they are base or child) contents' MUST live under `ion-content`, and in there, if we wanna show a specific route's content, we should use a router-outlet. So we can either have:
+
+- Standard router-outlet: `<router-outlet></router-outlet>`
+- Ionic router-outlet: `<ion-router-outlet></ion-router-outlet>`
+
+**Which one to choose?**
+If you you have a tab-liked footer to navigate between pages without having Ionic's native-like iOS/Android page navigation, simply go with `router-outlet`.  
+But if you like to keep the previous pages alive (NOT be destroyed) so you can go back to them using Ionic's native-like gestures (e.g., iOS edge-swipe), then go with `ion-router-outlet`.
+
+&nbsp;
+
+### `ion-router-outlet` considerations
+
+- **Stack Navigation**: Pages are NOT destroyed when you navigate forward; they are kept alive in a stack.
+- **Lifecycle Hooks**: Use Ionic-specific hooks (`ionViewWillEnter`, etc.) instead of just `ngOnInit` for logic that must run every time a page is shown (e.g., refreshing data).
+- **Background Tasks**: Be careful with timers or subscriptions as they will continue to run while a page is hidden in the stack.
+
+&nbsp;
+
+**Lifecycle Hooks**:
+
+- Entering a Page:
+  - **`ionViewWillEnter`**: Fired when the component is about to animate into view. **Use this to refresh data** from services or reset component state.
+  - **`ionViewDidEnter`**: Fired after the component has finished animating.
+
+- Leaving a Page:
+  - **`ionViewWillLeave`**: Fired when the component is about to animate out of view. **Use this to pause timers, videos, or background processes.**
+  - **`ionViewDidLeave`**: Fired after the component has finished animating out.
+
+&nbsp;
+
+**⚠️ Background Processes Caution:**
+
+If you start a `setInterval`, `setTimeout`, or an RxJS subscription, it **will continue to run in the background** while the user is on another page in the stack. So consider the following:
+
+- Initialize heavy background tasks in `ionViewWillEnter`.
+- Clean up or pause them in `ionViewWillLeave`.
+- Use `ngOnDestroy` only for permanent clean-up (when the page is popped from the stack).
+
+&nbsp;
+
+**How to force destroy a page lib with `ion-router-outlet`?**
+
+If in some cases you still liked to force destroy a page lib with `ion-router-outlet` when navigating to another route, you can use `routerLink` with `replaceUrl=true`.
+
+```html
+<ion-button [routerLink]="['/some-page']" replaceUrl="true">
+  Go to Page
+</ion-button>
+```
+
+```ts
+this._router.navigate(['/some-page'], { replaceUrl: true });
 ```
 
 [🔙](../../README.md#guidelines)

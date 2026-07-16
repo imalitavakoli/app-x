@@ -1,0 +1,20 @@
+/**
+ * @file The orchestration (order) of the exports in this index file is
+ * important, because of the dependencies between the exported items themselves.
+ * For example, some of the base-feature components (indirectly) depend on the
+ * base-map (because of the 'data-access' lib which is initialized in them, and
+ * the 'data-access' lib's effect file which calls the 'map' lib's methods), so
+ * the base-map must be exported first, otherwise Webpack resolves it as
+ * undefined (circular dep crash).
+ */
+
+export * from './lib/base-app-init-v1/base-app-init.service';
+
+export * from './lib/base-feature-v2/base-feature-ext.component';
+export * from './lib/base-feature-v2/base-feature-ext-x-credit.component';
+
+export * from './lib/base-page-v2/base-page.component';
+export * from './lib/base-page-v2/base-page-parent.component';
+export * from './lib/base-page-v2/base-page-parent-ext-x-users.component';
+export * from './lib/base-page-v2/base-page-child.component';
+export * from './lib/base-page-v2/base-page-child-ext-x-users.component';

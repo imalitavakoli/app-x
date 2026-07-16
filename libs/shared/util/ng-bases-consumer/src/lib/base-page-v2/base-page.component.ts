@@ -24,19 +24,48 @@ import { V2ConfigFacade } from '@x/shared-api-data-access-ng-config';
 import { V1TranslationsFacade } from '@x/shared-api-data-access-ng-translations';
 import { V1AuthFacade } from '@x/shared-api-data-access-ng-auth';
 
-import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
+import { V1BaseFunComponent } from '@x/shared-util-ng-bases';
 
 /**
  * Base class for 'page' components.
  *
- * Here's how the inherited classes use this (in most cases):
- * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
+ * This class extends `V1BaseFunComponent` and adds automatic
+ * pre-fetching of common data (BaseURL, language, userId,
+ * appVersion) plus URL query param subscription for route-driven
+ * initialization.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HOW TO INHERIT
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * 01. Override `_xInitPreBeforeDom` (with super call, optional).
+ *     → Preparations before DOM is ready.
+ *
  * 02. Override `_xHasRequiredInputs`.
- * 03. Override `_xInitPre` (with super call right at the beginning).
- * 04. Override `_xInit` (with super call right at the beginning).
- * 05. Override `_xUpdate` (with super call right at the beginning).
- * 06. Optional! In HTML, you can use `$hasRequiredInputs`.
- * 07. Optional! In HTML, you can use `$appVersion`.
+ *     → Check if ALL required URL Query Params (inputs) for the page
+ *       to function correctly are already available (by checking
+ *       route snapshot).
+ *
+ * 03. Override `_xInitPre` (with super call, optional).
+ *     → Additional subscriptions or data fetching at init time.
+ *       NOTE: The base already fetches `_configDep`, `_baseUrl`,
+ *       `_lastLoadedLang`, `_userId`, and `$appVersion` here.
+ *
+ * 04. Override `_xInit` (with super call, optional).
+ *     → Page initialization logic.
+ *
+ * 05. Override `_xUpdate` (with super call, optional).
+ *     → React to URL query param changes.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HTML HELPERS
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * - `$hasRequiredInputs` — Signal indicating if all required URL
+ *   query params are available. Useful for conditionally rendering
+ *   page content.
+ * - `$appVersion` — Signal with the app version from the route
+ *   snapshot or Auth 'data-access' lib.
  *
  * @export
  * @class V2BasePageComponent

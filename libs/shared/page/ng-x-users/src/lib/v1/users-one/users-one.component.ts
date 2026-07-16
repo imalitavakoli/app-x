@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 
-import { V2BasePageChildExtXUsersComponent } from '@x/shared-util-ng-bases';
+import { V2BasePageChildExtXUsersComponent } from '@x/shared-util-ng-bases-consumer';
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 
 @Component({

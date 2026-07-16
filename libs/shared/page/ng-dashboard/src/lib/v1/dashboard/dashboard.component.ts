@@ -13,7 +13,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { LottieComponent } from 'ngx-lottie';
 
 import { V1CapacitorCoreService } from '@x/shared-util-ng-capacitor';
-import { V2BasePageParentExtXUsersComponent } from '@x/shared-util-ng-bases';
+import { V2BasePageParentExtXUsersComponent } from '@x/shared-util-ng-bases-consumer';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';

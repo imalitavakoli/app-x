@@ -5,7 +5,7 @@ import { exhaustMap, Subscription, take } from 'rxjs';
 import { TranslocoService } from '@jsverse/transloco';
 
 import { V2BasePage_Error } from '@x/shared-util-ng-bases-model';
-import { V2BasePageComponent } from '@x/shared-util-ng-bases';
+import { V2BasePageComponent } from '@x/shared-util-ng-bases-consumer';
 import { V1CommunicationService } from '@x/shared-util-ng-services';
 import {
   V1CapacitorCoreService,

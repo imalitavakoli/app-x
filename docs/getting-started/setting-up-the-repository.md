@@ -141,7 +141,7 @@ mkdir C:\Users\YOU\.ssh -Force
 2. Add GitHub's host key to `known_hosts` (if the file doesn't already exist). This tells your SSH client to trust GitHub's server.
 
 ```bash
-echo github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl >> C:\Users\YOU\.ssh\known_hosts
+ssh-keyscan -t ed25519 github.com >> C:\Users\YOU\.ssh\known_hosts
 ```
 
 3. Generate a new SSH key pair:

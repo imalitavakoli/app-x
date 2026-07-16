@@ -1,6 +1,11 @@
 export * from './lib/base-app-init-v1/base-app-init.interfaces';
 
+export * from './lib/base-data-access-v1/base.effects.interfaces';
+export * from './lib/base-data-access-v1/base.reducer.interfaces';
+export * from './lib/base-data-access-v1/base.selectors.interfaces';
+
 export * from './lib/base-feature-v1/base-feature.interfaces';
+export * from './lib/base-feature-v2/base-feature.interfaces';
 
 export * from './lib/base-page-v2/base-page.interfaces';
 

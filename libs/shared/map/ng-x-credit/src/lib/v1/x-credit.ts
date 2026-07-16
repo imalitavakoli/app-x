@@ -67,18 +67,19 @@ export class V1XCredit extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapSummary(res.body as V1XCredit_ApiSummary);
       }),
       catchError((err) => {
-        // NOTE: In this `catchError` we don't need to parse the errors, as we
-        // don't have any error exceptions for the already called API endpoint.
-        // So we just simply log the error.
+        // NOTE: In this `catchError` we don't have any error exceptions for the
+        // already called API endpoint.
 
-        const error = err.message || err;
-        console.error('@V1XCredit/getSummary:', error);
-        this._logFailure(error.message || undefined, err, lib);
-        return throwError(() => error);
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code'];
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
+        console.error('@V1XCredit/getSummary:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }
@@ -137,44 +138,32 @@ export class V1XCredit extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapDetail(res.body as V1XCredit_ApiDetail);
       }),
       catchError((err) => {
-        // NOTE: In this `catchError` we need to parse the errors, as we have
-        // some error exceptions for the already called API endpoint. So parse
-        // the error, and if it could get parsed via our Base class's function
-        // `_parsedError`, it means that we've received an error which is
-        // already handled by the server (i.e., it is an custom error), and we
-        // can identify its `code` property to see if it should be considered as
-        // an exception or not.
+        // NOTE: In this `catchError` we have some error exceptions for the
+        // already called API endpoint. So we shold parse the error to see if
+        // it's a custom (expected) server error! And if it is, let's see if we
+        // can identify its `code` property or not! To see if it should be
+        // considered as an exception or not.
 
-        const error = err.message || err;
-        let errorParsed: any = false;
+        const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
+        let errToLog = err.message || undefined;
+        if (errParsed && errParsed['code']) errToLog = errParsed['code']; // As `V1XCredit_ApiErrorDetail`.
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
 
-        // Try parsing the error (see if it's a custom server error or not).
-        errorParsed = this._parsedError(err);
-
-        // Log for non-custom errors, or custom ones which are NOT known as exceptions.
-        if (!errorParsed || !errorParsed.code) {
-          console.error('@V1XCredit/getDetail:', error);
+        // Do `console.error` for non-custom errors OR custom ones which are NOT known as exceptions.
+        // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
+        if (!errParsed || !errParsed['code']) {
+          console.error('@V1XCredit/getDetail:', err.message || err);
         } else {
-          if (errorParsed.code !== 'USER_MISSING_DETAIL_DATA') {
-            console.error('@V1XCredit/getDetail:', error);
+          if (errParsed['code'] !== 'USER_MISSING_DETAIL_DATA') {
+            console.error('@V1XCredit/getDetail:', err.message || err);
           }
         }
 
-        // If parsed, return custom code. Otherwise, return generic error message.
-        if (errorParsed && errorParsed.code) {
-          this._logFailure(
-            errorParsed.code as V1XCredit_ApiErrorDetail,
-            err,
-            lib,
-          );
-          return throwError(() => errorParsed.code as V1XCredit_ApiErrorDetail);
-        }
-        this._logFailure(error.message || undefined, err, lib);
-        return throwError(() => error);
+        return throwError(() => errToLog || err.message || err);
       }),
     );
   }

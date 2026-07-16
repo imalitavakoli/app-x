@@ -14,15 +14,52 @@ import {
 } from '@angular/core';
 
 /**
- * Base class for 'ui' & 'feature' components (functionalities).
+ * ROOT base class for 'ui' & 'feature' components (functionalities).
  *
- * Here's how the inherited classes use this (in most cases):
- * 01. Override `_xInitPreBeforeDom` (with super call right at the beginning).
- * 02. Override `_xHasRequiredInputs` (with super call right at the beginning).
- * 03. Override `_xInitPre` (with super call right at the beginning).
- * 04. Override `_xInit` (with super call right at the beginning).
- * 05. Override `_xUpdate` (with super call right at the beginning). When having
- *     `@Input` (zone.js), you may use `_xIsInputChanged` inside of this function.
+ * Every component ultimately extends this class. It wires up Angular lifecycle
+ * hooks (`ngOnInit`, `ngAfterViewInit`, `ngOnChanges`) into a deterministic
+ * initialisation and update chain that subclasses hook into via a small set of
+ * protected overrides.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HOW TO INHERIT
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * NOTE: Items marked with "(with super call)" should call `super.methodName()`
+ * right at the beginning. Items marked "optional" may be skipped if not
+ * applicable.
+ *
+ * 01. Override `_xInitPreBeforeDom` (with super call).
+ *     → Runs inside `ngOnInit`, **before** the DOM is available.
+ *       Use for early setup that does not need template access.
+ *
+ * 02. Override `_xHasRequiredInputs` (with super call).
+ *     → Returns `true` when every mandatory input has a value.
+ *       Called before `_xInit` and again before every `_xUpdate`.
+ *
+ * 03. Override `_xInitPre` (with super call).
+ *     → Runs once inside `ngAfterViewInit`, **before** `_xInit`.
+ *       Use for subscriptions or DOM-dependent pre-work.
+ *
+ * 04. Override `_xInit` (with super call).
+ *     → Runs once after `_xInitPre` succeeds and
+ *       `_xHasRequiredInputs` returns `true`. Main initialisation.
+ *
+ * 05. Override `_xUpdate` (with super call).
+ *     → Runs on every subsequent `ngOnChanges` after init.
+ *       For zone.js `@Input` properties, use `_xIsInputChanged`
+ *       inside this method to detect specific input changes.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * LIFECYCLE SEQUENCE
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * First render:
+ *   ngOnInit → _xInitPreBeforeDom →
+ *   ngAfterViewInit → _xInitPre → _xHasRequiredInputs → _xInit
+ *
+ * Subsequent changes:
+ *   ngOnChanges → _xHasRequiredInputs → _xUpdate
  *
  * @export
  * @class V1BaseFunComponent
@@ -77,12 +114,13 @@ export abstract class V1BaseFunComponent
     // NOTE: We use `ngAfterViewInit` instead of `ngOnInit`, because we like to
     // make sure that we already have access to the DOM, before starting the TS
     // logic. Now in such case, because the DOM is already initialized with the
-    // initial value of the inputs, then if the component that is going to use
-    // this component, provides another value for the inputs just immediately
-    // after the view init, we may receive Angular's
-    // `ExpressionChangedAfterItHasBeenCheckedError` error. To prevent that,
-    // we use a timeout to ensure the view is already stable, and then we can
-    // safely define new values for our inputs.
+    // initial value of the inputs, then if the component that initializes
+    // this component (e.g., a 'feature' component initializes a 'ui'
+    // component), provides another value for the inputs just immediately after
+    // the view init, we may receive Angular's
+    // `ExpressionChangedAfterItHasBeenCheckedError` error (in a zone.js app).
+    // To prevent that, we use a timeout to ensure the view is already stable,
+    // and then we can safely define new values for our inputs.
     setTimeout(() => {
       this._isNgAfterViewInit = true; // Set as initialized.
 

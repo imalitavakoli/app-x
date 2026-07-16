@@ -19,7 +19,7 @@ import { V1ToggleMeDirective } from '@x/shared-ui-ng-directives';
 @Component({
   selector: 'x-notifier-v1',
   standalone: true,
-  imports: [CommonModule, V1ToggleMeDirective],
+  imports: [CommonModule],
   templateUrl: './notifier.component.html',
   styleUrls: ['./notifier.component.scss'],
 })
@@ -29,6 +29,13 @@ export class V1NotifierComponent {
   /* //////////////////////////////////////////////////////////////////////// */
   /* Input, Output                                                            */
   /* //////////////////////////////////////////////////////////////////////// */
+
+  /**
+   * CSS classes that are added to the holder.
+   *
+   * @type {string}
+   */
+  @Input() holderClasses = '';
 
   /**
    * Set after how many ms the notifier should get closed.
@@ -45,9 +52,26 @@ export class V1NotifierComponent {
    * @type {unknown}
    */
   @Input() set show(value: unknown) {
-    this.isOpen = value ? true : false;
+    const isOpen = value ? true : false;
+
+    // Guard: skip if the open/closed state hasn't actually changed.
+    // Without this, every Angular change-detection cycle (including the
+    // initial render where show=false) would schedule a stale timer.
+    if (isOpen === this.isOpen) return;
+
+    this.isOpen = isOpen;
     this._dispatchEvent();
-    this._autoClose();
+
+    if (this.isOpen) {
+      // Schedule the auto-close timer only when transitioning to OPEN.
+      // At this point all sibling @Inputs (including closeAfter) have already
+      // been applied by Angular, so this.closeAfter holds the correct value.
+      this._scheduleAutoClose();
+    } else {
+      // Notifier was closed externally (e.g. parent set show=false).
+      // Cancel any pending timer so it cannot fire after the fact.
+      this._clearTimer();
+    }
   }
 
   /**
@@ -68,11 +92,26 @@ export class V1NotifierComponent {
   /* Functions, Methods                                                       */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  private _autoClose() {
-    setTimeout(() => {
+  // Holds the ID of the pending auto-close timer so it can be cancelled.
+  // null means no timer is currently running.
+  private _timerId: ReturnType<typeof setTimeout> | null = null;
+
+  private _scheduleAutoClose(): void {
+    // Always clear any existing timer first.
+    // This prevents a previous timer (e.g. from a rapid show→hide→show sequence)
+    // from closing the notifier sooner than expected.
+    this._clearTimer();
+    this._timerId = setTimeout(() => {
       this.isOpen = false;
       this._dispatchEvent();
-    }, this.closeAfter);
+    }, this.closeAfter); // closeAfter is read here, AFTER all @Inputs are set
+  }
+
+  private _clearTimer(): void {
+    if (this._timerId !== null) {
+      clearTimeout(this._timerId);
+      this._timerId = null; // reset so we can safely check later
+    }
   }
 
   private _dispatchEvent() {

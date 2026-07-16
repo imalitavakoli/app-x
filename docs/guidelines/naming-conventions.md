@@ -53,9 +53,16 @@ We recommend some naming conventions for different types of interfaces/component
 
 &nbsp;
 
-- **'map' lib's API interfaces**: Start with `Api`. For example, `ApiSomething`. API payload interfaces: Start with `ApiPayload`. For example, `ApiPayloadSomething`. API error interfaces: Start with `ApiError`. For example, `ApiErrorSomething`.
-- **'map' lib's Mapped interfaces**: Start with `Map`. For example, `MapSomething`.
-- **'map' lib's methods**: Start with the API endpoint verb that the method is going to deal with. For example, `getSelectedLang`, `PostSelectedLang`.
+- **'map' lib's API interfaces**: Use `V{x}{LibName}_Api{Name}` schema. For example, `V1Payment_ApiSomething`.
+- **'map' lib's API payload interfaces**: Use `V{x}{LibName}_ApiPayload{Name}` schema. For example, `V1Payment_ApiPayloadSomething`.
+- **'map' lib's API error interfaces**: Use `V{x}{LibName}_ApiError{Name}` schema. For example, `V1Payment_ApiErrorSomething`.
+- **'map' lib's Mapped interfaces**: Use `V{x}{LibName}_Map{Name}` schema. For example, `V1Payment_MapSomething`.
+- **'map' lib's API dealing methods**: Start with the API endpoint verb that the method is going to deal with. For example, `getSelectedLang`, `PostSelectedLang`.
+
+&nbsp;
+
+- **'feature', 'ui', 'page' lib's globally exposed interfaces/types**: Use `V{x}{LibName}_{Name}` schema. For example, `V2Chart_Primary`.
+- **'ui' lib's globally exposed mocks**: Use `V{x}{LIB_NAME}_{NAME}` schema. For example, `V2_CHART_LOCATION`.
 
 &nbsp;
 
@@ -68,7 +75,7 @@ We recommend some naming conventions for different types of interfaces/component
 
 &nbsp;
 
-- **Cypress selectors (`data-cy` attributes)**: Use `{lib-name}-v{x}_{short-component-name}_{selector-name}` schema. For example, `profile-image-v1_profile-image_loading`.
+- **E2E testing selectors (`data-cy` or `data-testid` attributes)**: Use `{lib-name}-v{x}_{short-component-name}_{selector-name}` schema. For example, `profile-image-v1_profile-image_loading`.
 - **Analytics logs**: Should follow 'GA4' naming rules, and use past tense verbs. For example, `called_reset` when `reset` method (public function) is called externally/internally; `handled_xInitOrUpdateAfterAllDataReady` when `_xInitOrUpdateAfterAllDataReady` private/protected function is handled (called) internally by the component itself; `clicked_viewDetails` (when 'View Details' button is clicked).
 
 &nbsp;

@@ -121,14 +121,12 @@ The name of the variables are self-explementary, so here we just describe what a
 
 - `e-preloader` element is the **app's initial preloader's background**. The background color covers the whole page.  
   Variable name(s):
-
   - `--e-preloader--bg-color`: Background color can be equal to `--e-primary-color`.
 
 &nbsp;
 
 - `e-preloader__bar` element is the **app's initial preloader's bar itself**.  
   Variable name(s):
-
   - `--e-preloader__bar--color`: Bar color can be equal to `--e-day-lighter-color`.
 
 &nbsp;
@@ -136,7 +134,6 @@ The name of the variables are self-explementary, so here we just describe what a
 - `e-fader` element is the **app's fader** which covers the whole content of the app when user is switching between different pages.  
   **Any concern?** Some apps may NOT have this element.
   Variable name(s):
-
   - `--e-fader--bg-color--light`: Background color in light mode can be equal to `--e-day-lighter-color`.
   - `--e-fader--bg-color--dark`: Background color in dark mode can be equal to `--e-night-color`.
 
@@ -144,7 +141,6 @@ The name of the variables are self-explementary, so here we just describe what a
 
 - `e-link` elements are the **links** that take the user to a different page.  
   Variable name(s):
-
   - `--e-link--color--light`: Text color in light mode. Default is `--e-primary-darker-color`.
   - `--e-link--color--dark`: Text color in dark mode. Default is `--e-primary-color`.
 
@@ -152,7 +148,6 @@ The name of the variables are self-explementary, so here we just describe what a
 
 - `e-btn--base` elements are the **buttons with 'Base' role** that does a base action in a lib.
   Variable name(s):
-
   - `--e-btn--base--bg-color`: Background color. Default is `--e-primary-color`.
   - `--e-btn--base--color`: Text color. Default is `--e-day-lighter-color`.
   - `--e-btn--base--border-color`: Border color. Default is `--e-primary-color`.
@@ -161,7 +156,6 @@ The name of the variables are self-explementary, so here we just describe what a
 
 - `e-btn--secondary` elements are the **buttons with 'Secondary' role** that does a secondary action in a lib.
   Variable name(s):
-
   - `--e-btn--secondary--bg-color`: Background color. Default is `--e-primary-color`.
   - `--e-btn--secondary--color`: Text color. Default is `--e-day-lighter-color`.
   - `--e-btn--secondary--border-color`: Border color. Default is `--e-primary-color`.
@@ -175,7 +169,7 @@ The name of the variables are self-explementary, so here we just describe what a
 You may see an app in action, and might wonder what some error (or sometimes informative) codes mean in different parts of the app when a special scenario happens (or is happening behind the scenes)? You can read the app's `README.md` file ('UX edge decisions' section) to learn more about what each code mean and what actions the app takes in some special occasions.
 
 **What do we mean by 'UX edge decisions'?**  
-Imagine our app is supposed to show a energy data chart... If the app receives an error from server, we show that error on the front-side with a friendly readable message, but also attach a special code to it (e.g., `V3InsightsFacade(V1BaseFeatureComponent_main)/locations`). This code's description can be found in the app's `README.md` file ('UX edge decisions' section).
+Imagine our app is supposed to show a energy data chart... If the app receives an error from server, we show that error on the front-side with a friendly readable message, but also attach a special code to it (e.g., `V3InsightsFacade(V2BaseFeatureComponent_main)/locations`). This code's description can be found in the app's `README.md` file ('UX edge decisions' section).
 
 **How 'UX edge decisions' descriptions can help?**  
 UX edge decisions' actions & codes help us in variety of ways, like: Remembering why we have decided to let the app behave in such a special way at the first place when we come back to the project after a while in the future, easier debugging when our clients share a screenshot from the app and like us to change something about it, and having a better overview of our app's edge cases.

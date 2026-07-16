@@ -28,51 +28,79 @@ import {
 import { V2BasePageComponent } from './base-page.component';
 
 /**
- * Base class for 'page' components that act as a parent (i.e., pages that have
- * child routes).
+ * Base class for 'page' components that act as a parent (i.e., pages
+ * that have child routes).
  *
- * Here's a way (#1) that the inherited classes use this:
+ * Extends `V2BasePageComponent` and adds starter-lib orchestration,
+ * error aggregation from child routes/feature libs, and communication
+ * service integration.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HOW TO INHERIT
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
  * 01. Override `_xHasRequiredInputs`.
- * 02. Override `_xInitPre` (with super call right at the beginning).
- * 03. Override `_xInit` (with super call right at the beginning).
- * 04. Override `_xUpdate` (with super call right at the beginning).
+ *     → Check if ALL required URL query params are available.
+ *
+ * 02. Override `_xInitPre` (with super call, optional).
+ *     → Additional subscriptions at init time.
+ *
+ * 03. Override `_xInit` (with super call, optional).
+ *     → Page initialization logic.
+ *
+ * 04. Override `_xUpdate` (with super call, optional).
+ *     → React to URL query param changes.
+ *
  * 05. Override `_xHasInitStarterLibs`.
- * 06. Override `_xInitOtherLibs`.
- * 07. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
- *     it may throw (by its `hasError` output): `xOnError({page: 'parent', lib: 'blahblah', error: $event})`.
- * 08. In HTML, use `$errors` array to show the errors that 'feature' libs may
- *     emit (e.g., in a popup), and also reset the array (e.g., when the user
- *     closes the popup).
- * 09. Optional! In HTML, you can use `$hasRequiredInputs`.
- * 10. Optional! In HTML, you can use `$appVersion`.
+ *     → Check if ALL starter libs are ready. Return `false` and
+ *       call the initializer function of the next unready starter
+ *       lib. Return `true` when all starter libs are ready.
  *
- * Here's also another way (#2) that the inherited classes use this (in most cases):
- * 01. Override `_xHasRequiredInputs`.
- * 02. Override `_xHasInitStarterLibs`.
- * 03. Override `_xInitOtherLibs`.
- * 04. In HTML, use `xOnError` as 'feature' lib's callback to handle errors that
- *     it may throw (by its `hasError` output): `xOnError({page: 'parent', lib: 'blahblah', error: $event})`.
- * 05. In HTML, use `$errors` array to show the errors that 'feature' libs may
- *     emit (e.g., in a popup), and also reset the array (e.g., when the user
- *     closes the popup).
- * 06. Optional! In HTML, you can use `$hasRequiredInputs`.
- * 07. Optional! In HTML, you can use `$appVersion`.
+ * 06. Override `_xInitOtherLibs` (optional).
+ *     → Initialize non-starter libs. In most cases this is empty
+ *       because libs are initialized in HTML via starter lib ready
+ *       flags.
  *
- * IMPORTANT: In HTML, where we wanna initialize the child routes, we should
- * do that ONLY after starter libs are ready:
- * `<div *ngIf="isReadyStarterLib1"><router-outlet></router-outlet></div>`.
+ * ─────────────────────────────────────────────────────────────────────────────
+ * STARTER LIBS
+ * ─────────────────────────────────────────────────────────────────────────────
  *
- * Here's how other libs ('ui', 'feature', or `page`) may interacts with this:
- * 01. Optional! The lib can fetch `$appVersion` via the communication service
- *     (if this parent page itself already had access to it by `app.routes.ts`
- *     file of the app or Auth 'data-access' lib). e.g., the child routes which
- *     are defined in the 'page' lib (and not straightly in the app) can use
- *     this data.
- * 02. Optional! The lib can listen to `@V2BasePageParentComponent:Init` event
- *     which gets emitted via the communication service. e.g., the mobile-header
- *     can listen to this event to update its UI layout to 'base', as we are in
- *     a parent (base) page.
+ * A "starter lib" is a 'feature' lib that MUST be initialized BEFORE any other
+ * lib in the page, because its output is other libs' required input.
  *
+ * In HTML, child routes should only be initialized AFTER starter libs are
+ * ready:
+ * `<div *ngIf="isReadyStarterLib1()"><router-outlet></router-outlet></div>`
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ERROR HANDLING
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * In HTML, use `xOnError` as the 'feature' lib's `hasError` output callback:
+ * `(hasError)="xOnError({page: 'parent', lib: 'blahblah', error: $event})"`
+ *
+ * Errors from child routes are automatically captured via the
+ * communication service (`error` typed events in `_xInitPre`).
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * COMMUNICATION EVENTS
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * - Emits `@V2BasePageParentComponent:Init` (type: `changeByUser`)
+ *   when this page initializes. e.g., it's useful for the mobile-header to
+ *   update its UI layout to 'base'.
+ * - Stores `appVersion` in `communicationService.storedData` for child routes
+ *   to consume.
+ * - Listens for `error` typed events from child routes.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HTML HELPERS
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * - `$hasRequiredInputs` — Signal, all required URL params available.
+ * - `$appVersion` — Signal, app version string.
+ * - `$errors` — Signal array of `V2BasePage_Error` objects from
+ *   feature libs and child routes. Show in a popup, reset on dismiss.
  *
  * @export
  * @class V2BasePageParentComponent

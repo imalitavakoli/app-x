@@ -1,9 +1,9 @@
 @if (platform === 'desktop') {
-<main role="main">
-  <router-outlet></router-outlet>
-</main>
+  <main role="main">
+    <router-outlet></router-outlet>
+  </main>
 } @else {
-<x-ionic-app-holder-v1> </x-ionic-app-holder-v1>
+  <x-ionic-app-holder-v1> </x-ionic-app-holder-v1>
 }
 
 <!-- /////////////////////////////////////////////////////////////////////// -->
@@ -11,13 +11,19 @@
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
 @if ((configFacade.dataConfigDep$ | async)?.fun?.feat?.daylightSwitch) {
-<x-daylight-v1></x-daylight-v1>
+  <x-daylight-v1></x-daylight-v1>
 }
+
+<!-- /////////////////////////////////////////////////////////////////////// -->
+<!-- Network-Modal Lib                                                       -->
+<!-- /////////////////////////////////////////////////////////////////////// -->
+
+<x-modal-network-fea-v1> </x-modal-network-fea-v1>
 
 <!-- /////////////////////////////////////////////////////////////////////// -->
 <!-- BlahBlah Lib                                                            -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
 @if (authenticated) {
-<!-- <x-blahblah-fea-v1> </x-blahblah-fea-v1> -->
+  <!-- <x-blahblah-fea-v1> </x-blahblah-fea-v1> -->
 }
