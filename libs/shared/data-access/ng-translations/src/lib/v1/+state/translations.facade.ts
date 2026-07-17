@@ -164,9 +164,12 @@ export class V1TranslationsFacade extends V1BaseFacade {
    * "loading" state.
    *
    * Each subsequent `get*()` call automatically unmasks its own key, so only
-   * the keys that are actively re-fetched become visible again.
+   * the keys that are actively re-fetched become visible again. Keys that are
+   * NOT re-fetched after `cacheMask` stay hidden.
    *
-   * Unlike `cacheInvalidate`, this does NOT delete the cached data.
+   * NOTE: Unlike `cacheInvalidate`, this does NOT delete the cached data. The
+   * data remains in the store and becomes visible as soon as the corresponding
+   * `get*()` is called.
    */
   cacheMask() {
     this._store.dispatch(TranslationsActions.cacheMask());

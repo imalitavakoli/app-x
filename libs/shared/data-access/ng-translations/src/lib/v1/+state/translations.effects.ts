@@ -18,13 +18,13 @@ import { V1Translations_ResponseIsRelatedTo } from './translations.interfaces';
 
 @Injectable()
 export class V1TranslationsEffects extends V1BaseEffects {
-  private actions$ = inject(Actions);
-  private _map = inject(V1Translations);
+  private readonly _actions$ = inject(Actions);
+  private readonly _map = inject(V1Translations);
 
   /* Get translations in a specific language //////////////////////////////// */
 
   getTranslations$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(TranslationsActions.getTranslations),
       mergeMap((action) =>
         this._runEffectByCache<V1Translations_State, any>({
@@ -68,7 +68,7 @@ export class V1TranslationsEffects extends V1BaseEffects {
   /* Get client all available langs & user selected lang //////////////////// */
 
   getAllLangs$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(TranslationsActions.getAllLangs),
       mergeMap((action) =>
         this._runEffectByCache<V1Translations_State, any>({
@@ -102,7 +102,7 @@ export class V1TranslationsEffects extends V1BaseEffects {
   );
 
   getSelectedLang$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(TranslationsActions.getSelectedLang),
       mergeMap((action) =>
         this._runEffectByCache<V1Translations_State, any>({
@@ -142,7 +142,7 @@ export class V1TranslationsEffects extends V1BaseEffects {
   /* Set user selected lang ///////////////////////////////////////////////// */
 
   patchSelectedLang$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(TranslationsActions.patchSelectedLang),
       concatMap(({ lib, url, userId, cultureCode }) => {
         return this._map.patchSelectedLang(url, userId, cultureCode, lib).pipe(

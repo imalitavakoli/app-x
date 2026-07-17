@@ -8,7 +8,7 @@ import {
 } from './translations.interfaces';
 
 /* ////////////////////////////////////////////////////////////////////////// */
-/* Datas                                                                      */
+/* Narrow selectors (Datas): Resolved (flat, via cacheKeyLatest)              */
 /* ////////////////////////////////////////////////////////////////////////// */
 
 /**
@@ -60,7 +60,7 @@ export const selectSelectedLangData = createSelector(
 );
 
 /* ////////////////////////////////////////////////////////////////////////// */
-/* Loadeds                                                                    */
+/* Narrow selectors (Loadeds): Resolved (flat, via cacheKeyLatest)            */
 /* ////////////////////////////////////////////////////////////////////////// */
 
 /**
@@ -112,7 +112,7 @@ export const selectSelectedLangLoaded = createSelector(
 );
 
 /* ////////////////////////////////////////////////////////////////////////// */
-/* Errors                                                                     */
+/* Narrow selectors (Errors): Resolved (flat, via cacheKeyLatest)             */
 /* ////////////////////////////////////////////////////////////////////////// */
 
 /**

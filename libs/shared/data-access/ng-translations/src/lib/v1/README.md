@@ -387,22 +387,22 @@ export class TestComponent implements OnInit {
   /* //////////////////////////////////////////////////////////////////////// */
 
   ngOnInit() {
-    // Configure TTL (in ms) for caching. Default is 300000ms (5 min).
-    // Set 0 to disable caching for a specific data-key (always refetch).
-    // this._translationsFacade.configureTtl({
-    //   translations: 600000, // 10 minutes for translations
-    //   allLangs: 0,          // Always refetch allLangs
-    // });
+    /* Caching methods ////////////////////////////////////////////////////// */
 
-    // Invalidate (wipe) cached data for specific data-keys.
-    // This clears datas, loadeds, errors, and cacheTimestamps for the
-    // listed keys. The next get*() call for those keys will always refetch.
-    // this._translationsFacade.cacheInvalidate(['translations']);
+    // Configure TTL (ms) per data-key for an instance. 0 disables caching for a
+    // key (always refetch).
+    this._translationsFacade.configureTtl({
+      translations: 60000, // 1 min
+      allLangs: 0, // never cache — always refetch
+    });
 
-    // Mask all data keys. Resolved selectors will return `undefined` for
-    // every key until the next get*() call unmasks them automatically.
-    // Unlike cacheInvalidate, this does NOT delete the cached data.
-    // this._translationsFacade.cacheMask();
+    // Invalidate (wipe) cached data for specific data-keys so the next get*()
+    // refetches from the API.
+    this._translationsFacade.cacheInvalidate(['translations']);
+
+    // Mask all data-keys — resolved/narrow selectors emit `undefined` until the
+    // next get*() call unmasks the requested key automatically.
+    this._translationsFacade.cacheMask();
 
     /* Subscription (RECOMMENDED) /////////////////////////////////////////// */
 

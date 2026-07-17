@@ -95,6 +95,28 @@ export const initialState: V1Translations_State = {
 /* Feature State Reducer                                                      */
 /* ////////////////////////////////////////////////////////////////////////// */
 
+/**
+ * The cache-aware feature reducer.
+ *
+ * Each handler just calls the matching `v1BaseReducer*` helper — the base does
+ * all the cache bookkeeping. Reads (GET) use `v1BaseReducerSetLoading`; then
+ * `success`/`failure`/`cacheHit` store the result.
+ *
+ * Writes (PATCH/PUT/POST/DELETE) are different: instead of set-loading, they
+ * call `v1BaseReducerInvalidate` to clear the cached data-keys they change (as
+ * declared in `CACHE_INVALIDATION_MAP`), so the next read fetches fresh data.
+ *
+ * @example
+ * // Data-mutation action (single-instance): invalidate, don't set-loading.
+ * // CACHE_INVALIDATION_MAP = { patchSelectedLang: ['selectedLang'] };
+ * on(TranslationsActions.patchSelectedLang, (state): V1Translations_State => ({
+ *   ...state,
+ *   ...v1BaseReducerInvalidate(state, CACHE_INVALIDATION_MAP['patchSelectedLang']),
+ *   loadedLatest: { selectedLang: false },
+ * })),
+ *
+ * @type {ActionReducer<V1Translations_State>}
+ */
 export const v1TranslationsReducer = createReducer(
   initialState,
 
