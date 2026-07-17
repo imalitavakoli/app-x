@@ -44,8 +44,6 @@ import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 })
 export class V1TestPageComponent implements OnInit {
   readonly configFacade = inject(V2ConfigFacade);
-
-  // Note: When calling the lib's methods, we assume that
   private readonly _proxy = inject(V1XCredit);
   private readonly _baseUrl = '/v1';
 
