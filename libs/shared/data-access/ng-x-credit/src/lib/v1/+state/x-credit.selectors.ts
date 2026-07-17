@@ -1,5 +1,11 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import * as reducer from './x-credit.reducer';
+import {
+  V1XCredit_Loadeds,
+  V1XCredit_Errors,
+  V1XCredit_Datas,
+} from './x-credit.interfaces';
 
 /**
  * `createFeatureSelector()` method?
@@ -63,6 +69,10 @@ export const selectEntityLoadedLatest = (id = 'g') => {
   );
 };
 
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Raw selectors (cache-keyed state slices)                                   */
+/* ////////////////////////////////////////////////////////////////////////// */
+
 export const selectEntityLoadeds = (id = 'g') => {
   const entity = selectEntity(id);
   return createSelector(
@@ -87,6 +97,164 @@ export const selectEntityDatas = (id = 'g') => {
   );
 };
 
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Narrow selectors (Datas): Resolved (flat, via cacheKeyLatest)              */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+export const selectEntitySummaryData = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(entity, (state: reducer.V1XCredit_Entity) => {
+    if (state.cacheMaskedKeys?.has('summary')) return undefined;
+    const key = state.cacheKeyLatest['summary'];
+    return key ? state.datas.summary[key] : undefined;
+  });
+};
+
+export const selectEntityDetailData = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(entity, (state: reducer.V1XCredit_Entity) => {
+    if (state.cacheMaskedKeys?.has('detail')) return undefined;
+    const key = state.cacheKeyLatest['detail'];
+    return key ? state.datas.detail[key] : undefined;
+  });
+};
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Narrow selectors (Loadeds): Resolved (flat, via cacheKeyLatest)            */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+export const selectEntitySummaryLoaded = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(entity, (state: reducer.V1XCredit_Entity) => {
+    if (state.cacheMaskedKeys?.has('summary')) return undefined;
+    const key = state.cacheKeyLatest['summary'];
+    return key ? state.loadeds.summary[key] : undefined;
+  });
+};
+
+export const selectEntityDetailLoaded = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(entity, (state: reducer.V1XCredit_Entity) => {
+    if (state.cacheMaskedKeys?.has('detail')) return undefined;
+    const key = state.cacheKeyLatest['detail'];
+    return key ? state.loadeds.detail[key] : undefined;
+  });
+};
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Narrow selectors (Errors): Resolved (flat, via cacheKeyLatest)             */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+export const selectEntitySummaryError = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(entity, (state: reducer.V1XCredit_Entity) => {
+    if (state.cacheMaskedKeys?.has('summary')) return undefined;
+    const key = state.cacheKeyLatest['summary'];
+    return key ? state.errors.summary[key] : undefined;
+  });
+};
+
+export const selectEntityDetailError = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(entity, (state: reducer.V1XCredit_Entity) => {
+    if (state.cacheMaskedKeys?.has('detail')) return undefined;
+    const key = state.cacheKeyLatest['detail'];
+    return key ? state.errors.detail[key] : undefined;
+  });
+};
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Resolved selectors (flat, via cacheKeyLatest)                              */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+/**
+ * Select all entity loadeds resolved to flat `{ [dataKey]?: boolean }`.
+ * Uses `cacheKeyLatest` to resolve each key to its latest cache entry.
+ *
+ * NOTE: This selector is named `selectEntityResolvedLoadeds` (not
+ * `selectEntityLoadeds`) because `selectEntityLoadeds` already returns
+ * the raw cache-keyed structure. The `Resolved` keyword is used to
+ * avoid naming collisions — especially if we ever adopt `createFeature()`
+ * for this lib, which auto-generates selectors like `selectLoadeds`.
+ * The corresponding facade observable is named `entityLoadeds$` (not
+ * `entityResolvedLoadeds$`) for consumer convenience.
+ */
+export const selectEntityResolvedLoadeds = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(
+    entity,
+    (state: reducer.V1XCredit_Entity): V1XCredit_Loadeds => {
+      const result: V1XCredit_Loadeds = {};
+      for (const key of Object.keys(state.cacheKeyLatest)) {
+        if (state.cacheMaskedKeys?.has(key)) continue;
+        const ck = state.cacheKeyLatest[key];
+        (result as any)[key] = ck ? state.loadeds[key]?.[ck] : undefined;
+      }
+      return result;
+    },
+  );
+};
+
+/**
+ * Select all entity errors resolved to flat `{ [dataKey]?: string }`.
+ * Uses `cacheKeyLatest` to resolve each key to its latest cache entry.
+ *
+ * NOTE: This selector is named `selectEntityResolvedErrors` (not
+ * `selectEntityErrors`) because `selectEntityErrors` already returns
+ * the raw cache-keyed structure. The `Resolved` keyword is used to
+ * avoid naming collisions — especially if we ever adopt `createFeature()`
+ * for this lib, which auto-generates selectors like `selectErrors`.
+ * The corresponding facade observable is named `entityErrors$` (not
+ * `entityResolvedErrors$`) for consumer convenience.
+ */
+export const selectEntityResolvedErrors = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(
+    entity,
+    (state: reducer.V1XCredit_Entity): V1XCredit_Errors => {
+      const result: V1XCredit_Errors = {};
+      for (const key of Object.keys(state.cacheKeyLatest)) {
+        if (state.cacheMaskedKeys?.has(key)) continue;
+        const ck = state.cacheKeyLatest[key];
+        (result as any)[key] = ck ? state.errors[key]?.[ck] : undefined;
+      }
+      return result;
+    },
+  );
+};
+
+/**
+ * Select all entity datas resolved to flat `{ [dataKey]?: Type }`.
+ * Uses `cacheKeyLatest` to resolve each key to its latest cache entry.
+ *
+ * NOTE: This selector is named `selectEntityResolvedDatas` (not
+ * `selectEntityDatas`) because `selectEntityDatas` already returns
+ * the raw cache-keyed structure. The `Resolved` keyword is used to
+ * avoid naming collisions — especially if we ever adopt `createFeature()`
+ * for this lib, which auto-generates selectors like `selectDatas`.
+ * The corresponding facade observable is named `entityDatas$` (not
+ * `entityResolvedDatas$`) for consumer convenience.
+ */
+export const selectEntityResolvedDatas = (id = 'g') => {
+  const entity = selectEntity(id);
+  return createSelector(
+    entity,
+    (state: reducer.V1XCredit_Entity): V1XCredit_Datas => {
+      const result: V1XCredit_Datas = {};
+      for (const key of Object.keys(state.cacheKeyLatest)) {
+        if (state.cacheMaskedKeys?.has(key)) continue;
+        const ck = state.cacheKeyLatest[key];
+        (result as any)[key] = ck ? state.datas[key]?.[ck] : undefined;
+      }
+      return result;
+    },
+  );
+};
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Computed                                                                   */
+/* ////////////////////////////////////////////////////////////////////////// */
+
 /**
  * Factory function to create a selector that sees if there are any `errors` in
  * the target instace object or not.
@@ -97,12 +265,14 @@ export const selectEntityHasError = (id = 'g') => {
   // Find the entity in the state object.
   const entity = selectEntity(id);
 
-  // Check if there's any error in the entity object.
+  // Check if there's any error in the (cache-keyed) error records.
   return createSelector(
     entity,
     (state: reducer.V1XCredit_Entity | undefined) => {
       return state
-        ? Object.values(state.errors).some((error) => error !== undefined)
+        ? Object.values(state.errors).some((errorRecord) =>
+            Object.values(errorRecord).some((e) => e !== undefined),
+          )
         : false;
     },
   );

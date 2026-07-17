@@ -24,6 +24,7 @@ import {
 } from 'rxjs';
 
 import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
+import { v1BaseCacheGetError } from '@x/shared-util-ng-bases';
 import {
   V1XCredit_Datas,
   V1XCredit_Loadeds,
@@ -114,6 +115,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
   protected override _xInitPreBeforeDom(): void {
     // LIB: XCredit (main)
     this.xCreditFacade.createIfNotExists(this.nameInstance_main);
+    // this.xCreditFacade.configureTtl(this.nameInstance_main, { summary: 300000, detail: 300000 }); // Optional: Override default TTL (ms) per data-key. 0 disables caching for a key.
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -174,9 +176,10 @@ export abstract class V2BaseFeatureExtXCreditComponent
       .subscribe((state) => {
         // Emit the error messages if any.
         const emitError = (key: keyof V1XCredit_Datas) => {
-          if (state.loadedLatest[key] && state.errors[key]) {
+          const error = v1BaseCacheGetError(state, key);
+          if (state.loadedLatest[key] && error) {
             // Don't emit the following errors (they are exceptions).
-            if (state.errors[key] === 'USER_MISSING_DETAIL_DATA') {
+            if (error === 'USER_MISSING_DETAIL_DATA') {
               return;
             }
 
@@ -184,7 +187,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
             this.xOnError(
               {
                 key: key,
-                value: state.errors[key] as string,
+                value: error,
               },
               'V1XCreditFacade',
               this.nameInstance_main,
@@ -210,6 +213,6 @@ export abstract class V2BaseFeatureExtXCreditComponent
   protected override _xDataReset(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main = [];
-    this.xCreditFacade.reset(this.nameInstance_main);
+    this.xCreditFacade.cacheMask(this.nameInstance_main);
   }
 }

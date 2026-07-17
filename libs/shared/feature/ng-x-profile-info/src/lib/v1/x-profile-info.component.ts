@@ -28,6 +28,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { LottieComponent } from 'ngx-lottie';
 
 import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
+import { v1BaseCacheGetError } from '@x/shared-util-ng-bases';
 import { V2BaseFeatureExtComponent } from '@x/shared-util-ng-bases-consumer';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V1XCredit_Style } from '@x/shared-map-ng-x-credit';
@@ -88,6 +89,7 @@ export class V1XProfileInfoFeaComponent
   protected override _xInitPreBeforeDom(): void {
     // LIB: XCredit (main)
     this.xCreditFacade.createIfNotExists(this.nameInstance_main);
+    // this.xCreditFacade.configureTtl(this.nameInstance_main, { detail: 300000 }); // Optional: Override default TTL (ms) per data-key. 0 disables caching for a key.
   }
 
   protected override _xInitOrUpdateAfterAllDataReady() {
@@ -166,9 +168,10 @@ export class V1XProfileInfoFeaComponent
       .subscribe((state) => {
         // Emit the error messages if any.
         const emitError = (key: keyof V1XCredit_Datas) => {
-          if (state.loadedLatest[key] && state.errors[key]) {
+          const error = v1BaseCacheGetError(state, key);
+          if (state.loadedLatest[key] && error) {
             // Don't emit the following errors (they are exceptions).
-            if (state.errors[key] === 'USER_MISSING_DETAIL_DATA') {
+            if (error === 'USER_MISSING_DETAIL_DATA') {
               return;
             }
 
@@ -176,7 +179,7 @@ export class V1XProfileInfoFeaComponent
             this.xOnError(
               {
                 key: key,
-                value: state.errors[key] as string,
+                value: error,
               },
               'V1XCreditFacade',
               this.nameInstance_main,
@@ -227,7 +230,7 @@ export class V1XProfileInfoFeaComponent
   protected override _xDataReset(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main = [];
-    this.xCreditFacade.reset(this.nameInstance_main);
+    this.xCreditFacade.cacheMask(this.nameInstance_main);
 
     // LIB: XProfileInfo
     this._xProfileInfoRequestedData = [];

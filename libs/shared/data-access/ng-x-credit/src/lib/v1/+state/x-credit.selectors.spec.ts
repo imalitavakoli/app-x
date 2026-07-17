@@ -1,10 +1,13 @@
-import * as fromBlahblah from './blahblah.reducer';
-import { selectEntityHasError } from './blahblah.selectors';
+import * as fromXCredit from './x-credit.reducer';
+import {
+  selectEntityHasError,
+  selectEntitySummaryData,
+} from './x-credit.selectors';
 
-describe('VXBlahblah Selectors', () => {
+describe('V1XCredit Selectors', () => {
   it('should select the feature state', () => {
     const state = {
-      [fromBlahblah.blahblahFeatureKey]: {},
+      [fromXCredit.xCreditFeatureKey]: {},
     };
 
     const result = selectEntityHasError('g')(state);
