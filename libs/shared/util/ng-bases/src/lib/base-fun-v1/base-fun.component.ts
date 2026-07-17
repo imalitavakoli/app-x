@@ -167,8 +167,8 @@ export abstract class V1BaseFunComponent
    *
    * **Useful for?** Preparations that are required to happen before the DOM is
    * ready, because some HTML elements may require them. e.g., Setting default
-   * values for inputs in 'ui' libs, or preparing facades (creating new state
-   * object instances) in 'feature' libs.
+   * values for inputs in 'ui' libs, or preparing facades (TTLs configs and new
+   * state object instances) in 'feature' libs.
    *
    * @protected
    */

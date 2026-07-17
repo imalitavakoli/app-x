@@ -22,7 +22,8 @@ import { V1BaseFunComponent } from '../base-fun-v1/base-fun.component';
  * ─────────────────────────────────────────────────────────────────────────────
  *
  * 01. Override `_xInitPreBeforeDom` (with super call).
- *     → Create facade instances BEFORE the DOM is initialized.
+ *     → Config TTLs (for cache-aware data-access libs) AND create instances
+ *       (for multi-instance data-access libs) BEFORE the DOM is initialized.
  *       e.g., `this._insightsFacade.createIfNotExists('V2BaseFeatureComponent_main');`
  *
  * 02. Override `_xHasRequiredInputs` (with super call).
@@ -175,9 +176,9 @@ export abstract class V2BaseFeatureComponent
   /* //////////////////////////////////////////////////////////////////////// */
 
   // Introduced in the Base.
-  // NOTE: This function should be overridden in the child class, for the times
-  // that we're using multi-instance 'data-access' libs. In here, we create
-  // a new instance(s) for the 'data-access' lib.
+  // NOTE: This function should be overridden in the child class to config TTLs
+  // (for cache-aware data-access libs) AND create instances (for multi-instance
+  // data-access libs).
   // e.g., `this._insightsFacade.createIfNotExists('V2BaseFeatureComponent_main');`
   // protected  _xInitPreBeforeDom(): void {}
 
