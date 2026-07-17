@@ -9,6 +9,7 @@ import {
   V1Translations_State,
   V1TranslationsFacade,
 } from '@x/shared-data-access-ng-translations';
+import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 
 import { environment } from '../environments/environment';
 
@@ -79,10 +80,12 @@ export class TranslocoHttpLoader implements TranslocoLoader {
       exhaustMap((state) => {
         // Check if translations data is already loaded in the store, then save
         // it, as we're going to use it later at the end...
-        if ((state as V1Translations_State).datas.translations) {
-          this._langPrevData = (
-            state as V1Translations_State
-          ).datas.translations;
+        const prevData = v1BaseCacheGetData(
+          state as V1Translations_State,
+          'translations',
+        );
+        if (prevData) {
+          this._langPrevData = prevData;
         }
 
         // Now use translations to fetch the desired language (`lang` argument).
@@ -110,8 +113,9 @@ export class TranslocoHttpLoader implements TranslocoLoader {
       map((state) => {
         // Finally if the NEW loaded JSON file is truthy, return that as an
         // Observable, otherwise return `_langPrevData` as an Observable.
-        if (state.datas.translations) {
-          return state.datas.translations as Translation;
+        const data = v1BaseCacheGetData(state, 'translations');
+        if (data) {
+          return data as Translation;
         } else {
           return this._langPrevData as Translation;
         }

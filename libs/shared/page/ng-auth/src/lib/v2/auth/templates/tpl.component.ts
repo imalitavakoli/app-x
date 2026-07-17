@@ -15,6 +15,11 @@ import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1AuthFacade } from '@x/shared-data-access-ng-auth';
 import { V1TranslationsFacade } from '@x/shared-data-access-ng-translations';
+import {
+  v1BaseCacheGetData,
+  v1BaseCacheGetError,
+  v1BaseCacheGetLoaded,
+} from '@x/shared-util-ng-bases';
 
 import { V2Auth_Submit } from './tpl.interfaces';
 
@@ -118,11 +123,16 @@ export class V2AuthPageTplComponent
     // or not.
     this._translationsSub =
       this._translationsFacade.translationsState$.subscribe((state) => {
-        if (state.loadeds.selectedLang && state.loadeds.allLangs) {
+        if (
+          v1BaseCacheGetLoaded(state, 'selectedLang') === true &&
+          v1BaseCacheGetLoaded(state, 'allLangs') === true
+        ) {
           // If loaded successfully, set the language.
-          if (state.datas.selectedLang && state.datas.allLangs) {
-            this._lastLoadedLang = state.datas.selectedLang.id;
-            this._langService.setAvailableLangs(state.datas.allLangs.codes);
+          const selectedLang = v1BaseCacheGetData(state, 'selectedLang');
+          const allLangs = v1BaseCacheGetData(state, 'allLangs');
+          if (selectedLang && allLangs) {
+            this._lastLoadedLang = selectedLang.id;
+            this._langService.setAvailableLangs(allLangs.codes);
             this._langService.setActiveLang(this._lastLoadedLang);
             this._langService
               .load(this._lastLoadedLang)
@@ -131,7 +141,10 @@ export class V2AuthPageTplComponent
           }
 
           // If there was an error, just log it... It doesn't stop the app.
-          if (state.errors.selectedLang || state.errors.allLangs) {
+          if (
+            v1BaseCacheGetError(state, 'selectedLang') ||
+            v1BaseCacheGetError(state, 'allLangs')
+          ) {
             console.warn(
               '@V2AuthPageTplComponent/_setAppLang: Translations could not get loaded successfully.',
             );

@@ -1,38 +1,94 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 
+import {
+  v1BaseReducerSetLoading,
+  v1BaseReducerOnSuccess,
+  v1BaseReducerOnFailure,
+  v1BaseReducerOnCacheHit,
+  v1BaseReducerInvalidate,
+  v1BaseReducerConfigureTtl,
+} from '@x/shared-util-ng-bases';
+import { V1Base_One } from '@x/shared-util-ng-bases-model';
+
 import { TranslationsActions } from './translations.actions';
 import {
-  V1Translations_Errors,
-  V1Translations_Loadeds,
-  V1Translations_Datas,
+  V1Translations_RawErrors,
+  V1Translations_RawLoadeds,
+  V1Translations_LoadedLatest,
+  V1Translations_RawDatas,
   V1Translations_SuccessAction,
-  V1Translations_FailureAction,
+  V1Translations_CacheTimestamps,
+  V1Translations_Ttls,
+  V1Translations_ResponseIsRelatedTo,
 } from './translations.interfaces';
 
 /* ////////////////////////////////////////////////////////////////////////// */
-/* Feature State Interface & Object                                           */
+/* Basic Constants                                                            */
+/* ////////////////////////////////////////////////////////////////////////// */
+
+const DEFAULT_TTL = 300000; // 5 minutes
+
+/** All data keys — used by `cacheMask` to mask everything. */
+const ALL_DATA_KEYS: V1Translations_ResponseIsRelatedTo[] = [
+  'translations',
+  'allLangs',
+  'selectedLang',
+];
+
+/**
+ * Define which actions cause cache invalidation for specific data-keys.
+ * When a mutation action (PATCH/PUT/POST/DELETE) is dispatched, the cache
+ * entries for the listed data-keys are wiped so the next GET refetches.
+ */
+const CACHE_INVALIDATION_MAP: Record<
+  string,
+  V1Translations_ResponseIsRelatedTo[]
+> = {
+  patchSelectedLang: ['selectedLang'],
+};
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Feature State Interface                                                    */
 /* ////////////////////////////////////////////////////////////////////////// */
 
 // NOTE: Exported ONLY for test codes.
 export const translationsFeatureKey = 'v1Translations';
 
-export interface V1Translations_State {
+export interface V1Translations_State extends V1Base_One {
   lastLoadedLangCultureCode: string | undefined;
 
-  loadedLatest: V1Translations_Loadeds;
-  loadeds: V1Translations_Loadeds;
-  errors: V1Translations_Errors;
-  datas: V1Translations_Datas;
+  /** Timestamps of when each cache entry was stored. */
+  cacheTimestamps: V1Translations_CacheTimestamps;
+  /** TTL config (ms) per data-key. */
+  ttls: V1Translations_Ttls;
+
+  loadedLatest: V1Translations_LoadedLatest;
+  loadeds: V1Translations_RawLoadeds;
+  errors: V1Translations_RawErrors;
+  datas: V1Translations_RawDatas;
 }
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Initial shape                                                              */
+/* ////////////////////////////////////////////////////////////////////////// */
 
 // NOTE: Exported ONLY for test codes.
 export const initialState: V1Translations_State = {
   lastLoadedLangCultureCode: undefined,
 
-  loadedLatest: {} as V1Translations_Loadeds,
-  loadeds: {} as V1Translations_Loadeds,
-  errors: {} as V1Translations_Errors,
-  datas: {} as V1Translations_Datas,
+  cacheKeyLatest: {},
+  cacheTimestamps: { translations: {}, allLangs: {}, selectedLang: {} },
+  ttls: {
+    translations: DEFAULT_TTL,
+    allLangs: DEFAULT_TTL,
+    selectedLang: DEFAULT_TTL,
+  },
+  cacheMaskedKeys: new Set<string>(),
+
+  loadedLatest: {} as V1Translations_LoadedLatest,
+  loadeds: { translations: {}, allLangs: {}, selectedLang: {} },
+  errors: { translations: {}, allLangs: {}, selectedLang: {} },
+  datas: { translations: {}, allLangs: {}, selectedLang: {} },
 };
 
 /* ////////////////////////////////////////////////////////////////////////// */
@@ -48,10 +104,12 @@ export const v1TranslationsReducer = createReducer(
     TranslationsActions.getTranslations,
     (state, action): V1Translations_State => ({
       ...state,
-      loadedLatest: { translations: false },
-      loadeds: { ...state.loadeds, translations: undefined },
-      errors: { ...state.errors, translations: undefined },
-      datas: { ...state.datas, translations: undefined },
+      ...v1BaseReducerSetLoading(
+        state,
+        'translations',
+        { ...action },
+        'translations',
+      ),
     }),
   ),
 
@@ -61,10 +119,7 @@ export const v1TranslationsReducer = createReducer(
     TranslationsActions.getAllLangs,
     (state, action): V1Translations_State => ({
       ...state,
-      loadedLatest: { allLangs: false },
-      loadeds: { ...state.loadeds, allLangs: undefined },
-      errors: { ...state.errors, allLangs: undefined },
-      datas: { ...state.datas, allLangs: undefined },
+      ...v1BaseReducerSetLoading(state, 'allLangs', { ...action }, 'allLangs'),
     }),
   ),
 
@@ -72,10 +127,12 @@ export const v1TranslationsReducer = createReducer(
     TranslationsActions.getSelectedLang,
     (state, action): V1Translations_State => ({
       ...state,
-      loadedLatest: { selectedLang: false },
-      loadeds: { ...state.loadeds, selectedLang: undefined },
-      errors: { ...state.errors, selectedLang: undefined },
-      datas: { ...state.datas, selectedLang: undefined },
+      ...v1BaseReducerSetLoading(
+        state,
+        'selectedLang',
+        { ...action },
+        'selectedLang',
+      ),
     }),
   ),
 
@@ -85,23 +142,63 @@ export const v1TranslationsReducer = createReducer(
     TranslationsActions.patchSelectedLang,
     (state, action): V1Translations_State => ({
       ...state,
+      ...v1BaseReducerInvalidate(
+        state,
+        CACHE_INVALIDATION_MAP['patchSelectedLang'],
+      ),
       loadedLatest: { selectedLang: false },
-      loadeds: { ...state.loadeds, selectedLang: undefined },
-      errors: { ...state.errors, selectedLang: undefined },
-      datas: { ...state.datas, selectedLang: undefined },
+    }),
+  ),
+
+  /* Cache actions ////////////////////////////////////////////////////////// */
+
+  on(
+    TranslationsActions.cacheHit,
+    (state, action): V1Translations_State => ({
+      ...state,
+      ...v1BaseReducerOnCacheHit(state, action.relatedTo, action.cacheKey),
+    }),
+  ),
+
+  on(
+    TranslationsActions.configureTtl,
+    (state, action): V1Translations_State => ({
+      ...state,
+      ...v1BaseReducerConfigureTtl(state, action),
+    }),
+  ),
+
+  on(
+    TranslationsActions.cacheInvalidate,
+    (state, { keys }): V1Translations_State => ({
+      ...state,
+      ...v1BaseReducerInvalidate(state, keys),
+    }),
+  ),
+
+  on(
+    TranslationsActions.cacheMask,
+    (state): V1Translations_State => ({
+      ...state,
+      cacheMaskedKeys: new Set<string>(ALL_DATA_KEYS),
     }),
   ),
 
   /* Other actions ////////////////////////////////////////////////////////// */
+
+  on(TranslationsActions.reset, (): V1Translations_State => initialState),
 
   on(
     TranslationsActions.success,
     (state, action): V1Translations_State => ({
       ...state,
       ...setMorePropsBasedOnActSuccess(action),
-      loadedLatest: { [action.relatedTo]: true },
-      loadeds: { ...state.loadeds, [action.relatedTo]: true },
-      datas: { ...state.datas, [action.relatedTo]: action.data },
+      ...v1BaseReducerOnSuccess(
+        state,
+        action.relatedTo,
+        action.cacheKey,
+        action.data,
+      ),
     }),
   ),
 
@@ -109,9 +206,12 @@ export const v1TranslationsReducer = createReducer(
     TranslationsActions.failure,
     (state, action): V1Translations_State => ({
       ...state,
-      loadedLatest: { [action.relatedTo]: true },
-      loadeds: { ...state.loadeds, [action.relatedTo]: true },
-      errors: { ...state.errors, [action.relatedTo]: action.error },
+      ...v1BaseReducerOnFailure(
+        state,
+        action.relatedTo,
+        action.cacheKey,
+        action.error,
+      ),
     }),
   ),
 );

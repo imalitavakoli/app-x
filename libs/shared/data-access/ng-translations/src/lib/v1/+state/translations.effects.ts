@@ -1,17 +1,23 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap, switchMap, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, concatMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import {
   V1Translations,
   V1Translations_MapSelectedLang,
 } from '@x/shared-map-ng-translations';
+import { V1BaseEffects } from '@x/shared-util-ng-bases';
 
 import { TranslationsActions } from './translations.actions';
+import {
+  translationsFeature,
+  V1Translations_State,
+} from './translations.reducer';
+import { V1Translations_ResponseIsRelatedTo } from './translations.interfaces';
 
 @Injectable()
-export class V1TranslationsEffects {
+export class V1TranslationsEffects extends V1BaseEffects {
   private actions$ = inject(Actions);
   private _map = inject(V1Translations);
 
@@ -20,27 +26,42 @@ export class V1TranslationsEffects {
   getTranslations$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TranslationsActions.getTranslations),
-      concatMap(({ lib, url, clientId, cultureCode, modules }) => {
-        return this._map
-          .getTranslations(url, clientId, cultureCode, modules, lib)
-          .pipe(
-            map((data) =>
-              TranslationsActions.success({
-                relatedTo: 'translations',
-                data,
-                extra: { cultureCode },
-              }),
+      mergeMap((action) =>
+        this._runEffectByCache<V1Translations_State, any>({
+          relatedTo: 'translations',
+          cacheKeyPrefix: 'translations',
+          cacheKeyParams: { ...action },
+          stateSelector: translationsFeature.selectV1TranslationsState,
+          getCacheTimestamps: (s) => s.cacheTimestamps.translations,
+          getTtl: (s) => s.ttls.translations,
+          apiFn: () =>
+            this._map.getTranslations(
+              action.url,
+              action.clientId,
+              action.cultureCode,
+              action.modules,
+              action.lib,
             ),
-            catchError((error) =>
-              of(
-                TranslationsActions.failure({
-                  relatedTo: 'translations',
-                  error,
-                }),
-              ),
-            ),
-          );
-      }),
+          onSuccess: (data, cacheKey) =>
+            TranslationsActions.success({
+              relatedTo: 'translations',
+              cacheKey,
+              data,
+              extra: { cultureCode: action.cultureCode },
+            }),
+          onFailure: (error, cacheKey) =>
+            TranslationsActions.failure({
+              relatedTo: 'translations',
+              cacheKey,
+              error,
+            }),
+          onCacheHit: (relatedTo, cacheKey) =>
+            TranslationsActions.cacheHit({
+              relatedTo: relatedTo as V1Translations_ResponseIsRelatedTo,
+              cacheKey,
+            }),
+        }),
+      ),
     ),
   );
 
@@ -49,45 +70,72 @@ export class V1TranslationsEffects {
   getAllLangs$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TranslationsActions.getAllLangs),
-      concatMap(({ lib, url }) => {
-        return this._map.getAllLangs(url, lib).pipe(
-          map((data) =>
-            TranslationsActions.success({ relatedTo: 'allLangs', data }),
-          ),
-          catchError((error) =>
-            of(
-              TranslationsActions.failure({
-                relatedTo: 'allLangs',
-                error,
-              }),
-            ),
-          ),
-        );
-      }),
+      mergeMap((action) =>
+        this._runEffectByCache<V1Translations_State, any>({
+          relatedTo: 'allLangs',
+          cacheKeyPrefix: 'allLangs',
+          cacheKeyParams: { ...action },
+          stateSelector: translationsFeature.selectV1TranslationsState,
+          getCacheTimestamps: (s) => s.cacheTimestamps.allLangs,
+          getTtl: (s) => s.ttls.allLangs,
+          apiFn: () => this._map.getAllLangs(action.url, action.lib),
+          onSuccess: (data, cacheKey) =>
+            TranslationsActions.success({
+              relatedTo: 'allLangs',
+              cacheKey,
+              data,
+            }),
+          onFailure: (error, cacheKey) =>
+            TranslationsActions.failure({
+              relatedTo: 'allLangs',
+              cacheKey,
+              error,
+            }),
+          onCacheHit: (relatedTo, cacheKey) =>
+            TranslationsActions.cacheHit({
+              relatedTo: relatedTo as V1Translations_ResponseIsRelatedTo,
+              cacheKey,
+            }),
+        }),
+      ),
     ),
   );
 
   getSelectedLang$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TranslationsActions.getSelectedLang),
-      concatMap(({ lib, url, userId }) => {
-        return this._map.getSelectedLang(url, userId, lib).pipe(
-          map((data) =>
+      mergeMap((action) =>
+        this._runEffectByCache<V1Translations_State, any>({
+          relatedTo: 'selectedLang',
+          cacheKeyPrefix: 'selectedLang',
+          cacheKeyParams: { ...action },
+          stateSelector: translationsFeature.selectV1TranslationsState,
+          getCacheTimestamps: (s) => s.cacheTimestamps.selectedLang,
+          getTtl: (s) => s.ttls.selectedLang,
+          apiFn: () =>
+            this._map.getSelectedLang(action.url, action.userId, action.lib),
+          onSuccess: (data, cacheKey) =>
             TranslationsActions.success({
               relatedTo: 'selectedLang',
+              cacheKey,
               data,
               extra: {
                 cultureCode: (data as V1Translations_MapSelectedLang)?.id,
               },
             }),
-          ),
-          catchError((error) =>
-            of(
-              TranslationsActions.failure({ relatedTo: 'selectedLang', error }),
-            ),
-          ),
-        );
-      }),
+          onFailure: (error, cacheKey) =>
+            TranslationsActions.failure({
+              relatedTo: 'selectedLang',
+              cacheKey,
+              error,
+            }),
+          onCacheHit: (relatedTo, cacheKey) =>
+            TranslationsActions.cacheHit({
+              relatedTo: relatedTo as V1Translations_ResponseIsRelatedTo,
+              cacheKey,
+            }),
+        }),
+      ),
     ),
   );
 
@@ -101,6 +149,7 @@ export class V1TranslationsEffects {
           map((data) =>
             TranslationsActions.success({
               relatedTo: 'selectedLang',
+              cacheKey: '', // Mutation — no cache key needed.
               data,
               extra: { cultureCode },
             }),
@@ -109,6 +158,7 @@ export class V1TranslationsEffects {
             of(
               TranslationsActions.failure({
                 relatedTo: 'selectedLang',
+                cacheKey: '', // Mutation — no cache key needed.
                 error,
               }),
             ),

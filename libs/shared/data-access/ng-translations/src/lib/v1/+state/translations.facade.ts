@@ -7,23 +7,25 @@
 import { Injectable, inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
+import { V1BaseFacade } from '@x/shared-util-ng-bases';
+
 import { TranslationsActions } from './translations.actions';
 import { translationsFeature } from './translations.reducer';
+import {
+  V1Translations_Ttls,
+  V1Translations_ResponseIsRelatedTo,
+} from './translations.interfaces';
 import * as selectors from './translations.selectors';
 
 @Injectable({
   providedIn: 'root',
 })
-export class V1TranslationsFacade {
-  private readonly _store = inject(Store);
+export class V1TranslationsFacade extends V1BaseFacade {
+  // protected readonly _store = inject(Store); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* Selectors: Let's select one option from our feature state object.        */
+  /* Selectors: Others                                                        */
   /* //////////////////////////////////////////////////////////////////////// */
-
-  translationsState$ = this._store.pipe(
-    select(translationsFeature.selectV1TranslationsState),
-  );
 
   lastLoadedLangCultureCode$ = this._store.pipe(
     select(translationsFeature.selectLastLoadedLangCultureCode),
@@ -32,11 +34,64 @@ export class V1TranslationsFacade {
   loadedLatest$ = this._store.pipe(
     select(translationsFeature.selectLoadedLatest),
   );
-  loadeds$ = this._store.pipe(select(translationsFeature.selectLoadeds));
-  errors$ = this._store.pipe(select(translationsFeature.selectErrors));
-  datas$ = this._store.pipe(select(translationsFeature.selectDatas));
 
   hasError$ = this._store.pipe(select(selectors.selectHasError));
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Selectors: Raw (cache-keyed state slices)                                */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  translationsState$ = this._store.pipe(
+    select(translationsFeature.selectV1TranslationsState),
+  );
+
+  rawLoadeds$ = this._store.pipe(select(translationsFeature.selectLoadeds));
+  rawErrors$ = this._store.pipe(select(translationsFeature.selectErrors));
+  rawDatas$ = this._store.pipe(select(translationsFeature.selectDatas));
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Selectors: Resolved (Flat, via cacheKeyLatest)                           */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  loadeds$ = this._store.pipe(select(selectors.selectResolvedLoadeds));
+  errors$ = this._store.pipe(select(selectors.selectResolvedErrors));
+  datas$ = this._store.pipe(select(selectors.selectResolvedDatas));
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Narrow Selectors (Datas): Resolved (Flat, via cacheKeyLatest)            */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  translationsData$ = this._store.pipe(
+    select(selectors.selectTranslationsData),
+  );
+  allLangsData$ = this._store.pipe(select(selectors.selectAllLangsData));
+  selectedLangData$ = this._store.pipe(
+    select(selectors.selectSelectedLangData),
+  );
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Narrow Selectors (Loadeds): Resolved (Flat, via cacheKeyLatest)          */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  translationsLoaded$ = this._store.pipe(
+    select(selectors.selectTranslationsLoaded),
+  );
+  allLangsLoaded$ = this._store.pipe(select(selectors.selectAllLangsLoaded));
+  selectedLangLoaded$ = this._store.pipe(
+    select(selectors.selectSelectedLangLoaded),
+  );
+
+  /* //////////////////////////////////////////////////////////////////////// */
+  /* Narrow Selectors (Errors): Resolved (Flat, via cacheKeyLatest)           */
+  /* //////////////////////////////////////////////////////////////////////// */
+
+  translationsError$ = this._store.pipe(
+    select(selectors.selectTranslationsError),
+  );
+  allLangsError$ = this._store.pipe(select(selectors.selectAllLangsError));
+  selectedLangError$ = this._store.pipe(
+    select(selectors.selectSelectedLangError),
+  );
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Actions: Let's modify the state by dispatching actions.                  */
@@ -79,5 +134,48 @@ export class V1TranslationsFacade {
     this._store.dispatch(
       TranslationsActions.patchSelectedLang({ lib, url, userId, cultureCode }),
     );
+  }
+
+  /**
+   * Configure TTL (Time-To-Live) in milliseconds for each data-key.
+   * Pass 0 for a key to disable caching for it (always refetch).
+   * Default TTL is 300000ms (1000 * 60 * 5 ms = 5 minutes) for all data-keys.
+   *
+   * @param ttls  Partial TTL config. Only provided keys are updated.
+   */
+  configureTtl(ttls: Partial<V1Translations_Ttls>) {
+    this._store.dispatch(TranslationsActions.configureTtl(ttls));
+  }
+
+  /**
+   * Invalidate (wipe) cached data for specific data-keys.
+   * This clears `datas`, `loadeds`, `errors`, and `cacheTimestamps` for the
+   * listed keys. The next `get*()` call for those keys will always refetch.
+   *
+   * @param {V1Translations_ResponseIsRelatedTo[]} keys  Data-keys to invalidate
+   */
+  cacheInvalidate(keys: V1Translations_ResponseIsRelatedTo[]) {
+    this._store.dispatch(TranslationsActions.cacheInvalidate({ keys }));
+  }
+
+  /**
+   * Mask all data keys. Once masked, resolved selectors (e.g. `datas$`,
+   * `loadeds$`) will return `undefined` for every key — the UI sees a
+   * "loading" state.
+   *
+   * Each subsequent `get*()` call automatically unmasks its own key, so only
+   * the keys that are actively re-fetched become visible again.
+   *
+   * Unlike `cacheInvalidate`, this does NOT delete the cached data.
+   */
+  cacheMask() {
+    this._store.dispatch(TranslationsActions.cacheMask());
+  }
+
+  /**
+   * Reset the state to initial. Clears all cached data.
+   */
+  reset() {
+    this._store.dispatch(TranslationsActions.reset());
   }
 }

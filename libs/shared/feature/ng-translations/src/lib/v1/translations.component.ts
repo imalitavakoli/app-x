@@ -20,6 +20,10 @@ import {
   V1TranslationsFacade,
   V1Translations_Errors,
 } from '@x/shared-data-access-ng-translations';
+import {
+  v1BaseCacheGetData,
+  v1BaseCacheGetError,
+} from '@x/shared-util-ng-bases';
 
 /**
  * Here's what we need to do:
@@ -124,18 +128,20 @@ export class V1TranslationsFeaComponent implements OnInit, OnDestroy {
         // We're listening to `selectedLang` changes... So as soon as its new
         // data is successfully loaded, let's use the Transloco Service to
         // change the whole app's language as well.
-        if (state.loadedLatest.selectedLang && state.datas.selectedLang) {
-          const cultureCode = state.datas.selectedLang.id;
+        const selectedLang = v1BaseCacheGetData(state, 'selectedLang');
+        if (state.loadedLatest.selectedLang && selectedLang) {
+          const cultureCode = selectedLang.id;
           this._langService.setActiveLang(cultureCode);
           this._langService.load(cultureCode).pipe(take(1)).subscribe();
         }
 
         // Emit the error messages if any.
         const emitError = (key: keyof V1Translations_Errors) => {
-          if (state.loadedLatest[key] && state.errors[key]) {
+          const error = v1BaseCacheGetError(state, key);
+          if (state.loadedLatest[key] && error) {
             this.hasError.emit({
               key: key,
-              value: state.errors[key] as string,
+              value: error,
             });
           }
         };

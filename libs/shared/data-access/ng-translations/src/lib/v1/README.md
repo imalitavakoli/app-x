@@ -51,10 +51,11 @@ export const effects = [V1TranslationsEffects];
 import { APP_INITIALIZER, ApplicationConfig, isDevMode } from '@angular/core';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { environment } from '../environments/environment';
-import { metaReducers, reducers, effects } from './+state';
-import { AppInitializerService } from './app-initializer.service';
 import { provideTransloco } from '@jsverse/transloco';
+
+import { environment } from '../environments/environment';
+import { AppInitializerService } from './app-initializer.service';
+import { metaReducers, reducers, effects } from './+state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -87,8 +88,13 @@ import { inject, Injectable } from '@angular/core';
 import { Translation, TranslocoLoader } from '@jsverse/transloco';
 import { HttpClient } from '@angular/common/http';
 import { exhaustMap, map, of, skip, take, asapScheduler, filter } from 'rxjs';
+
+import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
-import { V1TranslationsFacade } from '@x/shared-data-access-ng-translations';
+import {
+  V1Translations_State,
+  V1TranslationsFacade,
+} from '@x/shared-data-access-ng-translations';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
@@ -118,10 +124,12 @@ export class TranslocoHttpLoader implements TranslocoLoader {
         return state !== false;
       }),
       exhaustMap((state) => {
-        if ((state as V1Translations_State).datas.translations) {
-          this._langPrevData = (
-            state as V1Translations_State
-          ).datas.translations;
+        const prevData = v1BaseCacheGetData(
+          state as V1Translations_State,
+          'translations',
+        );
+        if (prevData) {
+          this._langPrevData = prevData;
         }
 
         asapScheduler.schedule(() => {
@@ -133,8 +141,9 @@ export class TranslocoHttpLoader implements TranslocoLoader {
       skip(2),
       take(1),
       map((state) => {
-        if (state.datas.translations) {
-          return state.datas.translations as Translation;
+        const data = v1BaseCacheGetData(state, 'translations');
+        if (data) {
+          return data as Translation;
         } else {
           return this._langPrevData as Translation;
         }
@@ -166,13 +175,19 @@ import {
   Translation,
 } from '@jsverse/transloco';
 import { proxifyConfigExtra } from '@x/ng-insights-map-config';
-import { exhaustMap, of, skip, take } from 'rxjs';
-import { environment } from '../environments/environment';
-import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
+import { exhaustMap, of, skip, take, filter } from 'rxjs';
+
+import { v1LanguageGetCode } from '@x/shared-util-formatters';
+import {
+  v1BaseCacheGetData,
+  v1BaseCacheGetLoaded,
+} from '@x/shared-util-ng-bases';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
+import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1AuthFacade } from '@x/shared-data-access-ng-auth';
 import { V1TranslationsFacade } from '@x/shared-data-access-ng-translations';
-import { v1LanguageGetCode } from '@x/shared-util-formatters';
+
+import { environment } from '../environments/environment';
 import { HaltedState } from './app.interfaces';
 
 @Injectable({ providedIn: 'root' })
@@ -229,8 +244,14 @@ export class AppInitializerService {
                 state.datas.getToken.userId,
               );
 
+              // emissions, wait until both keys report loaded via
+              // `v1BaseCacheGetLoaded`.
               return this._translationsFacade.translationsState$.pipe(
-                skip(4),
+                filter(
+                  (state) =>
+                    v1BaseCacheGetLoaded(state, 'allLangs') === true &&
+                    v1BaseCacheGetLoaded(state, 'selectedLang') === true,
+                ),
                 take(1),
               );
             }),
@@ -250,16 +271,17 @@ export class AppInitializerService {
               return;
             }
 
-            if (!state.datas.allLangs || !state.datas.selectedLang) {
+            const allLangs = v1BaseCacheGetData(state, 'allLangs');
+            const selectedLang = v1BaseCacheGetData(state, 'selectedLang');
+            if (!allLangs || !selectedLang) {
               this._setLangSettings(defaultLang);
               this._loadLang(resolve, defaultLang);
               return;
             }
 
-            const langs = state.datas.allLangs.codes as AvailableLangs;
-            const lang = state.datas.selectedLang;
-            this._setLangSettings(lang.id, langs);
-            this._loadLang(resolve, lang.id);
+            const langs = allLangs.codes as AvailableLangs;
+            this._setLangSettings(selectedLang.id, langs);
+            this._loadLang(resolve, selectedLang.id);
           });
       });
   }
@@ -335,7 +357,7 @@ export class AppInitializerService {
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import {
   TranslocoPipe,
   TranslocoDirective,
@@ -344,6 +366,7 @@ import {
 
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1TranslationsFacade } from '@x/shared-data-access-ng-translations';
+import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 
 @Component({
   selector: 'x-test',
@@ -364,24 +387,69 @@ export class TestComponent implements OnInit {
   /* //////////////////////////////////////////////////////////////////////// */
 
   ngOnInit() {
-    // Start listening to the state changes.
+    // Configure TTL (in ms) for caching. Default is 300000ms (5 min).
+    // Set 0 to disable caching for a specific data-key (always refetch).
+    // this._translationsFacade.configureTtl({
+    //   translations: 600000, // 10 minutes for translations
+    //   allLangs: 0,          // Always refetch allLangs
+    // });
+
+    // Invalidate (wipe) cached data for specific data-keys.
+    // This clears datas, loadeds, errors, and cacheTimestamps for the
+    // listed keys. The next get*() call for those keys will always refetch.
+    // this._translationsFacade.cacheInvalidate(['translations']);
+
+    // Mask all data keys. Resolved selectors will return `undefined` for
+    // every key until the next get*() call unmasks them automatically.
+    // Unlike cacheInvalidate, this does NOT delete the cached data.
+    // this._translationsFacade.cacheMask();
+
+    /* Subscription (RECOMMENDED) /////////////////////////////////////////// */
+
+    // Listen to ONLY one slice of the data in the state.
+    // This takes advantage of NgRx memoized selectors and only re-emits
+    // when the specific data actually changes.
+
+    this._translationsFacade.translationsData$
+      .pipe(filter((data) => data !== undefined))
+      .subscribe((data) => {
+        console.log('translations:', data);
+      });
+
+    /* Subscription (ALTERNATIVE) /////////////////////////////////////////// */
+
+    // Listen to all the state changes via `translationsState$`.
+    // You can have one single subscription and take advantage of
+    // `loadedLatest` to discriminate which property just changed.
+    //
+    // NOTE: The state contains cache records for each key.
+    // Use `v1BaseCacheGetData` with the state object to get the data for the
+    // most recently dispatched call.
+
     this._translationsSub =
       this._translationsFacade.translationsState$.subscribe((state) => {
-        if (state.loadedLatest.translations && state.datas.translations) {
-          console.log('translations:', state.datas.translations);
+        const translations = v1BaseCacheGetData(state, 'translations');
+        if (state.loadedLatest.translations && translations) {
+          console.log('translations:', translations);
         }
-        if (state.loadedLatest.allLangs && state.datas.allLangs) {
-          console.log('allLangs:', state.datas.allLangs);
+
+        const allLangs = v1BaseCacheGetData(state, 'allLangs');
+        if (state.loadedLatest.allLangs && allLangs) {
+          console.log('allLangs:', allLangs);
         }
-        if (state.loadedLatest.selectedLang && state.datas.selectedLang) {
-          console.log('selectedLang:', state.datas.selectedLang);
+
+        const selectedLang = v1BaseCacheGetData(state, 'selectedLang');
+        if (state.loadedLatest.selectedLang && selectedLang) {
+          console.log('selectedLang:', selectedLang);
         }
       });
+
+    /* Calling APIs ///////////////////////////////////////////////////////// */
 
     // Get translations
     this._translationsFacade.getTranslations(
       this._baseUrl,
-      1234567890,
+      14934656510,
       'en-GB',
       ['generic_errors'],
     );
@@ -396,6 +464,20 @@ export class TestComponent implements OnInit {
     // this._translationsFacade.patchSelectedLang(
     //   this._baseUrl, 11318242, 'en-GB',
     // );
+
+    /* Reset /////////////////////////////////////////////////////////////// */
+
+    // Reset the state after 5 seconds.
+    // NOTE: In the cache-aware architecture, prefer `cacheMask()` when you just
+    // want to hide the currently resolved data (e.g. on re-init) — it keeps the
+    // cached entries so TTL checks still apply and the next `get*()` can serve
+    // from cache. Use `cacheInvalidate([...])` to wipe specific keys, or
+    // `reset()` (below) only when you truly need to discard the ENTIRE state.
+    setTimeout(() => {
+      this._translationsSub.unsubscribe();
+      this._translationsFacade.reset();
+      console.log('State reset');
+    }, 5000);
   }
 }
 ```

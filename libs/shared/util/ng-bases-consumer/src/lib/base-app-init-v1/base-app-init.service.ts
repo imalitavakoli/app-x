@@ -334,7 +334,12 @@ export class V1BaseAppInitService {
 
               // Switch to the `translationsState$` Observable.
               return this._translationsFacade.translationsState$.pipe(
-                skip(4),
+                filter((state) => {
+                  return (
+                    v1BaseCacheGetLoaded(state, 'allLangs') === true &&
+                    v1BaseCacheGetLoaded(state, 'selectedLang') === true
+                  );
+                }),
                 take(1),
               );
             }),
@@ -360,16 +365,17 @@ export class V1BaseAppInitService {
             // of its settings) let's make sure we have all required data in
             // `translationsState$` state object. If not, again just try to
             // load the default language and return.
-            if (!state.datas.allLangs || !state.datas.selectedLang) {
+            const allLangs = v1BaseCacheGetData(state, 'allLangs');
+            const selectedLang = v1BaseCacheGetData(state, 'selectedLang');
+            if (!allLangs || !selectedLang) {
               setAppLang(defaultLang);
               loadAppLang(resolve, defaultLang);
               return;
             }
 
             // Let's set available langs, active lang, and load the active lang.
-            const langs = state.datas.allLangs.codes as LangDefinition[];
-            const lang = state.datas.selectedLang;
-            const langId = validateFetchedAppLang(lang.id, langs);
+            const langs = allLangs.codes as LangDefinition[];
+            const langId = validateFetchedAppLang(selectedLang.id, langs);
 
             setAppLang(langId, langs);
             loadAppLang(resolve, langId);

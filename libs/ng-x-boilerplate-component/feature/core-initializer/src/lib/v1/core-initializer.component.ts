@@ -13,6 +13,10 @@ import {
 import { Subscription, exhaustMap, filter, of, take } from 'rxjs';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
+import {
+  v1BaseCacheGetData,
+  v1BaseCacheGetError,
+} from '@x/shared-util-ng-bases';
 import { V2Config_MapDep, V2Config_MapFirebase } from '@x/shared-map-ng-config';
 import {
   V1FirebaseService,
@@ -162,7 +166,7 @@ export class V1CoreInitializerComponent
           state = state as V1Translations_State;
 
           // If translations data was NOT truthy, just return.
-          if (!state.datas.translations) {
+          if (!v1BaseCacheGetData(state, 'translations')) {
             return of(false);
           }
 
@@ -273,9 +277,10 @@ export class V1CoreInitializerComponent
     this._translationsSub =
       this._translationsFacade.translationsState$.subscribe((state) => {
         // Dispatch actions & change lang.
-        if (state.loadedLatest.selectedLang && state.datas.selectedLang) {
-          const cultureCode = state.datas.selectedLang.id;
-          const cultureLabel = state.datas.selectedLang.label;
+        const selectedLang = v1BaseCacheGetData(state, 'selectedLang');
+        if (state.loadedLatest.selectedLang && selectedLang) {
+          const cultureCode = selectedLang.id;
+          const cultureLabel = selectedLang.label;
 
           // Change the app lang.
           changeLang(cultureCode, cultureLabel);
@@ -306,8 +311,9 @@ export class V1CoreInitializerComponent
           key: keyof V1Translations_Errors,
           keyWithPrefix: WebcomErrorKey,
         ) => {
-          if (state.loadedLatest[key] && state.errors[key]) {
-            this._dispatchError(keyWithPrefix, state.errors[key] as string);
+          const error = v1BaseCacheGetError(state, key);
+          if (state.loadedLatest[key] && error) {
+            this._dispatchError(keyWithPrefix, error);
           }
         };
         emitError('translations', 'initializer-translations');

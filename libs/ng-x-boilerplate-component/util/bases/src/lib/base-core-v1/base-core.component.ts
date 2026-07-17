@@ -27,6 +27,7 @@ import {
   v1LocalWebcomGet,
   v1LocalWebcomSetOneError,
 } from '@x/shared-util-local-storage';
+import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V2ConfigFacade } from '@x/shared-api-data-access-ng-config';
 import {
@@ -278,7 +279,7 @@ export class V1BaseCoreComponent
           state = state as V1Translations_State;
 
           // If translations data was NOT truthy, just return.
-          if (!state.datas.translations) {
+          if (!v1BaseCacheGetData(state, 'translations')) {
             return of(false);
           }
 
