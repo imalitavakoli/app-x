@@ -658,8 +658,8 @@ export abstract class V2BaseFeatureComponent
    *   // LIB: Insights (main)
    *   if (this._insightsRequestedData_main) this._insightsRequestedData_main = [];
    *
-   *   // this._insightsFacade.reset('V2BaseFeatureComponent_main'); // This should be done, if (1) you're dealing with a non-cache-aware data-access lib, or (2) you don't like the 'ui' component to go back to its 'loading' state while fetching new data.
    *   this._insightsFacade.cacheMask('V2BaseFeatureComponent_main'); // This should be done, if you're dealing with a cache-aware data-access lib. It masks (hides) all previously cached data, so that they don't hang around while you're already subscribed to the cache-aware observables (e.g., `entity$`). They will automatically get revealed once the relevant `get*` method is called.
+   *   // this._insightsFacade.reset('V2BaseFeatureComponent_main'); // This should be done, ONLY IF you're dealing with a non-cache-aware data-access lib.
    *   // this._insightsFacade.createIfNotExists('V2BaseFeatureComponent_main'); // This should already have been done BEFORE the DOM is initialized (in `_xInitPreBeforeDom`).
    * }
    * ```
