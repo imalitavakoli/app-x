@@ -8,7 +8,7 @@ import { Injectable, inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 import { ConfigActions } from './config.actions';
-import { configFeature } from './config.reducer';
+import { v2ConfigFeature } from './config.reducer';
 
 @Injectable({
   providedIn: 'root',
@@ -26,33 +26,37 @@ export class V2ConfigFacade {
   // feature state changes, it should update our templates or do some other
   // sutff if we have already subscribed to the observable.
 
-  configState$ = this._store.pipe(select(configFeature.selectV2ConfigState));
+  configState$ = this._store.pipe(select(v2ConfigFeature.selectV2ConfigState));
 
   loadedConfigDep$ = this._store.pipe(
-    select(configFeature.selectLoadedConfigDep),
+    select(v2ConfigFeature.selectLoadedConfigDep),
   );
   errorConfigDep$ = this._store.pipe(
-    select(configFeature.selectErrorConfigDep),
+    select(v2ConfigFeature.selectErrorConfigDep),
   );
-  dataConfigDep$ = this._store.pipe(select(configFeature.selectDataConfigDep));
+  dataConfigDep$ = this._store.pipe(
+    select(v2ConfigFeature.selectDataConfigDep),
+  );
 
   loadedConfigFirebase$ = this._store.pipe(
-    select(configFeature.selectLoadedConfigFirebase),
+    select(v2ConfigFeature.selectLoadedConfigFirebase),
   );
   errorConfigFirebase$ = this._store.pipe(
-    select(configFeature.selectErrorConfigFirebase),
+    select(v2ConfigFeature.selectErrorConfigFirebase),
   );
   dataConfigFirebase$ = this._store.pipe(
-    select(configFeature.selectDataConfigFirebase),
+    select(v2ConfigFeature.selectDataConfigFirebase),
   );
 
   loadedDataBuild$ = this._store.pipe(
-    select(configFeature.selectLoadedDataBuild),
+    select(v2ConfigFeature.selectLoadedDataBuild),
   );
   errorDataBuild$ = this._store.pipe(
-    select(configFeature.selectErrorDataBuild),
+    select(v2ConfigFeature.selectErrorDataBuild),
   );
-  dataDataBuild$ = this._store.pipe(select(configFeature.selectDataDataBuild));
+  dataDataBuild$ = this._store.pipe(
+    select(v2ConfigFeature.selectDataDataBuild),
+  );
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Actions: Let's modify the state by dispatching actions.                  */

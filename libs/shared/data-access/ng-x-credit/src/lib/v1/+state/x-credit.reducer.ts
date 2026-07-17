@@ -31,7 +31,7 @@ import { XCreditActions } from './x-credit.actions';
 /* ////////////////////////////////////////////////////////////////////////// */
 
 /** Default TTL (ms) applied to every data-key. 5 minutes. */
-export const DEFAULT_TTL = 300000;
+export const V1_X_CREDIT_DEFAULT_TTL = 300000;
 
 /** All data keys — used by `cacheMask` to mask everything. */
 const ALL_DATA_KEYS: V1XCredit_ResponseIsRelatedTo[] = ['summary', 'detail'];
@@ -54,7 +54,7 @@ const LOG_PREFIX = 'x-credit.reducer';
 /* Feature State Interface                                                    */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-export const xCreditFeatureKey = 'v1XCredit';
+export const v1XCreditFeatureKey = 'v1XCredit';
 
 /**
  * This is our one single instance interface.
@@ -102,7 +102,7 @@ export interface V1XCredit_State extends EntityState<V1XCredit_Entity> {
 }
 
 interface V1XCredit_PartialState {
-  readonly [xCreditFeatureKey]: V1XCredit_State;
+  readonly [v1XCreditFeatureKey]: V1XCredit_State;
 }
 
 /**
@@ -125,7 +125,7 @@ export const v1XCreditAdapter: EntityAdapter<V1XCredit_Entity> =
 
 /**
  * Create a fresh entity instance with all cache-aware fields initialized.
- * TTLs default to `DEFAULT_TTL` for every data-key. All cache-keyed records
+ * TTLs default to `*DEFAULT_TTL` for every data-key. All cache-keyed records
  * (`loadeds`, `errors`, `datas`, `cacheTimestamps`) start as empty `Record`s.
  *
  * @param {string} id The entity's unique id.
@@ -137,7 +137,7 @@ function createInitialEntity(id: string): V1XCredit_Entity {
 
     cacheKeyLatest: {},
     cacheTimestamps: { summary: {}, detail: {} },
-    ttls: { summary: DEFAULT_TTL, detail: DEFAULT_TTL },
+    ttls: { summary: V1_X_CREDIT_DEFAULT_TTL, detail: V1_X_CREDIT_DEFAULT_TTL },
     cacheMaskedKeys: new Set<string>(),
 
     loadedLatest: {} as V1XCredit_LoadedLatest,
@@ -155,7 +155,7 @@ function createInitialEntity(id: string): V1XCredit_Entity {
  *
  * @type {V1XCredit_State}
  */
-export const initialState: V1XCredit_State = v1XCreditAdapter.addOne(
+export const v1XCreditInitialState: V1XCredit_State = v1XCreditAdapter.addOne(
   createInitialEntity('g'),
   v1XCreditAdapter.getInitialState({
     lastSetStyle: undefined,
@@ -199,7 +199,7 @@ export const initialState: V1XCredit_State = v1XCreditAdapter.addOne(
  * @type {ActionReducer<V1XCredit_State>}
  */
 const reducer = createReducer(
-  initialState,
+  v1XCreditInitialState,
 
   /* Select a style ///////////////////////////////////////////////////////// */
 
@@ -305,7 +305,7 @@ const reducer = createReducer(
     ),
   ),
 
-  on(XCreditActions.resetAll, () => initialState),
+  on(XCreditActions.resetAll, () => v1XCreditInitialState),
 
   on(XCreditActions.success, (state, { id, props }) =>
     v1XCreditAdapter.updateOne(

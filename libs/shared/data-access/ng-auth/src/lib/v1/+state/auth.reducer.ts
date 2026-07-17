@@ -8,7 +8,7 @@ import { V1Auth_Errors, V1Auth_Loadeds, V1Auth_Datas } from './auth.interfaces';
 /* ////////////////////////////////////////////////////////////////////////// */
 
 // NOTE: Exported ONLY for test codes.
-export const authFeatureKey = 'v1Auth';
+export const v1AuthFeatureKey = 'v1Auth';
 
 export interface V1Auth_State {
   publicUrls: string[];
@@ -22,7 +22,7 @@ export interface V1Auth_State {
 }
 
 // NOTE: Exported ONLY for test codes.
-export const initialState: V1Auth_State = {
+export const v1AuthInitialState: V1Auth_State = {
   publicUrls: [],
   protectedInitialPath: '/dashboard',
   appVersion: undefined,
@@ -38,7 +38,7 @@ export const initialState: V1Auth_State = {
 /* ////////////////////////////////////////////////////////////////////////// */
 
 export const v1AuthReducer = createReducer(
-  initialState,
+  v1AuthInitialState,
 
   /* Auth by: Magic ///////////////////////////////////////////////////////// */
 
@@ -211,7 +211,7 @@ export const v1AuthReducer = createReducer(
 /* Feature State Selectors (auto generated via `createFeature()`)             */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-export const authFeature = createFeature({
-  name: authFeatureKey,
+export const v1AuthFeature = createFeature({
+  name: v1AuthFeatureKey,
   reducer: v1AuthReducer,
 });

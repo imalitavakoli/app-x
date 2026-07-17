@@ -17,9 +17,9 @@ import {
  * Only re-emits when the resolved data actually changes.
  */
 export const selectTranslationsData = createSelector(
-  fromTranslations.translationsFeature.selectDatas,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectDatas,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (datas, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('translations')) return undefined;
     const key = latestKeys['translations'];
@@ -33,9 +33,9 @@ export const selectTranslationsData = createSelector(
  * Only re-emits when the resolved data actually changes.
  */
 export const selectAllLangsData = createSelector(
-  fromTranslations.translationsFeature.selectDatas,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectDatas,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (datas, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('allLangs')) return undefined;
     const key = latestKeys['allLangs'];
@@ -49,9 +49,9 @@ export const selectAllLangsData = createSelector(
  * Only re-emits when the resolved data actually changes.
  */
 export const selectSelectedLangData = createSelector(
-  fromTranslations.translationsFeature.selectDatas,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectDatas,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (datas, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('selectedLang')) return undefined;
     const key = latestKeys['selectedLang'];
@@ -69,9 +69,9 @@ export const selectSelectedLangData = createSelector(
  * dispatched call.
  */
 export const selectTranslationsLoaded = createSelector(
-  fromTranslations.translationsFeature.selectLoadeds,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectLoadeds,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (loadeds, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('translations')) return undefined;
     const key = latestKeys['translations'];
@@ -85,9 +85,9 @@ export const selectTranslationsLoaded = createSelector(
  * dispatched call.
  */
 export const selectAllLangsLoaded = createSelector(
-  fromTranslations.translationsFeature.selectLoadeds,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectLoadeds,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (loadeds, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('allLangs')) return undefined;
     const key = latestKeys['allLangs'];
@@ -101,9 +101,9 @@ export const selectAllLangsLoaded = createSelector(
  * dispatched call.
  */
 export const selectSelectedLangLoaded = createSelector(
-  fromTranslations.translationsFeature.selectLoadeds,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectLoadeds,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (loadeds, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('selectedLang')) return undefined;
     const key = latestKeys['selectedLang'];
@@ -121,9 +121,9 @@ export const selectSelectedLangLoaded = createSelector(
  * dispatched call.
  */
 export const selectTranslationsError = createSelector(
-  fromTranslations.translationsFeature.selectErrors,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectErrors,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (errors, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('translations')) return undefined;
     const key = latestKeys['translations'];
@@ -137,9 +137,9 @@ export const selectTranslationsError = createSelector(
  * dispatched call.
  */
 export const selectAllLangsError = createSelector(
-  fromTranslations.translationsFeature.selectErrors,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectErrors,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (errors, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('allLangs')) return undefined;
     const key = latestKeys['allLangs'];
@@ -153,9 +153,9 @@ export const selectAllLangsError = createSelector(
  * dispatched call.
  */
 export const selectSelectedLangError = createSelector(
-  fromTranslations.translationsFeature.selectErrors,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectErrors,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (errors, latestKeys, maskedKeys) => {
     if (maskedKeys?.has('selectedLang')) return undefined;
     const key = latestKeys['selectedLang'];
@@ -177,9 +177,9 @@ export const selectSelectedLangError = createSelector(
  * `loadeds$` (not `resolvedLoadeds$`) for consumer convenience.
  */
 export const selectResolvedLoadeds = createSelector(
-  fromTranslations.translationsFeature.selectLoadeds,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectLoadeds,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (loadeds, latestKeys, maskedKeys): V1Translations_Loadeds => {
     const result: V1Translations_Loadeds = {};
     for (const key of Object.keys(latestKeys)) {
@@ -201,9 +201,9 @@ export const selectResolvedLoadeds = createSelector(
  * `errors$` (not `resolvedErrors$`) for consumer convenience.
  */
 export const selectResolvedErrors = createSelector(
-  fromTranslations.translationsFeature.selectErrors,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectErrors,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (errors, latestKeys, maskedKeys): V1Translations_Errors => {
     const result: V1Translations_Errors = {};
     for (const key of Object.keys(latestKeys)) {
@@ -225,9 +225,9 @@ export const selectResolvedErrors = createSelector(
  * `datas$` (not `resolvedDatas$`) for consumer convenience.
  */
 export const selectResolvedDatas = createSelector(
-  fromTranslations.translationsFeature.selectDatas,
-  fromTranslations.translationsFeature.selectCacheKeyLatest,
-  fromTranslations.translationsFeature.selectCacheMaskedKeys,
+  fromTranslations.v1TranslationsFeature.selectDatas,
+  fromTranslations.v1TranslationsFeature.selectCacheKeyLatest,
+  fromTranslations.v1TranslationsFeature.selectCacheMaskedKeys,
   (datas, latestKeys, maskedKeys): V1Translations_Datas => {
     const result: V1Translations_Datas = {};
     for (const key of Object.keys(latestKeys)) {
@@ -251,7 +251,7 @@ export const selectResolvedDatas = createSelector(
  * @type {boolean}
  */
 export const selectHasError = createSelector(
-  fromTranslations.translationsFeature.selectErrors,
+  fromTranslations.v1TranslationsFeature.selectErrors,
   (errors) => {
     return Object.values(errors).some((errorRecord) =>
       Object.values(errorRecord).some((e) => e !== undefined),

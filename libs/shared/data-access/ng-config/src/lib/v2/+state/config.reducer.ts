@@ -23,7 +23,7 @@ import { ConfigActions } from './config.actions';
 /* ////////////////////////////////////////////////////////////////////////// */
 
 // NOTE: Exported ONLY for test codes.
-export const configFeatureKey = 'v2Config';
+export const v2ConfigFeatureKey = 'v2Config';
 
 export interface V2Config_State {
   loadedConfigDep: boolean;
@@ -40,7 +40,7 @@ export interface V2Config_State {
 }
 
 // NOTE: Exported ONLY for test codes.
-export const initialState: V2Config_State = {
+export const v2ConfigInitialState: V2Config_State = {
   loadedConfigDep: false,
   errorConfigDep: undefined,
   dataConfigDep: undefined,
@@ -59,7 +59,7 @@ export const initialState: V2Config_State = {
 /* ////////////////////////////////////////////////////////////////////////// */
 
 export const v2ConfigReducer = createReducer(
-  initialState,
+  v2ConfigInitialState,
 
   /* Load Config: DEP /////////////////////////////////////////////////////// */
 
@@ -126,7 +126,7 @@ export const v2ConfigReducer = createReducer(
 /* Feature State Selectors (auto generated via `createFeature()`)             */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-export const configFeature = createFeature({
-  name: configFeatureKey,
+export const v2ConfigFeature = createFeature({
+  name: v2ConfigFeatureKey,
   reducer: v2ConfigReducer,
 });

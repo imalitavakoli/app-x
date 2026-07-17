@@ -4,7 +4,7 @@ import * as fromAuth from './auth.reducer';
 
 // We can create more selectors by the help of `createFeature()` function
 // export const selectErrorPlus = createSelector(
-//   fromAuth.authFeature.selectAuthState,
+//   fromAuth.v1AuthFeature.selectAuthState,
 //   (state: fromAuth.V1Auth_State) =>
 //     state.errors ? `ERROR: ${state.errors}` : 'ERROR!',
 // );
@@ -16,7 +16,7 @@ import * as fromAuth from './auth.reducer';
  * @type {boolean}
  */
 export const selectHasError = createSelector(
-  fromAuth.authFeature.selectV1AuthState,
+  fromAuth.v1AuthFeature.selectV1AuthState,
   (state: fromAuth.V1Auth_State) => {
     return Object.values(state.errors).some((error) => error !== undefined);
   },

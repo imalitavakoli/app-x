@@ -2,11 +2,11 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 
 import { XProfileInfoActions } from './x-profile-info.actions';
 import {
-  V1XProfileInfo_Errors,
-  V1XProfileInfo_Loadeds,
-  V1XProfileInfo_Datas,
-  V1XProfileInfo_SuccessAction,
-  V1XProfileInfo_FailureAction,
+  V2XProfileInfo_Errors,
+  V2XProfileInfo_Loadeds,
+  V2XProfileInfo_Datas,
+  V2XProfileInfo_SuccessAction,
+  V2XProfileInfo_FailureAction,
 } from './x-profile-info.interfaces';
 
 /* ////////////////////////////////////////////////////////////////////////// */
@@ -14,39 +14,39 @@ import {
 /* ////////////////////////////////////////////////////////////////////////// */
 
 // NOTE: Exported ONLY for test codes.
-export const v1XProfileInfoFeatureKey = 'v1XProfileInfo';
+export const v2XProfileInfoFeatureKey = 'v2XProfileInfo';
 
-export interface V1XProfileInfo_State {
+export interface V2XProfileInfo_State {
   // blahblah: string | undefined;
 
-  loadedLatest: V1XProfileInfo_Loadeds;
-  loadeds: V1XProfileInfo_Loadeds;
-  errors: V1XProfileInfo_Errors;
-  datas: V1XProfileInfo_Datas;
+  loadedLatest: V2XProfileInfo_Loadeds;
+  loadeds: V2XProfileInfo_Loadeds;
+  errors: V2XProfileInfo_Errors;
+  datas: V2XProfileInfo_Datas;
 }
 
 // NOTE: Exported ONLY for test codes.
-export const v1XProfileInfoInitialState: V1XProfileInfo_State = {
+export const v2XProfileInfoInitialState: V2XProfileInfo_State = {
   // blahblah: undefined,
 
-  loadedLatest: {} as V1XProfileInfo_Loadeds,
-  loadeds: {} as V1XProfileInfo_Loadeds,
-  errors: {} as V1XProfileInfo_Errors,
-  datas: {} as V1XProfileInfo_Datas,
+  loadedLatest: {} as V2XProfileInfo_Loadeds,
+  loadeds: {} as V2XProfileInfo_Loadeds,
+  errors: {} as V2XProfileInfo_Errors,
+  datas: {} as V2XProfileInfo_Datas,
 };
 
 /* ////////////////////////////////////////////////////////////////////////// */
 /* Feature State Reducer                                                      */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-export const v1XProfileInfoReducer = createReducer(
-  v1XProfileInfoInitialState,
+export const v2XProfileInfoReducer = createReducer(
+  v2XProfileInfoInitialState,
 
   /* Get data /////////////////////////////////////////////////////////////// */
 
   on(
     XProfileInfoActions.getData,
-    (state, action): V1XProfileInfo_State => ({
+    (state, action): V2XProfileInfo_State => ({
       ...state,
       loadedLatest: { data: false },
       loadeds: { ...state.loadeds, data: undefined },
@@ -57,11 +57,11 @@ export const v1XProfileInfoReducer = createReducer(
 
   /* Other actions ////////////////////////////////////////////////////////// */
 
-  on(XProfileInfoActions.reset, (state) => v1XProfileInfoInitialState),
+  on(XProfileInfoActions.reset, (state) => v2XProfileInfoInitialState),
 
   on(
     XProfileInfoActions.success,
-    (state, action): V1XProfileInfo_State => ({
+    (state, action): V2XProfileInfo_State => ({
       ...state,
       // ...setMorePropsBasedOnActSuccess(action),
       loadedLatest: { [action.relatedTo]: true },
@@ -72,7 +72,7 @@ export const v1XProfileInfoReducer = createReducer(
 
   on(
     XProfileInfoActions.failure,
-    (state, action): V1XProfileInfo_State => ({
+    (state, action): V2XProfileInfo_State => ({
       ...state,
       loadedLatest: { [action.relatedTo]: true },
       loadeds: { ...state.loadeds, [action.relatedTo]: true },
@@ -85,9 +85,9 @@ export const v1XProfileInfoReducer = createReducer(
 /* Feature State Selectors (auto generated via `createFeature()`)             */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-export const v1XProfileInfoFeature = createFeature({
-  name: v1XProfileInfoFeatureKey,
-  reducer: v1XProfileInfoReducer,
+export const v2XProfileInfoFeature = createFeature({
+  name: v2XProfileInfoFeatureKey,
+  reducer: v2XProfileInfoReducer,
 });
 
 /* ////////////////////////////////////////////////////////////////////////// */
@@ -95,8 +95,8 @@ export const v1XProfileInfoFeature = createFeature({
 /* ////////////////////////////////////////////////////////////////////////// */
 
 // function setMorePropsBasedOnActSuccess(
-//   action: V1XProfileInfo_SuccessAction,
-// ): Partial<V1XProfileInfo_State> {
+//   action: V2XProfileInfo_SuccessAction,
+// ): Partial<V2XProfileInfo_State> {
 //   switch (action.relatedTo) {
 //     case 'data':
 //       return {

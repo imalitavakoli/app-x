@@ -7,7 +7,7 @@ import {
 describe('V1XCredit Selectors', () => {
   it('should select the feature state', () => {
     const state = {
-      [fromXCredit.xCreditFeatureKey]: {},
+      [fromXCredit.v1XCreditFeatureKey]: {},
     };
 
     const result = selectEntityHasError('g')(state);

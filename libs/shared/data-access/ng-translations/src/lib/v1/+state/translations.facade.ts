@@ -10,7 +10,7 @@ import { select, Store } from '@ngrx/store';
 import { V1BaseFacade } from '@x/shared-util-ng-bases';
 
 import { TranslationsActions } from './translations.actions';
-import { translationsFeature } from './translations.reducer';
+import { v1TranslationsFeature } from './translations.reducer';
 import {
   V1Translations_Ttls,
   V1Translations_ResponseIsRelatedTo,
@@ -28,11 +28,11 @@ export class V1TranslationsFacade extends V1BaseFacade {
   /* //////////////////////////////////////////////////////////////////////// */
 
   lastLoadedLangCultureCode$ = this._store.pipe(
-    select(translationsFeature.selectLastLoadedLangCultureCode),
+    select(v1TranslationsFeature.selectLastLoadedLangCultureCode),
   );
 
   loadedLatest$ = this._store.pipe(
-    select(translationsFeature.selectLoadedLatest),
+    select(v1TranslationsFeature.selectLoadedLatest),
   );
 
   hasError$ = this._store.pipe(select(selectors.selectHasError));
@@ -42,12 +42,12 @@ export class V1TranslationsFacade extends V1BaseFacade {
   /* //////////////////////////////////////////////////////////////////////// */
 
   translationsState$ = this._store.pipe(
-    select(translationsFeature.selectV1TranslationsState),
+    select(v1TranslationsFeature.selectV1TranslationsState),
   );
 
-  rawLoadeds$ = this._store.pipe(select(translationsFeature.selectLoadeds));
-  rawErrors$ = this._store.pipe(select(translationsFeature.selectErrors));
-  rawDatas$ = this._store.pipe(select(translationsFeature.selectDatas));
+  rawLoadeds$ = this._store.pipe(select(v1TranslationsFeature.selectLoadeds));
+  rawErrors$ = this._store.pipe(select(v1TranslationsFeature.selectErrors));
+  rawDatas$ = this._store.pipe(select(v1TranslationsFeature.selectDatas));
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Selectors: Resolved (Flat, via cacheKeyLatest)                           */

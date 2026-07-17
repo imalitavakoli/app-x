@@ -11,7 +11,7 @@ import * as fromConfig from './config.reducer';
 
 // We can create more selectors by the help of `createFeature()` function
 // export const selectErrorPlus = createSelector(
-//   fromConfig.configFeature.selectV2ConfigState,
+//   fromConfig.v2ConfigFeature.selectV2ConfigState,
 //   (state: fromConfig.V2Config_State) =>
 //     state.errorConfigDep ? `ERROR: ${state.errorConfigDep}` : 'ERROR!',
 // );

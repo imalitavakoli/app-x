@@ -9,8 +9,8 @@ import * as fromXProfileInfo from './x-profile-info.reducer';
  * @type {boolean}
  */
 export const selectHasError = createSelector(
-  fromXProfileInfo.v1XProfileInfoFeature.selectV1XProfileInfoState,
-  (state: fromXProfileInfo.V1XProfileInfo_State) => {
+  fromXProfileInfo.v2XProfileInfoFeature.selectV2XProfileInfoState,
+  (state: fromXProfileInfo.V2XProfileInfo_State) => {
     return Object.values(state.errors).some((error) => error !== undefined);
   },
 );

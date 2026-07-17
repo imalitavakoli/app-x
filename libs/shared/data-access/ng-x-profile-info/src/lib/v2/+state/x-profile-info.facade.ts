@@ -11,12 +11,12 @@ import { V1BaseFacade } from '@x/shared-util-ng-bases';
 
 import { XProfileInfoActions } from './x-profile-info.actions';
 import * as selectors from './x-profile-info.selectors';
-import { v1XProfileInfoFeature } from './x-profile-info.reducer';
+import { v2XProfileInfoFeature } from './x-profile-info.reducer';
 
 @Injectable({
   providedIn: 'root',
 })
-export class V1XProfileInfoFacade extends V1BaseFacade {
+export class V2XProfileInfoFacade extends V1BaseFacade {
   // protected readonly _store = inject(Store); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -24,15 +24,15 @@ export class V1XProfileInfoFacade extends V1BaseFacade {
   /* //////////////////////////////////////////////////////////////////////// */
 
   state$ = this._store.pipe(
-    select(v1XProfileInfoFeature.selectV1XProfileInfoState),
+    select(v2XProfileInfoFeature.selectV2XProfileInfoState),
   );
 
   loadedLatest$ = this._store.pipe(
-    select(v1XProfileInfoFeature.selectLoadedLatest),
+    select(v2XProfileInfoFeature.selectLoadedLatest),
   );
-  loadeds$ = this._store.pipe(select(v1XProfileInfoFeature.selectLoadeds));
-  errors$ = this._store.pipe(select(v1XProfileInfoFeature.selectErrors));
-  datas$ = this._store.pipe(select(v1XProfileInfoFeature.selectDatas));
+  loadeds$ = this._store.pipe(select(v2XProfileInfoFeature.selectLoadeds));
+  errors$ = this._store.pipe(select(v2XProfileInfoFeature.selectErrors));
+  datas$ = this._store.pipe(select(v2XProfileInfoFeature.selectDatas));
 
   hasError$ = this._store.pipe(select(selectors.selectHasError));
 

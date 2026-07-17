@@ -11,7 +11,7 @@ import { V1BaseEffects } from '@x/shared-util-ng-bases';
 
 import { TranslationsActions } from './translations.actions';
 import {
-  translationsFeature,
+  v1TranslationsFeature,
   V1Translations_State,
 } from './translations.reducer';
 import { V1Translations_ResponseIsRelatedTo } from './translations.interfaces';
@@ -31,7 +31,7 @@ export class V1TranslationsEffects extends V1BaseEffects {
           relatedTo: 'translations',
           cacheKeyPrefix: 'translations',
           cacheKeyParams: { ...action },
-          stateSelector: translationsFeature.selectV1TranslationsState,
+          stateSelector: v1TranslationsFeature.selectV1TranslationsState,
           getCacheTimestamps: (s) => s.cacheTimestamps.translations,
           getTtl: (s) => s.ttls.translations,
           apiFn: () =>
@@ -75,7 +75,7 @@ export class V1TranslationsEffects extends V1BaseEffects {
           relatedTo: 'allLangs',
           cacheKeyPrefix: 'allLangs',
           cacheKeyParams: { ...action },
-          stateSelector: translationsFeature.selectV1TranslationsState,
+          stateSelector: v1TranslationsFeature.selectV1TranslationsState,
           getCacheTimestamps: (s) => s.cacheTimestamps.allLangs,
           getTtl: (s) => s.ttls.allLangs,
           apiFn: () => this._map.getAllLangs(action.url, action.lib),
@@ -109,7 +109,7 @@ export class V1TranslationsEffects extends V1BaseEffects {
           relatedTo: 'selectedLang',
           cacheKeyPrefix: 'selectedLang',
           cacheKeyParams: { ...action },
-          stateSelector: translationsFeature.selectV1TranslationsState,
+          stateSelector: v1TranslationsFeature.selectV1TranslationsState,
           getCacheTimestamps: (s) => s.cacheTimestamps.selectedLang,
           getTtl: (s) => s.ttls.selectedLang,
           apiFn: () =>

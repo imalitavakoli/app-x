@@ -6,7 +6,7 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 import { XUsersActions } from './x-users.actions';
 import { V1XUsers_CrudAction } from './x-users.interfaces';
 
-export const xUsersFeatureKey = 'v1XUsers';
+export const v1XUsersFeatureKey = 'v1XUsers';
 
 /* ////////////////////////////////////////////////////////////////////////// */
 /* Feature State Interface & Object                                           */
@@ -34,7 +34,7 @@ export interface V1XUsers_State extends EntityState<V1XUsers_MapUser> {
 }
 
 interface V1XUsers_PartialState {
-  readonly [xUsersFeatureKey]: V1XUsers_State;
+  readonly [v1XUsersFeatureKey]: V1XUsers_State;
 }
 
 /**
@@ -56,9 +56,10 @@ export const v1XUsersAdapter: EntityAdapter<V1XUsers_MapUser> =
  *
  * @type {V1XUsers_State}
  */
-export const initialState: V1XUsers_State = v1XUsersAdapter.getInitialState({
-  loaded: false,
-});
+export const v1XUsersInitialState: V1XUsers_State =
+  v1XUsersAdapter.getInitialState({
+    loaded: false,
+  });
 
 /* ////////////////////////////////////////////////////////////////////////// */
 /* Feature State Reducer                                                      */
@@ -77,7 +78,7 @@ export const initialState: V1XUsers_State = v1XUsersAdapter.getInitialState({
  * us to use `v1XUsersAdapter` at all.
  */
 const reducer = createReducer(
-  initialState,
+  v1XUsersInitialState,
 
   /* Set/Update/Delete entities ///////////////////////////////////////////// */
 

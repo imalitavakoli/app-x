@@ -14,7 +14,7 @@ import {
  * NOTE: We don't need it in our components most of the times.
  */
 export const selectState = createFeatureSelector<reducer.V1XCredit_State>(
-  reducer.xCreditFeatureKey,
+  reducer.v1XCreditFeatureKey,
 );
 
 export const selectLastSetStyle = createSelector(

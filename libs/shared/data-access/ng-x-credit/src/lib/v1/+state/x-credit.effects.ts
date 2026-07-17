@@ -9,7 +9,7 @@ import { V1BaseEffects } from '@x/shared-util-ng-bases';
 
 import { XCreditActions } from './x-credit.actions';
 import * as selectors from './x-credit.selectors';
-import { V1XCredit_State, DEFAULT_TTL } from './x-credit.reducer';
+import { V1XCredit_State, V1_X_CREDIT_DEFAULT_TTL } from './x-credit.reducer';
 import { V1XCredit_ResponseIsRelatedTo } from './x-credit.interfaces';
 
 @Injectable()
@@ -66,7 +66,8 @@ export class V1XCreditEffects extends V1BaseEffects {
           stateSelector: selectors.selectState,
           getCacheTimestamps: (s) =>
             s.entities[action.id]?.cacheTimestamps?.summary ?? {},
-          getTtl: (s) => s.entities[action.id]?.ttls?.summary ?? DEFAULT_TTL,
+          getTtl: (s) =>
+            s.entities[action.id]?.ttls?.summary ?? V1_X_CREDIT_DEFAULT_TTL,
           apiFn: () =>
             this._map.getSummary(action.url, action.userId, action.lib),
           onSuccess: (data, cacheKey) =>
@@ -108,7 +109,8 @@ export class V1XCreditEffects extends V1BaseEffects {
           stateSelector: selectors.selectState,
           getCacheTimestamps: (s) =>
             s.entities[action.id]?.cacheTimestamps?.detail ?? {},
-          getTtl: (s) => s.entities[action.id]?.ttls?.detail ?? DEFAULT_TTL,
+          getTtl: (s) =>
+            s.entities[action.id]?.ttls?.detail ?? V1_X_CREDIT_DEFAULT_TTL,
           apiFn: () =>
             this._map.getDetail(action.url, action.userId, action.lib),
           onSuccess: (data, cacheKey) =>

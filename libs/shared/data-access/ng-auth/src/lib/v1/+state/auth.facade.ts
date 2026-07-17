@@ -10,7 +10,7 @@ import { select, Store } from '@ngrx/store';
 import { V1Auth_ApiPayloadMagicSendLoginLink } from '@x/shared-map-ng-auth';
 
 import { AuthActions } from './auth.actions';
-import { authFeature } from './auth.reducer';
+import { v1AuthFeature } from './auth.reducer';
 import * as selectors from './auth.selectors';
 
 @Injectable({
@@ -23,18 +23,18 @@ export class V1AuthFacade {
   /* Selectors: Let's select one option from our feature state object.        */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  authState$ = this._store.pipe(select(authFeature.selectV1AuthState));
+  authState$ = this._store.pipe(select(v1AuthFeature.selectV1AuthState));
 
-  publicUrls$ = this._store.pipe(select(authFeature.selectPublicUrls));
+  publicUrls$ = this._store.pipe(select(v1AuthFeature.selectPublicUrls));
   protectedInitialPath$ = this._store.pipe(
-    select(authFeature.selectProtectedInitialPath),
+    select(v1AuthFeature.selectProtectedInitialPath),
   );
-  appVersion$ = this._store.pipe(select(authFeature.selectAppVersion));
+  appVersion$ = this._store.pipe(select(v1AuthFeature.selectAppVersion));
 
-  loadedLatest$ = this._store.pipe(select(authFeature.selectLoadedLatest));
-  loadeds$ = this._store.pipe(select(authFeature.selectLoadeds));
-  errors$ = this._store.pipe(select(authFeature.selectErrors));
-  datas$ = this._store.pipe(select(authFeature.selectDatas));
+  loadedLatest$ = this._store.pipe(select(v1AuthFeature.selectLoadedLatest));
+  loadeds$ = this._store.pipe(select(v1AuthFeature.selectLoadeds));
+  errors$ = this._store.pipe(select(v1AuthFeature.selectErrors));
+  datas$ = this._store.pipe(select(v1AuthFeature.selectDatas));
 
   hasError$ = this._store.pipe(select(selectors.selectHasError));
 

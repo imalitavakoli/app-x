@@ -26,7 +26,7 @@ import {
 /* Basic Constants                                                            */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-const DEFAULT_TTL = 300000; // 5 minutes
+const V1_TRANSLATIONS_DEFAULT_TTL = 300000; // 5 minutes
 
 /** All data keys — used by `cacheMask` to mask everything. */
 const ALL_DATA_KEYS: V1Translations_ResponseIsRelatedTo[] = [
@@ -52,7 +52,7 @@ const CACHE_INVALIDATION_MAP: Record<
 /* ////////////////////////////////////////////////////////////////////////// */
 
 // NOTE: Exported ONLY for test codes.
-export const translationsFeatureKey = 'v1Translations';
+export const v1TranslationsFeatureKey = 'v1Translations';
 
 export interface V1Translations_State extends V1Base_One {
   lastLoadedLangCultureCode: string | undefined;
@@ -73,15 +73,15 @@ export interface V1Translations_State extends V1Base_One {
 /* ////////////////////////////////////////////////////////////////////////// */
 
 // NOTE: Exported ONLY for test codes.
-export const initialState: V1Translations_State = {
+export const v1TranslationsInitialState: V1Translations_State = {
   lastLoadedLangCultureCode: undefined,
 
   cacheKeyLatest: {},
   cacheTimestamps: { translations: {}, allLangs: {}, selectedLang: {} },
   ttls: {
-    translations: DEFAULT_TTL,
-    allLangs: DEFAULT_TTL,
-    selectedLang: DEFAULT_TTL,
+    translations: V1_TRANSLATIONS_DEFAULT_TTL,
+    allLangs: V1_TRANSLATIONS_DEFAULT_TTL,
+    selectedLang: V1_TRANSLATIONS_DEFAULT_TTL,
   },
   cacheMaskedKeys: new Set<string>(),
 
@@ -118,7 +118,7 @@ export const initialState: V1Translations_State = {
  * @type {ActionReducer<V1Translations_State>}
  */
 export const v1TranslationsReducer = createReducer(
-  initialState,
+  v1TranslationsInitialState,
 
   /* Get translations in a specific language //////////////////////////////// */
 
@@ -208,7 +208,10 @@ export const v1TranslationsReducer = createReducer(
 
   /* Other actions ////////////////////////////////////////////////////////// */
 
-  on(TranslationsActions.reset, (): V1Translations_State => initialState),
+  on(
+    TranslationsActions.reset,
+    (): V1Translations_State => v1TranslationsInitialState,
+  ),
 
   on(
     TranslationsActions.success,
@@ -242,8 +245,8 @@ export const v1TranslationsReducer = createReducer(
 /* Feature State Selectors (auto generated via `createFeature()`)             */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-export const translationsFeature = createFeature({
-  name: translationsFeatureKey,
+export const v1TranslationsFeature = createFeature({
+  name: v1TranslationsFeatureKey,
   reducer: v1TranslationsReducer,
 });
 

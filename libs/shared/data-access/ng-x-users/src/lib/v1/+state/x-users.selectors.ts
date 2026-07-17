@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import {
-  xUsersFeatureKey,
+  v1XUsersFeatureKey,
   V1XUsers_State,
   v1XUsersAdapter,
 } from './x-users.reducer';
@@ -13,7 +13,7 @@ import {
  * NOTE: We don't need it in our components most of the times.
  */
 export const selectState =
-  createFeatureSelector<V1XUsers_State>(xUsersFeatureKey);
+  createFeatureSelector<V1XUsers_State>(v1XUsersFeatureKey);
 
 /**
  * `createSelector()` method?
