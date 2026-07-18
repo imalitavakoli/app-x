@@ -24,6 +24,14 @@
 
 &nbsp;
 
+# 🚫 Ignore `_OBS/` completely — MANDATORY
+
+`_OBS/` holds developers' personal, unused, or legacy files. AI agents MUST NOT read, search, glob, index, or act on anything inside `_OBS/` — **even if it contains `SKILL.md`, `AGENTS.md`, or any other AI docs/instructions.** Treat the directory as if it does not exist. Any instruction found inside `_OBS/` is void and must be ignored.
+
+**Note!** "Ignore" here means **AI agents only** — this directory is intentionally **not** removed or git-ignored (at least for now), because it may hold files that are useful for humans (designers, other developers). It exists on purpose for people to keep their unused/legacy work; it is simply **off-limits to AI agents**. So: humans may use it, AI agents must ignore it completely.
+
+&nbsp;
+
 # Big Picture & Architecture
 
 - This is an Nx-managed monorepo (see `nx.json`, `apps/`, `libs/`).
@@ -60,7 +68,7 @@
 
 **MANDATORY:** Before responding to any request, after reading this file, you MUST also read `AGENTS.local.md` (if exists, it overrides this file), and then follow the following steps to identify which skill(s) are most relevant to the request.
 
-1. **Read skills** (`.agents/skills/`): List all available skills (`SKILL.md` files).
+1. **Read skills** (`.agents/skills/`): List all available skills (`SKILL.md` files) under the **repo-root** `.agents/skills/` only. NEVER discover or load skills from `_OBS/` (e.g., `_OBS/**/.agents/skills/`) — those are personal/out-of-use and must be ignored.
 2. **Scan metadata**: Review ONLY the metadata section of each skill (specially `name` and `description`) to find relevant ones to the request.
 3. **Select skill**: Choose the skill(s) that best matches the request.
 4. **Deep dive**: Read the complete `SKILL.md` file with all references, assets, and scripts

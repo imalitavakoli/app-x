@@ -15,7 +15,7 @@ This helps us identify where apps and libs are located, what types of libraries 
 
 ```
 x/
-├── _OBS/                                           // Individuals or teams can freely put any unused files of their own in here.
+├── _OBS/                                           // Unused/legacy personal files. 🚫 AI agents MUST ignore this dir entirely (even SKILL.md/AGENTS.md inside it).
 │   └── {developer-name}/                           // Holds the individuals or teams' OBS files.
 ├── .agents/                                        // Holds AI Agents related files (holds e.g., Skills).
 ├── apps/                                           // Holds our apps.
