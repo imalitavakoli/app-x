@@ -4,7 +4,9 @@
 
 [WebNative VSCode Extension](https://marketplace.visualstudio.com/items?itemName=WebNative.webnative) helps you perform various functions that are common to developing an Ionic app. Functions such as running the app locally on Android & iOS device, or upgrading Capacitor core dependencies.
 
-Some useful functionalities that the extension offers:
+**Tip!** You may need to install JDK to enable all of this extension's features. Download JDK from [Adoptium website](https://adoptium.net/) or other distributors.
+
+**Some useful functionalities that the extension offers:**
 
 - [Remote Logging](https://capacitorjs.com/docs/vscode/debugging#remote-logging): Select `Settings > Logging` to filter what is logged to the output window, when you've already opened '[Nexus Browser](https://capacitor.nexusbrowser.com/capacitor)' app in your mobile device and selected `Run > Web` in the extension.
 

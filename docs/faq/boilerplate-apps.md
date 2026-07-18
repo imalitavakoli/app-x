@@ -184,10 +184,11 @@ What Capacitor sync process does basically? It puts the latest build web files (
 
 ## Capacitor tips & tricks
 
-**iOS Pod install:** When syncing the iOS native project, we may need to (re)init our `ios/App/Podfile`. To do so, we should run `cd apps/ng-boilerplate/ios/App` and then `pod install`.  
- **Tip!** Of course if 'cocoapods' is not already installed on our MacOS, first we should install it via [Homebrew](https://formulae.brew.sh/formula/cocoapods) by running `brew install cocoapods`, and then running `brew link --overwrite cocoapods`.
+**iOS Pod install:** When syncing the iOS native project, we may need to (re)init our `ios/App/Podfile`. To do so, first run `cd apps/ng-boilerplate/ios/App` to change directory to where the `Podfile` is located. Then run `pod install` or `pod install --repo-update`. Things to consider:
 
-**iOS `Podfile`:** Some plugins require us to manually add their Pods in our `ios/App/Podfile`. If the installed plugin's package version (folder) is updated at the root of our workspace, and we also have already manually added its Pod in `ios/App/Podfile` (such as `CapacitorFirebaseAnalytics` Pod), then we need to update our Pod's path to refer to the correct installed package... Otherwise, we might get duplication error, when syncing the iOS native project.
+- Of course if 'cocoapods' is not already installed on our MacOS, first we should install it via [Homebrew](https://formulae.brew.sh/formula/cocoapods) by running `brew install cocoapods`, and then running `brew link --overwrite cocoapods`.
+- Before running `pod install`, we should delete the existing `Podfile.lock` file (which exists beside `Podfile`) to avoid any possible version conflict errors.
+- Some plugins require us to manually add their Pods in our `ios/App/Podfile`. If the installed plugin's package version (folder) is updated at the root of our workspace, and we also have already manually added its Pod in `ios/App/Podfile` (such as `CapacitorFirebaseAnalytics` Pod), then we need to update our Pod's path to refer to the correct installed package... Otherwise, we might get duplication error, when syncing the iOS native project.
 
 **Running the native project:** After building (via `app-shell` command) your app and syncing it with the native Android/iOS project, you may need to clean the native project to see your latest built (compiled) version of the app in AndroidStudio/XCode. So here's what you can do:
 
@@ -201,7 +202,7 @@ What Capacitor sync process does basically? It puts the latest build web files (
 - **In Android, disable 'Analytics data collection' & 'Advertising ID collection':** In `apps/{app-name}/android/app/src/main/AndroidManifest.xml` file, define `firebase_analytics_collection_enabled` & `google_analytics_adid_collection_enabled` to false. In this way, you're disabling 'Analytics collection' & 'personalized advertising behavior' by default in the native Android app. Then whenever you collect the end-user consent, you can enable them in the app codes.
 - **In iOS, disable 'Analytics data collection':** In `apps/{app-name}/ios/App/App/Info.plist` file, define `FIREBASE_ANALYTICS_COLLECTION_ENABLED` to false. In this way, you're disabling 'Analytics collection' by default in the native iOS app. Then whenever you collect the end-user consent, you can enable them in the app codes.
 
-**Firebase-Analytics testing:** To test and make sure that Firebase events are successfully being logged into Firebase console, you should introduce the app that for Firebase while you're running it in 'Android Studio' & 'Xcode' simulators:
+**Firebase-Analytics testing:** To test and make sure that Firebase events are successfully being logged into Firebase console, you should introduce the app for Firebase while you're running it in 'Android Studio' & 'Xcode' simulators:
 
 - For Android, run `adb shell setprop debug.firebase.analytics.app {APP ID}` and then run the app in simulator.
 - For iOS, in Xcode: Product > Scheme > Edit Scheme… > Run > Arguments. Under "Arguments Passed On Launch" add: `-FIRAnalyticsDebugEnabled` and then run the app in simulator.

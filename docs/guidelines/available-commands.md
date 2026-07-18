@@ -36,7 +36,7 @@ Here are some notes to keep in mind:
 
 - Whenever you wanna update a dependency, run `pnpm info <package> version` to see what is your target's package's latest version, in order to write that specific version in `package.json` file.
 - Remember to update `@angular-builders/custom-webpack`, and `@angular/cli` to match with the major version of `@angular/core`.
-- **Capacitor/Ionic related updates**: Whenever updating Capacitor plugins, it's worthy to also update `@capacitor/assets`, `@capacitor/cli`, `@ionic/angular`, and `ionicons`.
+- **Capacitor/Ionic related updates**: Whenever updating Capacitor plugins, it's worthy to also update `@capacitor/assets`, `@capacitor/cli`, `@ionic/angular`, `@nxext/ionic-angular`, and `ionicons`.
 - **Tailwindcss related updates**: Whenever updating `tailwindcss`, it's worthy to also update `tailwindcss-scoped-preflight`, `prettier-plugin-tailwindcss`, `@tailwindcss/forms`, and `daisyui`.
 - **Transloco related updates**: Whenever updating `@jsverse/transloco`, it's worthy to also update `@jsverse/transloco-keys-manager`.
 - Remember to update `tools/{plugin}/package.json` file of the workspace's generators/executors to refer to the latest installed NX version in their `dependencies.@nx/devkit` property.
