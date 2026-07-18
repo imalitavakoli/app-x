@@ -43,7 +43,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V2XProfileInfoFacade } from '@x/shared-data-access-ng-x-profile-info';
-
+1;
 /**
  * NOTE: When calling the lib's methods, we assume the following:
  *
@@ -51,29 +51,29 @@ import { V2XProfileInfoFacade } from '@x/shared-data-access-ng-x-profile-info';
  * - In `apps/{app-name}/src/proxy.conf.json`:
  *   - For all API calls, `target = https://client-x-api.x.com`.
  * - In `apps/{app-name}/{assets-folder}/DEP_config.development.json`:
- *   - `general.environment.environment.items.base_url = /v2`.
+ *   - `general.environment.environment.items.base_url = /v1`.
  *   - `general.environment.environment.items.client_id = 1234567890`.
  *
  * For authenticated API requests, we assume that the following user is already logged in:
  * - https://admin.x.com/admin/users/123456
  *
  * @export
- * @class V2TestPageComponent
- * @typedef {V2TestPageComponent}
+ * @class V1TestPageComponent
+ * @typedef {V1TestPageComponent}
  */
 @Component({
-  selector: 'x-test-page-v2',
+  selector: 'x-test-page-v1',
   standalone: true,
   imports: [CommonModule, RouterModule, TranslocoDirective],
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
 })
-export class V2TestPageComponent implements OnInit {
+export class V1TestPageComponent implements OnInit {
   readonly configFacade = inject(V2ConfigFacade);
   readonly xProfileInfoFacade = inject(V2XProfileInfoFacade);
   private _xProfileInfoSub!: Subscription;
 
-  private readonly _baseUrl = '/v2/';
+  private readonly _baseUrl = '/v1/';
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Lifecycle                                                                */
