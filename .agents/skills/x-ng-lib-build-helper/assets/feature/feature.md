@@ -211,21 +211,22 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { LottieComponent } from 'ngx-lottie';
 
 import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
-import { V1BaseFeatureExtComponent } from '@x/shared-util-ng-bases';
+import { v1BaseCacheGetError } from '@x/shared-util-ng-bases';
+import { V2BaseFeatureExtComponent } from '@x/shared-util-ng-bases-consumer';
 import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V1XCredit_Style } from '@x/shared-map-ng-x-credit';
 import { V1XProfileInfo_MapData } from '@x/shared-map-ng-x-profile-info';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';
 import { V1XProfileInfoComponent } from '@x/shared-ui-ng-x-profile-info';
 import {
-  V1XCredit_Datas,
-  V1XCredit_Loadeds,
-  V1XCreditFacade,
+  V2XCredit_Datas,
+  V2XCredit_Loadeds,
+  V2XCreditFacade,
 } from '@x/shared-data-access-ng-x-credit';
 import {
-  V1XProfileInfo_Datas,
-  V1XProfileInfo_Loadeds,
-  V1XProfileInfoFacade,
+  V2XProfileInfo_Datas,
+  V2XProfileInfo_Loadeds,
+  V2XProfileInfoFacade,
 } from '@x/shared-data-access-ng-x-profile-info';
 
 @Component({
@@ -241,14 +242,14 @@ import {
   styleUrl: './x-profile-info.component.scss',
 })
 export class V1XProfileInfoFeaComponent
-  extends V1BaseFeatureExtComponent
+  extends V2BaseFeatureExtComponent
   implements V2BaseFeature_ExtHasIt
 {
-  readonly xCreditFacade = inject(V1XCreditFacade);
-  readonly xProfileInfoFacade = inject(V1XProfileInfoFacade);
+  readonly xCreditFacade = inject(V2XCreditFacade);
+  readonly xProfileInfoFacade = inject(V2XProfileInfoFacade);
 
-  protected _xCreditRequestedData_main: (keyof V1XCredit_Datas)[] = [];
-  protected _xProfileInfoRequestedData: (keyof V1XProfileInfo_Datas)[] = [];
+  protected _xCreditRequestedData_main: (keyof V2XCredit_Datas)[] = [];
+  protected _xProfileInfoRequestedData: (keyof V2XProfileInfo_Datas)[] = [];
 
   readonly nameThis: string = 'V1XProfileInfoFeaComponent'; // Name of this component
   readonly nameInstance_main: string = 'V1XProfileInfoFeaComponent_main'; // Name of the 'main' instance for multi-instance 'data-access' libs based on this component.
@@ -271,6 +272,10 @@ export class V1XProfileInfoFeaComponent
   protected override _xInitPreBeforeDom(): void {
     // LIB: XCredit (main)
     this.xCreditFacade.createIfNotExists(this.nameInstance_main);
+    // this.xCreditFacade.configureTtl(this.nameInstance_main, { detail: 300000 }); // Optional: Override default TTL (ms) per data-key. 0 disables caching for a key.
+
+    // LIB: XProfileInfo
+    // this.xProfileInfoFacade.configureTtl({ data: 300000 }); // Optional: Override default TTL (ms) per data-key. 0 disables caching for a key.
   }
 
   protected override _xInitOrUpdateAfterAllDataReady() {
@@ -316,7 +321,7 @@ export class V1XProfileInfoFeaComponent
 
     // LIB: XCredit (main)
     let isXCreditAllDataReady_main = false;
-    const xCredit_main = loadedsArr[0] as V1XCredit_Loadeds;
+    const xCredit_main = loadedsArr[0] as V2XCredit_Loadeds;
     isXCreditAllDataReady_main = this._xCreditRequestedData_main.every(
       (key) => !!xCredit_main[key],
     );
@@ -326,7 +331,7 @@ export class V1XProfileInfoFeaComponent
 
     // LIB: XProfileInfo
     let isXProfileInfoAllDataReady = false;
-    const xProfileInfo = loadedsArr[1] as V1XProfileInfo_Loadeds;
+    const xProfileInfo = loadedsArr[1] as V2XProfileInfo_Loadeds;
     isXProfileInfoAllDataReady = this._xProfileInfoRequestedData.every(
       (key) => !!xProfileInfo[key],
     );
@@ -348,10 +353,11 @@ export class V1XProfileInfoFeaComponent
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((state) => {
         // Emit the error messages if any.
-        const emitError = (key: keyof V1XCredit_Datas) => {
-          if (state.loadedLatest[key] && state.errors[key]) {
+        const emitError = (key: keyof V2XCredit_Datas) => {
+          const error = v1BaseCacheGetError(state, key);
+          if (state.loadedLatest[key] && error) {
             // Don't emit the following errors (they are exceptions).
-            if (state.errors[key] === 'USER_MISSING_DETAIL_DATA') {
+            if (error === 'USER_MISSING_DETAIL_DATA') {
               return;
             }
 
@@ -359,9 +365,9 @@ export class V1XProfileInfoFeaComponent
             this.xOnError(
               {
                 key: key,
-                value: state.errors[key] as string,
+                value: error,
               },
-              'V1XCreditFacade',
+              'V2XCreditFacade',
               this.nameInstance_main,
             );
           }
@@ -369,7 +375,7 @@ export class V1XProfileInfoFeaComponent
 
         // Loop through `_xCreditRequestedData_main` array to emit the error messages.
         this._xCreditRequestedData_main.forEach((key) => {
-          emitError(key as keyof V1XCredit_Datas);
+          emitError(key as keyof V2XCredit_Datas);
         });
       });
 
@@ -378,10 +384,11 @@ export class V1XProfileInfoFeaComponent
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((state) => {
         // Emit the error messages if any.
-        const emitError = (key: keyof V1XProfileInfo_Datas) => {
-          if (state.loadedLatest[key] && state.errors[key]) {
+        const emitError = (key: keyof V2XProfileInfo_Datas) => {
+          const error = v1BaseCacheGetError(state, key);
+          if (state.loadedLatest[key] && error) {
             // Don't emit the following errors (they are exceptions).
-            if (state.errors[key] === 'BLAHBLAH') {
+            if (error === 'BLAHBLAH') {
               return;
             }
 
@@ -389,16 +396,16 @@ export class V1XProfileInfoFeaComponent
             this.xOnError(
               {
                 key: key,
-                value: state.errors[key] as string,
+                value: error,
               },
-              'V1XProfileInfoFacade',
+              'V2XProfileInfoFacade',
             );
           }
         };
 
         // Loop through `_xProfileInfoRequestedData` array to emit the error messages.
         this._xProfileInfoRequestedData.forEach((key) => {
-          emitError(key as keyof V1XProfileInfo_Datas);
+          emitError(key as keyof V2XProfileInfo_Datas);
         });
       });
   }
@@ -410,11 +417,11 @@ export class V1XProfileInfoFeaComponent
   protected override _xDataReset(): void {
     // LIB: XCredit (main)
     this._xCreditRequestedData_main = [];
-    this.xCreditFacade.reset(this.nameInstance_main);
+    this.xCreditFacade.cacheMask(this.nameInstance_main);
 
     // LIB: XProfileInfo
     this._xProfileInfoRequestedData = [];
-    this.xProfileInfoFacade.reset();
+    this.xProfileInfoFacade.cacheMask();
   }
 
   protected override _xDataFetch(): void {
@@ -451,7 +458,7 @@ export class V1XProfileInfoFeaComponent
 
 ```html
 <x-x-profile-info-v1
-  [data]="$any((xProfileInfoFacade.datas$ | async)?.data)"
+  [data]="$any(xProfileInfoFacade.dataData$ | async)"
   [creditDetail]="
     $any((xCreditFacade.entityDatas$(nameInstance_main) | async)?.detail)
   "
@@ -475,12 +482,11 @@ export class V1XProfileInfoFeaComponent
 async; @let xProfileInfo_hasError = xProfileInfoFacade.hasError$ | async;
 
 <!-- Show error popup: If there's any error -->
-@if ( showErrors() && (xCredit_HasError_main || xProfileInfo_hasError) ) {
-
+@if (showErrors() && (xCredit_hasError_main || xProfileInfo_hasError)) {
 <!-- Show error popup: If there's any error rather than exception errors -->
-@if ((xCreditFacade.entityErrors$(nameInstance_main) | async)?.detail !==
-'USER_MISSING_DETAIL_DATA' && (xProfileInfoFacade.errors$ | async)?.data !==
-'BLAHBLAH') {
+@if ( (xCreditFacade.entityDetailError$(nameInstance_main) | async) !==
+'USER_MISSING_DETAIL_DATA' && (xProfileInfoFacade.dataError$ | async) !==
+'BLAHBLAH' ) {
 <x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
   <div slot="head">
     <i class="bi bi-exclamation-triangle-fill mr-2"></i>
@@ -493,28 +499,28 @@ async; @let xProfileInfo_hasError = xProfileInfoFacade.hasError$ | async;
       height="180px"
       containerClass="e-ani"
       [options]="{
-          path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
-          loop: false,
-        }"
+            path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+            loop: false,
+          }"
     ></ng-lottie>
     <p class="p m-6 text-center">
       {{ t('common.error_desc') }}
 
-      <!-- xCreditFacade ///////////////////////////////////////////////// -->
+      <!-- xCreditFacade /////////////////////////////////////////////// -->
 
-      @if ((xCreditFacade.entityErrors$(nameInstance_main) | async)?.detail) {
+      @if (xCreditFacade.entityDetailError$(nameInstance_main) | async) {
       <small class="e-ecode">
-        V1XCreditFacade({{ nameInstance_main }})/detail
+        V2XCreditFacade({{ nameInstance_main }})/detail
       </small>
       }
 
-      <!-- xProfileInfoFacade //////////////////////////////////////////// -->
+      <!-- xProfileInfoFacade ////////////////////////////////////////// -->
 
-      @if ((xProfileInfoFacade.errors$ | async)?.data) {
-      <small class="e-ecode"> V1XProfileInfoFacade/data </small>
+      @if (xProfileInfoFacade.dataError$ | async) {
+      <small class="e-ecode"> V2XProfileInfoFacade/data </small>
       }
     </p>
   </div>
 </x-popup-v1>
-}}
+} }
 ```

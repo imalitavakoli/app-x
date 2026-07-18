@@ -207,6 +207,12 @@ Run `nx test shared-data-access-ng-x-users` to execute the unit tests.
 It's the main file of a 'data-access' lib.
 
 ```ts
+/**
+ * @file Here's a facade (proxy layer) that lets other libs to work with this
+ * lib! Actually, here our facade class itself straightly uses the NgRx Store,
+ * so other libs don't have to!
+ */
+
 import { Injectable, inject } from '@angular/core';
 import { select, Store, Action } from '@ngrx/store';
 
@@ -317,22 +323,23 @@ import { Injectable, inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { switchMap, catchError, of, concatMap, map, mergeMap } from 'rxjs';
 
+import { V1BaseEffects } from '@x/shared-util-ng-bases';
 import { V1XUsers } from '@x/shared-map-ng-x-users';
 
 import { XUsersActions } from './x-users.actions';
 import * as reducer from './x-users.reducer';
 
 @Injectable()
-export class V1XUsersEffects {
-  private actions$ = inject(Actions);
-  private _map = inject(V1XUsers);
+export class V1XUsersEffects extends V1BaseEffects {
+  private readonly _actions$ = inject(Actions);
+  private readonly _map = inject(V1XUsers);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* set/Update/Delete entities                                               */
   /* //////////////////////////////////////////////////////////////////////// */
 
   getAll$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.getAll),
       concatMap(({ lib, url }) => {
         return this._map.getAll(url, lib).pipe(
@@ -344,7 +351,7 @@ export class V1XUsersEffects {
   );
 
   addOne$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.addOne),
       concatMap(({ lib, url, user }) => {
         return this._map.addOne(url, user, lib).pipe(
@@ -356,7 +363,7 @@ export class V1XUsersEffects {
   );
 
   updateOne$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.updateOne),
       concatMap(({ lib, url, user }) => {
         return this._map.updateOne(url, user, lib).pipe(
@@ -372,7 +379,7 @@ export class V1XUsersEffects {
   );
 
   removeOne$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.removeOne),
       concatMap(({ lib, url, id }) => {
         return this._map.removeOne(url, id, lib).pipe(
@@ -405,10 +412,10 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 import { XUsersActions } from './x-users.actions';
 import { V1XUsers_CrudAction } from './x-users.interfaces';
 
-export const xUsersFeatureKey = 'v1XUsers';
+export const v1XUsersFeatureKey = 'v1XUsers';
 
 /* ////////////////////////////////////////////////////////////////////////// */
-/* Feature State Interface & Object                                           */
+/* Feature State Interface                                                    */
 /* ////////////////////////////////////////////////////////////////////////// */
 
 /**
@@ -433,7 +440,7 @@ export interface V1XUsers_State extends EntityState<V1XUsers_MapUser> {
 }
 
 interface V1XUsers_PartialState {
-  readonly [xUsersFeatureKey]: V1XUsers_State;
+  readonly [v1XUsersFeatureKey]: V1XUsers_State;
 }
 
 /**
@@ -447,6 +454,10 @@ interface V1XUsers_PartialState {
 export const v1XUsersAdapter: EntityAdapter<V1XUsers_MapUser> =
   createEntityAdapter<V1XUsers_MapUser>();
 
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Initial shape                                                              */
+/* ////////////////////////////////////////////////////////////////////////// */
+
 /**
  * This is our whole feature state object.
  * By the help of `getInitialState()` method, we create a initial state options
@@ -455,9 +466,10 @@ export const v1XUsersAdapter: EntityAdapter<V1XUsers_MapUser> =
  *
  * @type {V1XUsers_State}
  */
-export const initialState: V1XUsers_State = v1XUsersAdapter.getInitialState({
-  loaded: false,
-});
+export const v1XUsersInitialState: V1XUsers_State =
+  v1XUsersAdapter.getInitialState({
+    loaded: false,
+  });
 
 /* ////////////////////////////////////////////////////////////////////////// */
 /* Feature State Reducer                                                      */
@@ -476,7 +488,7 @@ export const initialState: V1XUsers_State = v1XUsersAdapter.getInitialState({
  * us to use `v1XUsersAdapter` at all.
  */
 const reducer = createReducer(
-  initialState,
+  v1XUsersInitialState,
 
   /* Set/Update/Delete entities ///////////////////////////////////////////// */
 
@@ -661,7 +673,7 @@ export const XUsersActions = createActionGroup({
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import {
-  xUsersFeatureKey,
+  v1XUsersFeatureKey,
   V1XUsers_State,
   v1XUsersAdapter,
 } from './x-users.reducer';
@@ -673,7 +685,7 @@ import {
  * NOTE: We don't need it in our components most of the times.
  */
 export const selectState =
-  createFeatureSelector<V1XUsers_State>(xUsersFeatureKey);
+  createFeatureSelector<V1XUsers_State>(v1XUsersFeatureKey);
 
 /**
  * `createSelector()` method?

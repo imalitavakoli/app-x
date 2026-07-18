@@ -202,7 +202,7 @@ export class V1XCredit extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapSummary(res.body as V1XCredit_ApiSummary);
       }),
       catchError((err) => {
@@ -212,7 +212,7 @@ export class V1XCredit extends V1BaseMap {
         const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
         let errToLog = err.message || undefined;
         if (errParsed && errParsed['code']) errToLog = errParsed['code'];
-        this._logFailure(errToLog, err, 'POST', payload, lib);
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
         console.error('@V1XCredit/getSummary:', err.message || err); // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
         return throwError(() => errToLog || err.message || err);
       }),
@@ -260,7 +260,7 @@ export class V1XCredit extends V1BaseMap {
     // Let's send the request
     return observable.pipe(
       map((res) => {
-        this._logSuccess(res.body, res, lib);
+        this._logSuccess(res.body, res, 'GET', undefined, lib);
         return this._mapDetail(res.body as V1XCredit_ApiDetail);
       }),
       catchError((err) => {
@@ -273,7 +273,7 @@ export class V1XCredit extends V1BaseMap {
         const errParsed = this._parsedError(err); // Try parsing the error to see if it's a custom (expected) server error.
         let errToLog = err.message || undefined;
         if (errParsed && errParsed['code']) errToLog = errParsed['code']; // As `V1XCredit_ApiErrorDetail`.
-        this._logFailure(errToLog, err, 'POST', payload, lib);
+        this._logFailure(errToLog, err, 'GET', undefined, lib);
 
         // Do `console.error` for non-custom errors OR custom ones which are NOT known as exceptions.
         // NOTE: Log the error message (when available) to keep 'WebNative' logs easier to read.
