@@ -12,13 +12,12 @@ import { V2BaseFeatureComponent } from '@x/shared-util-ng-bases';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
- * Base class for all 'feature' components (V2 extended version which
- * takes care of fetching common prerequisite data in `_xDataPre`).
+ * Base class for all 'feature' components (the extended version which takes
+ * care of fetching common prerequisite data in `_xDataPre`).
  *
- * This is the V2 counterpart of `V2BaseFeatureExtComponent`. It
- * extends `V2BaseFeatureComponent` (reactive dependency chain) and
- * adds automatic pre-fetching of BaseURL, language, and userId so
- * that child classes don't need to do it themselves.
+ * This extends `V2BaseFeatureComponent` to add automatic pre-fetching of
+ * BaseURL, language, and userId so that child classes don't need to do it
+ * themselves.
  *
  * ─────────────────────────────────────────────────────────────────────────────
  * WHEN TO USE THIS
@@ -34,7 +33,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
  * ─────────────────────────────────────────────────────────────────────────────
  *
  * 01. Override `_xInitPreBeforeDom` (with super call).
- *     → Create facade instances BEFORE the DOM is initialized.
+ *     → Config TTLs (for cache-aware data-access libs) AND create instances
+ *       (for multi-instance data-access libs) BEFORE the DOM is initialized.
  *
  * 02. Override `_xHasRequiredInputs` (with super call).
  *     → Read ALL signal inputs (for tracking) and return `false` if
