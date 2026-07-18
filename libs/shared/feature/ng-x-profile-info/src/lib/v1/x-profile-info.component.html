@@ -19,44 +19,52 @@
 <!-- Show an error if something happens in the 'data-access' lib             -->
 <!-- /////////////////////////////////////////////////////////////////////// -->
 
-@if (
-  showErrors() &&
-  ((xCreditFacade.entityHasError$(nameInstance_main) | async) ||
-    (xProfileInfoFacade.hasError$ | async))
-) {
-  <x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
-    <div slot="head">
-      <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-      <span class="font-semibold">{{ t('common.error') }}</span>
-    </div>
+@let xCredit_hasError_main =
+  xCreditFacade.entityHasError$(nameInstance_main) | async;
+@let xProfileInfo_hasError = xProfileInfoFacade.hasError$ | async;
 
-    <div slot="body">
-      <ng-lottie
-        width="100%"
-        height="180px"
-        containerClass="e-ani"
-        [options]="{
-          path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
-          loop: false,
-        }"
-      ></ng-lottie>
-      <p class="p m-6 text-center">
-        {{ t('common.error_desc') }}
+<!-- Show error popup: If there's any error -->
+@if (showErrors() && (xCredit_hasError_main || xProfileInfo_hasError)) {
+  <!-- Show error popup: If there's any error rather than exception errors -->
+  @if (
+    (xCreditFacade.entityDetailError$(nameInstance_main) | async) !==
+      'USER_MISSING_DETAIL_DATA' &&
+    (xProfileInfoFacade.dataError$ | async) !== 'BLAHBLAH'
+  ) {
+    <x-popup-v1 *transloco="let t" [isHeadEnable]="true" [isOpen]="true">
+      <div slot="head">
+        <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+        <span class="font-semibold">{{ t('common.error') }}</span>
+      </div>
 
-        <!-- xCreditFacade ///////////////////////////////////////////////// -->
+      <div slot="body">
+        <ng-lottie
+          width="100%"
+          height="180px"
+          containerClass="e-ani"
+          [options]="{
+            path: (configFacade.dataConfigDep$ | async)?.assets?.gfxError,
+            loop: false,
+          }"
+        ></ng-lottie>
+        <p class="p m-6 text-center">
+          {{ t('common.error_desc') }}
 
-        @if (xCreditFacade.entityDetailError$(nameInstance_main) | async) {
-          <small class="e-ecode">
-            V1XCreditFacade({{ nameInstance_main }})/detail
-          </small>
-        }
+          <!-- xCreditFacade /////////////////////////////////////////////// -->
 
-        <!-- xProfileInfoFacade //////////////////////////////////////////// -->
+          @if (xCreditFacade.entityDetailError$(nameInstance_main) | async) {
+            <small class="e-ecode">
+              V1XCreditFacade({{ nameInstance_main }})/detail
+            </small>
+          }
 
-        @if (xProfileInfoFacade.dataError$ | async) {
-          <small class="e-ecode"> V2XProfileInfoFacade/data </small>
-        }
-      </p>
-    </div>
-  </x-popup-v1>
+          <!-- xProfileInfoFacade ////////////////////////////////////////// -->
+
+          @if (xProfileInfoFacade.dataError$ | async) {
+            <small class="e-ecode"> V2XProfileInfoFacade/data </small>
+          }
+        </p>
+      </div>
+    </x-popup-v1>
+  }
 }
