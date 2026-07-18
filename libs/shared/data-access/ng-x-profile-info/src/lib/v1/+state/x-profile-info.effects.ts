@@ -9,13 +9,13 @@ import { XProfileInfoActions } from './x-profile-info.actions';
 
 @Injectable()
 export class V1XProfileInfoEffects {
-  private actions$ = inject(Actions);
-  private _map = inject(V1XProfileInfo);
+  private readonly _actions$ = inject(Actions);
+  private readonly _map = inject(V1XProfileInfo);
 
   /* Get data /////////////////////////////////////////////////////////////// */
 
   getData$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XProfileInfoActions.getData),
       concatMap(({ lib, url, userId }) => {
         return this._map.getData(url, userId, lib).pipe(

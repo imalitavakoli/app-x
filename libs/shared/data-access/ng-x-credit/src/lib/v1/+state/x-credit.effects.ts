@@ -1,19 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { switchMap, tap, mergeMap } from 'rxjs/operators';
-import { EMPTY, of } from 'rxjs';
+import { catchError, map, concatMap, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
 
-import { V1BaseEffects } from '@x/shared-util-ng-bases';
+import { V1XCredit, V1XCredit_Style } from '@x/shared-map-ng-x-credit';
 import { v1LocalPrefGet, v1LocalPrefSet } from '@x/shared-util-local-storage';
-import { V1XCredit } from '@x/shared-map-ng-x-credit';
 
 import { XCreditActions } from './x-credit.actions';
-import * as selectors from './x-credit.selectors';
-import { V1XCredit_State, V1_X_CREDIT_DEFAULT_TTL } from './x-credit.reducer';
-import { V1XCredit_ResponseIsRelatedTo } from './x-credit.interfaces';
 
 @Injectable()
-export class V1XCreditEffects extends V1BaseEffects {
+export class V1XCreditEffects {
   private readonly _actions$ = inject(Actions);
   private readonly _map = inject(V1XCredit);
 
@@ -56,39 +52,30 @@ export class V1XCreditEffects extends V1BaseEffects {
   getSummary$ = createEffect(() =>
     this._actions$.pipe(
       ofType(XCreditActions.getSummary),
-      mergeMap((action) =>
-        this._runEffectByCache<V1XCredit_State, any>({
-          relatedTo: 'summary',
-          cacheKeyPrefix: 'summary',
-          cacheKeyParams: { ...action },
-          cacheKeyExcludes: ['id'],
-          stateSelector: selectors.selectState,
-          getCacheTimestamps: (s) =>
-            s.entities[action.id]?.cacheTimestamps?.summary ?? {},
-          getTtl: (s) =>
-            s.entities[action.id]?.ttls?.summary ?? V1_X_CREDIT_DEFAULT_TTL,
-          apiFn: () =>
-            this._map.getSummary(action.url, action.userId, action.lib),
-          onSuccess: (data, cacheKey) =>
+      concatMap(({ lib, id, url, userId }) => {
+        return this._map.getSummary(url, userId, lib).pipe(
+          map((data) =>
             XCreditActions.success({
-              id: action.id,
-              props: { relatedTo: 'summary', cacheKey, data },
-            }),
-          onFailure: (error, cacheKey) =>
-            XCreditActions.failure({
-              id: action.id,
-              props: { relatedTo: 'summary', cacheKey, error },
-            }),
-          onCacheHit: (relatedTo, cacheKey) =>
-            XCreditActions.cacheHit({
-              id: action.id,
+              id,
               props: {
-                relatedTo: relatedTo as V1XCredit_ResponseIsRelatedTo,
-                cacheKey,
+                relatedTo: 'summary',
+                data,
               },
             }),
-        }),
-      ),
+          ),
+          catchError((error) =>
+            of(
+              XCreditActions.failure({
+                id,
+                props: {
+                  relatedTo: 'summary',
+                  error,
+                },
+              }),
+            ),
+          ),
+        );
+      }),
     ),
   );
 
@@ -99,39 +86,30 @@ export class V1XCreditEffects extends V1BaseEffects {
   getDetail$ = createEffect(() =>
     this._actions$.pipe(
       ofType(XCreditActions.getDetail),
-      mergeMap((action) =>
-        this._runEffectByCache<V1XCredit_State, any>({
-          relatedTo: 'detail',
-          cacheKeyPrefix: 'detail',
-          cacheKeyParams: { ...action },
-          cacheKeyExcludes: ['id'],
-          stateSelector: selectors.selectState,
-          getCacheTimestamps: (s) =>
-            s.entities[action.id]?.cacheTimestamps?.detail ?? {},
-          getTtl: (s) =>
-            s.entities[action.id]?.ttls?.detail ?? V1_X_CREDIT_DEFAULT_TTL,
-          apiFn: () =>
-            this._map.getDetail(action.url, action.userId, action.lib),
-          onSuccess: (data, cacheKey) =>
+      concatMap(({ lib, id, url, userId }) => {
+        return this._map.getDetail(url, userId, lib).pipe(
+          map((data) =>
             XCreditActions.success({
-              id: action.id,
-              props: { relatedTo: 'detail', cacheKey, data },
-            }),
-          onFailure: (error, cacheKey) =>
-            XCreditActions.failure({
-              id: action.id,
-              props: { relatedTo: 'detail', cacheKey, error },
-            }),
-          onCacheHit: (relatedTo, cacheKey) =>
-            XCreditActions.cacheHit({
-              id: action.id,
+              id,
               props: {
-                relatedTo: relatedTo as V1XCredit_ResponseIsRelatedTo,
-                cacheKey,
+                relatedTo: 'detail',
+                data,
               },
             }),
-        }),
-      ),
+          ),
+          catchError((error) =>
+            of(
+              XCreditActions.failure({
+                id,
+                props: {
+                  relatedTo: 'detail',
+                  error,
+                },
+              }),
+            ),
+          ),
+        );
+      }),
     ),
   );
 }

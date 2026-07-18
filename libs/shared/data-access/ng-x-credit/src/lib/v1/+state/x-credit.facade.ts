@@ -9,11 +9,7 @@ import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
 import { V1BaseFacade } from '@x/shared-util-ng-bases';
-import {
-  V1XCredit_Style,
-  V1XCredit_MapSummary,
-  V1XCredit_MapDetail,
-} from '@x/shared-map-ng-x-credit';
+import { V1XCredit_Style } from '@x/shared-map-ng-x-credit';
 
 import { XCreditActions } from './x-credit.actions';
 import * as selectors from './x-credit.selectors';
@@ -22,11 +18,6 @@ import {
   V1XCredit_Loadeds,
   V1XCredit_Errors,
   V1XCredit_Datas,
-  V1XCredit_RawLoadeds,
-  V1XCredit_RawErrors,
-  V1XCredit_RawDatas,
-  V1XCredit_Ttls,
-  V1XCredit_ResponseIsRelatedTo,
 } from './x-credit.interfaces';
 
 @Injectable({
@@ -36,87 +27,35 @@ export class V1XCreditFacade extends V1BaseFacade {
   // protected readonly _store = inject(Store); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* Selectors: Others                                                        */
-  /* //////////////////////////////////////////////////////////////////////// */
-
-  lastSetStyle$ = this._store.pipe(select(selectors.selectLastSetStyle));
-
-  entityLoadedLatest$(id = 'g'): Observable<V1XCredit_Loadeds> {
-    return this._store.pipe(select(selectors.selectEntityLoadedLatest(id)));
-  }
-  entityHasError$(id = 'g'): Observable<boolean> {
-    return this._store.pipe(select(selectors.selectEntityHasError(id)));
-  }
-  hasEntity$(id = 'g'): Observable<boolean> {
-    return this._store.pipe(select(selectors.selectHasEntity(id)));
-  }
-
-  /* //////////////////////////////////////////////////////////////////////// */
-  /* Selectors: Raw (cache-keyed state slices)                                */
+  /* Selectors: Let's select one option from our feature state object.        */
   /* //////////////////////////////////////////////////////////////////////// */
 
   state$ = this._store.pipe(select(selectors.selectState));
   allEntities$ = this._store.pipe(select(selectors.selectAllEntities));
 
+  lastSetStyle$ = this._store.pipe(select(selectors.selectLastSetStyle));
+
   entity$(id = 'g'): Observable<reducer.V1XCredit_Entity> {
     return this._store.pipe(select(selectors.selectEntity(id)));
   }
-
-  rawEntityLoadeds$(id = 'g'): Observable<V1XCredit_RawLoadeds> {
+  entityLoadedLatest$(id = 'g'): Observable<V1XCredit_Loadeds> {
+    return this._store.pipe(select(selectors.selectEntityLoadedLatest(id)));
+  }
+  entityLoadeds$(id = 'g'): Observable<V1XCredit_Loadeds> {
     return this._store.pipe(select(selectors.selectEntityLoadeds(id)));
   }
-  rawEntityErrors$(id = 'g'): Observable<V1XCredit_RawErrors> {
+  entityErrors$(id = 'g'): Observable<V1XCredit_Errors> {
     return this._store.pipe(select(selectors.selectEntityErrors(id)));
   }
-  rawEntityDatas$(id = 'g'): Observable<V1XCredit_RawDatas> {
+  entityDatas$(id = 'g'): Observable<V1XCredit_Datas> {
     return this._store.pipe(select(selectors.selectEntityDatas(id)));
   }
-
-  /* //////////////////////////////////////////////////////////////////////// */
-  /* Selectors: Resolved (flat, via cacheKeyLatest)                           */
-  /* //////////////////////////////////////////////////////////////////////// */
-
-  entityLoadeds$(id = 'g'): Observable<V1XCredit_Loadeds> {
-    return this._store.pipe(select(selectors.selectEntityResolvedLoadeds(id)));
-  }
-  entityErrors$(id = 'g'): Observable<V1XCredit_Errors> {
-    return this._store.pipe(select(selectors.selectEntityResolvedErrors(id)));
-  }
-  entityDatas$(id = 'g'): Observable<V1XCredit_Datas> {
-    return this._store.pipe(select(selectors.selectEntityResolvedDatas(id)));
+  entityHasError$(id = 'g'): Observable<boolean> {
+    return this._store.pipe(select(selectors.selectEntityHasError(id)));
   }
 
-  /* //////////////////////////////////////////////////////////////////////// */
-  /* Narrow Selectors (Datas): Resolved (flat, via cacheKeyLatest)            */
-  /* //////////////////////////////////////////////////////////////////////// */
-
-  entitySummaryData$(id = 'g'): Observable<V1XCredit_MapSummary | undefined> {
-    return this._store.pipe(select(selectors.selectEntitySummaryData(id)));
-  }
-  entityDetailData$(id = 'g'): Observable<V1XCredit_MapDetail | undefined> {
-    return this._store.pipe(select(selectors.selectEntityDetailData(id)));
-  }
-
-  /* //////////////////////////////////////////////////////////////////////// */
-  /* Narrow Selectors (Loadeds): Resolved (flat, via cacheKeyLatest)          */
-  /* //////////////////////////////////////////////////////////////////////// */
-
-  entitySummaryLoaded$(id = 'g'): Observable<boolean | undefined> {
-    return this._store.pipe(select(selectors.selectEntitySummaryLoaded(id)));
-  }
-  entityDetailLoaded$(id = 'g'): Observable<boolean | undefined> {
-    return this._store.pipe(select(selectors.selectEntityDetailLoaded(id)));
-  }
-
-  /* //////////////////////////////////////////////////////////////////////// */
-  /* Narrow Selectors (Errors): Resolved (flat, via cacheKeyLatest)           */
-  /* //////////////////////////////////////////////////////////////////////// */
-
-  entitySummaryError$(id = 'g'): Observable<string | undefined> {
-    return this._store.pipe(select(selectors.selectEntitySummaryError(id)));
-  }
-  entityDetailError$(id = 'g'): Observable<string | undefined> {
-    return this._store.pipe(select(selectors.selectEntityDetailError(id)));
+  hasEntity$(id = 'g'): Observable<boolean> {
+    return this._store.pipe(select(selectors.selectHasEntity(id)));
   }
 
   /* //////////////////////////////////////////////////////////////////////// */
@@ -187,60 +126,17 @@ export class V1XCreditFacade extends V1BaseFacade {
    * NOTE: This method always MUST be used before subscribing to any entity
    * related Observables such as `entity$`, `entityLoadedLatest$`, etc.
    *
-   * @param {string} id The entity id
+   * @param {string} id
    */
   createIfNotExists(id: string) {
     this._store.dispatch(XCreditActions.createIfNotExists({ id }));
   }
 
   /**
-   * Configure TTL (Time-To-Live) in milliseconds for each data-key of a
-   * specific entity. Pass 0 for a key to disable caching for it (always
-   * refetch).
-   *
-   * @param {string} id The entity id
-   * @param {Partial<V1XCredit_Ttls>} ttls TTL values to merge
-   */
-  configureTtl(id: string, ttls: Partial<V1XCredit_Ttls>) {
-    this._store.dispatch(XCreditActions.configureTtl({ id, ttls }));
-  }
-
-  /**
-   * Invalidate (wipe) cached data for specific data-keys of a specific entity.
-   * This clears `datas`, `loadeds`, `errors`, and `cacheTimestamps` for the
-   * listed keys. The next `get*()` call for those keys will always refetch.
-   *
-   * @param {string} id The entity id
-   * @param {V1XCredit_ResponseIsRelatedTo[]} keys Data-keys to invalidate
-   */
-  cacheInvalidate(id: string, keys: V1XCredit_ResponseIsRelatedTo[]) {
-    this._store.dispatch(XCreditActions.cacheInvalidate({ id, keys }));
-  }
-
-  /**
-   * Mask all data keys for a specific entity. Once masked, resolved selectors
-   * (e.g. `entityDatas$`, `entityLoadeds$`) will return `undefined` for every
-   * key — the UI sees a "loading" state.
-   *
-   * Each subsequent `get*()` call automatically unmasks its own key, so only
-   * the keys that are actively re-fetched become visible again. Keys that are
-   * NOT re-fetched after `cacheMask` stay hidden.
-   *
-   * NOTE: Unlike `cacheInvalidate`, this does NOT delete the cached data. The
-   * data remains in the store and becomes visible as soon as the corresponding
-   * `get*()` is called.
-   *
-   * @param {string} id The entity id
-   */
-  cacheMask(id: string) {
-    this._store.dispatch(XCreditActions.cacheMask({ id }));
-  }
-
-  /**
    * Reset one instance object to its initial state. This is useful when you
    * want to reset the state of a specific entity.
    *
-   * @param {string} id The entity id
+   * @param {string} id
    */
   reset(id: string) {
     this._store.dispatch(XCreditActions.reset({ id }));

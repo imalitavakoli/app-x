@@ -1,57 +1,25 @@
-import { Action, createReducer, on } from '@ngrx/store';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-
+import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import {
-  v1BaseReducerSetLoading,
-  v1BaseReducerOnSuccess,
-  v1BaseReducerOnFailure,
-  v1BaseReducerOnCacheHit,
-  v1BaseReducerInvalidate,
-  v1BaseReducerConfigureTtl,
-  v1BaseReducerEntityValidateId,
-  v1BaseReducerEntityReset,
-} from '@x/shared-util-ng-bases';
-import { V1Base_One } from '@x/shared-util-ng-bases-model';
+  EntityState,
+  EntityAdapter,
+  createEntityAdapter,
+  Update,
+} from '@ngrx/entity';
 
 import { V1XCredit_Style } from '@x/shared-map-ng-x-credit';
 
 import {
-  V1XCredit_RawErrors,
-  V1XCredit_RawLoadeds,
-  V1XCredit_RawDatas,
-  V1XCredit_LoadedLatest,
-  V1XCredit_CacheTimestamps,
-  V1XCredit_Ttls,
+  V1XCredit_Errors,
+  V1XCredit_Loadeds,
+  V1XCredit_Datas,
+  V1XCredit_InstancePropsSuccess,
+  V1XCredit_InstancePropsFailure,
   V1XCredit_ResponseIsRelatedTo,
 } from './x-credit.interfaces';
 import { XCreditActions } from './x-credit.actions';
 
 /* ////////////////////////////////////////////////////////////////////////// */
-/* Basic Constants                                                            */
-/* ////////////////////////////////////////////////////////////////////////// */
-
-/** Default TTL (ms) applied to every data-key. 5 minutes. */
-export const V1_X_CREDIT_DEFAULT_TTL = 300000;
-
-/** All data keys — used by `cacheMask` to mask everything. */
-const ALL_DATA_KEYS: V1XCredit_ResponseIsRelatedTo[] = ['summary', 'detail'];
-
-/**
- * Define which actions cause cache invalidation for specific data-keys.
- * When a mutation action (PATCH/PUT/POST/DELETE) is dispatched, the cache
- * entries for the listed data-keys are wiped so the next GET refetches.
- *
- * NOTE: This lib has no data-mutation actions (`setStyle` only persists a UI
- * preference and does not affect `summary`/`detail`), so the map is empty.
- */
-const CACHE_INVALIDATION_MAP: Record<string, V1XCredit_ResponseIsRelatedTo[]> =
-  {};
-
-/** Prefix for error logging in this reducer. */
-const LOG_PREFIX = 'x-credit.reducer';
-
-/* ////////////////////////////////////////////////////////////////////////// */
-/* Feature State Interface                                                    */
+/* Feature State Interface & Object                                           */
 /* ////////////////////////////////////////////////////////////////////////// */
 
 export const v1XCreditFeatureKey = 'v1XCredit';
@@ -59,26 +27,16 @@ export const v1XCreditFeatureKey = 'v1XCredit';
 /**
  * This is our one single instance interface.
  *
- * It extends `V1Base_One` (the cache-aware base shape), so it carries
- * `cacheKeyLatest`, `cacheTimestamps`, `ttls`, `cacheMaskedKeys`, and the
- * cache-keyed `loadeds`/`errors`/`datas` records.
- *
  * @export
  * @interface V1XCredit_Entity
  * @typedef {V1XCredit_Entity}
  */
-export interface V1XCredit_Entity extends V1Base_One {
+export interface V1XCredit_Entity {
   id: 'g' | string; // Unique identifier for this instance
-
-  /** Timestamps of when each cache entry was stored. */
-  cacheTimestamps: V1XCredit_CacheTimestamps;
-  /** TTL config (ms) per data-key. */
-  ttls: V1XCredit_Ttls;
-
-  loadedLatest: V1XCredit_LoadedLatest;
-  loadeds: V1XCredit_RawLoadeds;
-  errors: V1XCredit_RawErrors;
-  datas: V1XCredit_RawDatas;
+  loadedLatest: V1XCredit_Loadeds;
+  loadeds: V1XCredit_Loadeds;
+  errors: V1XCredit_Errors;
+  datas: V1XCredit_Datas;
 }
 
 /**
@@ -95,6 +53,7 @@ export interface V1XCredit_Entity extends V1Base_One {
  * @typedef {V1XCredit_State}
  * @extends {EntityState<V1XCredit_Entity>}
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface V1XCredit_State extends EntityState<V1XCredit_Entity> {
   // NOTE: We disabled `selectedId`, because we don't need it for this functionality.
   // selectedId?: 'g' | string; // Shows which record has been selected
@@ -119,44 +78,22 @@ export const v1XCreditAdapter: EntityAdapter<V1XCredit_Entity> =
     selectId: (entity: V1XCredit_Entity) => entity.id,
   });
 
-/* ////////////////////////////////////////////////////////////////////////// */
-/* Initial shape                                                              */
-/* ////////////////////////////////////////////////////////////////////////// */
-
-/**
- * Create a fresh entity instance with all cache-aware fields initialized.
- * TTLs default to `*DEFAULT_TTL` for every data-key. All cache-keyed records
- * (`loadeds`, `errors`, `datas`, `cacheTimestamps`) start as empty `Record`s.
- *
- * @param {string} id The entity's unique id.
- * @returns {V1XCredit_Entity}
- */
-function createInitialEntity(id: string): V1XCredit_Entity {
-  return {
-    id,
-
-    cacheKeyLatest: {},
-    cacheTimestamps: { summary: {}, detail: {} },
-    ttls: { summary: V1_X_CREDIT_DEFAULT_TTL, detail: V1_X_CREDIT_DEFAULT_TTL },
-    cacheMaskedKeys: new Set<string>(),
-
-    loadedLatest: {} as V1XCredit_LoadedLatest,
-    loadeds: { summary: {}, detail: {} },
-    errors: { summary: {}, detail: {} },
-    datas: { summary: {}, detail: {} },
-  };
-}
-
 /**
  * This is our whole feature state object.
  * By the help of `getInitialState()` method, we create a initial state options
- * values... The `v1XCreditAdapter` itself has our entities, now we just add the
+ * values... The `itemsAdapter` itself has our entities, now we just add the
  * initial state of other options that it doesn't have.
  *
  * @type {V1XCredit_State}
  */
 export const v1XCreditInitialState: V1XCredit_State = v1XCreditAdapter.addOne(
-  createInitialEntity('g'),
+  {
+    id: 'g',
+    loadedLatest: {} as V1XCredit_Loadeds,
+    loadeds: {} as V1XCredit_Loadeds,
+    errors: {} as V1XCredit_Errors,
+    datas: {} as V1XCredit_Datas,
+  },
   v1XCreditAdapter.getInitialState({
     lastSetStyle: undefined,
   }),
@@ -166,38 +103,6 @@ export const v1XCreditInitialState: V1XCredit_State = v1XCreditAdapter.addOne(
 /* Feature State Reducer                                                      */
 /* ////////////////////////////////////////////////////////////////////////// */
 
-/**
- * The cache-aware feature reducer.
- *
- * Each handler just calls the matching `v1BaseReducer*` helper — the base does
- * all the cache bookkeeping. Reads (GET) use `v1BaseReducerSetLoading`; then
- * `success`/`failure`/`cacheHit` store the result.
- *
- * Writes (PATCH/PUT/POST/DELETE) are different: instead of set-loading, they
- * call `v1BaseReducerInvalidate` to clear the cached data-keys they change (as
- * declared in `CACHE_INVALIDATION_MAP`), so the next read fetches fresh data.
- *
- * @example
- * // Data-mutation action (multi-instance): invalidate, don't set-loading.
- * // CACHE_INVALIDATION_MAP = { patchSummary: ['summary'] };
- * on(XCreditActions.patchSummary, (state, { id }) =>
- *   v1XCreditAdapter.updateOne(
- *     {
- *       id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
- *       changes: {
- *         ...v1BaseReducerInvalidate(
- *           state.entities[id]!,
- *           CACHE_INVALIDATION_MAP['patchSummary'],
- *         ),
- *         loadedLatest: { summary: false },
- *       },
- *     },
- *     { ...state },
- *   ),
- * ),
- *
- * @type {ActionReducer<V1XCredit_State>}
- */
 const reducer = createReducer(
   v1XCreditInitialState,
 
@@ -209,16 +114,11 @@ const reducer = createReducer(
 
   /* Get summary data /////////////////////////////////////////////////////// */
 
-  on(XCreditActions.getSummary, (state, { id, ...rest }) =>
+  on(XCreditActions.getSummary, (state, { id }) =>
     v1XCreditAdapter.updateOne(
       {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: v1BaseReducerSetLoading(
-          state.entities[id]!,
-          'summary',
-          { ...rest },
-          'summary',
-        ),
+        id: getId(state, id),
+        changes: entitySetToLoading(state, getId(state, id), 'summary'),
       },
       { ...state },
     ),
@@ -226,62 +126,11 @@ const reducer = createReducer(
 
   /* Get detail data /////////////////////////////////////////////////////// */
 
-  on(XCreditActions.getDetail, (state, { id, ...rest }) =>
+  on(XCreditActions.getDetail, (state, { id }) =>
     v1XCreditAdapter.updateOne(
       {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: v1BaseReducerSetLoading(
-          state.entities[id]!,
-          'detail',
-          { ...rest },
-          'detail',
-        ),
-      },
-      { ...state },
-    ),
-  ),
-
-  /* Cache actions ////////////////////////////////////////////////////////// */
-
-  on(XCreditActions.cacheHit, (state, { id, props }) =>
-    v1XCreditAdapter.updateOne(
-      {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: v1BaseReducerOnCacheHit(
-          state.entities[id]!,
-          props.relatedTo,
-          props.cacheKey,
-        ),
-      },
-      { ...state },
-    ),
-  ),
-
-  on(XCreditActions.configureTtl, (state, { id, ttls }) =>
-    v1XCreditAdapter.updateOne(
-      {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: v1BaseReducerConfigureTtl(state.entities[id]!, ttls),
-      },
-      { ...state },
-    ),
-  ),
-
-  on(XCreditActions.cacheInvalidate, (state, { id, keys }) =>
-    v1XCreditAdapter.updateOne(
-      {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: v1BaseReducerInvalidate(state.entities[id]!, keys),
-      },
-      { ...state },
-    ),
-  ),
-
-  on(XCreditActions.cacheMask, (state, { id }) =>
-    v1XCreditAdapter.updateOne(
-      {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: { cacheMaskedKeys: new Set<string>(ALL_DATA_KEYS) },
+        id: getId(state, id),
+        changes: entitySetToLoading(state, getId(state, id), 'detail'),
       },
       { ...state },
     ),
@@ -292,34 +141,35 @@ const reducer = createReducer(
   on(XCreditActions.createIfNotExists, (state, { id }) => {
     const hasInstance = !!state.entities[id];
     if (hasInstance) return { ...state };
-    return v1XCreditAdapter.addOne(createInitialEntity(id), { ...state });
+    return v1XCreditAdapter.addOne(
+      {
+        id: id,
+        loadedLatest: {},
+        loadeds: {},
+        errors: {},
+        datas: {},
+      },
+      { ...state },
+    );
   }),
 
   on(XCreditActions.reset, (state, { id }) =>
     v1XCreditAdapter.updateOne(
       {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: { id, ...v1BaseReducerEntityReset(state.entities[id]!) },
+        id: getId(state, id),
+        changes: entityReset(state, getId(state, id)),
       },
       { ...state },
     ),
   ),
 
-  on(XCreditActions.resetAll, () => v1XCreditInitialState),
+  on(XCreditActions.resetAll, (state) => v1XCreditInitialState),
 
   on(XCreditActions.success, (state, { id, props }) =>
     v1XCreditAdapter.updateOne(
       {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: {
-          // ...setMorePropsBasedOnActSuccess(props),
-          ...v1BaseReducerOnSuccess(
-            state.entities[id]!,
-            props.relatedTo,
-            props.cacheKey,
-            props.data,
-          ),
-        },
+        id: getId(state, id),
+        changes: entityInjectData(state, getId(state, id), props),
       },
       { ...state },
     ),
@@ -328,13 +178,8 @@ const reducer = createReducer(
   on(XCreditActions.failure, (state, { id, props }) =>
     v1XCreditAdapter.updateOne(
       {
-        id: v1BaseReducerEntityValidateId(state.entities, id, LOG_PREFIX),
-        changes: v1BaseReducerOnFailure(
-          state.entities[id]!,
-          props.relatedTo,
-          props.cacheKey,
-          props.error,
-        ),
+        id: getId(state, id),
+        changes: entityInjectError(state, getId(state, id), props),
       },
       { ...state },
     ),
@@ -352,11 +197,106 @@ export function v1XCreditReducer(
 /* Useful functions                                                           */
 /* ////////////////////////////////////////////////////////////////////////// */
 
+function getId(state: V1XCredit_State, instanceId: string): 'g' | string {
+  const hasInstance = !!state.entities[instanceId];
+  if (!hasInstance) {
+    console.error(
+      `@x-credit.reducer/getId: No entity found with id: ${instanceId}`,
+    );
+  }
+
+  // NOTE: We just log IF the instance (`id`) doesn't exist in the state
+  // object, and we don't return `g` instance instead! Because we like the app
+  // to break so that debugging becomes easier.
+  // return hasInstance ? instanceId : 'g';
+  return instanceId;
+}
+
+function entityReset(
+  state: V1XCredit_State,
+  instanceId: string,
+): V1XCredit_Entity {
+  return {
+    id: instanceId,
+    loadedLatest: {},
+    loadeds: {},
+    errors: {},
+    datas: {},
+  };
+}
+
+/**
+ * It sets one property of the entity, rather than the other common properties,
+ * such as `loadedLatest`, `loadeds`, `errors`, `datas`.
+ *
+ * @param {V1XCredit_State} state
+ * @param {string} instanceId
+ * @param {string} propKey
+ * @param {*} propValue
+ * @returns {V1XCredit_Entity}
+ */
+function entitySetOneProp(
+  state: V1XCredit_State,
+  instanceId: string,
+  propKey: string,
+  propValue: any,
+): V1XCredit_Entity {
+  const entity = state.entities[instanceId] as V1XCredit_Entity;
+  return {
+    ...entity,
+    [propKey]: propValue,
+  };
+}
+
+function entitySetToLoading(
+  state: V1XCredit_State,
+  instanceId: string,
+  propKey: V1XCredit_ResponseIsRelatedTo,
+): V1XCredit_Entity {
+  const entity = state.entities[instanceId] as V1XCredit_Entity;
+  return {
+    ...entity,
+    loadedLatest: { [propKey]: false },
+    loadeds: { ...entity.loadeds, [propKey]: undefined },
+    errors: { ...entity.errors, [propKey]: undefined },
+    datas: { ...entity.datas, [propKey]: undefined },
+  };
+}
+
+function entityInjectData(
+  state: V1XCredit_State,
+  instanceId: string,
+  props: V1XCredit_InstancePropsSuccess,
+): V1XCredit_Entity {
+  const entity = state.entities[instanceId] as V1XCredit_Entity;
+  return {
+    ...entity,
+    // ...setMorePropsBasedOnActSuccess(props),
+    loadedLatest: { [props.relatedTo]: true },
+    loadeds: { ...entity.loadeds, [props.relatedTo]: true },
+    datas: { ...entity.datas, [props.relatedTo]: props.data },
+  };
+}
+
+function entityInjectError(
+  state: V1XCredit_State,
+  instanceId: string,
+  props: V1XCredit_InstancePropsFailure,
+): V1XCredit_Entity {
+  const entity = state.entities[instanceId] as V1XCredit_Entity;
+  return {
+    ...entity,
+    loadedLatest: { [props.relatedTo]: true },
+    loadeds: { ...entity.loadeds, [props.relatedTo]: true },
+    errors: { ...entity.errors, [props.relatedTo]: props.error },
+  };
+}
+
 // function setMorePropsBasedOnActSuccess(
 //   props: V1XCredit_InstancePropsSuccess,
 // ): Partial<V1XCredit_Entity> {
 //   switch (props.relatedTo) {
-//     case 'summary':
+//     case 'data1':
 //       return {
 //         something: props.extra?.['something'],
 //       };

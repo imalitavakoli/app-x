@@ -91,7 +91,7 @@ export class V1TestPageComponent implements OnInit {
     // Get data
     this.xProfileInfoFacade.getData(this._baseUrl, 123);
 
-    // Reset the state after 5 seconds.
+    // Reset
     setTimeout(() => {
       this._xProfileInfoSub.unsubscribe();
       this.xProfileInfoFacade.reset(); // Reset the whole state.

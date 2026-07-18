@@ -1,8 +1,5 @@
 import * as fromXCredit from './x-credit.reducer';
-import {
-  selectEntityHasError,
-  selectEntitySummaryData,
-} from './x-credit.selectors';
+import { selectEntityHasError } from './x-credit.selectors';
 
 describe('V2XCredit Selectors', () => {
   it('should select the feature state', () => {

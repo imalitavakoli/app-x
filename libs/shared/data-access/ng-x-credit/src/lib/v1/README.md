@@ -40,7 +40,6 @@ import { RouterModule } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 import { TranslocoDirective } from '@jsverse/transloco';
 
-import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V3XCreditFacade } from '@x/shared-data-access-ng-x-credit';
 
@@ -100,67 +99,17 @@ export class V1TestPageComponent implements OnInit, OnDestroy {
       console.log('state:', state);
     });
 
-    /* Caching methods ////////////////////////////////////////////////////// */
-
-    // Configure TTL (ms) per data-key for an instance. 0 disables caching for a
-    // key (always refetch).
-    this.xCreditFacade.configureTtl('V1TestPageComponent', {
-      summary: 60000, // 1 min
-      detail: 0, // never cache — always refetch
-    });
-
-    // Invalidate (wipe) cached data for specific data-keys so the next get*()
-    // refetches from the API.
-    this.xCreditFacade.cacheInvalidate('V1TestPageComponent', ['summary']);
-
-    // Mask all data-keys — resolved/narrow selectors emit `undefined` until the
-    // next get*() call unmasks the requested key automatically.
-    this.xCreditFacade.cacheMask('V1TestPageComponent');
-
-    /* Subscription (RECOMMENDED) /////////////////////////////////////////// */
-
-    // Listen to ONLY one slice of the data in the entity.
-    // This takes advantage of NgRx memoized selectors and only re-emits
-    // when the specific data actually changes.
-
-    this.xCreditFacade
-      .entitySummaryData$('V1TestPageComponent')
-      .subscribe((summary) => {
-        if (summary) console.log('summary:', summary);
-      });
-
-    this.xCreditFacade
-      .entityDetailData$('V1TestPageComponent')
-      .subscribe((detail) => {
-        if (detail) console.log('detail:', detail);
-      });
-
-    /* Subscription (ALTERNATIVE) /////////////////////////////////////////// */
-
-    // Listen to all the state changes via `entity$`.
-    // You can have one single subscription and take advantage of
-    // `loadedLatest` to discriminate which property just changed.
-    //
-    // NOTE: The entity contains cache records for each key.
-    // Use `v1BaseCacheGetData` with the entity object to get
-    // the data for the most recently dispatched call.
-
+    // Start listening to the state changes of `V1TestPageComponent` entity.
     this._xCreditEntitySub = this.xCreditFacade
       .entity$('V1TestPageComponent')
-      .pipe(take(1))
       .subscribe((state) => {
-        const summary = v1BaseCacheGetData(state, 'summary');
-        if (state.loadedLatest.summary && summary) {
-          console.log('summary:', summary);
+        if (state.loadedLatest.summary && state.datas.summary) {
+          console.log('summary:', state.datas.summary);
         }
-
-        const detail = v1BaseCacheGetData(state, 'detail');
-        if (state.loadedLatest.detail && detail) {
-          console.log('detail:', detail);
+        if (state.loadedLatest.detail && state.datas.detail) {
+          console.log('detail:', state.datas.detail);
         }
       });
-
-    /* Calling APIs ///////////////////////////////////////////////////////// */
 
     // Get summary
     this.xCreditFacade.getSummary(this._baseUrl, 123, 'V1TestPageComponent');
@@ -168,9 +117,7 @@ export class V1TestPageComponent implements OnInit, OnDestroy {
     // Get detail
     this.xCreditFacade.getDetail(this._baseUrl, 123, 'V1TestPageComponent');
 
-    /* Reset //////////////////////////////////////////////////////////////// */
-
-    // Reset the state after 5 seconds.
+    // Reset
     setTimeout(() => {
       this._xCreditEntitySub.unsubscribe();
       this.xCreditFacade.reset('V1TestPageComponent'); // Reset only the entity object itself.
@@ -197,7 +144,8 @@ And here's how to show probable errors that may happen while fetching data from 
 
       <!-- xCreditFacade/summary /////////////////////////////////////////// -->
 
-      @if (xCreditFacade.entitySummaryError$('V1TestPageComponent') | async) {
+      @if ((xCreditFacade.entityErrors$('V1TestPageComponent') |
+      async)?.summary) {
       <small class="e-ecode">
         V1XCreditFacade({{ 'V1TestPageComponent' }})/summary
       </small>
@@ -205,7 +153,8 @@ And here's how to show probable errors that may happen while fetching data from 
 
       <!-- xCreditFacade/detail //////////////////////////////////////////// -->
 
-      @if (xCreditFacade.entityDetailError$('V1TestPageComponent') | async) {
+      @if ((xCreditFacade.entityErrors$('V1TestPageComponent') | async)?.detail)
+      {
       <small class="e-ecode">
         V1XCreditFacade({{ 'V1TestPageComponent' }})/detail
       </small>

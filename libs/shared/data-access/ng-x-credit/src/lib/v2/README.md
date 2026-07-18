@@ -170,7 +170,11 @@ export class V1TestPageComponent implements OnInit, OnDestroy {
 
     /* Reset //////////////////////////////////////////////////////////////// */
 
-    // Reset the state after 5 seconds.
+    // NOTE: In the cache-aware architecture, prefer `cacheMask()` when you just
+    // want to hide the currently resolved data (e.g. on re-init) — it keeps the
+    // cached entries so TTL checks still apply and the next `get*()` can serve
+    // from cache. Use `cacheInvalidate([...])` to wipe specific keys, or
+    // `reset()` (below) only when you truly need to discard the ENTIRE entity.
     setTimeout(() => {
       this._xCreditEntitySub.unsubscribe();
       this.xCreditFacade.reset('V1TestPageComponent'); // Reset only the entity object itself.
