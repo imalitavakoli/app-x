@@ -117,6 +117,35 @@ And here's how to show probable errors that may happen while fetching data from 
 }
 ```
 
+## More
+
+_Optional!_ Instead of registering the data-access state in the app, you can register it right in the page itself.
+
+```ts
+// lib.routes.ts
+
+import { Route } from '@angular/router';
+import { provideState } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { V1TestPageComponent } from './test/test.component';
+import {
+  v1XProfileInfoFeatureKey,
+  v1XProfileInfoReducer,
+  V1XProfileInfoEffects,
+} from '@x/shared-data-access-ng-x-profile-info';
+
+export const V1TestRoutes: Route[] = [
+  {
+    path: '',
+    component: V1TestPageComponent,
+    providers: [
+      provideState(v1XProfileInfoFeatureKey, v1XProfileInfoReducer),
+      provideEffects(V1XProfileInfoEffects),
+    ],
+  },
+];
+```
+
 ## Important requirements
 
 _NONE_

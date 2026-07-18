@@ -242,3 +242,11 @@ export const V1TestRoutes: Route[] = [
   },
 ];
 ```
+
+## Important requirements
+
+_NONE_
+
+## Running unit tests
+
+Run `nx test shared-data-access-ng-x-credit` to execute the unit tests.
