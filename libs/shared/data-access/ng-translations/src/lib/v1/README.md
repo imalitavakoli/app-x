@@ -364,9 +364,9 @@ import {
   TranslocoService,
 } from '@jsverse/transloco';
 
+import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1TranslationsFacade } from '@x/shared-data-access-ng-translations';
-import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
 
 @Component({
   selector: 'x-test',
@@ -396,12 +396,12 @@ export class TestComponent implements OnInit {
       allLangs: 0, // never cache — always refetch
     });
 
-    // Invalidate (wipe) cached data for specific data-keys so the next get*()
+    // Invalidate (wipe) cached data for specific data-keys so the next `get*()`
     // refetches from the API.
     this._translationsFacade.cacheInvalidate(['translations']);
 
     // Mask all data-keys — resolved/narrow selectors emit `undefined` until the
-    // next get*() call unmasks the requested key automatically.
+    // next `get*()` call unmasks the requested key automatically.
     this._translationsFacade.cacheMask();
 
     /* Subscription (RECOMMENDED) /////////////////////////////////////////// */
@@ -467,7 +467,6 @@ export class TestComponent implements OnInit {
 
     /* Reset /////////////////////////////////////////////////////////////// */
 
-    // Reset the state after 5 seconds.
     // NOTE: In the cache-aware architecture, prefer `cacheMask()` when you just
     // want to hide the currently resolved data (e.g. on re-init) — it keeps the
     // cached entries so TTL checks still apply and the next `get*()` can serve
