@@ -41,9 +41,9 @@ import {
   V1XCreditFacade,
 } from '@x/shared-data-access-ng-x-credit';
 import {
-  V1XProfileInfo_Datas,
-  V1XProfileInfo_Loadeds,
-  V1XProfileInfoFacade,
+  V2XProfileInfo_Datas,
+  V2XProfileInfo_Loadeds,
+  V2XProfileInfoFacade,
 } from '@x/shared-data-access-ng-x-profile-info';
 
 @Component({
@@ -63,10 +63,10 @@ export class V1XProfileInfoFeaComponent
   implements V2BaseFeature_ExtHasIt
 {
   readonly xCreditFacade = inject(V1XCreditFacade);
-  readonly xProfileInfoFacade = inject(V1XProfileInfoFacade);
+  readonly xProfileInfoFacade = inject(V2XProfileInfoFacade);
 
   protected _xCreditRequestedData_main: (keyof V1XCredit_Datas)[] = [];
-  protected _xProfileInfoRequestedData: (keyof V1XProfileInfo_Datas)[] = [];
+  protected _xProfileInfoRequestedData: (keyof V2XProfileInfo_Datas)[] = [];
 
   readonly nameThis: string = 'V1XProfileInfoFeaComponent'; // Name of this component
   readonly nameInstance_main: string = 'V1XProfileInfoFeaComponent_main'; // Name of the 'main' instance for multi-instance 'data-access' libs based on this component.
@@ -90,6 +90,9 @@ export class V1XProfileInfoFeaComponent
     // LIB: XCredit (main)
     this.xCreditFacade.createIfNotExists(this.nameInstance_main);
     // this.xCreditFacade.configureTtl(this.nameInstance_main, { detail: 300000 }); // Optional: Override default TTL (ms) per data-key. 0 disables caching for a key.
+
+    // LIB: XProfileInfo
+    // this.xProfileInfoFacade.configureTtl({ data: 300000 }); // Optional: Override default TTL (ms) per data-key. 0 disables caching for a key.
   }
 
   protected override _xInitOrUpdateAfterAllDataReady() {
@@ -145,7 +148,7 @@ export class V1XProfileInfoFeaComponent
 
     // LIB: XProfileInfo
     let isXProfileInfoAllDataReady = false;
-    const xProfileInfo = loadedsArr[1] as V1XProfileInfo_Loadeds;
+    const xProfileInfo = loadedsArr[1] as V2XProfileInfo_Loadeds;
     isXProfileInfoAllDataReady = this._xProfileInfoRequestedData.every(
       (key) => !!xProfileInfo[key],
     );
@@ -198,10 +201,11 @@ export class V1XProfileInfoFeaComponent
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((state) => {
         // Emit the error messages if any.
-        const emitError = (key: keyof V1XProfileInfo_Datas) => {
-          if (state.loadedLatest[key] && state.errors[key]) {
+        const emitError = (key: keyof V2XProfileInfo_Datas) => {
+          const error = v1BaseCacheGetError(state, key);
+          if (state.loadedLatest[key] && error) {
             // Don't emit the following errors (they are exceptions).
-            if (state.errors[key] === 'BLAHBLAH') {
+            if (error === 'BLAHBLAH') {
               return;
             }
 
@@ -209,16 +213,16 @@ export class V1XProfileInfoFeaComponent
             this.xOnError(
               {
                 key: key,
-                value: state.errors[key] as string,
+                value: error,
               },
-              'V1XProfileInfoFacade',
+              'V2XProfileInfoFacade',
             );
           }
         };
 
         // Loop through `_xProfileInfoRequestedData` array to emit the error messages.
         this._xProfileInfoRequestedData.forEach((key) => {
-          emitError(key as keyof V1XProfileInfo_Datas);
+          emitError(key as keyof V2XProfileInfo_Datas);
         });
       });
   }
@@ -234,7 +238,7 @@ export class V1XProfileInfoFeaComponent
 
     // LIB: XProfileInfo
     this._xProfileInfoRequestedData = [];
-    this.xProfileInfoFacade.reset();
+    this.xProfileInfoFacade.cacheMask();
   }
 
   protected override _xDataFetch(): void {

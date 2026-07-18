@@ -1,5 +1,5 @@
 <x-x-profile-info-v1
-  [data]="$any((xProfileInfoFacade.datas$ | async)?.data)"
+  [data]="$any(xProfileInfoFacade.dataData$ | async)"
   [creditDetail]="
     $any((xCreditFacade.entityDatas$(nameInstance_main) | async)?.detail)
   "
@@ -45,7 +45,7 @@
 
         <!-- xCreditFacade ///////////////////////////////////////////////// -->
 
-        @if ((xCreditFacade.entityErrors$(nameInstance_main) | async)?.detail) {
+        @if (xCreditFacade.entityDetailError$(nameInstance_main) | async) {
           <small class="e-ecode">
             V1XCreditFacade({{ nameInstance_main }})/detail
           </small>
@@ -53,8 +53,8 @@
 
         <!-- xProfileInfoFacade //////////////////////////////////////////// -->
 
-        @if ((xProfileInfoFacade.errors$ | async)?.data) {
-          <small class="e-ecode"> V1XProfileInfoFacade/data </small>
+        @if (xProfileInfoFacade.dataError$ | async) {
+          <small class="e-ecode"> V2XProfileInfoFacade/data </small>
         }
       </p>
     </div>

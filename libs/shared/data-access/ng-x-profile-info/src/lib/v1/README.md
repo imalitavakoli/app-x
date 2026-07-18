@@ -2,6 +2,8 @@
 
 x-profile-info v1.
 
+**Note!** This version of the library is **not cache-aware**. Every `get*()` call hits the API directly — there is no de-duplication, cache key, or TTL (Time-To-Live).
+
 ## Implementation guide
 
 1. First, register the data-access state in the app.

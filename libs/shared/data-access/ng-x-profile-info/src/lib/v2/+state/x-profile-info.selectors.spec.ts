@@ -1,13 +1,12 @@
-import * as fromBlahblah from './blahblah.reducer';
-import { selectEntityHasError } from './blahblah.selectors';
+import * as fromXProfileInfo from './x-profile-info.reducer';
+import { selectHasError } from './x-profile-info.selectors';
 
-describe('VXBlahblah Selectors', () => {
+describe('V2XProfileInfo Selectors', () => {
   it('should select the feature state', () => {
-    const state = {
-      [fromBlahblah.blahblahFeatureKey]: {},
-    };
-
-    const result = selectEntityHasError('g')(state);
+    const result =
+      fromXProfileInfo.v2XProfileInfoFeature.selectV2XProfileInfoState({
+        [fromXProfileInfo.v2XProfileInfoFeatureKey]: {},
+      });
 
     expect(result).toEqual({});
   });

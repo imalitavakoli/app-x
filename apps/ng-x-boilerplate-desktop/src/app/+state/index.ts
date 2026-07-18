@@ -25,9 +25,9 @@ import {
   V1XCreditEffects,
 } from '@x/shared-data-access-ng-x-credit';
 import {
-  V1XProfileInfo_State,
-  v1XProfileInfoReducer,
-  V1XProfileInfoEffects,
+  V2XProfileInfo_State,
+  v2XProfileInfoReducer,
+  V2XProfileInfoEffects,
 } from '@x/shared-data-access-ng-x-profile-info';
 import {
   V1XUsers_State,
@@ -55,7 +55,7 @@ export interface State {
   v1Auth: V1Auth_State;
   v1Translations: V1Translations_State;
   v1XCredit: V1XCredit_State;
-  v1XProfileInfo: V1XProfileInfo_State;
+  v2XProfileInfo: V2XProfileInfo_State;
   v1XUsers: V1XUsers_State;
   nativeBridge: NativeBridge_State;
 }
@@ -75,7 +75,7 @@ export const reducers: ActionReducerMap<State> = {
   v1Auth: v1AuthReducer,
   v1Translations: v1TranslationsReducer,
   v1XCredit: v1XCreditReducer,
-  v1XProfileInfo: v1XProfileInfoReducer,
+  v2XProfileInfo: v2XProfileInfoReducer,
   v1XUsers: v1XUsersReducer,
   nativeBridge: nativeBridgeReducer,
 };
@@ -91,7 +91,7 @@ export const effects = [
   V1AuthEffects,
   V1TranslationsEffects,
   V1XCreditEffects,
-  V1XProfileInfoEffects,
+  V2XProfileInfoEffects,
   V1XUsersEffects,
   NativeBridgeEffects,
 ];

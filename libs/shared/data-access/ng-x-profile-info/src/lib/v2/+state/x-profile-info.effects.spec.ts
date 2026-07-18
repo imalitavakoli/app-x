@@ -1,19 +1,26 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { Observable } from 'rxjs';
 
-import { VXBlabblahEffects } from './blahblah.effects';
+import { V2XProfileInfoEffects } from './x-profile-info.effects';
 
-describe('VXBlabblahEffects', () => {
+describe('V2XProfileInfoEffects', () => {
   let actions$: Observable<any>;
-  let effects: VXBlabblahEffects;
+  let effects: V2XProfileInfoEffects;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [VXBlabblahEffects, provideMockActions(() => actions$)],
+      providers: [
+        V2XProfileInfoEffects,
+        provideMockActions(() => actions$),
+        provideMockStore(),
+        provideHttpClient(),
+      ],
     });
 
-    effects = TestBed.inject(VXBlabblahEffects);
+    effects = TestBed.inject(V2XProfileInfoEffects);
   });
 
   it('should be created', () => {

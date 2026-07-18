@@ -1,13 +1,16 @@
-import { vXBlahblahReducer, initialState } from './blahblah.reducer';
+import {
+  v2XProfileInfoReducer,
+  v2XProfileInfoInitialState,
+} from './x-profile-info.reducer';
 
-describe('VXBlahblah Reducer', () => {
+describe('V2XProfileInfo Reducer', () => {
   describe('an unknown action', () => {
     it('should return the previous state', () => {
       const action = {} as any;
 
-      const result = vXBlahblahReducer(initialState, action);
+      const result = v2XProfileInfoReducer(v2XProfileInfoInitialState, action);
 
-      expect(result).toBe(initialState);
+      expect(result).toBe(v2XProfileInfoInitialState);
     });
   });
 });
