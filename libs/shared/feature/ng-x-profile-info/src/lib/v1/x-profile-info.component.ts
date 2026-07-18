@@ -36,9 +36,9 @@ import { V1XProfileInfo_MapData } from '@x/shared-map-ng-x-profile-info';
 import { V1PopupComponent } from '@x/shared-ui-ng-popup';
 import { V1XProfileInfoComponent } from '@x/shared-ui-ng-x-profile-info';
 import {
-  V1XCredit_Datas,
-  V1XCredit_Loadeds,
-  V1XCreditFacade,
+  V2XCredit_Datas,
+  V2XCredit_Loadeds,
+  V2XCreditFacade,
 } from '@x/shared-data-access-ng-x-credit';
 import {
   V2XProfileInfo_Datas,
@@ -62,10 +62,10 @@ export class V1XProfileInfoFeaComponent
   extends V2BaseFeatureExtComponent
   implements V2BaseFeature_ExtHasIt
 {
-  readonly xCreditFacade = inject(V1XCreditFacade);
+  readonly xCreditFacade = inject(V2XCreditFacade);
   readonly xProfileInfoFacade = inject(V2XProfileInfoFacade);
 
-  protected _xCreditRequestedData_main: (keyof V1XCredit_Datas)[] = [];
+  protected _xCreditRequestedData_main: (keyof V2XCredit_Datas)[] = [];
   protected _xProfileInfoRequestedData: (keyof V2XProfileInfo_Datas)[] = [];
 
   readonly nameThis: string = 'V1XProfileInfoFeaComponent'; // Name of this component
@@ -138,7 +138,7 @@ export class V1XProfileInfoFeaComponent
 
     // LIB: XCredit (main)
     let isXCreditAllDataReady_main = false;
-    const xCredit_main = loadedsArr[0] as V1XCredit_Loadeds;
+    const xCredit_main = loadedsArr[0] as V2XCredit_Loadeds;
     isXCreditAllDataReady_main = this._xCreditRequestedData_main.every(
       (key) => !!xCredit_main[key],
     );
@@ -170,7 +170,7 @@ export class V1XProfileInfoFeaComponent
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((state) => {
         // Emit the error messages if any.
-        const emitError = (key: keyof V1XCredit_Datas) => {
+        const emitError = (key: keyof V2XCredit_Datas) => {
           const error = v1BaseCacheGetError(state, key);
           if (state.loadedLatest[key] && error) {
             // Don't emit the following errors (they are exceptions).
@@ -184,7 +184,7 @@ export class V1XProfileInfoFeaComponent
                 key: key,
                 value: error,
               },
-              'V1XCreditFacade',
+              'V2XCreditFacade',
               this.nameInstance_main,
             );
           }
@@ -192,7 +192,7 @@ export class V1XProfileInfoFeaComponent
 
         // Loop through `_xCreditRequestedData_main` array to emit the error messages.
         this._xCreditRequestedData_main.forEach((key) => {
-          emitError(key as keyof V1XCredit_Datas);
+          emitError(key as keyof V2XCredit_Datas);
         });
       });
 

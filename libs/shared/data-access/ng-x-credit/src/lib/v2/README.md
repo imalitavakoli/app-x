@@ -1,8 +1,8 @@
 # shared-data-access-ng-x-credit
 
-x-credit v1.
+x-credit v2.
 
-**Note!** This version of the library is **not cache-aware**. Every `get*()` call hits the API directly — there is no de-duplication, cache key, or TTL (Time-To-Live).
+**Note!** This version of the library is **cache-aware**. Every `get*()` call is de-duplicated by a cache key derived from its params. If a previous identical call is still within its TTL (Time-To-Live), the effect serves the cached data (a "cache hit") instead of hitting the API again. The default TTL is configurable via `configureTtl()`.
 
 ## Implementation guide
 
@@ -14,17 +14,17 @@ x-credit v1.
 import { isDevMode } from '@angular/core';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import {
-  V1XCredit_State,
-  v1XCreditReducer,
-  V1XCreditEffects,
+  V2XCredit_State,
+  v2XCreditReducer,
+  V2XCreditEffects,
 } from '@x/shared-data-access-ng-x-credit';
 
 export interface State {
-  v1XCredit: V1XCredit_State;
+  v2XCredit: V2XCredit_State;
 }
 
 export const reducers: ActionReducerMap<State> = {
-  v1XCredit: v1XCreditReducer,
+  v2XCredit: v2XCreditReducer,
 };
 
 export const metaReducers: MetaReducer<State>[] = isDevMode() ? [] : [];
@@ -40,7 +40,7 @@ import { RouterModule } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 import { TranslocoDirective } from '@jsverse/transloco';
 
-import { v1BaseCacheGetData } from '@x/shared-util-ng-bases';
+import { v2BaseCacheGetData } from '@x/shared-util-ng-bases';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V3XCreditFacade } from '@x/shared-data-access-ng-x-credit';
 
@@ -81,7 +81,7 @@ export class V1TestPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Before subscribing to the state changes, create the entity
-    // `V1TestPageComponent` if it doesn't exist.
+    // `V2TestPageComponent` if it doesn't exist.
     this.xCreditFacade.createIfNotExists('V1TestPageComponent');
 
     // Check if the user has already set a preferred style (in her last app visit).
@@ -142,19 +142,19 @@ export class V1TestPageComponent implements OnInit, OnDestroy {
     // `loadedLatest` to discriminate which property just changed.
     //
     // NOTE: The entity contains cache records for each key.
-    // Use `v1BaseCacheGetData` with the entity object to get
+    // Use `v2BaseCacheGetData` with the entity object to get
     // the data for the most recently dispatched call.
 
     this._xCreditEntitySub = this.xCreditFacade
       .entity$('V1TestPageComponent')
       .pipe(take(1))
       .subscribe((state) => {
-        const summary = v1BaseCacheGetData(state, 'summary');
+        const summary = v2BaseCacheGetData(state, 'summary');
         if (state.loadedLatest.summary && summary) {
           console.log('summary:', summary);
         }
 
-        const detail = v1BaseCacheGetData(state, 'detail');
+        const detail = v2BaseCacheGetData(state, 'detail');
         if (state.loadedLatest.detail && detail) {
           console.log('detail:', detail);
         }
@@ -199,7 +199,7 @@ And here's how to show probable errors that may happen while fetching data from 
 
       @if (xCreditFacade.entitySummaryError$('V1TestPageComponent') | async) {
       <small class="e-ecode">
-        V1XCreditFacade({{ 'V1TestPageComponent' }})/summary
+        V2XCreditFacade({{ 'V1TestPageComponent' }})/summary
       </small>
       }
 
@@ -207,7 +207,7 @@ And here's how to show probable errors that may happen while fetching data from 
 
       @if (xCreditFacade.entityDetailError$('V1TestPageComponent') | async) {
       <small class="e-ecode">
-        V1XCreditFacade({{ 'V1TestPageComponent' }})/detail
+        V2XCreditFacade({{ 'V1TestPageComponent' }})/detail
       </small>
       }
     </p>
@@ -228,9 +228,9 @@ import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { V1TestPageComponent } from './test/test.component';
 import {
-  v1XCreditFeatureKey,
-  v1XCreditReducer,
-  V1XCreditEffects,
+  v2XCreditFeatureKey,
+  v2XCreditReducer,
+  V2XCreditEffects,
 } from '@x/shared-data-access-ng-x-credit';
 
 export const V1TestRoutes: Route[] = [
@@ -238,8 +238,8 @@ export const V1TestRoutes: Route[] = [
     path: '',
     component: V1TestPageComponent,
     providers: [
-      provideState(v1XCreditFeatureKey, v1XCreditReducer),
-      provideEffects(V1XCreditEffects),
+      provideState(v2XCreditFeatureKey, v2XCreditReducer),
+      provideEffects(V2XCreditEffects),
     ],
   },
 ];

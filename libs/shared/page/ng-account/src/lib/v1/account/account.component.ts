@@ -15,7 +15,7 @@ import { V1PopupComponent } from '@x/shared-ui-ng-popup';
 import { V1AppAccSidebar_State } from '@x/shared-ui-ng-app-acc-sidebar';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
 import { V1AuthFacade } from '@x/shared-data-access-ng-auth';
-import { V1XCreditFacade } from '@x/shared-data-access-ng-x-credit';
+import { V2XCreditFacade } from '@x/shared-data-access-ng-x-credit';
 import { V1AppAccSidebarFeaComponent } from '@x/shared-feature-ng-app-acc-sidebar';
 
 import { StateGeneralComponent } from './state-general/state-general.component';
@@ -39,7 +39,7 @@ import { StateLanguageComponent } from './state-language/state-language.componen
 export class V1AccountPageComponent implements OnInit {
   readonly configFacade = inject(V2ConfigFacade);
   private readonly _authFacade = inject(V1AuthFacade);
-  private readonly _xCreditFacade = inject(V1XCreditFacade);
+  private readonly _xCreditFacade = inject(V2XCreditFacade);
   protected _communicationService = inject(V1CommunicationService);
   capacitorCoreSerivce = inject(V1CapacitorCoreService);
 

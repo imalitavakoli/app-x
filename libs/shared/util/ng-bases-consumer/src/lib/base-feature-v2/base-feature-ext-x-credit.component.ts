@@ -26,9 +26,9 @@ import {
 import { V2BaseFeature_ExtHasIt } from '@x/shared-util-ng-bases-model';
 import { v1BaseCacheGetError } from '@x/shared-util-ng-bases';
 import {
-  V1XCredit_Datas,
-  V1XCredit_Loadeds,
-  V1XCreditFacade,
+  V2XCredit_Datas,
+  V2XCredit_Loadeds,
+  V2XCreditFacade,
 } from '@x/shared-api-data-access-ng-x-credit';
 
 import { V2BaseFeatureExtComponent } from './base-feature-ext.component';
@@ -80,7 +80,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
   /* General //////////////////////////////////////////////////////////////// */
 
   // 'data-access' libs
-  readonly xCreditFacade = inject(V1XCreditFacade);
+  readonly xCreditFacade = inject(V2XCreditFacade);
   // readonly configFacade = inject(V2ConfigFacade); // Introduced in the Base.
   // readonly translationsFacade = inject(V1TranslationsFacade); // Introduced in the Base.
   // protected readonly _authFacade = inject(V1AuthFacade); // Introduced in the Base.
@@ -92,7 +92,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
   // protected _userId!: number; // Introduced in the Base.
 
   // 'data-access' libs' requested data arrays
-  protected _xCreditRequestedData_main: (keyof V1XCredit_Datas)[] = [];
+  protected _xCreditRequestedData_main: (keyof V2XCredit_Datas)[] = [];
 
   /* Inherited children components related ////////////////////////////////// */
 
@@ -149,7 +149,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
 
     // LIB: XCredit (main)
     let isXCreditAllDataReady_main = false;
-    const xCredit_main = loadedsArr[0] as V1XCredit_Loadeds; // In `_xFacadesPre` we already defined the order of the observables in the array that it returns... So we know that `loadedsArr` is also in the same order.
+    const xCredit_main = loadedsArr[0] as V2XCredit_Loadeds; // In `_xFacadesPre` we already defined the order of the observables in the array that it returns... So we know that `loadedsArr` is also in the same order.
     isXCreditAllDataReady_main = this._xCreditRequestedData_main.every(
       (key) => !!xCredit_main[key],
     );
@@ -175,7 +175,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((state) => {
         // Emit the error messages if any.
-        const emitError = (key: keyof V1XCredit_Datas) => {
+        const emitError = (key: keyof V2XCredit_Datas) => {
           const error = v1BaseCacheGetError(state, key);
           if (state.loadedLatest[key] && error) {
             // Don't emit the following errors (they are exceptions).
@@ -189,7 +189,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
                 key: key,
                 value: error,
               },
-              'V1XCreditFacade',
+              'V2XCreditFacade',
               this.nameInstance_main,
             );
           }
@@ -197,7 +197,7 @@ export abstract class V2BaseFeatureExtXCreditComponent
 
         // Loop through `_xCreditRequestedData_main` array to emit the error messages.
         this._xCreditRequestedData_main.forEach((key) => {
-          emitError(key as keyof V1XCredit_Datas);
+          emitError(key as keyof V2XCredit_Datas);
         });
       });
   }
