@@ -2,22 +2,23 @@ import { Injectable, inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { switchMap, catchError, of, concatMap, map, mergeMap } from 'rxjs';
 
+import { V1BaseEffects } from '@x/shared-util-ng-bases';
 import { V1XUsers } from '@x/shared-map-ng-x-users';
 
 import { XUsersActions } from './x-users.actions';
 import * as reducer from './x-users.reducer';
 
 @Injectable()
-export class V1XUsersEffects {
-  private actions$ = inject(Actions);
-  private _map = inject(V1XUsers);
+export class V1XUsersEffects extends V1BaseEffects {
+  private readonly _actions$ = inject(Actions);
+  private readonly _map = inject(V1XUsers);
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* set/Update/Delete entities                                               */
   /* //////////////////////////////////////////////////////////////////////// */
 
   getAll$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.getAll),
       concatMap(({ lib, url }) => {
         return this._map.getAll(url, lib).pipe(
@@ -29,7 +30,7 @@ export class V1XUsersEffects {
   );
 
   addOne$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.addOne),
       concatMap(({ lib, url, user }) => {
         return this._map.addOne(url, user, lib).pipe(
@@ -41,7 +42,7 @@ export class V1XUsersEffects {
   );
 
   updateOne$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.updateOne),
       concatMap(({ lib, url, user }) => {
         return this._map.updateOne(url, user, lib).pipe(
@@ -57,7 +58,7 @@ export class V1XUsersEffects {
   );
 
   removeOne$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(XUsersActions.removeOne),
       concatMap(({ lib, url, id }) => {
         return this._map.removeOne(url, id, lib).pipe(

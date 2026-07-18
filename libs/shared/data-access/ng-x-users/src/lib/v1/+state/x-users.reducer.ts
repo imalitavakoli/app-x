@@ -9,7 +9,7 @@ import { V1XUsers_CrudAction } from './x-users.interfaces';
 export const v1XUsersFeatureKey = 'v1XUsers';
 
 /* ////////////////////////////////////////////////////////////////////////// */
-/* Feature State Interface & Object                                           */
+/* Feature State Interface                                                    */
 /* ////////////////////////////////////////////////////////////////////////// */
 
 /**
@@ -47,6 +47,10 @@ interface V1XUsers_PartialState {
  */
 export const v1XUsersAdapter: EntityAdapter<V1XUsers_MapUser> =
   createEntityAdapter<V1XUsers_MapUser>();
+
+/* ////////////////////////////////////////////////////////////////////////// */
+/* Initial shape                                                              */
+/* ////////////////////////////////////////////////////////////////////////// */
 
 /**
  * This is our whole feature state object.

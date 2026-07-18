@@ -16,7 +16,6 @@ import { V1XCredit_ResponseIsRelatedTo } from './x-credit.interfaces';
 export class V1XCreditEffects extends V1BaseEffects {
   private readonly _actions$ = inject(Actions);
   private readonly _map = inject(V1XCredit);
-  // protected readonly _store = inject(Store); // Introduced in the Base.
 
   /* //////////////////////////////////////////////////////////////////////// */
   /*  Select a style                                                          */

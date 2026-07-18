@@ -14,13 +14,13 @@ import { AuthActions } from './auth.actions';
 
 @Injectable()
 export class V1AuthEffects {
-  private actions$ = inject(Actions);
-  private _map = inject(V1Auth);
+  private readonly _actions$ = inject(Actions);
+  private readonly _map = inject(V1Auth);
 
   /* Auth by: Magic ///////////////////////////////////////////////////////// */
 
   magicSendLoginLink$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.magicSendLoginLink),
       concatMap(({ url, payload }) => {
         return this._map.magicSendLoginLink(url, payload).pipe(
@@ -36,7 +36,7 @@ export class V1AuthEffects {
   );
 
   checkIfLinkSeen$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.checkIfLinkSeen),
       concatMap(({ url, ticketId }) => {
         return this._map.checkIfLinkSeen(url, ticketId).pipe(
@@ -59,7 +59,7 @@ export class V1AuthEffects {
   /* Auth by: Bankid //////////////////////////////////////////////////////// */
 
   bankidGetRequiredData$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.bankidGetRequiredData),
       concatMap(({ url, clientId }) => {
         return this._map.bankidGetRequiredData(url, clientId).pipe(
@@ -80,7 +80,7 @@ export class V1AuthEffects {
   );
 
   bankidCheckIfAuthenticated$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.bankidCheckIfAuthenticated),
       concatMap(({ url, orderRef, clientId }) => {
         return this._map
@@ -108,7 +108,7 @@ export class V1AuthEffects {
   /* Auth by: Magic, Bankid ///////////////////////////////////////////////// */
 
   getTokenViaTicket$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.getTokenViaTicket),
       concatMap(({ url, clientId, ticketId }) => {
         return this._map.getTokenViaTicket(url, clientId, ticketId).pipe(
@@ -131,7 +131,7 @@ export class V1AuthEffects {
   );
 
   getTokenViaRefresh$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.getTokenViaRefresh),
       concatMap(({ url, clientId, userId, refreshToken }) => {
         return this._map
@@ -157,7 +157,7 @@ export class V1AuthEffects {
   /* Auth by: SSO (auto-login) ////////////////////////////////////////////// */
 
   autoGetTicketId$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.autoGetTicketId),
       concatMap(({ url }) => {
         return this._map.autoGetTicketId(url).pipe(
@@ -175,7 +175,7 @@ export class V1AuthEffects {
   /* Other actions ////////////////////////////////////////////////////////// */
 
   checkIfAlreadyLoggedin$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(AuthActions.checkIfAlreadyLoggedin),
       switchMap(() => {
         let isTokenValid = false;
@@ -204,7 +204,7 @@ export class V1AuthEffects {
 
   logout$ = createEffect(
     () =>
-      this.actions$.pipe(
+      this._actions$.pipe(
         ofType(AuthActions.logout),
         tap(() => {
           // Simply remove token data from LocalStorage, if it's available.

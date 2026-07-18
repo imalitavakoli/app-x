@@ -40,8 +40,8 @@ import { ConfigActions } from './config.actions';
  */
 @Injectable()
 export class V2ConfigEffects implements OnRunEffects {
-  private actions$ = inject(Actions);
-  private _map = inject(V2Config);
+  private readonly _actions$ = inject(Actions);
+  private readonly _map = inject(V2Config);
 
   /* Enable/Disable the effects ///////////////////////////////////////////// */
 
@@ -56,11 +56,11 @@ export class V2ConfigEffects implements OnRunEffects {
   ngrxOnRunEffects(
     resolvedEffects$: Observable<EffectNotification>,
   ): Observable<EffectNotification> {
-    return this.actions$.pipe(
+    return this._actions$.pipe(
       ofType(ConfigActions.appInitStart),
       exhaustMap(() =>
         resolvedEffects$.pipe(
-          takeUntil(this.actions$.pipe(ofType(ConfigActions.appInitFinish))),
+          takeUntil(this._actions$.pipe(ofType(ConfigActions.appInitFinish))),
         ),
       ),
     );
@@ -69,7 +69,7 @@ export class V2ConfigEffects implements OnRunEffects {
   /* Load Config: DEP /////////////////////////////////////////////////////// */
 
   loadConfigDep$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(ConfigActions.loadConfigDep),
       concatMap(({ url, extraMapFun, assetsFolderName }) => {
         return this._map.loadConfigDep(url, extraMapFun, assetsFolderName).pipe(
@@ -85,7 +85,7 @@ export class V2ConfigEffects implements OnRunEffects {
   /* Load Config: Firebase ////////////////////////////////////////////////// */
 
   loadConfigFirebase$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(ConfigActions.loadConfigFirebase),
       concatMap(({ url }) => {
         return this._map.loadConfigFirebase(url).pipe(
@@ -101,7 +101,7 @@ export class V2ConfigEffects implements OnRunEffects {
   /* Load Data: Build /////////////////////////////////////////////////////// */
 
   loadDataBuild$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(ConfigActions.loadDataBuild),
       concatMap(({ url }) => {
         return this._map.loadDataBuild(url).pipe(
