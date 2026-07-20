@@ -143,6 +143,12 @@
         "jest": true
       },
       "rules": {}
+    },
+    {
+      "files": ["tailwind.config.js"],
+      "rules": {
+        "@nx/enforce-module-boundaries": "off"
+      }
     }
   ]
 }
