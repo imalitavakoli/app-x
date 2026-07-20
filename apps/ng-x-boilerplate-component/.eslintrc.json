@@ -30,6 +30,11 @@
     },
     {
       "files": ["*.html"],
+      "excludedFiles": [
+        "index.html",
+        "index.iframe-v1.html",
+        "index.webcom-v1.html"
+      ],
       "extends": ["plugin:@nx/angular-template"],
       "rules": {}
     }
