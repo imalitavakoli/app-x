@@ -49,6 +49,7 @@ x/
 │       ├── util/ng-bases                           // Holds shared Base classes for different types of libs.
 │       └── util/ng-bases-model                     // Holds shared Base interfaces/types/mocks for different types of libs.
 ├── tools/                                          // Holds the NX workspace executors, generators, and some useful scripts that can act on our code base.
+│   └── jest/                                       // Holds jest preset configs that will be read by `jest.preset.js`.
 ├── .eslintrc.json                                  // Defines the Eslint rules (library types constraints).
 ├── AGENTS.md                                       // Defines the AI agents' settings and instructions.
 ├── AGENTS.local.md                                 // Defines the AI agents' local (personal) settings and instructions (overrides `AGENTS.md` if exists).
