@@ -131,7 +131,13 @@ export const v1AuthReducer = createReducer(
       loadedLatest: { getToken: false },
       loadeds: { ...state.loadeds, getToken: undefined },
       errors: { ...state.errors, getToken: undefined },
-      datas: { ...state.datas, getToken: undefined },
+      // NOTE: Unlike the other `getToken` actions, we intentionally KEEP the
+      // current (now-expired) `datas.getToken` while a refresh is in flight.
+      // Wiping it here would make every other in-flight/brand-new protected
+      // request see "no token" and get logged out by the interceptor. The
+      // interceptor detects a completed refresh by the access token CHANGING,
+      // and guarantees the refresh request itself runs only once.
+      datas: { ...state.datas },
     }),
   ),
 

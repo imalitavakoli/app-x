@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap, switchMap, tap } from 'rxjs/operators';
+import {
+  catchError,
+  map,
+  concatMap,
+  switchMap,
+  tap,
+  exhaustMap,
+} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 import {
@@ -130,10 +137,17 @@ export class V1AuthEffects {
     ),
   );
 
+  // NOTE: `exhaustMap` (not `concatMap`) is deliberate here. While a refresh is
+  // already in flight, any further `getTokenViaRefresh` actions are DROPPED
+  // rather than queued — so we can never fire a second refresh (and therefore
+  // never spend the same refresh token twice) even if a duplicate action slips
+  // through from some other code path. The interceptor already guarantees a
+  // single dispatch per cycle; this is defense-in-depth at the layer closest to
+  // the API call.
   getTokenViaRefresh$ = createEffect(() =>
     this._actions$.pipe(
       ofType(AuthActions.getTokenViaRefresh),
-      concatMap(({ url, clientId, userId, refreshToken }) => {
+      exhaustMap(({ url, clientId, userId, refreshToken }) => {
         return this._map
           .getTokenViaRefresh(url, clientId, userId, refreshToken)
           .pipe(

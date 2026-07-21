@@ -4,19 +4,20 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpHeaders,
   HttpErrorResponse,
 } from '@angular/common/http';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
-  BehaviorSubject,
   Observable,
   catchError,
-  concatMap,
   exhaustMap,
   filter,
-  skip,
+  finalize,
+  map,
+  shareReplay,
   switchMap,
   take,
+  tap,
   throwError,
 } from 'rxjs';
 
@@ -24,11 +25,11 @@ import {
   V1CapacitorCoreService,
   V1CapacitorCore_AppInfo,
 } from '@x/shared-util-ng-capacitor';
-import { V1AuthFacade } from './+state/auth.facade';
-import { Router, ActivatedRoute } from '@angular/router';
+import { V2Config_MapDep } from '@x/shared-map-ng-config';
 import { V1Auth_MapGetToken } from '@x/shared-map-ng-auth';
 import { V2ConfigFacade } from '@x/shared-data-access-ng-config';
-import { V2Config_MapDep } from '@x/shared-map-ng-config';
+
+import { V1AuthFacade } from './+state/auth.facade';
 
 @Injectable()
 export class V1AuthInterceptor implements HttpInterceptor {
@@ -36,17 +37,26 @@ export class V1AuthInterceptor implements HttpInterceptor {
   private readonly _configFacade = inject(V2ConfigFacade);
   private readonly _capacitorCoreService = inject(V1CapacitorCoreService);
 
-  private _tokenData: V1Auth_MapGetToken | null = null;
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
 
   private _platform: 'ios' | 'android' | 'desktop' = 'desktop';
   private _isNative = false;
   private _deviceUuid?: string = undefined; // Desktop apps don't have a device UUID.
-  private _nativeAppInfo: V1CapacitorCore_AppInfo | null = null; // Desktop apps don't have a device UUID.
-  private _isRefreshing = false;
-  private _refreshTokenSubj: BehaviorSubject<unknown> =
-    new BehaviorSubject<unknown>(null);
+  private _nativeAppInfo: V1CapacitorCore_AppInfo | null = null; // Desktop apps don't have native app info.
+
+  /**
+   * The SINGLE in-flight refresh for the current expiry cycle.
+   *
+   * This one shared reference is what guarantees that
+   * `GET .../authentication/oauth/token?grant_type=refresh_token` is called
+   * EXACTLY ONCE per refresh cycle (i.e., a given refresh token is never spent
+   * twice): the first 401 creates it and fires the request; every concurrent
+   * 401 reuses the same observable instead of starting its own refresh. It is
+   * reset back to `null` (via `finalize`) as soon as the cycle resolves, so a
+   * later expiry (e.g. after re-login) can refresh again. See `_refreshToken`.
+   */
+  private _refresh$: Observable<V1Auth_MapGetToken> | null = null;
 
   constructor() {
     // Here in Auth Interceptor we are going to call some protected API
@@ -84,17 +94,20 @@ export class V1AuthInterceptor implements HttpInterceptor {
     // Attach some app-specific data to ALL requests that wanna leave our app.
     req = this._attachAppInfo(req);
 
-    // If the request is already `authentication/oauth/token`, it means that
-    // we've already tried to refresh the token once... So instead of continuing
-    // the code in the function, let's return refresh token URL request itself...
-    // Why? Because in such case, we have already subscribed to the auth state
-    // change in `_handle401Error` function... So stop the request processing
-    // here, and continue in there.
+    // This IS the refresh-token call itself (grant_type=refresh_token). Let it
+    // go straight to the backend, untouched:
+    //   1. It authenticates via the `refresh_token` URL query param, NOT a
+    //      Bearer access token — so we must not attach one.
+    //   2. Its result must be handled ONLY by the auth effect (success/failure
+    //      → store), never by this interceptor's 401 handler. Returning here
+    //      keeps it out of the `catchError`/`_handle401Error` path, so a failed
+    //      refresh can't recursively trigger another refresh — and it can't
+    //      deadlock on the in-flight `_refresh$` guard below (it would end up
+    //      waiting on itself).
     //
-    // NOTE: How the refresh token can be expired? Well, we cannot just rely on
-    // what is stored in the LocalStorage! Maybe the user didn't visit the app
-    // in months... And the days until expiration that we've stored in the
-    // LocalStorage is out of date by now...
+    // NOTE: `authentication/oauth/token` is also a public URL, so it would
+    // bypass token attachment anyway; this early return is the explicit,
+    // list-independent safeguard for the two guarantees above.
     if (req.url.includes('authentication/oauth/token')) {
       // Let's also check if `req` has 'refresh_token' URL Query Param that is
       // 'refresh_token'.
@@ -103,6 +116,12 @@ export class V1AuthInterceptor implements HttpInterceptor {
         return next.handle(req);
       }
     }
+
+    // Remember which token THIS request was sent with. If it later gets a 401,
+    // we can compare it against the current token to detect a "stale" 401 (one
+    // where a refresh has already happened in the meantime) and avoid kicking
+    // off a redundant, racing refresh. See `_handle401Error`.
+    let usedTokenData: V1Auth_MapGetToken | null = null;
 
     // Let's first start subscribing to our own `authState` observable
     // and then switch to the request handle observable via `exhaustMap`
@@ -114,6 +133,22 @@ export class V1AuthInterceptor implements HttpInterceptor {
         // If request is public, let it just continue its journey...
         if (this._isReqPublic(req.url, state.publicUrls)) {
           return next.handle(req);
+        }
+
+        // If a token refresh is ALREADY in flight, do NOT send this request
+        // with the token that's currently in the store — during the refresh
+        // window that is the expiring token, so sending now would just earn a
+        // guaranteed 401 (an extra, pointless round-trip). Instead, wait for the
+        // in-flight refresh and send straight away with the NEW token. This is
+        // what makes requests that START mid-refresh behave like the queued
+        // ones: they leave the app only once, and only with a fresh token.
+        if (this._refresh$) {
+          return this._refresh$.pipe(
+            switchMap((newToken) => {
+              usedTokenData = newToken;
+              return next.handle(this._attachToken(req, newToken.accessToken));
+            }),
+          );
         }
 
         // If we're here, it means that the request MUST be authenticated... So
@@ -132,8 +167,8 @@ export class V1AuthInterceptor implements HttpInterceptor {
         // If we're here, it means that the request MUST be authenticated and we
         // also have all of the required data... So let's attach the token to
         // the request and then let it leave our app.
-        this._tokenData = state.datas.getToken;
-        const newReq = this._attachToken(req, this._tokenData.accessToken);
+        usedTokenData = state.datas.getToken;
+        const newReq = this._attachToken(req, usedTokenData.accessToken);
         return next.handle(newReq);
       }),
       catchError((err) => {
@@ -142,12 +177,7 @@ export class V1AuthInterceptor implements HttpInterceptor {
         // expiration! So if it's a 401 one, let's handle it to see if we can
         // refresh the token, and then try sending the original request again...
         if (err instanceof HttpErrorResponse && err.status === 401) {
-          return this._handle401Error(
-            req,
-            next,
-            this._tokenData as V1Auth_MapGetToken,
-            err,
-          );
+          return this._handle401Error(req, next, usedTokenData, err);
         }
 
         // If it's not a 401 error, just let the error continue its journey...
@@ -173,9 +203,14 @@ export class V1AuthInterceptor implements HttpInterceptor {
       'authentication/bankid',
       'authentication/tickets',
       'authentication/oauth/token',
+      'clients/signup/url',
       'assets',
       'translations',
       'maintenance',
+      'updatePriority',
+      'payment/paypoint/guest/',
+      'payment/paypoint/token',
+      'config/branding',
     ];
     const combinedPublicUrls = [...publicUrls, ...commonPublicUrls];
 
@@ -218,8 +253,8 @@ export class V1AuthInterceptor implements HttpInterceptor {
       appVersion = version;
     });
 
-    // If we're here, it means that we have at least one piece of app info to
-    // attach to the request. So let's attach them all (if available).
+    // Attach every piece of app info we have. `platform` and `isNative` are
+    // always present; the rest are included only when available.
     return req.clone({
       setHeaders: {
         'X-Xapp': JSON.stringify({
@@ -253,7 +288,14 @@ export class V1AuthInterceptor implements HttpInterceptor {
   }
 
   /**
-   * Logout and redirect user to the default page of the app.
+   * Log the user out on the front-end and redirect to the default page.
+   *
+   * NOTE: Unlike elsewhere in the app, we do NOT call `postLogout` (the
+   * server-side logout) here. By the time we reach this point, either the
+   * refresh/access tokens are already invalid on the server (a failed refresh)
+   * or we simply have no usable access token to begin with — and `postLogout`
+   * itself requires a valid Access-Token. So a server-side logout is neither
+   * possible nor needed; clearing the session on the front-end is enough.
    *
    * @private
    */
@@ -264,108 +306,166 @@ export class V1AuthInterceptor implements HttpInterceptor {
   }
 
   /**
-   * Handle the 401 error by trying to refresh the token for the first request,
-   * and queueing up the rest of the probable next requests to be sent with the
-   * new token.
+   * Handle a 401 by joining a single shared token refresh, then replaying the
+   * request with the new token. The first 401 of a cycle starts the refresh;
+   * every concurrent 401 reuses the SAME in-flight refresh (see `_refreshToken`)
+   * and replays once it resolves. A "stale" 401 (a newer token already exists)
+   * is replayed without refreshing, and when there is no refresh token / no
+   * active session the user is redirected instead.
    *
    * @private
    * @param {HttpRequest<unknown>} req
    * @param {HttpHandler} next
-   * @param {V1Auth_MapGetToken} tokenData
-   * @param {unknown} error
-   * @returns {*}
+   * @param {V1Auth_MapGetToken | null} tokenData The token THIS request was sent with.
+   * @param {unknown} error The original 401 error.
+   * @returns {Observable<HttpEvent<unknown>>}
    */
   private _handle401Error(
     req: HttpRequest<unknown>,
     next: HttpHandler,
-    tokenData: V1Auth_MapGetToken,
+    tokenData: V1Auth_MapGetToken | null,
     error: unknown,
-  ) {
-    let baseUrl!: string;
-    let clientId!: number;
-
+  ): Observable<HttpEvent<unknown>> {
     // If there's no refresh token at all (some clients don't have it), just
     // redirect.
-    if (!tokenData.refreshToken) {
+    if (!tokenData || !tokenData.refreshToken) {
       this._redirectToDefaultPath();
       return throwError(() => error);
     }
 
-    // Let's try to refresh the token... But while we're refreshing it, other
-    // requests may come immediately right after the first request which has
-    // gotten 401 error... That's why we don't try refreshing the token for the
-    // next requests, but we queue them up (via `_refreshTokenSubj`) to be sent
-    // out of our app, ONLY after that we have the new token stored.
-    if (!this._isRefreshing) {
-      // Let probable next requests know that we're trying to refresh the token.
-      this._isRefreshing = true;
-      this._refreshTokenSubj.next(null);
+    // NOTE: `tokenData` is the token THIS request was actually sent with (see
+    // `intercept`), NOT a shared field that other requests may have mutated.
+    const usedToken = tokenData;
 
-      // Start the Observable from `_configFacade` to save required data for the
-      // rest of our operations.
+    // Before refreshing, look at the CURRENT token in the auth state. Why?
+    // Several requests may have left our app carrying the same expired access
+    // token; their 401 responses then trickle back over a short window. By the
+    // time a "late" 401 arrives, an earlier 401 may have ALREADY refreshed the
+    // token. In that case this 401 is stale: we must NOT refresh again (a
+    // second refresh would spend the refresh token a second time, race the
+    // first one, and log the user out). Instead we just replay the request with
+    // the token that's already there.
+    return this._authFacade.authState$.pipe(
+      take(1),
+      exhaustMap((current) => {
+        const currentToken = current.datas.getToken;
+
+        // If the store has NO token at all, the user was logged out while this
+        // request was in flight (e.g. a `logout` elsewhere cleared the state).
+        // Do NOT refresh — reviving the session with the old refresh token here
+        // would silently undo that logout. Just redirect.
+        if (!currentToken) {
+          this._redirectToDefaultPath();
+          return throwError(() => error);
+        }
+
+        // STALE 401: a newer token already exists (an earlier 401 already
+        // refreshed). Replay with it instead of refreshing again.
+        if (currentToken.accessToken !== usedToken.accessToken) {
+          return next.handle(this._attachToken(req, currentToken.accessToken));
+        }
+
+        // The token really is expired and nobody has a fresh one yet. Join the
+        // single shared refresh (`_refreshToken` starts it once and hands the
+        // same in-flight observable to every concurrent 401), then replay THIS
+        // request with whatever new access token it produces.
+        return this._refreshToken(usedToken).pipe(
+          switchMap((newToken) =>
+            next.handle(this._attachToken(req, newToken.accessToken)),
+          ),
+          // The refresh failed (the redirect/logout is done once inside
+          // `_refreshToken`). Propagate the ORIGINAL 401 for this request.
+          catchError(() => throwError(() => error)),
+        );
+      }),
+    );
+  }
+
+  /**
+   * Refresh the access token EXACTLY ONCE per expiry cycle.
+   *
+   * The first 401 that reaches here creates `_refresh$`, dispatches the single
+   * `getTokenViaRefresh` request, and multicasts the result (via `shareReplay`)
+   * so every concurrent 401 that arrives while the refresh is in flight reuses
+   * the SAME observable — nobody spends the refresh token a second time.
+   *
+   * Completion is detected from the SPECIFIC resolution of this refresh (a
+   * genuinely new access token, or an error recorded for `getToken`), NOT from
+   * "the next auth-state emission" — unrelated auth actions also emit, so
+   * blindly taking the next emission could resolve the refresh against the
+   * wrong state.
+   *
+   * @private
+   * @param {V1Auth_MapGetToken} usedToken The (expired) token this cycle refreshes.
+   * @returns {Observable<V1Auth_MapGetToken>} Emits the fresh token, or errors.
+   */
+  private _refreshToken(
+    usedToken: V1Auth_MapGetToken,
+  ): Observable<V1Auth_MapGetToken> {
+    // A refresh is already underway for this cycle → reuse it. THIS is the
+    // single-flight guard that prevents a duplicate refresh-token request.
+    if (this._refresh$) return this._refresh$;
+
+    this._refresh$ = this._configFacade.dataConfigDep$.pipe(
+      take(1),
+      // Kick off the one-and-only refresh request for this cycle.
       // NOTE: We already know that DEP config `data` is definitely truthy. How?
       // Our apps won't get initialized, unless DEP config gets loaded
       // successfully.
-      return this._configFacade.dataConfigDep$.pipe(
-        take(1),
-        exhaustMap((data) => {
-          data = data as V2Config_MapDep;
+      tap((data) => {
+        const dep = data as V2Config_MapDep;
+        this._authFacade.getTokenViaRefresh(
+          dep.general.baseUrl,
+          dep.general.clientId,
+          usedToken.userId,
+          usedToken.refreshToken as string,
+        );
+      }),
+      // Wait for THIS refresh to resolve: either a new access token appears
+      // (success) or an error is recorded for `getToken` (failure).
+      switchMap(() =>
+        this._authFacade.authState$.pipe(
+          filter(
+            (state) =>
+              !!state.errors.getToken ||
+              (!!state.datas.getToken &&
+                state.datas.getToken.accessToken !== usedToken.accessToken),
+          ),
+          take(1),
+          map((state) => {
+            if (
+              !state.datas.getToken ||
+              state.datas.getToken.accessToken === usedToken.accessToken
+            ) {
+              throw new Error(
+                state.errors.getToken ??
+                  '@AuthInterceptor/_refreshToken: Token refresh failed',
+              );
+            }
+            return state.datas.getToken;
+          }),
+        ),
+      ),
+      catchError((err) => {
+        // The refresh failed → the session is unrecoverable. Redirect ONCE
+        // (this pipeline is shared across all queued requests) and propagate the
+        // error so each queued request can fail out.
+        this._redirectToDefaultPath();
+        return throwError(() => err);
+      }),
+      // Release the cycle (on success, failure, or unsubscription) so a LATER
+      // expiry — e.g. after the user logs back in — can refresh again. This also
+      // replaces the old "swap in a fresh BehaviorSubject after an error" hack:
+      // a brand-new observable is built for the next cycle.
+      finalize(() => {
+        this._refresh$ = null;
+      }),
+      // Multicast the single refresh to every concurrent 401. `refCount: false`
+      // keeps the one refresh alive to completion even if some requests are
+      // cancelled mid-flight, so we never fire a second refresh for this cycle.
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
 
-          // Save the required data for later use.
-          baseUrl = data.general.baseUrl;
-          clientId = data.general.clientId;
-
-          // Use auth to refresh the token.
-          this._authFacade.getTokenViaRefresh(
-            baseUrl,
-            clientId,
-            tokenData.userId,
-            tokenData.refreshToken as string,
-          );
-
-          // Switch to the `authState$` Observable.
-          return this._authFacade.authState$;
-        }),
-        skip(1),
-        take(1),
-        exhaustMap((state) => {
-          // Let probable next requests know that we're done refreshing the token.
-          this._isRefreshing = false;
-
-          // If we have the new token data, let's attach the token to the
-          // request before it leaves our app, and call `next` method of
-          // `_refreshTokenSubj` to emit the new token value to all subscribers.
-          if (state.datas.getToken) {
-            this._tokenData = state.datas.getToken;
-            this._refreshTokenSubj.next(this._tokenData);
-            const newReq = this._attachToken(req, this._tokenData.accessToken);
-            return next.handle(newReq);
-          }
-
-          // If we're here, it means that we couldn't get the new token data,
-          // then notify all requests of about the failure, redirect the page,
-          // and throw an error.
-          this._refreshTokenSubj.error(
-            '@AuthInterceptor/_handle401Error: Token fetch failed',
-          );
-          this._redirectToDefaultPath();
-          return throwError(() => error);
-        }),
-      );
-    } else {
-      return this._refreshTokenSubj.pipe(
-        filter((token) => {
-          return token !== null;
-        }),
-        take(1),
-        switchMap((token) => {
-          const newReq = this._attachToken(
-            req,
-            (token as V1Auth_MapGetToken).accessToken,
-          );
-          return next.handle(newReq);
-        }),
-      );
-    }
+    return this._refresh$;
   }
 }
