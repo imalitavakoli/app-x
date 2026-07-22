@@ -220,6 +220,7 @@ In the workspace, I've added specific comments as keywords. These make it easier
   - ### `— c` [Organizing](./docs/guidelines/best-practices.md#organizing)
   - ### `— d` [State management](./docs/guidelines/best-practices.md#state-management)
   - ### `— e` [Error handling](./docs/guidelines/best-practices.md#error-handling)
+  - ### `— f` [Ionic & Capacitor (mobile apps)](./docs/guidelines/best-practices.md#ionic--capacitor-mobile-apps)
 
 &nbsp;
 
