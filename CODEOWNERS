@@ -40,6 +40,7 @@
 /libs/shared/feature/ng-app-acc-sidebar/ @Ali
 /libs/shared/feature/ng-app-footer/ @Ali
 /libs/shared/feature/ng-app-header/ @Ali
+/libs/shared/feature/ng-modal/src/lib/modal-network-v1/ @Ali
 /libs/shared/feature/ng-translations/ @Ali
 /libs/shared/feature/ng-x-profile-image/ @Ali
 /libs/shared/feature/ng-x-profile-info/ @Ali
@@ -71,6 +72,7 @@
 /libs/shared/ui/ng-directives/src/lib/long-press-me-v1/ @Ali
 /libs/shared/ui/ng-directives/src/lib/toggle-me-v1/ @Ali
 /libs/shared/ui/ng-ionic/ @Ali
+/libs/shared/ui/ng-modal/src/lib/modal-network-v1/ @Ali
 /libs/shared/ui/ng-notifier/ @Ali
 /libs/shared/ui/ng-pipes/src/lib/currency-v1/ @Ali
 /libs/shared/ui/ng-popup/ @Ali
@@ -87,11 +89,19 @@
 /libs/shared/util/formatters/src/lib/number-v1/ @Ali
 /libs/shared/util/local-storage/ @Ali
 /libs/shared/util/ng-bases/ @Ali
+/libs/shared/util/ng-bases-consumer/ @Ali
 /libs/shared/util/ng-bases-model/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-android-edge-to-edge-support-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-att-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-browser-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-core-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-firebase-analytics-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-firebase-authentication-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-firebase-crashlytics-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-firebase-firestore-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-firebase-remote-config-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-keyboard-v1/ @Ali
+/libs/shared/util/ng-capacitor/src/lib/capacitor-network-v1/ @Ali
 /libs/shared/util/ng-capacitor/src/lib/capacitor-notification-v1/ @Ali
 /libs/shared/util/ng-services/src/lib/apptentive-v1/ @Ali
 /libs/shared/util/ng-services/src/lib/auth-auto-v1/ @Ali
