@@ -92,17 +92,23 @@ A startup hook auto-loads one skill — `using-superpowers` — into every sessi
 2. Routing — `using-superpowers` matches your request to a skill ("build X" vs "fix bug" vs a plain question).
 3. Hand-offs — each skill names the next one, forming a chain.
 
-**The workflow (building a feature)**
+**The workflow (Routing)**
 
-- `brainstorming` → asks questions, agrees on a design, saves a design doc (won't code until you approve).
-- `writing-plans` → breaks it into tiny exact tasks, then asks how to execute.
-- `subagent-driven-development` (or `executing-plans`) → builds task-by-task.
-- `test-driven-development` → writes tests first.
-- `requesting-code-review` → reviews the code.
-- `finishing-a-development-branch` → merge / PR / discard (you choose).
+- **Building a feature**
+  - `brainstorming` → asks questions, agrees on a design, saves a design doc (won't code until you approve).
+  - `writing-plans` → breaks it into tiny exact tasks, then asks how to execute.
+  - `subagent-driven-development` (or `executing-plans`) → builds task-by-task.
+  - `test-driven-development` → writes tests first.
+  - `requesting-code-review` → reviews the code.
+  - `finishing-a-development-branch` → merge / PR / discard (you choose).
 
-For bugs it's a shorter chain:  
-`systematic-debugging` → find root cause → `verification-before-completion` verifies the fix. Simple questions get answered with no skill at all.
+- **For bugs it's a shorter chain**
+
+  `systematic-debugging` → find root cause → `verification-before-completion` verifies the fix.
+
+- **Simple questions**
+
+  They get answered with no skill at all.
 
 **Benefits**
 

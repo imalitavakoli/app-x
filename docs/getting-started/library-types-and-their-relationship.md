@@ -135,17 +135,73 @@ The versioning folder names can be something like `v1`, `v2`, etc. They can also
 
 [🔝](#library-types--their-relationship-📚)
 
-## Useful shared libs
+## Functionality types
 
-Shared libs are the libraries that will be utilized across multiple apps and other libraries. Some of these libs will be used more commonly than others. Here are some important notes to keep in mind about such libs.
+A functionality is actually a feature that we build for our applications. It can consist of multiple lib types.
 
-- `libs/shared/ui/tailwindcss/` lib: In this lib, you can find the following CSS classes, which can be used in special occasions:
-  - In `components-general.scss` `e-h-usual`: To show any heading in `1.875rem = 30px` size (`<h4>` size). Our apps use this heading font size a lot... So for example, to have a page heading, we can semantically use `<h1>` HTML tag, but set `e-h-usual` CSS class for it.
-  - In `components-general.scss` `e-ecode`: To show the app's UX edge decisions codes. It adds some styles to the code.
-  - In `components-general.scss` `e-notrans`: To show the texts that are not being read from the translations lib, and are hard-coded instead. It makes finding such texts easier across the app to plan for adding their translations later.  
-    **Tip!** If you just want to mark such texts in your code (without adding any css styles), you can just simply write `TODO:TRANS` comment above your text, whether it's in HTML or TS.
+For example, a 'profile' functionality that fetched the user's profile details from the server and displaysthem across multiple Angular applications, belongs to the shared 'domain' and may consist of the following libraries:
 
-- `libs/shared/ui/base/` lib: In this lib, you can find the following CSS classes, which can be used in special occasions:
-  - In `mains.scss` `e-svg`: To define some default styles for the direct `<svg>` element that is loaded in `<inline-svg>` components that have `e-svg` CSS class.
+- `shared-map-ng-profile`
+- `shared-data-access-ng-profile`
+- `shared-ui-ng-profile`
+- `shared-feature-ng-profile`
+- `shared-page-ng-profile`
 
-[🔙](../../README.md#getting-started)
+> **Note!**
+> Functionalities must **not** have their own '_util_' libs. Instead, they should reuse existing '_util_' libs. These libs contain low-level utilities that can be shared across multiple functionalities.
+>
+> By "their own" we mean libs named after the functionality itself. For example, the `profile` functionality must **not** have a `shared-util-ng-profile` lib.
+>
+> Similarly, functionalities do **not** have their own '_api_' or '_app_' libs:
+>
+> - '_api_' libs act only as proxies.
+> - '_app_' libs are the actual applications (products) that combine multiple functionalities to deliver value to end users.
+
+> **Note!**
+> In most cases, functionalities also don't have their own '_page_' lib, because pages are meant to compose multiple functionalities.
+>
+> However, if a functionality represents an entire page by itself, for example, a `profile` page that only displays the user's profile, it is perfectly fine to have a `shared-page-ng-profile` lib.
+
+&nbsp;
+
+### 'abstract' type
+
+**What is it?** A functionality which consists of '_map_' and '_data-access_' lib types.
+
+**Which lib is imported by other libs?** '_data-access_' lib.
+
+&nbsp;
+
+### 'visual' type
+
+**What is it?** A functionality which consists of '_ui_' and '_feature_' lib types.
+
+**Which lib is imported by other libs?** '_feature_' lib.
+
+&nbsp;
+
+### 'visual+' type
+
+**What is it?** A functionality which consists of '_ui_', '_feature_', and '_page_' lib types.
+
+**Which lib is imported by other libs?** '_feature_' lib.
+
+&nbsp;
+
+### 'mixed' type
+
+**What is it?** A functionality which consists of '_map_', '_data-access_', '_ui_', and '_feature_' lib types.
+
+**Which lib is imported by other libs?** '_feature_' lib.
+
+&nbsp;
+
+### 'mixed+' type
+
+**What is it?** A functionality which consists of '_map_', '_data-access_', '_ui_', '_feature_', and '_page_' lib types.
+
+**Which lib is imported by other libs?** '_feature_' lib.
+
+&nbsp;
+
+[🔝](#library-types--their-relationship-📚)

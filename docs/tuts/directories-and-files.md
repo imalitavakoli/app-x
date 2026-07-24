@@ -1,12 +1,12 @@
-[🔙](../../README.md#faq)
+[🔙](../../README.md#tuts)
 
-# Directories & files ⁉
+# Directories & files 📂
 
 Some directories & files are familiar to all of us right at the beginning! But there are some of them which may need more explanation.
 
 &nbsp;
 
-[🔝](#directories--files-⁉)
+[🔝](#directories--files-📂)
 
 ## Directories
 
@@ -24,7 +24,7 @@ Some directories & files are familiar to all of us right at the beginning! But t
 
 &nbsp;
 
-[🔝](#directories--files-⁉)
+[🔝](#directories--files-📂)
 
 ## Files
 
@@ -53,7 +53,7 @@ Some directories & files are familiar to all of us right at the beginning! But t
 
 &nbsp;
 
-[🔝](#directories--files-⁉)
+[🔝](#directories--files-📂)
 
 ## AI-specific files & directories
 
@@ -66,4 +66,4 @@ For IDE or AI agent specific instructions, review the following directories/file
 
 **Tip!** If you are using other IDEs that require separate files for their own AI agents, you can use the above-mentioned 'IDE-specific' AI agent instruction files as a reference for writing your own instructions. _In simple terms:_ the main AI agent instructions should always be documented in `AGENTS.md` file, while the 'IDE-specific' instruction files should simply reference that file.
 
-[🔙](../../README.md#faq)
+[🔙](../../README.md#tuts)

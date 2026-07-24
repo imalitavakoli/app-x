@@ -161,7 +161,12 @@ In the workspace, I've added specific comments as keywords. These make it easier
     - `—— G` ['page' type](./docs/getting-started/library-types-and-their-relationship.md#page-type)
     - `—— H` ['app' type](./docs/getting-started/library-types-and-their-relationship.md#app-type)
   - ### `— b` [Versioning shared libs](./docs/getting-started/library-types-and-their-relationship.md#versioning-shared-libs)
-  - ### `— c` [Useful shared libs](./docs/getting-started/library-types-and-their-relationship.md#useful-shared-libs)
+  - ### `— c` [Functionality types](./docs/getting-started/library-types-and-their-relationship.md#functionality-types)
+    - `—— A` ['abstract' type](./docs/getting-started/library-types-and-their-relationship.md#abstract-type)
+    - `—— B` ['visual' type](./docs/getting-started/library-types-and-their-relationship.md#visual-type)
+    - `—— C` ['visual+' type](./docs/getting-started/library-types-and-their-relationship.md#visual+-type)
+    - `—— D` ['mixed' type](./docs/getting-started/library-types-and-their-relationship.md#mixed-type)
+    - `—— E` ['mixed+' type](./docs/getting-started/library-types-and-their-relationship.md#mixed+-type)
 
 - ## `3` [Designers related](./docs/getting-started/designers-related.md)
   - ### `— a` [Exporting brand-specific images](./docs/getting-started/designers-related.md#exporting-brand-specific-images)
@@ -195,47 +200,61 @@ In the workspace, I've added specific comments as keywords. These make it easier
   - ### `— e` [Generating non-technology related libs](./docs/guidelines/available-commands.md#generating-non-technology-related-libs)
   - ### `— f` [_Optional!_ Installing & connecting to NX Cloud](./docs/guidelines/available-commands.md#optional-installing--connecting-to-nx-cloud)
 
-- ## `4` [Common tasks](./docs/guidelines/common-tasks.md)
-  - ### `— a` [Generate & build a whole new functionality](./docs/guidelines/common-tasks.md#generate--build-a-whole-new-functionality)
-  - ### `— b` [Consider an API error as an exception](./docs/guidelines/common-tasks.md#consider-an-api-error-as-an-exception)
-  - ### `— c` [API response schema changes](./docs/guidelines/common-tasks.md#api-response-schema-changes)
-  - ### `— d` [A property is added/removed in API response schema](./docs/guidelines/common-tasks.md#a-property-is-addedremoved-in-api-response-schema)
-  - ### `— e` [UI/UX changes](./docs/guidelines/common-tasks.md#uiux-changes)
-  - ### `— f` [Add new image/icon asset for a lib](./docs/guidelines/common-tasks.md#add-new-imageicon-asset-for-a-lib)
-  - ### `— g` [Add new DEP config for a lib](./docs/guidelines/common-tasks.md#add-new-dep-config-for-a-lib)
-  - ### `— h` [Add new communication interface for a lib](./docs/guidelines/common-tasks.md#add-new-communication-interface-for-a-lib)
-  - ### `— i` [Generate & build a web-component](./docs/guidelines/common-tasks.md#generate--build-a-web-component)
-  - ### `— j` [Update a web-component](./docs/guidelines/common-tasks.md#update-a-web-component)
-  - ### `— k` [Update the workspace](./docs/guidelines/common-tasks.md#update-the-workspace)
-  - ### `— l` [Update the workspace AI instructions](./docs/guidelines/common-tasks.md#update-the-workspace-ai-instructions)
-
-- ## `5` [Naming conventions](./docs/guidelines/naming-conventions.md)
+- ## `4` [Naming conventions](./docs/guidelines/naming-conventions.md)
   - ### `— a` [Folders](./docs/guidelines/naming-conventions.md#folders)
   - ### `— b` [Coding](./docs/guidelines/naming-conventions.md#coding)
   - ### `— c` [Styling](./docs/guidelines/naming-conventions.md#styling)
 
-- ## `6` [Best practices](./docs/guidelines/best-practices.md)
+- ## `5` [Best practices](./docs/guidelines/best-practices.md)
   - ### `— a` [Mindset](./docs/guidelines/best-practices.md#mindset)
   - ### `— b` [Documenting](./docs/guidelines/best-practices.md#documenting)
   - ### `— c` [Organizing](./docs/guidelines/best-practices.md#organizing)
-  - ### `— d` [State management](./docs/guidelines/best-practices.md#state-management)
-  - ### `— e` [Error handling](./docs/guidelines/best-practices.md#error-handling)
-  - ### `— f` [Ionic & Capacitor (mobile apps)](./docs/guidelines/best-practices.md#ionic--capacitor-mobile-apps)
 
 &nbsp;
 
-# FAQ
+# Runbooks
 
-- ## `1` [Directories & files](./docs/faq/directories-and-files.md)
-  - ### `— a` [Directories](./docs/faq/directories-and-files.md#directories)
-  - ### `— b` [Files](./docs/faq/directories-and-files.md#files)
+- ## `1` [Functionality: Create](./docs/runbooks/functionality-create.md)
 
-- ## `2` [Our Boilerplate app(s)](./docs/faq/boilerplate-apps.md)
-  - ### `— a` [How to have a new app](./docs/faq/boilerplate-apps.md#how-to-have-a-new-app)
-  - ### `— b` [How most of our Boilerplate apps got created](./docs/faq/boilerplate-apps.md#how-most-of-our-boilerplate-apps-got-created)
-  - ### `— c` [How to integrate Ionic & Capacitor](./docs/faq/boilerplate-apps.md#how-to-integrate-ionic--capacitor)
-  - ### `— d` [How to integrate Electron](./docs/faq/boilerplate-apps.md#how-to-integrate-electron)
-  - ### `— e` [How to install Capacitor plugins](./docs/faq/boilerplate-apps.md#how-to-install-capacitor-plugins)
-  - ### `— f` [Ionic tips & tricks](./docs/faq/boilerplate-apps.md#ionic-tips--tricks)
-  - ### `— g` [Capacitor tips & tricks](./docs/faq/boilerplate-apps.md#capacitor-tips--tricks)
-  - ### `— h` [Icons & Splash-Screen](./docs/faq/boilerplate-apps.md#icons--splash-screen)
+- ## `2` [API: Add errors as exceptions](./docs/runbooks/api-add-errors-as-exceptions.md)
+
+- ## `3` [API: Update Responses](./docs/runbooks/api-update-responses.md)
+
+- ## `4` [UI/UX: Update](./docs/runbooks/ui-ux-update.md)
+
+- ## `5` [DEP: Update assets for a lib](./docs/runbooks/dep-update-assets-for-a-lib.md)
+
+- ## `6` [DEP: Update config for a lib](./docs/runbooks/dep-update-config-for-a-lib.md)
+
+- ## `7` [Communication: Create interface for a lib](./docs/runbooks/communication-create-interface-for-a-lib.md)
+
+- ## `8` [Web-component: Create](./docs/runbooks/web-component-create.md)
+
+- ## `9` [Web-component: Update](./docs/runbooks/web-component-update.md)
+
+- ## `10` [Workspace: Update](./docs/runbooks/workspace-update.md)
+
+- ## `11` [Workspace: Update AI instructions](./docs/runbooks/workspace-update-ai-instructions.md)
+
+&nbsp;
+
+# Tuts
+
+- ## `1` [Directories & files](./docs/tuts/directories-and-files.md)
+  - ### `— a` [Directories](./docs/tuts/directories-and-files.md#directories)
+  - ### `— b` [Files](./docs/tuts/directories-and-files.md#files)
+
+- ## `2` [FAQ](./docs/tuts/faq.md)
+  - ### `— a` [State management](./docs/tuts/faq.md#state-management)
+  - ### `— b` [Error handling](./docs/tuts/faq.md#error-handling)
+  - ### `— c` [Ionic & Capacitor (mobile apps)](./docs/tuts/faq.md#ionic--capacitor-mobile-apps)
+
+- ## `3` [Our Boilerplate app(s)](./docs/tuts/boilerplate-apps.md)
+  - ### `— a` [How to have a new app](./docs/tuts/boilerplate-apps.md#how-to-have-a-new-app)
+  - ### `— b` [How most of our Boilerplate apps got created](./docs/tuts/boilerplate-apps.md#how-most-of-our-boilerplate-apps-got-created)
+  - ### `— c` [How to integrate Ionic & Capacitor](./docs/tuts/boilerplate-apps.md#how-to-integrate-ionic--capacitor)
+  - ### `— d` [How to integrate Electron](./docs/tuts/boilerplate-apps.md#how-to-integrate-electron)
+  - ### `— e` [How to install Capacitor plugins](./docs/tuts/boilerplate-apps.md#how-to-install-capacitor-plugins)
+  - ### `— f` [Ionic tips & tricks](./docs/tuts/boilerplate-apps.md#ionic-tips--tricks)
+  - ### `— g` [Capacitor tips & tricks](./docs/tuts/boilerplate-apps.md#capacitor-tips--tricks)
+  - ### `— h` [Icons & Splash-Screen](./docs/tuts/boilerplate-apps.md#icons--splash-screen)

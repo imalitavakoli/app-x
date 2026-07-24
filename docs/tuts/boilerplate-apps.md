@@ -1,4 +1,4 @@
-[🔙](../../README.md#faq)
+[🔙](../../README.md#tuts)
 
 # Our Boilerplate app(s) 📦
 
@@ -237,4 +237,4 @@ And yes, we already added `src/assets/native` folder to contain sample Icons & S
 
 We also modified `android/.gitignore` and `ios/.gitignore` files to add generated Icons & Splash-Screen to the ignore list.
 
-[🔙](../../README.md#faq)
+[🔙](../../README.md#tuts)
