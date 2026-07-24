@@ -7,6 +7,10 @@
     @apply container mx-auto px-4 xl:max-w-[1200px];
   }
 
+  /**
+   * Show the app's UX edge decisions codes.
+   * It is mainly used in error popups, to show the error's snipper code.
+   */
   .e-ecode {
     @apply text-eneutral bg-eneutral/10 mx-1 rounded p-1 font-mono text-xs;
   }
@@ -19,6 +23,12 @@
   /* Typography                                                               */
   /* //////////////////////////////////////////////////////////////////////// */
 
+  /**
+   * Show any heading in 1.875rem = 30px size (<h4> size).
+   * Our apps use this heading font size a lot...
+   * So for example, to have a page heading, we can semantically use `<h1>` HTML 
+   * tag, but set this CSS class for it.
+   */
   .e-h-usual {
     @apply mb-3 pt-9 text-xl font-extrabold;
   }
@@ -45,6 +55,16 @@
     @apply font-bold decoration-2 transition hover:underline;
   }
 
+  /**
+   * Any text that needs to be translated (e.g., via the Translations lib) but
+   * it's currently hard-coded, can be marked to be distinguished with this CSS
+   * class. This makes finding such texts easier across the app to plan for 
+   * adding their translation-keys later.
+   *
+   * NOTE: If you just want to mark such texts in your code (without adding any 
+   * CSS styles), you can just simply write `TODO:TRANS` comment above your 
+   * text, whether it's in HTML or TS.
+   */
   .e-notrans {
     @apply bg-eneutral/20;
   }

@@ -37,9 +37,12 @@
     box-sizing: border-box;
   }
 
-  // Let's define some default styles for the direct <svg> element that is
-  // loaded in <svg-icon> components.
-  // NOTE: The component should have the class `.e-svg` to apply these styles.
+  /**
+   * Default styles for the direct `<svg>` element that is loaded in 
+   * `<svg-icon>` components.
+   *
+   * NOTE: The component should have the class `.e-svg` to apply these styles.
+   */
   .e-svg {
     > svg {
       width: 100%;
