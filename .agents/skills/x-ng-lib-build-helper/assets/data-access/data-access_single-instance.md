@@ -1,7 +1,31 @@
 # 'ng-x-profile-info' functionality 'data-access' lib samples
 
-Here we share the sample files of a functionality called 'ng-x-profile-info', just for you as a source of inspiration.  
-This lib has 'single-instance' object structure.
+Here are sample files from the 'data-access' library of the 'ng-x-profile-info' functionality. Use them as inspiration when creating your own 'data-access' libraries.
+
+This 'data-access' library follows the 'single-instance' object structure.
+
+```
+libs/shared/data-access/ng-x-profile-info/
+├── src/
+│   ├── lib/v2/
+│   │   ├── +state/
+│   │   │   ├── x-profile-info.actions.ts
+│   │   │   ├── x-profile-info.effects.ts
+│   │   │   ├── x-profile-info.facade.ts
+│   │   │   ├── x-profile-info.interfaces.ts
+│   │   │   ├── x-profile-info.reducer.ts
+│   │   │   └── x-profile-info.selectors.ts
+│   │   └── README.md (inner)
+│   ├── index.ts
+│   └── test-setup.ts
+├── .eslintrc.json
+├── jest.config.ts
+├── project.json
+├── README.md (outer)
+├── tsconfig.json
+├── tsconfig.lib.json
+└── tsconfig.spec.json
+```
 
 <!--
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,31 @@
 # 'ng-x-users' functionality 'data-access' lib samples
 
-Here we share the sample files of a functionality called 'ng-x-users', just for you as a source of inspiration.  
-This lib has 'entity' object structure.
+Here are sample files from the 'data-access' library of the 'ng-x-users' functionality. Use them as inspiration when creating your own 'data-access' libraries.
+
+This 'data-access' library follows the 'entity' object structure.
+
+```
+libs/shared/data-access/ng-x-users/
+├── src/
+│   ├── lib/v1/
+│   │   ├── +state/
+│   │   │   ├── x-users.actions.ts
+│   │   │   ├── x-users.effects.ts
+│   │   │   ├── x-users.facade.ts
+│   │   │   ├── x-users.interfaces.ts
+│   │   │   ├── x-users.reducer.ts
+│   │   │   └── x-users.selectors.ts
+│   │   └── README.md
+│   ├── index.ts
+│   └── test-setup.ts
+├── .eslintrc.json
+├── jest.config.ts
+├── project.json
+├── README.md
+├── tsconfig.json
+├── tsconfig.lib.json
+└── tsconfig.spec.json
+```
 
 <!--
 ////////////////////////////////////////////////////////////////////////////////

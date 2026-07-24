@@ -1,6 +1,26 @@
 # 'ng-x-credit' functionality 'map' lib samples
 
-Here we share the sample files of a functionality called 'ng-x-credit', just for you as a source of inspiration.
+Here are sample files from the 'map' library of the 'ng-x-credit' functionality. Use them as inspiration when creating your own 'map' libraries.
+
+```
+libs/shared/map/ng-x-credit/
+├── src/
+│   ├── lib/v1/
+│   │   ├── x-credit-detail.interfaces.ts
+│   │   ├── x-credit-generic.interfaces.ts
+│   │   ├── x-credit-summary.interfaces.ts
+│   │   ├── x-credit.ts
+│   │   └── README.md (inner)
+│   ├── index.ts
+│   └── test-setup.ts
+├── .eslintrc.json
+├── jest.config.ts
+├── project.json
+├── README.md (outer)
+├── tsconfig.json
+├── tsconfig.lib.json
+└── tsconfig.spec.json
+```
 
 <!--
 ////////////////////////////////////////////////////////////////////////////////

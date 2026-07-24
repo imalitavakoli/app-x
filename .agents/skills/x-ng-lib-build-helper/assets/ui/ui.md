@@ -1,9 +1,30 @@
 # 'ng-x-profile-info' functionality 'ui' lib samples
 
-Here we share the sample files of a functionality called 'ng-x-profile-info', just for you as a source of inspiration.
+Here are sample files from the 'ui' library of the 'ng-x-profile-info' functionality. Use them as inspiration when creating your own 'ui' libraries.
+
+```
+libs/ng-x-profile-info/
+├── src/
+│   ├── lib/v1/
+│   │   ├── x-profile-info.component.html
+│   │   ├── x-profile-info.component.scss
+│   │   ├── x-profile-info.component.ts
+│   │   ├── x-profile-info.mocks.ts
+│   │   └── README.md (inner)
+│   ├── index.ts
+│   └── test-setup.ts
+├── .eslintrc.json
+├── jest.config.ts
+├── project.json
+├── README.md (outer)
+├── tsconfig.json
+├── tsconfig.lib.json
+└── tsconfig.spec.json
+```
 
 **Note!**  
-Based on what the functionality (lib) must do as a whole, one or more than one component should be exported out of the lib. For this functionality here are the exported components:
+Depending on what the library is designed to do, it may export one or more components.
+For this lib, the following components are exported:
 
 - `V1XProfileInfoComponent`
 

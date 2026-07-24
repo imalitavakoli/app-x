@@ -1,7 +1,31 @@
 # 'ng-x-credit' functionality 'data-access' lib samples
 
-Here we share the sample files of a functionality called 'ng-x-credit', just for you as a source of inspiration.  
-This lib has 'multi-instance' object structure.
+Here are sample files from the 'data-access' library of the 'ng-x-credit' functionality. Use them as inspiration when creating your own 'data-access' libraries.
+
+This 'data-access' library follows the 'multi-instance' object structure.
+
+```
+libs/shared/data-access/ng-x-credit/
+├── src/
+│   ├── lib/v2/
+│   │   ├── +state/
+│   │   │   ├── x-credit.actions.ts
+│   │   │   ├── x-credit.effects.ts
+│   │   │   ├── x-credit.facade.ts
+│   │   │   ├── x-credit.interfaces.ts
+│   │   │   ├── x-credit.reducer.ts
+│   │   │   └── x-credit.selectors.ts
+│   │   └── README.md (inner)
+│   ├── index.ts
+│   └── test-setup.ts
+├── .eslintrc.json
+├── jest.config.ts
+├── project.json
+├── README.md (outer)
+├── tsconfig.json
+├── tsconfig.lib.json
+└── tsconfig.spec.json
+```
 
 <!--
 ////////////////////////////////////////////////////////////////////////////////
