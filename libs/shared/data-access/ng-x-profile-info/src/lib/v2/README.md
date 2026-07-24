@@ -110,7 +110,7 @@ export class V1TestPageComponent implements OnInit {
 
     /* Subscription (ALTERNATIVE) /////////////////////////////////////////// */
 
-    // Listen to all the state changes via `translationsState$`.
+    // Listen to all the state changes via `state$`.
     // You can have one single subscription and take advantage of
     // `loadedLatest` to discriminate which property just changed.
     //
