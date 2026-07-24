@@ -27,8 +27,8 @@ import { V1XUsersFeaComponent } from '@x/shared-feature-ng-x-users';
     V1PopupComponent,
     V1XUsersFeaComponent,
   ],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.scss',
+  templateUrl: './x-users.component.html',
+  styleUrl: './x-users.component.scss',
 })
 export class V1XUsersPageComponent extends V2BasePageParentExtXUsersComponent {
   /* General //////////////////////////////////////////////////////////////// */

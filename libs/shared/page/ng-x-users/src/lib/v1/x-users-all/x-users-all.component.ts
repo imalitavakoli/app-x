@@ -8,8 +8,8 @@ import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 @Component({
   selector: 'x-x-users-all-page-v1',
   imports: [RouterModule],
-  templateUrl: './users-all.component.html',
-  styleUrls: ['./users-all.component.scss'],
+  templateUrl: './x-users-all.component.html',
+  styleUrls: ['./x-users-all.component.scss'],
 })
 export class V1XUsersAllPageComponent extends V2BasePageChildExtXUsersComponent {
   /* General //////////////////////////////////////////////////////////////// */

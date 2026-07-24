@@ -1,3 +1,3 @@
 export * from './lib/v1/lib.routes';
 
-export * from './lib/v1/users/users.component';
+export * from './lib/v1/x-users/x-users.component';

@@ -6,12 +6,12 @@ import { V2BasePageChildExtXUsersComponent } from '@x/shared-util-ng-bases-consu
 import { V1XUsers_MapUser } from '@x/shared-map-ng-x-users';
 
 @Component({
-  selector: 'x-x-users-one-page-v1',
+  selector: 'x-x-users-new-page-v1',
   imports: [RouterModule],
-  templateUrl: './users-one.component.html',
-  styleUrls: ['./users-one.component.scss'],
+  templateUrl: './x-users-new.component.html',
+  styleUrls: ['./x-users-new.component.scss'],
 })
-export class V1XUsersOnePageComponent extends V2BasePageChildExtXUsersComponent {
+export class V1XUsersNewPageComponent extends V2BasePageChildExtXUsersComponent {
   /* General //////////////////////////////////////////////////////////////// */
 
   protected override _pageName = 'Users';

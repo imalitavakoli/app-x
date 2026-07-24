@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
-import { V1XUsersPageComponent } from './users/users.component';
-import { V1XUsersAllPageComponent } from './users-all/users-all.component';
-import { V1XUsersEditPageComponent } from './users-edit/users-edit.component';
-import { V1XUsersNewPageComponent } from './users-new/users-new.component';
-import { V1XUsersOnePageComponent } from './users-one/users-one.component';
+import { V1XUsersPageComponent } from './x-users/x-users.component';
+import { V1XUsersAllPageComponent } from './x-users-all/x-users-all.component';
+import { V1XUsersEditPageComponent } from './x-users-edit/x-users-edit.component';
+import { V1XUsersNewPageComponent } from './x-users-new/x-users-new.component';
+import { V1XUsersOnePageComponent } from './x-users-one/x-users-one.component';
 
 export const V1XUsersRoutes: Route[] = [
   {
