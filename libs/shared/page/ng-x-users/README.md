@@ -1,7 +1,11 @@
 # shared-page-ng-x-users
 
-This library was generated with [Nx](https://nx.dev).
+This lib is a page for our app(s).
 
-## Running unit tests
+It initializes the required '_feature_' lib(s) to show the page contents.
 
-Run `nx test shared-page-ng-x-users` to execute the unit tests.
+We import this page in our app(s) `app.routes.ts` file.
+
+**What functionalities this lib initializes?**
+
+- ng-x-users
