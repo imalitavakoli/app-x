@@ -139,7 +139,7 @@ The versioning folder names can be something like `v1`, `v2`, etc. They can also
 
 A functionality is actually a feature that we build for our applications. It can consist of multiple lib types.
 
-For example, a 'profile' functionality that fetched the user's profile details from the server and displaysthem across multiple Angular applications, belongs to the shared 'domain' and may consist of the following libraries:
+For example, a 'profile' functionality that fetches the user's profile details from the server and displays them across multiple Angular applications, belongs to the shared 'domain' and may consist of the following libraries:
 
 - `shared-map-ng-profile`
 - `shared-data-access-ng-profile`

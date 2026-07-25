@@ -83,42 +83,59 @@ You can automatically configure our NX monorepo to work best with AI agents and 
 [Superpowers](https://github.com/obra/superpowers) is a plugin that makes our AI agent follow a disciplined workflow instead of coding first and thinking later.  
 [Click here](https://github.com/obra/superpowers#installation) to learn how to install it for different AI tools.
 
-**How it works**  
-A startup hook auto-loads one skill — `using-superpowers` — into every session. It's the traffic cop that reads your request and picks the right skill. Nothing else is automated; the rest is just skills reading and obeying instructions.
+**The one piece of automation.** At the start of every session, a hook loads a single "router" skill (`using-superpowers`) — and reloads it if the session is cleared or compacted. That's the only automated part. Everything else is skills: plain markdown files the agent reads and obeys, each naming the next one to use. So a "workflow" is a chain of instructions, not a program — the agent follows it because it's strongly instructed to, which works dependably in practice even though nothing mechanically forces it. (New skills may be added over time; the mechanism stays the same.)
 
-**The three layers**
+**Three layers:** (1) a hook injects the router at startup → (2) the router matches your request to a starting skill → (3) each skill hands off to the next.
 
-1. Bootstrap — the hook injects `using-superpowers` at session start.
-2. Routing — `using-superpowers` matches your request to a skill ("build X" vs "fix bug" vs a plain question).
-3. Hand-offs — each skill names the next one, forming a chain.
+#### What loads, when
 
-**The workflow (Routing)**
+> Tags:  
+> **[SP]** = defined by Superpowers (its README workflow or a skill's own trigger);  
+> **[ours]** = our framing, derived from those same triggers.
 
-- **Building a feature**
-  - `brainstorming` → asks questions, agrees on a design, saves a design doc (won't code until you approve).
-  - `writing-plans` → breaks it into tiny exact tasks, then asks how to execute.
-  - `subagent-driven-development` (or `executing-plans`) → builds task-by-task.
-  - `test-driven-development` → writes tests first.
-  - `requesting-code-review` → reviews the code.
-  - `finishing-a-development-branch` → merge / PR / discard (you choose).
+**1. Build a feature or change an existing feature's behavior [SP]** — The full pipeline:
 
-- **For bugs it's a shorter chain**
+- `brainstorming` — asks questions, agrees a design, saves + commits a design doc. Won't write code until you approve.
+- `writing-plans` — splits the design into tiny, exact tasks (with complete code), commits the plan, then asks how to execute.
+- `using-git-worktrees` — creates an isolated branch to work on (asks first).
+- `subagent-driven-development` (fresh subagent per task, each reviewed) — or `executing-plans` if there are no subagents (runs tasks inline).
+- `test-driven-development` — while coding each task: write the test and watch it fail (red), write just enough to pass (green), tidy up (refactor).
+- `requesting-code-review` — the agent asks for a review of its own work.
+- `finishing-a-development-branch` — you choose: merge / PR / keep / discard.
 
-  `systematic-debugging` → find root cause → `verification-before-completion` verifies the fix.
+**2. Fix a bug or failure [SP]** — shorter, no docs:
 
-- **Simple questions**
+- `systematic-debugging` — root cause before any fix (no guessing; escalates after 3 failed attempts).
+- `test-driven-development` — a failing test that reproduces the bug first.
+- `verification-before-completion` — before saying "fixed," runs the check fresh and reads real output, so the claim rests on evidence, not assumption.
 
-  They get answered with no skill at all.
+(A quick fix ends here. If it was branch work to merge, `finishing-a-development-branch` can load too — it handles a normal branch on its own and doesn't need `using-git-worktrees`.)
 
-**Benefits**
+**3. Execute an existing plan doc [ours]** — `subagent-driven-development` (same session, subagents) or `executing-plans` (separate session); both end at `finishing-a-development-branch`.
 
-- Designs and plans before coding — bad assumptions caught early.
-- Approval checkpoints keep you in control.
-- Design docs + plans are saved and committed.
-- Tests enforced; "done" backed by evidence, not hope.
-- It's just instructions — we can add our own rules without touching the plugin.
+**4. Several independent tasks at once [SP]** — `dispatching-parallel-agents`: one throwaway subagent per problem, launched together, merged at the end.
 
-**Bottom line:** turns the AI from an eager junior into a disciplined engineer that designs, plans, tests, and checks in with you.
+**5. Create or edit a skill [SP]** — `writing-skills`: builds it test-first, pressure-tests it with subagents, then deploys.
+
+**6. Respond to review feedback on the agent's work [SP]** — `receiving-code-review`: when your/the agent's work gets feedback (you say "this is wrong," or a bot comments on the PR), it verifies each point, pushes back when a suggestion is wrong, and applies changes one at a time. (Mirror of `requesting-code-review`.)
+
+**7. Ask for a named skill [ours]** — it loads immediately; its own hand-offs take over.
+
+**8. Ask a plain question [ours]** — no skill loads; the router just answers.
+
+#### Guards (fire on their own, in any workflow) [SP]
+
+- `verification-before-completion` — on any "done / fixed / passing" claim.
+- `systematic-debugging` — on any failure or unexpected behavior.
+- `receiving-code-review` — whenever review feedback arrives.
+
+#### Why it helps
+
+Designs and plans come before code, approval checkpoints keep you in control, docs and plans are committed, tests are enforced, and "done" is backed by evidence. It's all instructions plus one small hook — so we can layer our own workspace rules on top without touching the plugin.
+
+**Bottom line:** it turns the AI from an eager junior into a disciplined engineer that designs, plans, tests, reviews, and checks in with you.
+
+_Sources: Superpowers' README workflow and each skill's own trigger description._
 
 &nbsp;
 
