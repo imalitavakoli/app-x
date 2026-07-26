@@ -209,6 +209,7 @@ In the workspace, I've added specific comments as keywords. These make it easier
   - ### `— a` [Mindset](./docs/guidelines/best-practices.md#mindset)
   - ### `— b` [Documenting](./docs/guidelines/best-practices.md#documenting)
   - ### `— c` [Organizing](./docs/guidelines/best-practices.md#organizing)
+  - ### `— d` [Skills](./docs/guidelines/best-practices.md#skills)
 
 &nbsp;
 

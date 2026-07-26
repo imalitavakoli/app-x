@@ -89,7 +89,7 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 | After `writing-plans`, before execution | 1) `x-ng-prd-writer` → 2) `x-ng-tfs-writer` → 3) `x-ng-sp-plan-enricher`. |
 | `using-git-worktrees` (worktree created at execution start) | — |
 | Execution — `subagent-driven-development` / `executing-plans` | — (our rules reach here via the plan — see rule 4) |
-| `test-driven-development` (during execution) | — |
+| `test-driven-development` (during execution) | — (our rules reach here via the plan — see rule 4) |
 | `requesting-code-review` | — |
 | Before `verification-before-completion` (only if implementation introduced new FR/BR/AC IDs) | 1) `x-ng-prd-writer` (update) → 2) `x-ng-tfs-writer` (update) → 3) `x-ng-test-unit-helper` → 4) `x-ng-test-e2e-helper` (if applicable). |
 | `finishing-a-development-branch` | — |
@@ -105,9 +105,22 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 | Before `verification-before-completion` | 1) `x-ng-prd-writer` (update, add new IDs) → 2) `x-ng-tfs-writer` (update) → 3) `x-ng-test-unit-helper` → 4) `x-ng-test-e2e-helper` (if applicable). |
 | `finishing-a-development-branch` (if the fix is branch work) | — |
 
-> **Note!** Rows with `—` are placeholders — that Superpowers skill runs in this workflow but has no workspace step yet; to add one later, just fill the cell (no restructuring needed). The bug-fix path (table B) runs in the current session with no subagents today, so the agent performs its steps straight from this file — if a future Superpowers change runs them inside subagents, route their rules through the plan instead (rule 4).
+> **Note! — Table B needs no plan step; here is when to revisit that.** Whenever Superpowers updates, ask yourself one question: **"Does the bug-fix path still run in the current session, without subagents?"**
+>
+> - **Yes** (the case today) → nothing to do. The same agent that reads this file writes the fix and its tests, so it just follows table B directly.
+> - **No** (a future version runs the bug-fix path inside subagents) → subagents can't read this file, so table B's rules must then travel via a plan, exactly as rule 4 handles table A.
 
-> **Note!** A few Superpowers skills aren't part of either workflow above — they belong to separate scenarios, so they're not placed in table A or B: `receiving-code-review` (you give feedback on the agent's work), `dispatching-parallel-agents` (several independent tasks at once), and `writing-skills` (creating a skill). If you ever need to hook one, add a **Hook table C — Other Superpowers scenarios** for them.
+### Hook table C — Other Superpowers scenarios
+
+These Superpowers skills aren't part of the build (A) or bug-fix (B) workflows — each is its own scenario.
+
+| Lifecycle hook | Ordered workspace steps |
+| --- | --- |
+| Before `writing-skills` (authoring or editing a workspace skill) | Read the **Skills** section of `/docs/guidelines/best-practices.md` — our skill conventions and scaffolds. |
+| `receiving-code-review` (you give feedback on the agent's work) | — |
+| `dispatching-parallel-agents` (several independent tasks at once) | — |
+
+> **Note!** Rows with `—` are placeholders — that Superpowers skill runs in its table's workflow but has no workspace step yet; to add one later, just fill the cell (no restructuring needed).
 
 ### Workspace skills used in the hooks above
 

@@ -157,4 +157,89 @@ To improve teamwork, we follow some best practices:
 
 - **In mobile app development, use our own '_util_' Capacitor lib** (`shared-util-ng-capacitor`) as a wrapper to use the original Capacitor classes. This approach reduces other lib's dependencies to Capacitor and eases updating Capacitor classes.
 
+&nbsp;
+
+[🔝](#best-practices-👌)
+
+## Skills
+
+Our workspace skills live in the repo-root `.agents/skills/`. Author and edit them with Superpowers' `writing-skills` skill — it owns the _method_ (test-first authoring, discovery/description rules, the Iron Law). This section adds only the few **workspace-specific** conventions on top. Skills that plug into the Superpowers workflow have extra rules — see the [Superpowers-First Workflow](../../AGENTS.md#superpowers-first-workflow) in AGENTS.md.
+
+**Tip!** Read this before authoring or editing any `x-*` skill — it is hooked to `writing-skills` in AGENTS.md (Hook table C).
+
+&nbsp;
+
+- **Where they live**. In the repo-root `.agents/skills/<name>/`.
+
+&nbsp;
+
+- **Name with the `x-` family prefix**. `x-` marks a workspace skill (distinct from Superpowers and `nx-*` skills). Add framework-specific prefix (e.g., `ng` for Angular) when the skill is related to a certain framework, and omit it for language-agnostic skills (`x-…`). Add `sp` when the skill depends on a Superpowers artifact or lifecycle step (`x-ng-sp-…`, e.g. `x-ng-sp-plan-enricher`).
+
+&nbsp;
+
+- **Write outputs to workspace locations**. Functionality docs go to `docs/x/` (`PRD_{name}.md`, `TFS_{name}.md`); code follows [naming-conventions](./naming-conventions.md).
+
+&nbsp;
+
+- **Add an optional `version`** to `metadata` (e.g. `version: "1.0.0"`) so revisions are trackable.
+
+&nbsp;
+
+- **Start from a scaffold, then drop what a skill doesn't need**. These are starting points, not mandates — a tiny helper should not carry a Validate/Summary section it would leave empty.
+
+  **Document-generator skills** (e.g. `x-ng-prd-writer`, `x-ng-tfs-writer`):
+
+  ```
+  ---
+  name: x-ng-<thing>-writer
+  description: <what it produces> + <when to use>
+  metadata: { version: "1.0.0" }
+  ---
+  # <Title>
+  ## Overview        — what it outputs + the role it plays (e.g. "you are a product owner")
+  ## When to use     — triggers/symptoms; when NOT to
+  ## Prerequisites   — required inputs; if missing, STOP and ask
+  ## Inputs & output — reads <input> → writes <path>
+  ## Workflow        — numbered steps + a copyable checklist
+  ## Template        — "always use assets/template.md exactly" (link it)
+  ## Examples        — read the matching assets/examples/<type>.md before filling
+  ## Rules           — mandatory instructions (respect provided granularity, don't invent, ...)
+  ## Validate        — Review Checklist + Validation Steps (loop until all pass)
+  ## Summary         — report the saved path, the IDs created, and any open questions
+  ## Common mistakes — short table
+  ```
+
+  **Minimal helper / rule skills** (e.g. `x-ng-test-unit-helper`):
+
+  ```
+  ---
+  name: x-ng-<thing>-helper
+  description: <the rule it enforces> + <when to use>
+  metadata: { version: "1.0.0" }
+  ---
+  # <Title>
+  ## Overview   — the one rule, stated plainly
+  ## Rule       — the convention, with one concrete example
+  ## When to use / not
+  ```
+
+  **Code-transform / injector skills** (e.g. `x-ng-analytics-injector`, `x-ng-log-injector`):
+
+  ```
+  ---
+  name: x-ng-<thing>-injector
+  description: <what it injects/transforms> + <when to use>
+  metadata: { version: "1.0.0" }
+  ---
+  # <Title>
+  ## Overview        — what it injects/edits, and into what kind of target
+  ## When to use     — triggers; when NOT to (e.g. generated files)
+  ## Target & scope  — how to locate the target (class/component/service/directive) and which members to touch
+  ## Prerequisites   — the target must exist and be identifiable; if ambiguous, STOP and ask
+  ## Transform       — exactly what to inject and where (imports, call sites, naming); prefer a scripts/ AST transform for the mechanical edit
+  ## Idempotency     — detect existing injections; never duplicate — update in place, or skip if already present
+  ## Verify          — build/lint/test the touched project after editing; on failure, fix or revert
+  ## Common mistakes — short table
+  ```
+
 [🔙](../../README.md#guidelines)
