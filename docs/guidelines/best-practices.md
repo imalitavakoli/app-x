@@ -185,6 +185,14 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
 
 &nbsp;
 
+- **Write the `description` as `WHAT? … WHEN? …`**. WHAT = what the skill produces or does (not its step-by-step workflow). WHEN = the situations it applies to, plus the keywords a user might use to ask for it. Third person.
+
+&nbsp;
+
+- **Prefix a skill's checklist todos** with a short tag (e.g. `[prd]`). When the skill runs inside a larger workflow, this keeps its steps grouped and the outer workflow's todos visible instead of buried.
+
+&nbsp;
+
 - **Start from a scaffold, then drop what a skill doesn't need**. These are starting points, not mandates — a tiny helper should not carry a Validate/Summary section it would leave empty.
 
   **Document-generator skills** (e.g. `x-ng-prd-writer`, `x-ng-tfs-writer`):
@@ -192,7 +200,7 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
   ```
   ---
   name: x-ng-<thing>-writer
-  description: <what it produces> + <when to use>
+  description: WHAT? <what it produces>. WHEN? <triggers + keywords>
   metadata: { version: "1.0.0" }
   ---
   # <Title>
@@ -200,7 +208,7 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
   ## When to use     — triggers/symptoms; when NOT to
   ## Prerequisites   — required inputs; if missing, STOP and ask
   ## Inputs & output — reads <input> → writes <path>
-  ## Workflow        — numbered steps + a copyable checklist
+  ## Workflow        — numbered steps + a copyable checklist (prefix its todos, e.g. `[prd]`)
   ## Template        — "always use assets/template.md exactly" (link it)
   ## Examples        — read the matching assets/examples/<type>.md before filling
   ## Rules           — mandatory instructions (respect provided granularity, don't invent, ...)
@@ -214,7 +222,7 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
   ```
   ---
   name: x-ng-<thing>-helper
-  description: <the rule it enforces> + <when to use>
+  description: WHAT? <the rule it enforces>. WHEN? <triggers + keywords>
   metadata: { version: "1.0.0" }
   ---
   # <Title>
@@ -228,7 +236,7 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
   ```
   ---
   name: x-ng-<thing>-injector
-  description: <what it injects/transforms> + <when to use>
+  description: WHAT? <what it injects/transforms>. WHEN? <triggers + keywords>
   metadata: { version: "1.0.0" }
   ---
   # <Title>
