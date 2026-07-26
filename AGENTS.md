@@ -53,41 +53,79 @@
 
 # Integration & Cross-Component Patterns
 
-- Angular libs communicate via inputs and outputs, but indirect communications between nested components happens via the Communication service (a service in `shared-util-ng-services` lib) via well-defined interfaces; see `/docs/guidelines/common-tasks.md#add-new-communication-interface-for-a-lib`.
+- Angular libs communicate via inputs and outputs, but indirect communications between nested components happens via the Communication service (a service in `shared-util-ng-services` lib) via well-defined interfaces; see `/docs/runbooks/communication-create-interface-for-a-lib.md`.
 - External dependencies are managed via `pnpm` and referenced in each `package.json`.
 - For decision about how to use 3rd-party frameworks, see `/docs/faq/boilerplate-apps.md#organizing`.
 
 # Developer Workflows
 
+**MANDATORY:** Before responding to any request, after reading this file, you MUST also read `AGENTS.local.md` (if it exists, it overrides this file).
+
 - **Always use Nx CLI** (`nx run`, `nx build`, `nx test`, etc.) for builds, tests, linting, and generation.
 - Use `pnpm` as the package manager.
-- Before editing codes, **remember that this workspace follows [Skills-First Workflow](#skills-first-workflow)**.
+- Before editing codes, **remember that this workspace follows the [Superpowers-First Workflow](#superpowers-first-workflow)**.
 - For project graph or dependency issues, use Nx MCP tools (`nx_workspace`, `nx_project_details`).
 
-## Skills-First Workflow
+## Superpowers-First Workflow
 
-**MANDATORY:** Before responding to any request, after reading this file, you MUST also read `AGENTS.local.md` (if exists, it overrides this file), and then follow the following steps to identify which skill(s) are most relevant to the request.
+This workspace is governed by the **Superpowers** plugin. Route every request through `superpowers:using-superpowers` as usual; its process skills (`brainstorming`, `writing-plans`, `systematic-debugging`, `test-driven-development`, etc.) own the workflow. Our own skills in `.agents/skills/` are **extensions**, invoked at the Superpowers lifecycle hooks in the tables below — they add to, never replace, Superpowers' own steps. The `nx-*` skills and any other workspace skills still apply directly for their own triggers. This layering is authorized by the precedence rule (user instructions > skills > default).
 
-1. **Read skills** (`.agents/skills/`): List all available skills (`SKILL.md` files) under the **repo-root** `.agents/skills/` only. NEVER discover or load skills from `_OBS/` (e.g., `_OBS/**/.agents/skills/`) — those are personal/out-of-use and must be ignored.
-2. **Scan metadata**: Review ONLY the metadata section of each skill (specially `name` and `description`) to find relevant ones to the request.
-3. **Select skill**: Choose the skill(s) that best matches the request.
-4. **Deep dive**: Read the complete `SKILL.md` file with all references, assets, and scripts
-5. **Execute**: Follow the skill's documented approach.
+- Discover skills under the **repo-root** `.agents/skills/` only.
+- **Never modify Superpowers' own files** — they update independently. All of our customization lives in this file and in our `.agents/skills/x-*` skills.
 
-### Rules
+### Operating rules
 
-- ✅ **Always** check skills directory first before using your own knowledge.
-- ✅ Read complete skill documentation including references, assets, and scripts.
-- ✅ Follow the skill's procedures exactly.
-- ❌ **Never** skip the skills check.
-- ❌ Don't assume or improvise without consulting skills first.
+1. **Control flow lives here, not in skills.** This section decides which skill runs when and in what order. Our `x-*` skills are **atomic**: each does one job with its own inputs/outputs and must NOT call or name another skill. A skill may declare a _prerequisite_ ("input: the PRD; if missing, stop and ask") — that guards its own contract; it is not orchestration.
+2. **The table says WHEN and WHICH; the skill says HOW.** Keep hook steps terse here; the full procedure lives inside the named skill.
+3. **Track progress with todos.** When you enter a workflow below, add one todo per hook step (prefix each `[x]`), **merge** them into the existing todo list (never replace it), and check them off as you go — this is how you remember the next step after a skill finishes.
+4. **Reaching execution / subagents.** Implementation and test-writing happen inside execution — in the `subagent-driven-development` path, in isolated subagents that do NOT read this file. The ONLY carrier into them is the Superpowers **plan**: `x-ng-sp-plan-enricher` writes our rules into the plan's Global Constraints. Anything that must reach implementers goes through that hook.
 
-### Other considerations
+### Hook table A — Build a feature, or change an existing feature's behavior
 
-- Do not ask the user for clarification about the meaning of a request if a relevant skill exists—always follow the skill's documented approach first.
-- If multiple skills seem relevant: Choose the one that most directly addresses the primary request.
-- If there are multiple versions for the chosen skill: Choose the latest version.
-- If no skill matches: Inform that no existing skill covers this scenario and continue to proceed with general knowledge.
+| Lifecycle hook | Ordered workspace steps |
+| --- | --- |
+| Before `brainstorming` | If this functionality already has PRD/TFS in `docs/x/`, read them first — they shape the design questions. |
+| Before `writing-plans` | Load `x-ng-lib-build-helper` so the plan's tasks follow our lib-type structure. |
+| After `writing-plans`, before execution | 1) `x-ng-prd-writer` → 2) `x-ng-tfs-writer` → 3) `x-ng-sp-plan-enricher`. |
+| `using-git-worktrees` (worktree created at execution start) | — |
+| Execution — `subagent-driven-development` / `executing-plans` | — (our rules reach here via the plan — see rule 4) |
+| `test-driven-development` (during execution) | — |
+| `requesting-code-review` | — |
+| Before `verification-before-completion` (only if implementation introduced new FR/BR/AC IDs) | 1) `x-ng-prd-writer` (update) → 2) `x-ng-tfs-writer` (update) → 3) `x-ng-test-unit-helper` → 4) `x-ng-test-e2e-helper` (if applicable). |
+| `finishing-a-development-branch` | — |
+
+> **Note!** `x-ng-sp-plan-enricher` is the one skill here built **specifically for Superpowers** — it edits the Superpowers plan, so (unlike the other `x-*` skills, which are general and usable on their own) it only makes sense inside this workflow. It is also why the `test-driven-development` and execution rows above show `—`: our unit- and e2e-test rules reach those steps **through the enriched plan**, not through a direct hook — so those placeholders do not mean "nothing happens here."
+
+### Hook table B — Fix a bug, or change an existing feature via the debugging path
+
+| Lifecycle hook | Ordered workspace steps |
+| --- | --- |
+| `systematic-debugging` | — |
+| `test-driven-development` | — |
+| Before `verification-before-completion` | 1) `x-ng-prd-writer` (update, add new IDs) → 2) `x-ng-tfs-writer` (update) → 3) `x-ng-test-unit-helper` → 4) `x-ng-test-e2e-helper` (if applicable). |
+| `finishing-a-development-branch` (if the fix is branch work) | — |
+
+> **Note!** Rows with `—` are placeholders — that Superpowers skill runs in this workflow but has no workspace step yet; to add one later, just fill the cell (no restructuring needed). The bug-fix path (table B) runs in the current session with no subagents today, so the agent performs its steps straight from this file — if a future Superpowers change runs them inside subagents, route their rules through the plan instead (rule 4).
+
+> **Note!** A few Superpowers skills aren't part of either workflow above — they belong to separate scenarios, so they're not placed in table A or B: `receiving-code-review` (you give feedback on the agent's work), `dispatching-parallel-agents` (several independent tasks at once), and `writing-skills` (creating a skill). If you ever need to hook one, add a **Hook table C — Other Superpowers scenarios** for them.
+
+### Workspace skills used in the hooks above
+
+The atomic workspace skills the hooks reference. See each skill's `SKILL.md` for its full procedure and inputs/outputs.
+
+| Skill                   | Reads → writes                                                               |
+| ----------------------- | ---------------------------------------------------------------------------- |
+| `x-ng-prd-writer`       | brainstorm conclusions → `docs/x/PRD_{name}.md` (holds ACs)                  |
+| `x-ng-tfs-writer`       | PRD → `docs/x/TFS_{name}.md` (holds FRs/BRs)                                 |
+| `x-ng-test-unit-helper` | TFS → `*.spec.ts` (`describe`↔FR, `it`↔BR)                                 |
+| `x-ng-test-e2e-helper`  | e2e app + its `user-stories.md` + PRD → e2e specs (`describe`↔US, `it`↔AC) |
+| `x-ng-lib-build-helper` | `assets/` examples → lib files                                               |
+| `x-ng-sp-plan-enricher` | PRD + TFS → enriched Superpowers plan                                        |
+
+### Locations & rollout
+
+- Functionality docs live in `docs/x/` (`PRD_{name}.md`, `TFS_{name}.md`). Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
+- These skills are being introduced incrementally. **If a referenced skill does not yet exist, skip its step** — the Superpowers workflow continues unaffected; only our extension for that step is skipped. (A later step whose required input was skipped will stop and ask per its own prerequisite guard, rather than produce wrong output.)
 
 ## MCP Usage Priority
 
