@@ -2,6 +2,9 @@
 
 > Product Requirements Document for the **{name}** functionality. Replace `{NAME}` with one consistent feature key derived from the functionality name (e.g. `balance-card` → `BALANCE`). Remove every `>` helper note from the final draft; keep every section heading **with its icon**.
 
+- **Last Updated** (YYYY-MM-DD): {date}
+- **Owner**: {owner}
+
 ## 📖 Introduction
 
 > One short paragraph: what is the `{name}` functionality and what value does it deliver? A newcomer should understand the feature from this alone.

@@ -1,5 +1,8 @@
 # PRD — ng-user-geo
 
+- **Last Updated**: 2026-07-26
+- **Owner**: Ali
+
 ## 📖 Introduction
 
 The **ng-user-geo** functionality resolves the current user's geographic context — country and preferred currency — from the server, so other functionalities can localise prices, formats, and content without each fetching it themselves.

@@ -1,5 +1,8 @@
 # PRD — ng-profile-info
 
+- **Last Updated**: 2026-07-26
+- **Owner**: Ali
+
 ## 📖 Introduction
 
 The **ng-profile-info** functionality shows the logged-in user's profile details (name, country, bio) together with their credit balance in a card, with a "Read more" action and a style toggle. It fetches its own data.

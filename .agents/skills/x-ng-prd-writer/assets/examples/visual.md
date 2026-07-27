@@ -1,5 +1,8 @@
 # PRD — ng-avatar-badge
 
+- **Last Updated**: 2026-07-26
+- **Owner**: Ali
+
 ## 📖 Introduction
 
 The **ng-avatar-badge** functionality displays a user's avatar image, name, and online status as a compact badge, and lets the user click it to trigger a details action. It presents user data that a shared functionality provides — it does not fetch data itself.
