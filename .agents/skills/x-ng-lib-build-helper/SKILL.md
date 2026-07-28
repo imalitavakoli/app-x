@@ -2,7 +2,7 @@
 name: x-ng-lib-build-helper
 description: "WHAT? Supplies the canonical structure and guidelines for building or updating a functionality's Nx + Angular libraries (map, data-access, ui, feature, page) — the reference examples an agent imitates instead of copying an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating a map / data-access / ui / feature / page lib, or deciding a lib's folder/file structure, base class, versioning, README files, or data-cy naming."
 metadata:
-  version: "1.0.0"
+  version: '1.0.0'
 ---
 
 # Lib Build Helper
@@ -19,13 +19,13 @@ Building or updating a functionality's `map`, `data-access`, `ui`, `feature`, or
 
 ## Pick the matching example
 
-| Lib type | Example |
-|---|---|
-| `map` | `assets/examples/map.md` |
+| Lib type      | Example                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| `map`         | `assets/examples/map.md`                                                                          |
 | `data-access` | `assets/examples/data-access-{single-instance,multi-instance,entity}.md` (by variant — see below) |
-| `ui` | `assets/examples/ui.md` |
-| `feature` | `assets/examples/feature.md` |
-| `page` | `assets/examples/page.md` |
+| `ui`          | `assets/examples/ui.md`                                                                           |
+| `feature`     | `assets/examples/feature.md`                                                                      |
+| `page`        | `assets/examples/page.md`                                                                         |
 
 Read the one matching example and reproduce what it demonstrates:
 
@@ -59,10 +59,10 @@ Lib types & import boundaries: `docs/getting-started/library-types-and-their-rel
 
 ## Common mistakes
 
-| Mistake | Fix |
-|---|---|
-| Copying an arbitrary existing lib | Use the `assets/examples/` example for that type — it is the source of truth. |
-| Inventing a base class | Extend the right base: `ui` → `V1BaseUiComponent`; `feature` → `V2BaseFeatureExtComponent`; `page` parent → `V2BasePageParentComponent`, child → `V2BasePageChildComponent` (a specialized `…Ext{Name}` only if the TFS names one); `map` → `V1BaseMap`. |
-| Only an outer README | Add the inner, copy-paste-ready README too. |
-| `entity` data-access for a non-pure-CRUD write | Use single- or multi-instance. |
-| Treating this skill as a builder | It only supplies references; the builder (an implementation plan, or you) does the actual building. |
+| Mistake                                        | Fix                                                                                                                                                                                                                                                      |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Copying an arbitrary existing lib              | Use the `assets/examples/` example for that type — it is the source of truth.                                                                                                                                                                            |
+| Inventing a base class                         | Extend the right base: `ui` → `V1BaseUiComponent`; `feature` → `V2BaseFeatureExtComponent`; `page` parent → `V2BasePageParentComponent`, child → `V2BasePageChildComponent` (a specialized `…Ext{Name}` only if the TFS names one); `map` → `V1BaseMap`. |
+| Only an outer README                           | Add the inner, copy-paste-ready README too.                                                                                                                                                                                                              |
+| `entity` data-access for a non-pure-CRUD write | Use single- or multi-instance.                                                                                                                                                                                                                           |
+| Treating this skill as a builder               | It only supplies references; the builder (an implementation plan, or you) does the actual building.                                                                                                                                                      |

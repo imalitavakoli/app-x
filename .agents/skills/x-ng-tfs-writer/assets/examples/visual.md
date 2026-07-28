@@ -191,7 +191,7 @@ Common: `ready`, `allDataIsReady`, `hasError`.
 ###### Functional Requirements & Business Rule Breakdown
 
 - **XPROFILE_CARDFEA_FR-01** _(maps to PRD XPROFILE-AC-01)_: Test fetch + wiring.
-  - **XPROFILE_CARDFEA_BR-01** _(maps to PRD XPROFILE-AC-01)_: Given `userId = 123` _(Arrange)_; When `_xDataFetch` runs _(Act)_; Then `V1UserFacade.getUser(baseUrl, 123, …)` is called _(Assert)_.
+  - **XPROFILE_CARDFEA_BR-01** _(maps to PRD XPROFILE-AC-01)_: Given the user facade returns user `U` only for `userId = 123` _(Arrange)_; When the component initializes with `userId = 123` and data becomes ready _(Act)_; Then the data it exposes to the card is `U` — proving it fetched the correct user _(Assert)_.
   - **XPROFILE_CARDFEA_BR-02** _(maps to PRD XPROFILE-AC-01)_: Given `userData$` resolves _(Arrange)_; When ready _(Act)_; Then `V1XProfileCardComponent.data` is set from `userData$`, `showCountry`/`icoPlaceholder` from DEP config, and its `state = data` _(Assert)_.
   - **XPROFILE_CARDFEA_BR-03** _(maps to PRD XPROFILE-AC-02)_: Given the card emits `clickedDetails` _(Arrange)_; When `onClickedDetails()` runs _(Act)_; Then the feature emits `clickedDetails` with the `userId` _(Assert)_.
 

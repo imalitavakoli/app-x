@@ -105,7 +105,7 @@ _NONE_ (abstract — no visual libs).
 
 ## 🧳 User Experience & Flows (Technical & Frontend Perspective)
 
-Abstract functionality — no `feature`/`ui`. A consumer (a page or a `feature` component) uses `V1UserGeoFacade` like any facade: it calls `getGeo(baseUrl, userId)` (typically from its `_xDataFetch`), awaits `geoLoaded$` / listens for `geoError$`, then reads `geoData$` once ready. (For the shape of a typical facade-driven `feature` journey — reset → fetch → await loaded → read data — see the `feature` examples and the `x-ng-lib-build-helper` samples.)
+Abstract functionality — no `feature`/`ui`. A consumer (a page or a `feature` component) uses `V1UserGeoFacade` like any facade: it calls `getGeo(baseUrl, userId)` (typically from its `_xDataFetch`), awaits `geoLoaded$` / listens for `geoError$`, then reads `geoData$` once ready. (For the shape of a typical facade-driven `feature` journey — reset → fetch → await loaded → read data — see the workspace's canonical lib-structure reference.)
 
 ## ❓ Open Technical Questions
 

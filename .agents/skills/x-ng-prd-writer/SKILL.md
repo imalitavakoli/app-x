@@ -2,7 +2,7 @@
 name: x-ng-prd-writer
 description: "WHAT? Generates or updates a functionality's PRD (Product Requirements Document) — the product-level spec covering users, data, UX flows, and Acceptance Criteria (ACs). WHEN? Asked to create or update a PRD, a product / scope / feature document, acceptance criteria, or a product spec for a functionality (feature) to be built or changed in the workspace; or when a brainstorm concludes and the feature needs its product spec written to docs/x/."
 metadata:
-  version: "1.0.0"
+  version: '1.0.0'
 ---
 
 # PRD Writer
@@ -11,7 +11,7 @@ metadata:
 
 You are a product owner writing a clear, professional PRD for a **functionality** (a feature that may consist of several library types). The PRD is the product-level source of truth: who the users are, what data is involved, how the experience flows, and — most importantly — the **Acceptance Criteria (ACs)**, the observable outcomes that later map to e2e test cases.
 
-This PRD does **not** contain Functional Requirements or Business Rules — those are granular, test-level rules that live in the TFS (written by `x-ng-tfs-writer`), which derives them from this PRD's ACs and description.
+This PRD does **not** contain Functional Requirements or Business Rules — those are granular, test-level rules that live in the TFS, which derives them from this PRD's ACs and description.
 
 Output: `docs/x/PRD_{functionality-name}.md`.
 
@@ -21,7 +21,7 @@ Output: `docs/x/PRD_{functionality-name}.md`.
 - A brainstorm has concluded and the feature needs its product spec.
 - Asked to define or revise a functionality's acceptance criteria.
 
-Do not use to write technical / library specs (that is `x-ng-tfs-writer`) or to write tests.
+Do not use to write technical / library specs (the TFS) or to write tests.
 
 ## Prerequisites
 
@@ -54,6 +54,7 @@ Copy this checklist and track it. Keep the `[prd]` prefix so, if this runs insid
    - **mixed** / **mixed+** (map + data-access + ui + feature [+ page]) → [assets/examples/mixed.md](assets/examples/mixed.md)
 
    For the `+` (page-level) types, also note the page delta: the `page` lib is the entry point, its inputs arrive as **URL query params**, and it may **navigate** between routes — capture those in Data Requirements, the flows, and the ACs. Keep every requirement atomic and testable. Do not invent facts — mark unknowns as Open Questions and ask.
+
 4. **Validate** — run the Review Checklist below; loop until all items pass.
 5. **Summary** — see below.
 
@@ -68,8 +69,9 @@ Read the example matching the functionality's type before filling the User Exper
 ## Rules
 
 - **No Functional Requirements or Business Rules.** They belong to the TFS. If the description states them, capture their intent here as Acceptance Criteria and/or Data Requirements; the TFS will decompose them into FRs/BRs.
-- **The user journey starts at functionality initialization, never outside the app.** The first step is the component coming to life — e.g. *"Initialization: the lib is in a 'loading' state until the `userId` input is provided."* Never begin with "the user opens the app", "logs in", or "navigates to the Dashboard".
+- **The user journey starts at functionality initialization, never outside the app.** The first step is the component coming to life — e.g. _"Initialization: the lib is in a 'loading' state until the `userId` input is provided."_ Never begin with "the user opens the app", "logs in", or "navigates to the Dashboard".
 - **Acceptance Criteria carry stable, unique IDs** in the form `{NAME}-AC-01`, `{NAME}-AC-02`, … ACs are the feature's observable, product-level outcomes; they map to e2e test cases later. When updating an existing PRD, never renumber existing IDs — add new ones.
+- **Write ACs as good, testable criteria.** Each AC is a single, **observable** outcome — one per AC; if it needs an "and", split it — kept **independent and deterministic**, at **product altitude** (the meaningful primary + alternate/error outcomes a user or consumer would notice), and **not** an internal/technical or component-contract detail (an output a feature merely emits to its host is a **BR** in the TFS, not an AC). Where an AC maps depends on the functionality type: **visual / page** → user-observable outcomes verified by **e2e** (anchor on stable `[data-cy]` / visible text); **abstract** (no UI) → observable **data-contract** outcomes (data available / loading / error / cache) verified by the **data-access** unit tests. Either way, the TFS decomposes each AC into FRs/BRs.
 - **Respect provided granularity.** If the user gave exact details (API endpoints, URL query params, field names), use them verbatim; do not generalise or override them.
 - **Minimise re-asking.** Reuse everything already in the brainstorm conclusions / description; only ask about genuine gaps.
 - **Do not invent facts.** Unknowns go to Open Questions and are raised with the user.
@@ -82,6 +84,7 @@ Read the example matching the functionality's type before filling the User Exper
 - [ ] No Functional Requirements and no Business Rules sections exist.
 - [ ] The user journey begins at initialization, not outside the app.
 - [ ] Every Acceptance Criterion has a unique `{NAME}-AC-01`-style ID.
+- [ ] Each AC is one observable outcome (no "and"), independent, and not a component-contract/technical detail (those are BRs).
 - [ ] Provided granularity (endpoints, params, field names) is preserved verbatim.
 - [ ] No invented facts; unknowns are in Open Questions.
 
@@ -100,10 +103,12 @@ Read the example matching the functionality's type before filling the User Exper
 
 ## Common mistakes
 
-| Mistake | Fix |
-|---|---|
-| Adding Functional Requirements / Business Rules | Remove them — they live in the TFS. Keep only ACs here. |
-| Journey starts with "user opens the app / logs in" | Start at initialization (loading state until inputs arrive). |
-| Acceptance Criteria without IDs | Give each a unique `{NAME}-AC-01` ID. |
-| Renumbering ACs when updating | Never renumber; add new IDs only. |
-| Generalising a provided endpoint / param | Use the exact value the user gave. |
+| Mistake                                            | Fix                                                                      |
+| -------------------------------------------------- | ------------------------------------------------------------------------ |
+| Adding Functional Requirements / Business Rules    | Remove them — they live in the TFS. Keep only ACs here.                  |
+| Journey starts with "user opens the app / logs in" | Start at initialization (loading state until inputs arrive).             |
+| Acceptance Criteria without IDs                    | Give each a unique `{NAME}-AC-01` ID.                                    |
+| Renumbering ACs when updating                      | Never renumber; add new IDs only.                                        |
+| Generalising a provided endpoint / param           | Use the exact value the user gave.                                       |
+| AC bundling several outcomes ("and")               | Split into one AC per observable outcome.                                |
+| AC that only asserts an emitted output/event       | A feature's output is a component contract → a BR in the TFS, not an AC. |

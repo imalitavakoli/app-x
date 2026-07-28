@@ -2,14 +2,14 @@
 name: x-ng-tfs-writer
 description: "WHAT? Generates or updates a functionality's TFS (Technical Functional Specification) — the frontend-oriented technical plan that turns an approved PRD into concrete Nx + Angular library specs (map / data-access / ui / feature / page), their public contracts, and the Functional Requirements (FRs) and Business Rules (BRs) that map to unit tests. WHEN? Asked to create or update a TFS, technical design / frontend architecture / system-requirements document, a functionality's library breakdown, or the FR/BR test blueprint for a feature to be built or changed in the workspace; or after a PRD is ready and the feature needs its technical spec written to docs/x/."
 metadata:
-  version: "1.0.0"
+  version: '1.0.0'
 ---
 
 # TFS Writer
 
 ## Overview
 
-You are a senior Nx + Angular frontend developer who turns an approved **PRD** into a complete, implementation-ready **TFS** for a **functionality** (a feature composed of several library types). The TFS defines *how the feature is built*: which libs are needed, each lib's public contract (inputs, outputs, methods, rendering rules), and the **Functional Requirements (FRs)** and **Business Rules (BRs)** that become the unit-test blueprint.
+You are a senior Nx + Angular frontend developer who turns an approved **PRD** into a complete, implementation-ready **TFS** for a **functionality** (a feature composed of several library types). The TFS defines _how the feature is built_: which libs are needed, each lib's public contract (inputs, outputs, methods, rendering rules), and the **Functional Requirements (FRs)** and **Business Rules (BRs)** that become the unit-test blueprint.
 
 - **FR → `describe`**, **BR → `it`** (the unit-test mapping).
 - Every FR/BR **back-links the PRD Acceptance Criterion (AC)** it decomposes, so PRD ↔ TFS ↔ tests stay in lockstep.
@@ -22,7 +22,7 @@ Output: `docs/x/TFS_{functionality-name}.md`.
 - Asked to create/update a TFS, technical design, frontend architecture, or library breakdown.
 - Asked to write or revise the FR/BR test blueprint for a functionality.
 
-Do not use to write the product spec (that is `x-ng-prd-writer`) or to write the tests/code themselves.
+Do not use to write the product spec (the PRD) or to write the tests/code themselves.
 
 ## Prerequisites
 
@@ -71,11 +71,15 @@ Read the example matching the functionality's classification before filling the 
 **Base classes (default):** `ui` components extend `V1BaseUiComponent`; `feature` components extend `V2BaseFeatureExtComponent`; parent `page` components extend `V2BasePageParentComponent`; child `page` components extend `V2BasePageChildComponent`. Use these unless the user asks to use — or to create — a specialized base derived from them (e.g. a shared `…-ext-{name}` base for `feature` libs that always use one specific `data-access` lib, or for `page` libs that always use one specific `feature` lib as their starter, kept DRY across functionalities). If the user names such a base, extend it instead and note it in the spec.
 
 **FR / BR (the test blueprint):**
+
 - **FR → unit-test `describe`; BR → unit-test `it`.** Write each BR in `Given [Arrange]; When [Act]; Then [Assert]` form, referencing exact `[data-cy="…"]` selectors, input signals, and output emitters — never vague prose ("shows the list").
+- **One observable behaviour per BR** (one `it`); if it needs an "and", split it. Give edge cases (loading / empty / error / boundary) their own BRs, with complete, realistic data.
+- **The `Then` asserts an observable effect, never an internal call.** State what the unit observably produces — a rendered `[data-cy]`, an emitted output, or a resulting state/signal — **not** "a facade/collaborator method was called" (asserting a collaborator call is a unit-test anti-pattern). For data-fetching, prove the request is correct by its **result**: prime the collaborator to return data for the expected params, then assert the data the component exposes — e.g. _Given the user facade returns `U` for `userId = 123`; When data is ready; Then the value bound to the card is `U`_ (this proves it fetched user 123 without asserting the call).
 - **Back-link the PRD:** annotate each FR/BR that implements a PRD scenario with the AC it decomposes, e.g. `(maps to PRD BALANCE-AC-01)`.
 - **IDs:** scope IDs to the exported component (or helper service) that owns them: `{NAME}_{COMPONENT}_FR-01` / `{NAME}_{COMPONENT}_BR-01` (e.g. `XPROFILE_CARD_BR-01`), and `{NAME}_{HELPER-NAME}_FR-01a` for a helper service. IDs are unique across the whole TFS (never reset or renumber). New technical scenarios (loading/error/interaction) get **new** unique IDs.
 
 **Inputs / Outputs:**
+
 - Each input's and output's description **IS its JSDoc** in the component — write it as such.
 - **Outputs are emitted via handler methods**, not directly in the HTML template — so a unit test can call the handler to assert the emit, instead of rendering the child `ui` component and triggering it through the DOM (which is effectively an e2e test).
 
@@ -85,10 +89,11 @@ Read the example matching the functionality's classification before filling the 
 
 **Multi-view vs single-view (how many components a `ui`/`feature` lib exports):** derive it from the PRD's User Experience & Flows. A **multi-view** functionality (needs more than one view/screen/page) exports **more than one** component — one per view — rather than one component that switches views via `dataType`. A **single-view** functionality exports **one** component whose `dataType` is optional with a fixed default that never changes (e.g. a list → `dataType = 'all'`; one entity → `dataType = 'one'`). The developer chooses; suggest the better fit.
 
-**`data-access` spec — style choice:** **entity** object structure **only** for a **pure** CRUD operation; **single-instance** when the lib is initialized once per page; **multi-instance** when initialized multiple times (by the page or several `feature` libs at once). Include this as a quote-note: *if a Post/Put/Patch must send an `extra` payload beyond the entity, it is not pure CRUD — use single- or multi-instance instead of entity.*
+**`data-access` spec — style choice:** **entity** object structure **only** for a **pure** CRUD operation; **single-instance** when the lib is initialized once per page; **multi-instance** when initialized multiple times (by the page or several `feature` libs at once). Include this as a quote-note: _if a Post/Put/Patch must send an `extra` payload beyond the entity, it is not pure CRUD — use single- or multi-instance instead of entity._
 
 **User Experience & Flows (technical journey):**
-- Per exported `feature` component (each under its own sub-heading): **Data flow** = *Independent data* (fetched in `_xDataFetch`, awaited via `_xFacadesPre` + `_xFacadesLoadesValidation`) → *Dependency chain* (`_xBuildDependencyChain$`, declaring dependent calls in one place as `switchMap` levels, may span facades — not sequential phases) → *On all ready* (`_xInitOrUpdateAfterAllDataReady`, fires once: set `ui` inputs **and** emit outputs).
+
+- Per exported `feature` component (each under its own sub-heading): **Data flow** = _Independent data_ (fetched in `_xDataFetch`, awaited via `_xFacadesPre` + `_xFacadesLoadesValidation`) → _Dependency chain_ (`_xBuildDependencyChain$`, declaring dependent calls in one place as `switchMap` levels, may span facades — not sequential phases) → _On all ready_ (`_xInitOrUpdateAfterAllDataReady`, fires once: set `ui` inputs **and** emit outputs).
 - **Background flows** (polling / intervals / pause-resume) are started from `_xInitOrUpdateAfterAllDataReady`, **not** the dependency chain — each in its own `_util/*.service.ts` with a lifecycle (start/tick/stop/pause/resume/destroy).
 - **Interaction flows** — one small unit per output (Trigger → Steps → Outcome); non-trivial logic goes in its own `_util/*.service.ts`.
 - **Decision logic** — decide how many encapsulated functions a component needs (possibly none): small logic can be a private `_…()` method on the component; larger logic, or logic shared across inner/exported components, belongs in its own `_util/` file of pure functions (with JSDoc + example) or a service.
@@ -121,13 +126,15 @@ Read the example matching the functionality's classification before filling the 
 
 ## Common mistakes
 
-| Mistake | Fix |
-|---|---|
-| Vague BRs ("shows the list") | Use `Given/When/Then` with exact `[data-cy]`, signals, emitters. |
-| FR/BR not linked to the PRD | Back-link each PRD-implementing FR/BR to its AC. |
-| Emitting outputs in the template | Emit via a handler method so unit tests can call it directly. |
-| Entity structure for non-pure CRUD | Use single-/multi-instance when a write needs an `extra` payload. |
-| Splitting the journey into sequential phases | Declare the whole dependency chain in one place; the ready callback fires once when all data is ready. |
-| Polling inside the dependency chain | Start polling in `_xInitOrUpdateAfterAllDataReady`, in a `_util/*.service.ts`. |
-| Adding an Analytics section to a lib spec | Analytics live in the PRD, not the TFS. |
-| Renumbering IDs on update | Never renumber; add new unique IDs only. |
+| Mistake                                                       | Fix                                                                                                                                                                                       |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vague BRs ("shows the list")                                  | Use `Given/When/Then` with exact `[data-cy]`, signals, emitters.                                                                                                                          |
+| BR asserting a facade/collaborator call ("`getX` was called") | Assert the observable effect instead — exposed data / state / output; prove a correct request by priming the collaborator to return data for the expected params and checking the result. |
+| BR bundling several behaviours ("and")                        | Split into one BR per observable behaviour.                                                                                                                                               |
+| FR/BR not linked to the PRD                                   | Back-link each PRD-implementing FR/BR to its AC.                                                                                                                                          |
+| Emitting outputs in the template                              | Emit via a handler method so unit tests can call it directly.                                                                                                                             |
+| Entity structure for non-pure CRUD                            | Use single-/multi-instance when a write needs an `extra` payload.                                                                                                                         |
+| Splitting the journey into sequential phases                  | Declare the whole dependency chain in one place; the ready callback fires once when all data is ready.                                                                                    |
+| Polling inside the dependency chain                           | Start polling in `_xInitOrUpdateAfterAllDataReady`, in a `_util/*.service.ts`.                                                                                                            |
+| Adding an Analytics section to a lib spec                     | Analytics live in the PRD, not the TFS.                                                                                                                                                   |
+| Renumbering IDs on update                                     | Never renumber; add new unique IDs only.                                                                                                                                                  |

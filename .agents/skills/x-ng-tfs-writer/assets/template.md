@@ -25,7 +25,7 @@
 
 ## 🔗 Existing Dependencies & Reuse
 
-> List only libs that **do not belong to this functionality** — i.e. libs from *other* functionalities/shared infra that this one reuses. Do not list this functionality's own map/data-access/ui/feature/page libs here. Ask the user what to reuse; do not assume. Flag anything recommended-but-not-yet-built with `[RECOMMENDED]` (it needs its own PRD & TFS).
+> List only libs that **do not belong to this functionality** — i.e. libs from _other_ functionalities/shared infra that this one reuses. Do not list this functionality's own map/data-access/ui/feature/page libs here. Ask the user what to reuse; do not assume. Flag anything recommended-but-not-yet-built with `[RECOMMENDED]` (it needs its own PRD & TFS).
 
 ### Used map / data-access libs
 
@@ -90,7 +90,7 @@
 
 #### Facade API
 
-> The full public surface: every `get*` and mutation (`patch*`/`post*`/`put*`/`delete*`) method AND every observable consumers use (list them all — cache-aware libs share a common set). See the `x-ng-lib-build-helper` samples for the exact set per structure.
+> The full public surface: every `get*` and mutation (`patch*`/`post*`/`put*`/`delete*`) method AND every observable consumers use (list them all). Cache-aware libs share a common set — the `get*`/mutation dispatchers, resolved observables (`datas$`, `loadeds$`, `errors$`, `hasError$` and their narrow per-key selectors), and cache controls (`configureTtl`, `cacheInvalidate`, `cacheMask`, `reset`); the exact set varies by structure (single-/multi-instance/entity). For the precise per-structure surface, follow the workspace's canonical lib-structure reference.
 >
 > **Mutations (cache-aware libs):** in a single-/multi-instance lib, a write (`patch*`/`post*`/`put*`/`delete*`) that re-defines a `get*` data-key is declared in the reducer's `CACHE_INVALIDATION_MAP` and applied via `v1BaseReducerInvalidate`, so the next read of that key refetches (its effect uses `concatMap` → `success`/`failure` with an empty `cacheKey`, not the cache-run helper). By contrast, an entity-structure lib expresses writes as the entity adapter's own CRUD ops (`addOne`/`updateOne`/`removeOne`). Note: which structure to use is decided solely by the pure-CRUD test in **Object Structure** above — not by whether the lib has mutations.
 
@@ -138,11 +138,11 @@ export class V1{Name}Component extends V1BaseUiComponent implements V1BaseUi_Has
 
 ###### Rendering Rules
 
-> What renders per `state` (and `dataType`), using exact `[data-cy="{lib}-v1_{component}_{part}"]` selectors. Reference the **translation keys** used for any heading/paragraph/label text, e.g. *"All" (via `{name}.all_h3`)* or *"Hello No.123" (via `{name}.greeting_p` with `userId`)*. Include conditional hides and popups.
+> What renders per `state` (and `dataType`), using exact `[data-cy="{lib}-v1_{component}_{part}"]` selectors. Reference the **translation keys** used for any heading/paragraph/label text, e.g. _"All" (via `{name}.all_h3`)_ or _"Hello No.123" (via `{name}.greeting_p` with `userId`)_. Include conditional hides and popups.
 
 ###### DEP Styles (CSS variables)
 
-> The CSS variables this component exposes for theming (apps override them via brand/DEP config). Use `naming-conventions.md#styling`: `--e-{class}--{rule}` or `--e-{class}--{rule}--{light,dark}`, on the `e-{short-lib-name}` class. Defaults may reference the app root variables (see `libs/shared/ui/base/src/lib/v1/root.scss`, e.g. `--e-primary-color`, `--e-night-color`, `--e-day-lighter-color`; all rgb triplets like `162 170 185`).
+> The CSS variables this component exposes for theming (apps override them via brand/DEP config). Use `naming-conventions.md#styling`: `--e-{class}--{rule}` or `--e-{class}--{rule}--{light,dark}`, on the `e-{short-lib-name}` class. Defaults may reference the base `ui` lib's root CSS variables (e.g. `--e-primary-color`, `--e-night-color`, `--e-day-lighter-color`; all rgb triplets like `162 170 185`).
 >
 > Example:
 >
@@ -199,6 +199,7 @@ export class V1{Name}FeaComponent extends V2BaseFeatureExtComponent implements V
 ###### DEP Config & Assets
 
 > What this component reads from the config data-access lib and maps to `ui` inputs:
+>
 > - **Config** — `$dataConfigDep()?.libs?.{name}V1?.{prop}` (config property named `{libname}_{version}`; see `docs/runbooks/dep-update-config-for-a-lib.md`).
 > - **Assets** — `$dataConfigDep()?.assets?.lib_{libname}_{ico,img}_{assetname}` (a custom icon/image path it passes to the `ui`'s asset input; see `docs/runbooks/dep-update-assets-for-a-lib.md`).
 >
@@ -206,7 +207,7 @@ export class V1{Name}FeaComponent extends V2BaseFeatureExtComponent implements V
 
 ###### Functional Requirements & Business Rule Breakdown
 
-> `describe`↔FR, `it`↔BR. Cover the **data-fetching** behaviour (facade calls, dependency resolution, error emission via `hasError`, DEP-config wiring). `Given/When/Then` referencing exact facade methods/observables. Back-link PRD ACs. New unique IDs, scoped to the component, unique across the TFS.
+> `describe`↔FR, `it`↔BR. Cover the **data-fetching** behaviour as **observable effects** — the data the component exposes to the `ui` once ready, its `state`/`hasError` on failure, DEP-config-driven inputs — **not** "the facade was called". To prove a request is correct, prime the facade to return data for the expected params and assert the exposed result. `Given/When/Then`. Back-link PRD ACs. New unique IDs, scoped to the component, unique across the TFS.
 
 ###### Error Handling & Edge Cases
 
@@ -218,7 +219,7 @@ export class V1{Name}FeaComponent extends V2BaseFeatureExtComponent implements V
 
 ### 📄 'page' Library Specification
 
-> Only for `visual+` / `mixed+`. A `page` composes `feature` libs and owns routing. Inputs arrive as **URL query params**. For naming and folder structure, follow the `page` sample in `x-ng-lib-build-helper`.
+> Only for `visual+` / `mixed+`. A `page` composes `feature` libs and owns routing. Inputs arrive as **URL query params**. For naming and folder structure, follow the workspace's canonical `page`-lib reference (parent + child route components, a `lib.routes.ts`, versioned selectors).
 
 #### Lib Name
 

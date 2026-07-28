@@ -62,13 +62,11 @@ The last piece of the puzzle is the `feature` lib, which owns its own `map`/`dat
 
 ## ✔️ Acceptance Criteria
 
-- **PROFILE-AC-01** — Given no `userId` yet, then the card shows a loading state.
-- **PROFILE-AC-02** — Given a `userId`, when profile and credit data are ready, then the card shows the full name, country, bio, and currency-formatted balance.
-- **PROFILE-AC-03** — Given data is still loading, then the card shows a skeleton and no partial data.
-- **PROFILE-AC-04** — Given the "Read more" button is clicked, then a `clickedReadMore` event is emitted.
-- **PROFILE-AC-05** — Given the style toggle is used, then the card switches between rounded and sharp and emits the chosen style.
-- **PROFILE-AC-06** — Given a non-exception fetch error, then an error popup is shown.
-- **PROFILE-AC-07** — Given the expected `USER_MISSING_DETAIL_DATA` exception, then no error is shown and the rest of the card renders.
+- **PROFILE-AC-01** — Given data is not yet loaded (no `userId`, or the fetch is in flight), then the card shows a skeleton/loading state and no partial data.
+- **PROFILE-AC-02** — Given a `userId` and profile + credit data are ready, then the card displays the user's full name, country, bio, and currency-formatted balance.
+- **PROFILE-AC-03** — Given the style toggle is used, then the card switches between rounded and sharp.
+- **PROFILE-AC-04** — Given a non-exception fetch error, then an error popup is shown.
+- **PROFILE-AC-05** — Given the expected `USER_MISSING_DETAIL_DATA` exception, then no error is shown and the rest of the card renders.
 
 ## ❓ Open Questions
 

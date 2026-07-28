@@ -55,11 +55,10 @@ No direct data access or auth logic — it presents data from the shared `user` 
 
 ## ✔️ Acceptance Criteria
 
-- **AVATAR-AC-01** — Given no `userId` yet, then the badge shows a loading state and no avatar or name.
-- **AVATAR-AC-02** — Given a `userId` and the user's data is available, then the badge shows the avatar image, the full name, and the online dot when `showOnlineDot` is true.
-- **AVATAR-AC-03** — Given `showOnlineDot` is false, then no online dot is shown.
-- **AVATAR-AC-04** — Given the badge is clicked, then a `clicked` event is emitted.
-- **AVATAR-AC-05** — Given the user's data has no `avatarUrl`, then a fallback placeholder avatar is shown.
+- **AVATAR-AC-01** — Given no `userId` yet, then the badge shows a loading state (no avatar or name).
+- **AVATAR-AC-02** — Given a `userId` and the user's data is available, then the badge shows the avatar image and the full name.
+- **AVATAR-AC-03** — Given the user's data is shown, then the online dot is displayed only when `showOnlineDot` is true.
+- **AVATAR-AC-04** — Given the user's data has no `avatarUrl`, then a fallback placeholder avatar is shown.
 
 ## ❓ Open Questions
 

@@ -36,7 +36,7 @@
 
 > The user journey, written from the functionality's own lifecycle.
 >
-> **Start at initialization — never outside the app.** The first step is the component coming to life. Good: *"Initialization: the lib is in a 'loading' state until the `userId` input is provided."* Not acceptable: "the user opens the app / logs in / navigates to the Dashboard".
+> **Start at initialization — never outside the app.** The first step is the component coming to life. Good: _"Initialization: the lib is in a 'loading' state until the `userId` input is provided."_ Not acceptable: "the user opens the app / logs in / navigates to the Dashboard".
 >
 > Then describe the primary flow (loading → data → interactions → outcomes) and any alternative / edge flows (empty, error, permission-denied). e.g. `when data is ready, show something` → `on click, emit clickedBlahblah`.
 >
