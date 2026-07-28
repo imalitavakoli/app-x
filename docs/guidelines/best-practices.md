@@ -217,19 +217,21 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
   ## Common mistakes — short table
   ```
 
-  **Minimal helper / rule skills** (e.g. `x-ng-test-unit-helper`):
+  **Reference / helper skills** (e.g. `x-ng-test-unit-helper`, `x-ng-lib-build-helper`) — a helper **produces nothing**; it loads a rule, guidelines, or examples into the agent's context so that whoever does the actual work follows them. Smallest form is a single rule:
 
   ```
   ---
   name: x-ng-<thing>-helper
-  description: WHAT? <the rule it enforces>. WHEN? <triggers + keywords>
+  description: WHAT? <the rule/guidelines it supplies>. WHEN? <triggers + keywords>
   metadata: { version: "1.0.0" }
   ---
   # <Title>
-  ## Overview   — the one rule, stated plainly
+  ## Overview   — what it supplies + that it is context-only (does not build or execute)
   ## Rule       — the convention, with one concrete example
   ## When to use / not
   ```
+
+  If it is **example-backed** (like `x-ng-lib-build-helper`), keep the examples in `assets/examples/` and add a **pick-the-matching-example** section plus a **fallback** for cases the examples don't cover (e.g. ask the user which existing code to imitate) — but it still produces nothing itself.
 
   **Code-transform / injector skills** (e.g. `x-ng-analytics-injector`, `x-ng-log-injector`):
 

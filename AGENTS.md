@@ -85,13 +85,13 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 | Lifecycle hook | Ordered workspace steps |
 | --- | --- |
 | Before `brainstorming` | If this functionality already has PRD/TFS in `docs/x/`, read them first — they shape the design questions. |
-| Before `writing-plans` | Load `x-ng-lib-build-helper` so the plan's tasks follow our lib-type structure. |
-| After `writing-plans`, before execution | 1) `x-ng-prd-writer` → 2) `x-ng-tfs-writer` → 3) `x-ng-sp-plan-enricher`. |
+| Before `writing-plans` | Write/refresh the PRD & TFS (`x-ng-prd-writer`, then `x-ng-tfs-writer`), then load the reference guidelines (`x-ng-lib-build-helper`, `x-ng-test-unit-helper`, `x-ng-test-e2e-helper`) — so all of it is in context and `writing-plans` drafts the plan from it. |
+| After `writing-plans`, before execution | `x-ng-sp-plan-enricher` — fold the PRD/TFS IDs and rules into the plan's Global Constraints (so they reach execution subagents) and tag its test tasks. |
 | `using-git-worktrees` (worktree created at execution start) | — |
 | Execution — `subagent-driven-development` / `executing-plans` | — (our rules reach here via the plan — see rule 4) |
 | `test-driven-development` (during execution) | — (our rules reach here via the plan — see rule 4) |
 | `requesting-code-review` | — |
-| Before `verification-before-completion` (only if implementation introduced new FR/BR/AC IDs) | 1) `x-ng-prd-writer` (update) → 2) `x-ng-tfs-writer` (update) → 3) `x-ng-test-unit-helper` → 4) `x-ng-test-e2e-helper` (if applicable). |
+| Before `verification-before-completion` (only if implementation introduced new FR/BR/AC IDs) | Update the docs (`x-ng-prd-writer`, then `x-ng-tfs-writer`), then bring the affected unit and (if applicable) e2e tests in line with the new IDs — the test rules are already in context from the Before `writing-plans` step. |
 | `finishing-a-development-branch` | — |
 
 > **Note!** `x-ng-sp-plan-enricher` is the one skill here built **specifically for Superpowers** — it edits the Superpowers plan, so (unlike the other `x-*` skills, which are general and usable on their own) it only makes sense inside this workflow. It is also why the `test-driven-development` and execution rows above show `—`: our unit- and e2e-test rules reach those steps **through the enriched plan**, not through a direct hook — so those placeholders do not mean "nothing happens here."
@@ -124,16 +124,16 @@ These Superpowers skills aren't part of the build (A) or bug-fix (B) workflows �
 
 ### Workspace skills used in the hooks above
 
-The atomic workspace skills the hooks reference. See each skill's `SKILL.md` for its full procedure and inputs/outputs.
+These are the workspace skills the hooks reference. Two are **writers** (they produce docs), three are **references** (their examples/guidelines just enter the agent's context — Superpowers does the actual building and test-writing), and one is a **plan-editor**. See each skill's `SKILL.md` for details.
 
-| Skill                   | Reads → writes                                                               |
-| ----------------------- | ---------------------------------------------------------------------------- |
-| `x-ng-prd-writer`       | brainstorm conclusions → `docs/x/PRD_{name}.md` (holds ACs)                  |
-| `x-ng-tfs-writer`       | PRD → `docs/x/TFS_{name}.md` (holds FRs/BRs)                                 |
-| `x-ng-test-unit-helper` | TFS → `*.spec.ts` (`describe`↔FR, `it`↔BR)                                 |
-| `x-ng-test-e2e-helper`  | e2e app + its `user-stories.md` + PRD → e2e specs (`describe`↔US, `it`↔AC) |
-| `x-ng-lib-build-helper` | `assets/` examples → lib files                                               |
-| `x-ng-sp-plan-enricher` | PRD + TFS → enriched Superpowers plan                                        |
+| Skill | Kind | What it does |
+| --- | --- | --- |
+| `x-ng-prd-writer` | writer | Writes/updates `docs/x/PRD_{name}.md` (ACs) from the brainstorm conclusions. |
+| `x-ng-tfs-writer` | writer | Writes/updates `docs/x/TFS_{name}.md` (FRs/BRs) from the PRD. |
+| `x-ng-lib-build-helper` | reference | Supplies canonical lib-structure examples + guidelines — context only; does not build libs. |
+| `x-ng-test-unit-helper` | reference | Supplies the unit-test rule (`describe`↔FR, `it`↔BR, from the TFS) — context only; does not write tests. |
+| `x-ng-test-e2e-helper` | reference | Supplies the e2e rule (`describe`↔US from the app's `user-stories.md`, `it`↔AC from the PRD) — context only; does not write tests. |
+| `x-ng-sp-plan-enricher` | plan-editor | Folds the PRD/TFS IDs + rules into the Superpowers plan's Global Constraints and tags its test tasks. |
 
 ### Locations & rollout
 
