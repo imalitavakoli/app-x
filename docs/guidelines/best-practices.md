@@ -163,7 +163,9 @@ To improve teamwork, we follow some best practices:
 
 ## Skills
 
-Our workspace skills live in the repo-root `.agents/skills/`. Author and edit them with Superpowers' `writing-skills` skill — it owns the _method_ (test-first authoring, discovery/description rules, the Iron Law). This section adds only the few **workspace-specific** conventions on top. Skills that plug into the Superpowers workflow have extra rules — see the [Superpowers-First Workflow](../../AGENTS.md#superpowers-first-workflow) in AGENTS.md.
+Our workspace skills live in the repo-root `.agents/skills/`. Author and edit them with Superpowers' `writing-skills` skill — it owns the _method_ (test-first authoring, discovery/description rules, the Iron Law). This section adds only the few **workspace-specific** conventions on top.
+
+**Plugging into the Superpowers workflow is external.** Skills are wired into the workflow by the hook tables in the [Superpowers-First Workflow](../../AGENTS.md#superpowers-first-workflow) (AGENTS.md), not by anything inside the skill — so every skill needs no special "workflow" rules and stays usable on its own. Only the `x-{tech}-sp-*` skills (e.g. `x-ng-sp-plan-enricher`) are workflow-coupled, operating on Superpowers' own artifacts (e.g. its plan).
 
 **Tip!** Read this before authoring or editing any `x-*` skill — it is hooked to `writing-skills` in AGENTS.md (Hook table C).
 
@@ -173,7 +175,17 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
 
 &nbsp;
 
-- **Name with the `x-` family prefix**. `x-` marks a workspace skill (distinct from Superpowers and `nx-*` skills). Add framework-specific prefix (e.g., `ng` for Angular) when the skill is related to a certain framework, and omit it for language-agnostic skills (`x-…`). Add `sp` when the skill depends on a Superpowers artifact or lifecycle step (`x-ng-sp-…`, e.g. `x-ng-sp-plan-enricher`).
+- **Name with the `x-` family prefix**. `x-` marks a workspace skill (distinct from Superpowers and `nx-*` skills). Add a **tech** prefix (e.g. `ng` for Angular) when the skill is tied to a certain technology, and omit it for tech-agnostic skills (`x-…`). Add `sp` when the skill depends on a Superpowers artifact or lifecycle step — the general form is `x-{tech}-sp-…`, where `{tech}` follows the rule above: `x-ng-sp-…` for an Angular-specific one (e.g. `x-ng-sp-plan-enricher`), or `x-sp-…` when it is tech-agnostic.
+
+&nbsp;
+
+- **Keep each skill self-contained — don't refer to other skills.** A skill holds everything it needs. When it depends on another skill's **output**, it names the produced _artifact_ (the file), not the producer — e.g. `x-ng-tfs-writer` names `docs/x/PRD_{name}.md`, never `x-ng-prd-writer`; if that file is missing it stops and asks (a prerequisite guard). Orchestration — _which_ skill runs _when_ — lives in AGENTS.md's hook tables, never in a skill.
+
+  **The one exception — reading another skill's internals.** Name another skill only when you must read something _inside_ it (its template, examples, assets) — not just consume its output. Even then, prefer to **inline** the piece you need; name the skill only if that content must stay single-sourced there. Expected mainly in `x-{tech}-sp-*` skills.
+
+&nbsp;
+
+- **Don't hardcode exact paths to volatile code — describe them generically.** So a skill survives the workspace evolving, refer _conceptually_ (e.g. "the base `ui` lib's root CSS variables") rather than naming a concrete file under `libs/` / `apps/` (e.g. `libs/shared/ui/base/src/lib/v{n}/root.scss`) or embedding a literal value. Name an exact code path or value **only when the user explicitly asks**. **Exception — `docs/`:** these are the stable reference surface and exist to be cited, so refer to them by exact path freely (e.g. `docs/guidelines/naming-conventions.md`, `docs/x/PRD_{name}.md`).
 
 &nbsp;
 
