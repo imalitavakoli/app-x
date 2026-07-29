@@ -58,6 +58,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
    - **Unit-test contract** — each `describe` maps a TFS Functional-Requirement (FR) ID; each `it` maps a Business-Rule (BR) ID; use the exact IDs from the TFS.
    - **E2e contract + this functionality's determination** — the rule (e2e only for a `page` lib, or a `feature` lib that initializes another `feature`) **and** the explicit yes/no for this functionality (step 5).
    - **Lib-structure pointer** — build each lib to the workspace's canonical lib examples (folder layout, base class, versioned naming, outer + inner README, `data-cy` naming `{lib}-v1_{component}_{part}`). Point to that reference; do not copy it in.
+   - **Commit-message pointer** — commit messages follow the Git section of `docs/guidelines/naming-conventions.md#git`. (Implementer subagents commit but don't read `AGENTS.md`, so this pointer must live in the plan.)
 4. **Tag each task** — for every task that writes/updates tests, list the **exact FR/BR IDs** that task's component(s) own (read them from the TFS ID Index / the per-lib file), and for any e2e task the **AC IDs** it covers. A test convention is useless to a subagent unless the task says *which* IDs belong to it.
 5. **E2e determination (explicit)** — decide from the TFS classification + PRD whether e2e applies: **yes** only if there is a `page` lib, or a `feature` that initializes another `feature`, AND the PRD ACs describe user-observable cases; otherwise **no**. State the decision (and a one-line why) in Global Constraints and repeat it in the relevant task(s) — so a subagent neither invents e2e nor wrongly skips it. **If e2e applies but the plan has no e2e task**, add one (targeting the composing e2e app) and tag it with the AC IDs it covers — the vanilla plan won't contain it, because Superpowers has no e2e concept.
 6. **Spec signpost** — prepend a one-line banner to the Superpowers spec: _"Product & technical specs for this functionality live in `docs/x/{name}/PRD.md` and `docs/x/{name}/TFS/` — read those for FRs/BRs/ACs."_ (Cosmetic but it guides future readers of the committed spec.)
@@ -79,7 +80,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 - [ ] The unit-test contract (`describe`↔FR, `it`↔BR, exact IDs) is present.
 - [ ] Every test task is tagged with the exact FR/BR IDs its component(s) own; any e2e task is tagged with its AC IDs.
 - [ ] The e2e determination for THIS functionality is stated explicitly (yes/no + one-line why), consistent between Global Constraints and the tasks. If e2e applies and the plan lacked an e2e task, one was added (in the composing e2e app) and tagged with its AC IDs.
-- [ ] The lib-structure convention is present as a pointer (not a pasted copy).
+- [ ] The lib-structure convention and the commit-message pointer (`naming-conventions.md#git`) are present as pointers (not pasted copies).
 - [ ] No workspace helper skill is named; the convention source-set defers to `AGENTS.md`'s hook.
 - [ ] The Superpowers spec has the one-line PRD/TFS signpost.
 - [ ] Nothing was built, scaffolded, or tested — only the plan and spec were edited.
