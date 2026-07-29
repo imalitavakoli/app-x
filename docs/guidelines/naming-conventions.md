@@ -76,7 +76,7 @@ We recommend some naming conventions for different types of interfaces/component
 &nbsp;
 
 - **E2E testing selectors (`data-cy` or `data-testid` attributes)**: Use `{lib-name}-v{x}_{short-component-name}_{selector-name}` schema. For example, `profile-image-v1_profile-image_loading`.
-- **Analytics logs**: Should follow 'GA4' naming rules, and use past tense verbs. For example, `called_reset` when `reset` method (public function) is called externally/internally; `handled_xInitOrUpdateAfterAllDataReady` when `_xInitOrUpdateAfterAllDataReady` private/protected function is handled (called) internally by the component itself; `clicked_viewDetails` (when 'View Details' button is clicked).
+- **Analytics logs**: Should follow 'GA4' naming rules.
 
 &nbsp;
 
