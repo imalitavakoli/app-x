@@ -40,7 +40,7 @@ We recommend some naming conventions for different types of interfaces/component
 
 - **Observable variables**: End with `$`. For example, `count$: Observable<CounterState>;`.
 - **Signal variables (rather than signal inputs)**: Start with `$`. For example, `$count: Signal<CounterState>;`.
-- **Boolean variables**: Start with `is`, `has`, 'shall'. For example, `isUserAuthenticated = false;`.
+- **Boolean variables**: Start with `is`, `has`, `shall`. For example, `isUserAuthenticated = false;`.
 - **Array variables**: End with `s` or `Arr`. For example, `errors = [];`, `forbiddenNamesArr = ['John', 'Jane'];`.
 - **Object variables**: End with `Obj`. For example, `userObj = {name: 'John', age: 32};`.
 - **Subscription variables**: End with `Sub`. For example, `intervalSub: Subscription;`.
@@ -116,5 +116,42 @@ It's also worth mentioning that, beside using the BEM methodology naming convent
 &nbsp;
 
 **Tip Regarding CSS variables:** A CSS variable name can consist of multiple parts (such as CSS class name, styling rule, and mode), and parts get divided by '--'. Now it's worth mentioning that, the first part of your CSS variable must match the CSS class that the variable is defined in. For example, if your CSS class name is `e-header-desktop__nav-link--active`, then the CSS variable name (for changing text color in all modes) which is defined in that CSS class, should be `--e-header-desktop__nav-link--active--color`.
+
+&nbsp;
+
+[🔝](#naming-conventions-👪)
+
+## Git
+
+Branch and commit naming (conventions, not tooling-enforced). Release / `fin` branches, commits, and tags use separate schemes — see [pr-rules](./pr-rules.md).
+
+&nbsp;
+
+### Branch
+
+`{type}/{TRACKER-ID}-{kebab-summary}` — **type** ∈ `feature` | `bugfix` | `hotfix` | `release`; **TRACKER-ID** = the task id (e.g. `TEA-4600`); **kebab-summary** = short, lowercase, hyphenated.
+
+e.g. `feature/TEA-4600-add-auth-page` · `bugfix/TEA-4611-fix-chart-zoom` · `release/TEA-4601-lib-auth`.
+
+&nbsp;
+
+### Commit
+
+```
+type(scope): summary   ← required
+body                   ← optional: the why / context (NOT a restatement of the diff)
+footer                 ← optional: Refs: TEA-4600, and trailers (e.g. Co-Authored-By:)
+```
+
+- **type** (required): `feat` | `fix` | `refactor` | `docs` | `test` | `chore` | `build`.
+- **scope** (optional): ONE coarse area — a functionality/lib (`x-credit`) or app (`ng-x-boilerplate-mobile`). Omit for cross-cutting / root / config changes. Never a file path or a list of lib types.
+- **summary** (required): imperative, lowercase, no trailing period, brief (≤ ~50 chars).
+
+Two rules that keep it brief and accurate:
+
+- **Describe intent, not paths** — git already records the files, so the message stays short and doesn't go stale when an unrelated file (e.g. a root config) is also touched.
+- **One semantic change per commit** — if you can't name a single scope, omit it (genuinely cross-cutting) or split the commit.
+
+e.g. `docs(x-credit): update readme` · `feat(ng-chart): add zoom control` · `fix(ng-x-boilerplate-mobile): correct auth redirect` · `chore: update deps` (no scope) · `build: fix base tsconfig path` (no scope).
 
 [🔙](../../README.md#guidelines)

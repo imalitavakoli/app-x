@@ -179,17 +179,17 @@ Our workspace skills live in the repo-root `.agents/skills/`. Author and edit th
 
 &nbsp;
 
-- **Keep each skill self-contained — don't refer to other skills.** A skill holds everything it needs. When it depends on another skill's **output**, it names the produced _artifact_ (the file), not the producer — e.g. `x-ng-tfs-writer` names `docs/x/PRD_{name}.md`, never `x-ng-prd-writer`; if that file is missing it stops and asks (a prerequisite guard). Orchestration — _which_ skill runs _when_ — lives in AGENTS.md's hook tables, never in a skill.
+- **Keep each skill self-contained — don't refer to other skills.** A skill holds everything it needs. When it depends on another skill's **output**, it names the produced _artifact_ (the file), not the producer — e.g. `x-ng-tfs-writer` names `docs/x/{name}/PRD.md`, never `x-ng-prd-writer`; if that file is missing it stops and asks (a prerequisite guard). Orchestration — _which_ skill runs _when_ — lives in AGENTS.md's hook tables, never in a skill.
 
   **The one exception — reading another skill's internals.** Name another skill only when you must read something _inside_ it (its template, examples, assets) — not just consume its output. Even then, prefer to **inline** the piece you need; name the skill only if that content must stay single-sourced there. Expected mainly in `x-{tech}-sp-*` skills.
 
 &nbsp;
 
-- **Don't hardcode exact paths to volatile code — describe them generically.** So a skill survives the workspace evolving, refer _conceptually_ (e.g. "the base `ui` lib's root CSS variables") rather than naming a concrete file under `libs/` / `apps/` (e.g. `libs/shared/ui/base/src/lib/v{n}/root.scss`) or embedding a literal value. Name an exact code path or value **only when the user explicitly asks**. **Exception — `docs/`:** these are the stable reference surface and exist to be cited, so refer to them by exact path freely (e.g. `docs/guidelines/naming-conventions.md`, `docs/x/PRD_{name}.md`).
+- **Don't hardcode exact paths to volatile code — describe them generically.** So a skill survives the workspace evolving, refer _conceptually_ (e.g. "the base `ui` lib's root CSS variables") rather than naming a concrete file under `libs/` / `apps/` (e.g. `libs/shared/ui/base/src/lib/v{n}/root.scss`) or embedding a literal value. Name an exact code path or value **only when the user explicitly asks**. **Exception — `docs/`:** these are the stable reference surface and exist to be cited, so refer to them by exact path freely (e.g. `docs/guidelines/naming-conventions.md`, `docs/x/{name}/PRD.md`).
 
 &nbsp;
 
-- **Write outputs to workspace locations**. Functionality docs go to `docs/x/` (`PRD_{name}.md`, `TFS_{name}.md`); code follows [naming-conventions](./naming-conventions.md).
+- **Write outputs to workspace locations**. Functionality docs go to `docs/x/{name}/` — `PRD.md` (single doc) and a `TFS/` folder (`README.md` + one `{libtype}.md` per lib type); code follows [naming-conventions](./naming-conventions.md).
 
 &nbsp;
 

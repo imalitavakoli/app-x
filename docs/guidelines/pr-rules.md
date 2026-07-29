@@ -31,12 +31,12 @@ Here's the process for making source code modification PRs.
 &nbsp;
 
 - `4` Fetch the latest modifications from the 'master' branch to your local machine, then **create a new branch** from 'master' for every task.  
-  **Branch naming convention:** `[task-id]-[description]`, or `[bugfix,feature,hotfix,release]/[task-id]-[description]`. For example, `TEA-4600-update-deps`, `feature/TEA-4600-add-simple-auth-page`, `release/TEA-4601-lib-auth`.
+  **Branch naming convention:** see the Git → Branch section of [naming-conventions.md](./naming-conventions.md#git).
 
 &nbsp;
 
 - `5` Make your modifications in your branch, and **commit every little semantic modification** with a brief description.  
-  **Commit naming convention:** `x/[description]`, `x/apps/[app-name]/[description]`, or `x/libs/[lib-type]/[lib-name]/[description]`. For example, `x/updated deps`, `x/apps/ng-boilerplate/added simple auth page`, `x/libs/feature,ui/ng-chart/updated readme`.  
+  **Commit naming convention:** see the Git → Commit section of [naming-conventions.md](./naming-conventions.md#git).  
   **Important!** If you have updated `package.json` or `pnpm-lock.yaml` files, you must inform the Workspace Specialist or EM (Engineering Manager), because updating the workspace packages is sensitive and might break the pipeline processes (if there's any automation defined).  
   **Note!** Always remember to keep the `README.md` file and documentation of the app/lib you've modified up-to-date. Here's the best practice: (1) Before changing any code, update the docs accordingly; (2) make your code modifications; (3) review the docs again to ensure they reflect the final changes. This way, the documentation stays current.
 
