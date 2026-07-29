@@ -11,7 +11,7 @@ Here are the steps to do so:
 - Follow [available-commands.md](../guidelines/available-commands.md#updating-the-whole-workspace) ('Updating the whole workspace' section) doc.
 - Update [setting-up-the-repository.md](../getting-started/setting-up-the-repository.md) ('Setting up the repository on a new machine' & 'Installing global dependencies' sections) doc according to the new version of dependencies (such as Node.js, pnpm, and etc.) which has been installed.
 
-## Updating docs
+## Update docs
 
 The following documents are among the most important in the workspace and are referenced from multiple locations.
 
