@@ -13,7 +13,7 @@ You are a product owner writing a clear, professional PRD for a **functionality*
 
 This PRD does **not** contain Functional Requirements or Business Rules — those are granular, test-level rules that live in the TFS, which derives them from this PRD's ACs and description.
 
-Output: `docs/x/PRD_{functionality-name}.md`.
+Output: `docs/x/{functionality-name}/PRD.md` (one doc per functionality, in that functionality's folder — the TFS lives beside it under `docs/x/{functionality-name}/TFS/`).
 
 ## When to use
 
@@ -27,12 +27,12 @@ Do not use to write technical / library specs (the TFS) or to write tests.
 
 **Required input:** a feature description (or brainstorm conclusions) for one functionality. If it is missing or unclear, STOP and ask — do not research or invent it.
 
-If the functionality already has a `docs/x/PRD_{name}.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber.
+If the functionality already has a `docs/x/{name}/PRD.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber.
 
 ## Inputs & output
 
 - **Reads:** the feature description / brainstorm conclusions (and the existing PRD, if any).
-- **Writes:** `docs/x/PRD_{functionality-name}.md`.
+- **Writes:** `docs/x/{functionality-name}/PRD.md`.
 
 ## Workflow
 
@@ -47,7 +47,7 @@ Copy this checklist and track it. Keep the `[prd]` prefix so, if this runs insid
 ```
 
 1. **Analyse** — read [assets/template.md](assets/template.md), the feature description, and `docs/getting-started/library-types-and-their-relationship.md` (to classify the functionality's type). If a PRD already exists, read it too.
-2. **Draft** — create `docs/x/PRD_{name}.md` mirroring the template's headings (content can be incomplete at first). Replace the feature-key placeholder `{NAME}` with one consistent key derived from the functionality name (e.g. `ng-profile-info` → `PROFILE`).
+2. **Draft** — create `docs/x/{name}/PRD.md` (create the `docs/x/{name}/` folder if absent) mirroring the template's headings (content can be incomplete at first). Replace the feature-key placeholder `{NAME}` with one consistent key derived from the functionality name (e.g. `ng-profile-info` → `PROFILE`).
 3. **Fill** — map the description into the correct sections. Classify the functionality's type (per the library-types doc), then read the matching example before writing the flows and ACs:
    - **abstract** (map + data-access, no UI) → [assets/examples/abstract.md](assets/examples/abstract.md)
    - **visual** / **visual+** (ui + feature [+ page]) → [assets/examples/visual.md](assets/examples/visual.md)
@@ -96,7 +96,7 @@ Read the example matching the functionality's type before filling the User Exper
 
 ## Summary
 
-1. Report the saved path (`docs/x/PRD_{name}.md`).
+1. Report the saved path (`docs/x/{name}/PRD.md`).
 2. List the AC IDs created or added (ID + one-line description).
 3. List any Open Questions the user still needs to answer.
 4. Incorporate requested changes until the user confirms.

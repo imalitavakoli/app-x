@@ -32,7 +32,7 @@ The lib may be **shared or app-specific** — either way, what matters is which 
 
 ## IDs: `describe` ↔ US, `it` ↔ AC
 
-- **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/PRD_{name}.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
+- **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/{name}/PRD.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
 - **`describe` ↔ User Story (US)** from the e2e app's **`apps/{app}-e2e/user-stories.md`** registry. Title: `<US-id> | As a …`. A US groups the ACs a user pursues in one story and **may span functionalities** — which is why USs live in the app registry, not a functionality's PRD. **US IDs are unique per e2e app.**
 - **The registry is created/updated by the e2e work, not by this skill.** When the e2e is written, if the story isn't registered a new US is added to `apps/{app}-e2e/user-stories.md` (the file is created if absent) with a fresh unique ID; an existing US is reused if it already fits. See [assets/examples/user-stories.md](assets/examples/user-stories.md) for the format.
 

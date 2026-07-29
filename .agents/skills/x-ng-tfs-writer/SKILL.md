@@ -14,7 +14,21 @@ You are a senior Nx + Angular frontend developer who turns an approved **PRD** i
 - **FR → `describe`**, **BR → `it`** (the unit-test mapping).
 - Every FR/BR **back-links the PRD Acceptance Criterion (AC)** it decomposes, so PRD ↔ TFS ↔ tests stay in lockstep.
 
-Output: `docs/x/TFS_{functionality-name}.md`.
+Output: a **folder** `docs/x/{functionality-name}/TFS/` — a `README.md` for the functionality-level sections plus **one file per library type** the functionality has:
+
+```
+docs/x/{functionality-name}/
+├── PRD.md                (the functionality's product spec)
+└── TFS/
+    ├── README.md         Overview, Existing Dependencies & Reuse, the ID Index, Open Technical Questions
+    ├── map.md            (only the lib types this functionality actually has)
+    ├── data-access.md
+    ├── ui.md
+    ├── feature.md        (also holds this feature's technical journey / flows)
+    └── page.md
+```
+
+`README.md` holds only functionality-level content; each `{libtype}.md` holds that lib's spec **and its FR/BR** (and, for `feature.md`, its technical journey). The README's **ID Index** lists every FR/BR ID, the file it lives in, and the PRD AC it maps to — so IDs stay unique across the whole folder and traceability is visible at a glance.
 
 ## When to use
 
@@ -26,45 +40,63 @@ Do not use to write the product spec (the PRD) or to write the tests/code themse
 
 ## Prerequisites
 
-**Required input:** the functionality's **PRD** (`docs/x/PRD_{name}.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
+**Required input:** the functionality's **PRD** (`docs/x/{name}/PRD.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
 
-If the functionality already has a `docs/x/TFS_{name}.md`, read it first and **update** it: preserve existing FR/BR IDs and add new ones — never renumber.
+If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly.
 
 ## Inputs & output
 
 - **Reads:** the PRD; `docs/getting-started/library-types-and-their-relationship.md` (classify the functionality); `docs/guidelines/naming-conventions.md` (lib/CSS naming, esp. `#styling`); `docs/guidelines/best-practices.md` (Organizing / Mindset — file structure); `docs/runbooks/dep-update-config-for-a-lib.md` (DEP config) and `docs/runbooks/dep-update-assets-for-a-lib.md` (DEP assets — a `ui` lib's custom icon/image whose path the `feature` reads from DEP config); and the existing TFS if any.
-- **Writes:** `docs/x/TFS_{functionality-name}.md`.
+- **Writes:** the `docs/x/{functionality-name}/TFS/` folder — `README.md` plus one `{libtype}.md` per present lib type.
 
 ## Workflow
 
 Copy this checklist and track it. Keep the `[tfs]` prefix so, if this runs inside a larger workflow, these stay grouped and the outer workflow's todos remain visible:
 
 ```
-- [ ] [tfs] 1. Analyse — read the template, the PRD, the library-types & naming-conventions docs, and any existing TFS
+- [ ] [tfs] 1. Analyse — read the templates (assets/template/), the PRD, the library-types & naming-conventions docs, and any existing TFS folder
 - [ ] [tfs] 2. Name & classify — derive the technical name; classify the functionality; read the matching example
-- [ ] [tfs] 3. Library breakdown — fill only the lib specs this functionality needs (map / data-access / ui / feature / page)
-- [ ] [tfs] 4. User Experience & Flows — write the technical journey (data flow → interaction / background / decision flows)
-- [ ] [tfs] 5. Validate — run the Review Checklist until all items pass
-- [ ] [tfs] 6. Summary — report the saved path, the FR/BR IDs, and open technical questions
+- [ ] [tfs] 3. Library breakdown — write one docs/x/{name}/TFS/{libtype}.md per present lib type (its spec + FR/BR)
+- [ ] [tfs] 4. Feature journey — in feature.md, add the technical journey (data flow → interaction / background / decision flows)
+- [ ] [tfs] 5. README — write docs/x/{name}/TFS/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions)
+- [ ] [tfs] 6. Validate — run the Review Checklist until all items pass
+- [ ] [tfs] 7. Summary — report the folder path, the FR/BR IDs, and open technical questions
 ```
 
-1. **Analyse** — read [assets/template.md](assets/template.md), the PRD, `docs/getting-started/library-types-and-their-relationship.md`, `docs/guidelines/naming-conventions.md`, and (for `feature` DEP config) `docs/runbooks/dep-update-config-for-a-lib.md`.
+1. **Analyse** — read the templates in [assets/template/](assets/template/) (the `README.md` template + the per-lib templates), the PRD, `docs/getting-started/library-types-and-their-relationship.md`, `docs/guidelines/naming-conventions.md`, and (for `feature` DEP config) `docs/runbooks/dep-update-config-for-a-lib.md`.
 2. **Name & classify** — derive the technical name (kebab-case; prefix `ng-` when the feature has logic, e.g. `ng-balance-card`); confirm with the user. Classify the functionality per the library-types doc and read the matching example:
-   - **abstract** (map + data-access) → [assets/examples/abstract.md](assets/examples/abstract.md)
-   - **visual** / **visual+** (ui + feature [+ page]) → [assets/examples/visual.md](assets/examples/visual.md)
-   - **mixed** / **mixed+** (map + data-access + ui + feature [+ page]) → [assets/examples/mixed-plus.md](assets/examples/mixed-plus.md)
-3. **Library breakdown** — include **only** the lib specs the classification needs. Follow the template's subsections exactly.
-4. **User Experience & Flows** — write the technical journey per the template's restructured format (see Rules).
-5. **Validate** — run the Review Checklist below; loop until all pass.
-6. **Summary** — see below.
+   - **abstract** (map + data-access) → [assets/examples/abstract/](assets/examples/abstract/)
+   - **visual** / **visual+** (ui + feature [+ page]) → [assets/examples/visual/](assets/examples/visual/)
+   - **mixed** / **mixed+** (map + data-access + ui + feature [+ page]) → [assets/examples/mixed-plus/](assets/examples/mixed-plus/)
+
+   The examples show the expected **content and granularity** per lib type; the **Output layout** map in the Template section below says which template file maps to which output file. Create the `docs/x/{name}/TFS/` folder (and `docs/x/{name}/` if absent).
+
+3. **Library breakdown** — write **one `docs/x/{name}/TFS/{libtype}.md` per lib type the classification needs** (`map` / `data-access` / `ui` / `feature` / `page` — create only the present ones). Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly.
+4. **Feature journey** — in `feature.md`, add the technical journey (per exported `feature` component). For an **abstract** functionality there is no `feature.md`; put the short facade-consumer note in `data-access.md` instead (see the template).
+5. **README** — write `docs/x/{name}/TFS/README.md` with the functionality-level sections (Overview, Existing Dependencies & Reuse, Open Technical Questions) **and the ID Index** — a table of every FR/BR ID → the lib file it lives in → the PRD AC it maps to. This is the single place that keeps IDs unique across the folder.
+6. **Validate** — run the Review Checklist below; loop until all pass.
+7. **Summary** — see below.
 
 ## Template
 
-**Always use [assets/template.md](assets/template.md) exactly** — same sections, same order. Remove the `>` quote-helpers from the final draft; keep every heading you use. Omit whole lib-type specs that the functionality does not use.
+The template is a **folder** — [assets/template/](assets/template/) — mirroring the output: one template file per output file. Use the matching template for each file you write, exactly (same sections, same order); remove the `>` quote-helper notes and the top `<!-- … -->` comment from the final draft; keep every heading you use; omit whole lib-type files the functionality does not use.
+
+**Output layout** — `docs/x/{name}/TFS/` (template → output):
+
+| Template file             | Output file      | Holds                                                                                                         |
+| ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| `template/README.md`      | `README.md`      | Overview, Existing Dependencies & Reuse, the 🧭 ID Index, Open Technical Questions — functionality-level only |
+| `template/map.md`         | `map.md`         | the `map` lib spec + its FR/BR (only if the functionality fetches)                                            |
+| `template/data-access.md` | `data-access.md` | the `data-access` lib spec + its FR/BR (+ the facade-consumer note for abstract functionalities)              |
+| `template/ui.md`          | `ui.md`          | the `ui` lib spec + its FR/BR (visual functionalities)                                                        |
+| `template/feature.md`     | `feature.md`     | the `feature` lib spec + its FR/BR + the 🧳 User Experience & Flows journey                                   |
+| `template/page.md`        | `page.md`        | the `page` lib spec + its FR/BR (`visual+` / `mixed+` only)                                                   |
+
+IDs are unique **across all files**; register every one in the README's 🧭 ID Index.
 
 ## Examples
 
-Read the example matching the functionality's classification before filling the specs and the journey — they show the expected granularity, the FR/BR test-ready syntax, and the journey structure. The three examples cover the five types: `abstract` → `abstract`; `visual` / `visual+` → `visual`; `mixed` / `mixed+` → `mixed-plus`. The `page` spec is demonstrated in `mixed-plus`, so a `visual+` functionality borrows it from there; a plain `mixed` functionality uses `mixed-plus` and omits its `page` spec.
+Read the example matching the functionality's classification before filling the specs and the journey — they show the expected granularity, the FR/BR test-ready syntax, and the journey structure. **Each example is a real folder** (`assets/examples/{type}/`), laid out exactly like a generated `docs/x/{name}/TFS/` — a `README.md` with a populated 🧭 ID Index plus one file per lib type — so it doubles as a layout reference. Read the files in the matching example folder. The three examples cover the five types: `abstract` → `abstract/`; `visual` / `visual+` → `visual/`; `mixed` / `mixed+` → `mixed-plus/`. `page.md` is demonstrated in `mixed-plus/`, so a `visual+` functionality borrows it from there; a plain `mixed` functionality uses `mixed-plus/` and omits `page.md`.
 
 ## Rules
 
@@ -76,7 +108,7 @@ Read the example matching the functionality's classification before filling the 
 - **One observable behaviour per BR** (one `it`); if it needs an "and", split it. Give edge cases (loading / empty / error / boundary) their own BRs, with complete, realistic data.
 - **The `Then` asserts an observable effect, never an internal call.** State what the unit observably produces — a rendered `[data-cy]`, an emitted output, or a resulting state/signal — **not** "a facade/collaborator method was called" (asserting a collaborator call is a unit-test anti-pattern). For data-fetching, prove the request is correct by its **result**: prime the collaborator to return data for the expected params, then assert the data the component exposes — e.g. _Given the user facade returns `U` for `userId = 123`; When data is ready; Then the value bound to the card is `U`_ (this proves it fetched user 123 without asserting the call).
 - **Back-link the PRD:** annotate each FR/BR that implements a PRD scenario with the AC it decomposes, e.g. `(maps to PRD BALANCE-AC-01)`.
-- **IDs:** scope IDs to the exported component (or helper service) that owns them: `{NAME}_{COMPONENT}_FR-01` / `{NAME}_{COMPONENT}_BR-01` (e.g. `XPROFILE_CARD_BR-01`), and `{NAME}_{HELPER-NAME}_FR-01a` for a helper service. IDs are unique across the whole TFS (never reset or renumber). New technical scenarios (loading/error/interaction) get **new** unique IDs.
+- **IDs:** scope IDs to the exported component (or helper service) that owns them, same format for both — `{NAME}_{OWNER}_FR-01` / `{NAME}_{OWNER}_BR-01`, where `{OWNER}` is the component (e.g. `XPROFILE_CARD_BR-01`) or the helper service (e.g. `XWALLET_POLL_FR-01`). IDs are unique **across the whole TFS folder** — all lib files share one ID space (never reset per file, never renumber). Record every ID in the README **ID Index** (ID → lib file → PRD AC). New technical scenarios (loading/error/interaction) get **new** unique IDs.
 
 **Inputs / Outputs:**
 
@@ -105,6 +137,8 @@ Read the example matching the functionality's classification before filling the 
 
 **Review Checklist** — before finalising, verify:
 
+- [ ] Folder layout correct: `docs/x/{name}/TFS/README.md` + one `{libtype}.md` per present lib type only; no lib spec placed in the README, nothing functionality-level placed in a lib file.
+- [ ] README has an **ID Index** listing every FR/BR ID → its lib file → its PRD AC; every ID in the lib files appears there and vice-versa.
 - [ ] Classification chosen and only the needed lib specs are included.
 - [ ] Every component names its base class correctly (`V1BaseUiComponent` / `V2BaseFeatureExtComponent` / `V2BasePageParentComponent` / `V2BasePageChildComponent`).
 - [ ] Every BR is `Given/When/Then` with concrete `[data-cy]` / signals / emitters; every FR/BR that implements the PRD back-links its AC.
@@ -118,10 +152,10 @@ Read the example matching the functionality's classification before filling the 
 
 ## Summary
 
-1. Report the saved path (`docs/x/TFS_{name}.md`).
+1. Report the saved folder (`docs/x/{name}/TFS/`) and list the files written (`README.md` + each `{libtype}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
 3. If any new libs were recommended as shared functionalities, remind the user each needs its own PRD & TFS.
-4. If new technical FR/BR/AC scenarios were discovered that the PRD lacks, list them and suggest updating the PRD.
+4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
 5. List Open Technical Questions; incorporate requested changes until the user confirms.
 
 ## Common mistakes
@@ -138,3 +172,5 @@ Read the example matching the functionality's classification before filling the 
 | Polling inside the dependency chain                           | Start polling in `_xInitOrUpdateAfterAllDataReady`, in a `_util/*.service.ts`.                                                                                                            |
 | Adding an Analytics section to a lib spec                     | Analytics live in the PRD, not the TFS.                                                                                                                                                   |
 | Renumbering IDs on update                                     | Never renumber; add new unique IDs only.                                                                                                                                                  |
+| Writing the TFS as one file, or a lib spec into `README.md`   | One `{libtype}.md` per present lib type; `README.md` holds only functionality-level sections + the ID Index.                                                                              |
+| Restarting FR/BR numbering in each lib file                   | All lib files share one ID space; keep IDs globally unique and listed in the README ID Index.                                                                                             |
