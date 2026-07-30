@@ -3,13 +3,12 @@
     "deny": ["Read(./.env)", "Read(./.env.*)", "Read(_OBS/**)"]
   },
   "hooks": {
-    "UserPromptSubmit": [
+    "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"MANDATORY: Before acting on ANY request, you MUST fully read AGENTS.md then AGENTS.local.md (if it exists).\"}}'",
-            "shell": "bash"
+            "command": "node .claude/hooks/inject-agents.mjs"
           }
         ]
       }
