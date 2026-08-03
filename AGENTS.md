@@ -137,7 +137,7 @@ Structure rules:
 
 **Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD + TFS + e2e verdict** → `writing-plans` → **mode + enricher** → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **doc/ID re-tag** _(only if new IDs)_ → `finishing-a-development-branch`
 
-> **Functionality gate.** Hooks A1–A4 apply only when the work is (or produces) a **functionality** — libs from `map` / `data-access` / `ui` / `feature` / `page`. `util`, `api`, and `app` **never** form a functionality (see `/docs/getting-started/library-types-and-their-relationship.md` → Functionality types): they get **no** `docs/x/{name}/` PRD or TFS (and therefore no AC / FR / BR IDs). If the cycle is only creating or updating one of those, **skip A1–A4** — no PRD/TFS writers, no e2e verdict, no enricher. Still run Superpowers' own `brainstorming` → `writing-plans` → branch → execution as needed (including `test-driven-development` when tests are in scope). For lib shape, load `x-ng-lib-build-helper` (its fallback covers `util` / `api`). Those libs **may still have unit tests** — when the plan or brainstorm includes them, write the specs; `describe` / `it` simply have **no** FR/BR IDs to match. Load `x-ng-test-unit-helper` for preset / formatting / TDD practice (skip only its FR/BR ID contract).
+> **Functionality gate.** Hooks A1–A4 apply only when the work is (or produces) a **functionality** — libs from `map` / `data-access` / `ui` / `feature` / `page`. `util`, `api`, and `app` **never** form a functionality (see `/docs/getting-started/library-types-and-their-relationship.md` → Functionality types): they get **no** `docs/x/{name}/` PRD or TFS (and therefore no PRD ACs). If the cycle is only creating or updating one of those, **skip A1–A4** — no PRD/TFS writers, no e2e verdict, no enricher. Still run Superpowers' own `brainstorming` → `writing-plans` → branch → execution as needed (including `test-driven-development` when tests are in scope). For lib shape, load `x-ng-lib-build-helper` (its fallback covers `util` / `api`). When unit tests are in scope for **`util`** or product **`app`**, load `x-ng-test-unit-helper` and follow its `references/libs/util.md` / `app.md`: FR/BR IDs come from a local `requirements.md` (`UTIL-…` / `APP-…`), not from TFS. **`api`** has no `requirements.md` (proxy-only).
 
 #### 🪝 A1 · Before `brainstorming`
 
@@ -181,7 +181,7 @@ In **auto** mode the tree has already been reviewed, so route the re-tag through
 
 No execution mode here — that question belongs to path A only. For git, see _Git contract_.
 
-> **Functionality gate.** B1 applies only when the fix is to a **functionality**. A change that only touches a `util`, `api`, or `app` never has PRD/TFS/AC IDs — **skip B1**. Unit tests for those libs still follow TDD / `x-ng-test-unit-helper` practice when tests are in scope; titles simply have no FR/BR IDs.
+> **Functionality gate.** B1 applies only when the fix is to a **functionality** (it updates `docs/x/` PRD/TFS). A change that only touches a `util`, `api`, or `app` never has those docs — **skip B1**. Unit tests for **`util`** / product **`app`** still follow TDD / `x-ng-test-unit-helper` when tests are in scope; FR/BR IDs come from local `requirements.md` (retag as part of normal test edits, not via B1's PRD/TFS writers). **`api`** has no `requirements.md`.
 
 #### 🪝 B1 · After `verification-before-completion` — only if the fix introduced new FR/BR/AC IDs
 
@@ -214,7 +214,7 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 | `x-ng-prd-writer`       | `docs/x/{name}/PRD.md` — the ACs                                                      |
 | `x-ng-tfs-writer`       | `docs/x/{name}/TFS/` — `README.md` (ID Index) + one `{libtype}.md` per lib (FRs/BRs)  |
 | `x-ng-lib-build-helper` | canonical lib-structure examples + guidelines                                         |
-| `x-ng-test-unit-helper` | unit-test conventions — for functionalities: `describe`↔FR, `it`↔BR from the TFS; for `util` / `api` / `app`: same practices, no ID contract |
+| `x-ng-test-unit-helper` | unit-test conventions — functionalities: `describe`↔FR, `it`↔BR from the TFS; `util` / `app`: same from local `requirements.md`; `api`: no ID doc |
 | `x-ng-test-e2e-helper`  | the e2e rule — `describe`↔US from the app's `user-stories.md`, `it`↔AC from the PRD |
 | `x-ng-sp-plan-enricher` | the Superpowers plan, enriched — Global Constraints + tagged test tasks               |
 | `x-skill-build-helper`  | the conventions and per-kind templates for building or updating a workspace skill     |
@@ -223,7 +223,7 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 
 ### Locations & rollout
 
-- Functionality docs live in `docs/x/{name}/` — `PRD.md` (single doc) and a `TFS/` folder (`README.md` + one `{libtype}.md` per lib type). `util`, `api`, and `app` never get these docs (they are not functionalities) — they may still have unit tests, but without AC / FR / BR IDs. Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
+- Functionality docs live in `docs/x/{name}/` — `PRD.md` (single doc) and a `TFS/` folder (`README.md` + one `{libtype}.md` per lib type). `util`, `api`, and `app` never get those docs (they are not functionalities). **`util`** may have `requirements.md` beside each inner/version README; product **`app`** may have `apps/{app-name}/requirements.md` — both supply unit-test FR/BR IDs (`UTIL-…` / `APP-…`). **`api`** has no `requirements.md`. Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
 - All seven skills above exist. **If a referenced skill is missing, say so and ask** — do not skip its step silently. (A later step whose required input never arrived will stop and ask per its own prerequisite guard, rather than produce wrong output.)
 
 &nbsp;

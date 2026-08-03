@@ -1,8 +1,7 @@
 ---
 name: x-ng-test-unit-helper
-description: "WHAT? The workspace conventions for a lib's Jest unit tests — TFS FR/BR ID mapping when a TFS exists, what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for a map / data-access / ui / feature / page lib, or for a util / api / app lib when tests are in scope; when deciding a spec's IDs, structure, native/Capacitor/Firebase mocking, or readability. Util/api/app have no PRD/TFS — still unit-test them, without FR/BR IDs."
 metadata:
-  version: '1.1.0'
+  version: '1.2.0'
 ---
 
 # Test Unit Helper
@@ -11,27 +10,34 @@ metadata:
 
 This skill is a **helper**: it puts the workspace's unit-test conventions into your context. It **produces nothing** — whoever is doing the work writes the tests, following these conventions.
 
-For a **functionality** lib, unit tests trace to that functionality's **TFS**: **FR → `describe`, BR → `it`**. For a standalone `util`, `api`, or `app` lib there is **no** PRD/TFS, so there are **no** AC / FR / BR IDs — but unit tests are still written when tests are in the workflow or plan, and every other convention below still applies.
+For a **functionality** lib, unit tests trace to that functionality's **TFS**: **FR → `describe`, BR → `it`**. For a **`util`** or product **`app`**, there is still **no** `docs/x/` PRD/TFS — FR/BR IDs come from a local **`requirements.md`** instead (see [Lib-type extras](#lib-type-extras-read-on-demand)). **`api`** libs have no code and no `requirements.md`; if somehow tested, use ID-less titles.
 
-It only adds **workspace specifics** (TFS IDs when they exist, test config, formatting) on top of good unit-testing practice. For _how_ to write the tests themselves, follow standard **TDD**: test real, observable behavior — **never assert on a mock** — and mock only what is unavoidable, at the lowest level, keeping mocks complete. Superpowers' `test-driven-development` (and the rest of execution) still owns the RED-GREEN cycle for these libs the same as for functionalities.
+It only adds **workspace specifics** (FR/BR IDs from the right source, test config, formatting) on top of good unit-testing practice. For _how_ to write the tests themselves, follow standard **TDD**: test real, observable behavior — **never assert on a mock** — and mock only what is unavoidable, at the lowest level, keeping mocks complete. Superpowers' `test-driven-development` (and the rest of execution) still owns the RED-GREEN cycle for these libs the same as for functionalities.
 
 ## When to use
 
 Writing or updating a `*.spec.ts` for any testable TypeScript/JavaScript in a workspace lib:
 
-- **Functionality libs** (`map` / `data-access` / `ui` / `feature` / `page`) — a component, service, directive, pipe, guard, or a pure helper inside one. Use the full FR/BR ID contract below.
-- **`util` / `api` / `app`** — when the workflow, brainstorm, or plan includes unit tests for them. Write the specs with the same TDD / preset / formatting / observable-effect rules; **`describe` / `it` titles have no FR/BR (or AC) ID** because those lib types never have a PRD or TFS (`docs/getting-started/library-types-and-their-relationship.md`). Do **not** invent IDs and do **not** create functionality docs just to tag a test.
+- **Functionality libs** (`map` / `data-access` / `ui` / `feature` / `page`) — a component, service, directive, pipe, guard, or a pure helper inside one. Use the full FR/BR ID contract from the TFS below.
+- **`util`** — when the workflow, brainstorm, or plan includes unit tests. Read [references/libs/util.md](references/libs/util.md) first: create/update that version's `requirements.md` and map `describe`/`it` to its `UTIL-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS.
+- **`app`** (product under `apps/{app-name}/`, not `{app}-e2e`) — when unit tests are in scope. Read [references/libs/app.md](references/libs/app.md) first: create/update `apps/{app-name}/requirements.md` and map to `APP-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS. E2e apps use `user-stories.md`, not this file.
+- **`api`** — no `requirements.md` (proxy-only, no code). Do not invent FR/BR IDs or functionality docs for them.
+
+## Lib-type extras (read on demand)
+
+- **`util`** — [references/libs/util.md](references/libs/util.md)
+- **`app`** (product app, not e2e) — [references/libs/app.md](references/libs/app.md)
 
 ## Map each block to a TFS ID (functionality libs only)
 
-**Skip this section** when the lib under test is a standalone `util`, `api`, or `app` — use clear ID-less `describe` / `it` titles (and AAA in the body) and continue with the preset / formatting / example guidance below.
+**Skip this section** when the lib under test is `util` or product `app` — use [Lib-type extras](#lib-type-extras-read-on-demand) instead. **Skip** for `api` — ID-less titles only if ever tested.
 
 For a **functionality** lib, the TFS — the `docs/x/{name}/TFS/` folder, specifically the `{libtype}.md` file for the lib you're testing (its FR/BR live in that file; the README's ID Index lists every ID and where it lives) — is the source of the IDs. Each exported component and helper service owns its own. Use the **exact IDs written in the TFS** (the TFS defines their format; don't invent your own).
 
 - **`describe`** ↔ a **Functional Requirement (FR)** — titled `<FR-ID>: <what it tests>`.
 - **`it`** ↔ a **Business Rule (BR)** — titled `<BR-ID>: Given <…>; When <…>; Then <…>`, and use **AAA** (Arrange / Act / Assert) in the body.
 
-Every test that asserts a **functionality behavior** uses the **exact FR/BR ID from the TFS** — the TFS is the source of truth for IDs; a test never invents one. In the rare case you hit a real behavior the TFS doesn't cover, don't write an untraceable test and **don't edit the TFS here** — **flag it as a TFS gap** so the FR/BR is added to the TFS by its author (a separate step); the test then uses that new ID. Reserve a plain (ID-less) title only for tests of purely-internal helpers the TFS does not track (and for all tests in `util` / `api` / `app` libs).
+Every test that asserts a **functionality behavior** uses the **exact FR/BR ID from the TFS** — the TFS is the source of truth for IDs; a test never invents one. In the rare case you hit a real behavior the TFS doesn't cover, don't write an untraceable test and **don't edit the TFS here** — **flag it as a TFS gap** so the FR/BR is added to the TFS by its author (a separate step); the test then uses that new ID. Reserve a plain (ID-less) title only for tests of purely-internal helpers the TFS does not track.
 
 ## Read the test config first (Jest today)
 
@@ -62,16 +68,19 @@ Separate each `describe` (FR) block — and the file's mock-data / mock-service 
 
 See [assets/examples/unit-spec.md](assets/examples/unit-spec.md) — a feature-component spec showing the FR/BR dividers, `Given/When/Then` + AAA, the `jest.preset.js` handling (native modules not re-stubbed; a hoisted barrel mock **only** for import safety), and **observable-effect** assertions rather than mock-call assertions.
 
-**Handing it to a subagent?** The file lives at `.agents/skills/x-ng-test-unit-helper/assets/examples/unit-spec.md` — give that full path. An execution agent resolves paths against the repo root and cannot read this skill, so the skill-relative path above means nothing to it.
+For util/app local FR/BR registries, imitate [assets/examples/requirements.md](assets/examples/requirements.md) (swap `UTIL-` ↔ `APP-` as needed).
+
+**Handing one to a subagent?** These files live under `.agents/skills/x-ng-test-unit-helper/assets/examples/` — give that full path. An execution agent resolves paths against the repo root and cannot read this skill, so the skill-relative paths above mean nothing to it.
 
 ## Common mistakes
 
 | Mistake                                                            | Fix                                                                                                                                                         |
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `describe` / `it` without FR / BR IDs (functionality lib)          | Tag each from the TFS: FR → `describe`, BR → `it`, using the exact TFS IDs.                                                                                 |
-| Skipping unit tests for a `util` / `api` / `app` because no TFS    | No PRD/TFS means no IDs — not "no tests". If tests are in the workflow/plan, write them with ID-less titles and the same TDD / preset / formatting rules.   |
-| Inventing FR/BR IDs for a `util` / `api` / `app` lib               | Those never have a TFS — use ordinary ID-less titles; do not invent IDs or create functionality docs.                                                       |
-| A real behavior tested without a TFS ID                            | Don't invent an ID or write an untraceable test; flag it as a TFS gap (the TFS author adds the FR/BR, then the test uses it). Don't edit the TFS from here. |
+| Skipping util/app unit tests because no TFS                        | No `docs/x/` docs — use local `requirements.md` (`UTIL-` / `APP-` IDs). See [Lib-type extras](#lib-type-extras-read-on-demand).                              |
+| Inventing FR/BR IDs for an `api` lib                               | No `requirements.md` for api — ID-less titles only if ever tested; do not invent IDs or create functionality docs.                                          |
+| Using TFS / `docs/x/` paths for util/app IDs                       | IDs come from the local `requirements.md` beside the inner (util) or app README.                                                                            |
+| A real functionality behavior tested without a TFS ID              | Don't invent an ID or write an untraceable test; flag it as a TFS gap (the TFS author adds the FR/BR, then the test uses it). Don't edit the TFS from here. |
 | Asserting a mock was called                                        | Test the unit's real observable output; asserting on mocks is a TDD anti-pattern.                                                                           |
 | Re-stubbing Capacitor / Firebase for import safety                 | The preset already makes their imports safe — read it before adding any stub.                                                                               |
 | Manually setting up jQuery / browser globals                       | The preset installs them before module evaluation.                                                                                                          |

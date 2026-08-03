@@ -2,7 +2,7 @@
 name: x-ng-test-e2e-helper
 description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that initializes another `feature`); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs."
 metadata:
-  version: '1.1.0'
+  version: '1.1.1'
 ---
 
 # Test E2e Helper
@@ -69,8 +69,8 @@ Just as a spec/Page Object is placed by _which lib it belongs to_, a **fixture i
 ## IDs: `describe` ↔ US, `it` ↔ AC
 
 - **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/{name}/PRD.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
-- **`describe` ↔ User Story (US)** from the e2e app's **`apps/{app}-e2e/user-stories.md`** registry. Title: `<US-id> | As a …`. A US groups the ACs a user pursues in one story and **may span functionalities** — which is why USs live in the app registry, not a functionality's PRD. **US IDs are unique per e2e app.**
-- **The registry is created/updated by the e2e work, not by this skill.** When the e2e is written, if the story isn't registered a new US is added to `apps/{app}-e2e/user-stories.md` (the file is created if absent) with a fresh unique ID; an existing US is reused if it already fits. See [assets/examples/user-stories.md](assets/examples/user-stories.md) for the format.
+- **`describe` ↔ User Story (US)** from the e2e app's **`apps/{app}-e2e/user-stories.md`** registry. Title: `<US-id> | As a …`.
+- **Registry rules** (create/update, uniqueness, format, lifecycle) — read [references/e2e-app.md](references/e2e-app.md) before adding or reusing a US. See also [assets/examples/user-stories.md](assets/examples/user-stories.md).
 
 ## e2e best-practices (and anti-patterns)
 

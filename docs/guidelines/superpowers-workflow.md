@@ -40,7 +40,7 @@ PRD and TFS under `docs/x/{name}/` exist only for **functionalities** (product f
 
 The **Functionality gate** on Path A (and the matching note on Path B's B1) moves that decision into control flow: skip A1–A4 / B1 when the cycle is only `util` / `api` / `app`. The skills stay the second line of defense if they are invoked anyway. Superpowers' own brainstorming → writing-plans → execution still runs; only the functionality-doc hooks are omitted.
 
-Skipping PRD/TFS does **not** skip unit tests. Those lib types may still be tested when the plan or brainstorm includes specs — there are simply no AC / FR / BR IDs for `describe` / `it` to match. `x-ng-test-unit-helper` still supplies preset, formatting, and TDD practice; only its FR/BR ID contract is offline.
+Skipping `docs/x/` PRD/TFS does **not** skip unit tests. When the plan or brainstorm includes specs, **`util`** and product **`app`** still get unit tests — their FR/BR IDs live in a local **`requirements.md`** (beside the util version README, or at `apps/{app-name}/requirements.md`), owned by the `x-ng-test-unit-helper` convention (`references/libs/util.md` / `app.md`), not under `docs/x/`. **`api`** stays without that doc (proxy-only). E2e apps keep `user-stories.md` for US IDs.
 
 &nbsp;
 
