@@ -16,11 +16,14 @@ node_modules
 *.launch
 .settings/
 *.sublime-workspace
+
+# AI agents
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
 .claude/settings.local.json
 .claude/worktrees
 AGENTS.local.md
+/.superpowers/
 
 # IDE - VSCode
 .vscode/*

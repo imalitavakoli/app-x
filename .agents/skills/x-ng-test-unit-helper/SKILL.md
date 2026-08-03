@@ -1,6 +1,6 @@
 ---
 name: x-ng-test-unit-helper
-description: "WHAT? Supplies the workspace conventions for writing or updating a lib's Jest unit tests — how `describe` / `it` map to the functionality's TFS Functional-Requirement (FR) and Business-Rule (BR) IDs, what `jest.preset.js` already provides (so specs don't re-stub native modules or crash), and the comment-divider / Given-When-Then / AAA formatting, with an annotated example in `assets/examples/`. WHEN? Before writing or updating any `*.spec.ts` unit test for a map / data-access / ui / feature lib — or for a component or service inside one; when deciding a spec's IDs, structure, native/Capacitor/Firebase mocking, or readability."
+description: "WHAT? The workspace conventions for a lib's Jest unit tests — TFS FR/BR ID mapping, what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for a map / data-access / ui / feature lib — or a component, service or util inside one; when deciding a spec's IDs, structure, native/Capacitor/Firebase mocking, or readability."
 metadata:
   version: '1.0.0'
 ---
@@ -9,7 +9,7 @@ metadata:
 
 ## Overview
 
-This skill is a **reference**: it puts the workspace's unit-test conventions into your context. It **produces nothing** — whoever is doing the work writes the tests, following these conventions.
+This skill is a **helper**: it puts the workspace's unit-test conventions into your context. It **produces nothing** — whoever is doing the work writes the tests, following these conventions.
 
 Unit tests trace to the functionality's **TFS**: **FR → `describe`, BR → `it`**.
 
@@ -56,6 +56,8 @@ Separate each `describe` (FR) block — and the file's mock-data / mock-service 
 ## Examples
 
 See [assets/examples/unit-spec.md](assets/examples/unit-spec.md) — a feature-component spec showing the FR/BR dividers, `Given/When/Then` + AAA, the `jest.preset.js` handling (native modules not re-stubbed; a hoisted barrel mock **only** for import safety), and **observable-effect** assertions rather than mock-call assertions.
+
+**Handing it to a subagent?** The file lives at `.agents/skills/x-ng-test-unit-helper/assets/examples/unit-spec.md` — give that full path. An execution agent resolves paths against the repo root and cannot read this skill, so the skill-relative path above means nothing to it.
 
 ## Common mistakes
 

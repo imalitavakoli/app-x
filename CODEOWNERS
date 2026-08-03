@@ -1,34 +1,128 @@
-# CODEOWNERS file defines individuals or teams that are expert in a specific
-# code area of a repo and are interested that the code quality stays great.
-# To take full advantage of this file, please read more:
+# CODEOWNERS — current owners of paths in this repo (no ownership history here).
+# Compatible with common Git hosts that read a root CODEOWNERS file.
+# Last matching rule wins. Put the fallback first; put more specific paths below.
+# Path sections below are grouped by directory — see rule 7 for the layout.
+#
+# Learn more (example host docs):
 # https://marketplace.atlassian.com/apps/1218598/code-owners-for-bitbucket
+#
+# Rules:
+# 1. Global fallback — every path has an owner until a more specific rule matches.
+#      * @alice
+#
+# 2. Directory ownership — one person/team owns a whole app or lib tree.
+#      /apps/ng-x-boilerplate-web/ @alice
+#      /libs/shared/data-access/ng-auth/ @alice
+#
+# 3. Version-folder ownership — only for shared libs that use per-version folders
+#    under `…/src/lib/{version}/` (see "Versioning shared libs" in
+#    docs/getting-started/library-types-and-their-relationship.md).
+#    Use when different people own different versions (e.g. `v1` vs `v2`, or
+#    `toggle-me-v1` vs `long-press-me-v1`). App-specific libs are not versioned
+#    this way — own them at the lib/app directory (rule 2).
+#      /libs/shared/ui/ng-directives/src/lib/toggle-me-v1/ @bob
+#      /libs/shared/ui/ng-modal/src/lib/modal-network-v1/ @carol
+#
+# 4. Teams — prefer a stable team over individuals when a group owns an area.
+#      /docs/ @my-org/docs-team
+#    Reviewer assignment depends on the host (team as a unit, or a subset via
+#    host-specific group strategies such as :all / :random(n)).
+#
+# 5. Own this file — ownership changes must be reviewable.
+#      CODEOWNERS @alice
+#
+# 6. Keep this file up to date (who is responsible for the path *now*):
+#    When to edit this file:
+#    - You create a new app, lib, or shared version-folder → add a line for it
+#      with the current owner.
+#    - Maintenance of a path is intentionally handed to another person/team
+#      (a planned handoff agreed with the current owner / Workspace Specialist).
+#      That is NOT "person B edited one file in person A's lib" — editing or
+#      reviewing code does not change ownership by itself.
+#    When to commit the edit:
+#    - In the same commit that adds the new path, or that records the handoff.
+#      Do not defer CODEOWNERS to a later commit.
+#    Handoff tip: optional short co-ownership (@old @new), then remove @old.
+#    Do not leave old owners or "formerly …" notes here (Git history records
+#    past owners).
+#
+# 7. Layout — where a new line goes:
+#    Sections are grouped by directory. Within a section, order by owner first
+#    (alphabetically), then by path, and leave one blank line between owners.
+#    Sort paths with `/` ranked below every other character, so a directory
+#    comes before longer sibling names — `ng-bases/` before `ng-bases-model/`,
+#    `ng-b2c/` before `ng-b2c-e2e/`. (Plain ASCII sorting inverts both, because
+#    `-` < `/`.) Co-owned lines (`@alice @bob`) form their own group, ordered
+#    by the full owner list.
+#      /libs/shared/ui/ng-alpha/ @alice
+#      /libs/shared/ui/ng-beta/ @alice
+#
+#      /libs/shared/ui/ng-gamma/ @bob
+#    This ordering is cosmetic EXCEPT for one case that is not: a parent path
+#    must stay ABOVE any path nested under it, even when owner order would put
+#    it lower. Last matching rule wins, so a parent listed after its child
+#    silently takes the child's ownership.
+#      /apps/ng-x-boilerplate-web/ @alice          (parent first)
+#      /apps/ng-x-boilerplate-web/android/ @bob    (nested override below it)
+#
+# Also: docs/guidelines/best-practices.md (Mindset → Prioritize docs).
 
 
 # //////////////////////////////////////////////////////////////////////////// #
-# Groups                                                                       #
+# Global fallback & this file                                                  #
 # //////////////////////////////////////////////////////////////////////////// #
 
-#@@@Ali @"Ali"
+* @Ali
+CODEOWNERS @Ali
 
 # //////////////////////////////////////////////////////////////////////////// #
-# Directories & files owned by "Ali" as a first owner                          #
+# Groups (optional — host-specific syntax)                                     #
+# //////////////////////////////////////////////////////////////////////////// #
+# Define a named group here only if your host supports custom groups in this
+# file; then use that group on path rules below. Prefer org/workspace teams
+# when the host already has them (see rule 4). Example (commented):
+#
+# @@@Ali @"Ali"
+
+# //////////////////////////////////////////////////////////////////////////// #
+# Root-level files                                                             #
 # //////////////////////////////////////////////////////////////////////////// #
 
-/_OBS/ali/ @Ali
+/AGENTS.md @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# apps/                                                                        #
+# //////////////////////////////////////////////////////////////////////////// #
 
 /apps/ng-x-boilerplate-component/ @Ali
 /apps/ng-x-boilerplate-desktop/ @Ali
 /apps/ng-x-boilerplate-mobile/ @Ali
 /apps/ng-x-boilerplate-web/ @Ali
 
+# //////////////////////////////////////////////////////////////////////////// #
+# docs/                                                                        #
+# //////////////////////////////////////////////////////////////////////////// #
+
 /docs/ @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/ (app-specific)                                                         #
+# //////////////////////////////////////////////////////////////////////////// #
 
 /libs/ng-x-boilerplate-component/ @Ali
 /libs/ng-x-boilerplate-desktop/ @Ali
 /libs/ng-x-boilerplate-mobile/ @Ali
 /libs/ng-x-boilerplate-web/ @Ali
 
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/shared/api/                                                             #
+# //////////////////////////////////////////////////////////////////////////// #
+
 /libs/shared/api/ @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/shared/data-access/                                                     #
+# //////////////////////////////////////////////////////////////////////////// #
 
 /libs/shared/data-access/ng-auth/ @Ali
 /libs/shared/data-access/ng-config/ @Ali
@@ -36,6 +130,10 @@
 /libs/shared/data-access/ng-x-credit/ @Ali
 /libs/shared/data-access/ng-x-profile-info/ @Ali
 /libs/shared/data-access/ng-x-users/ @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/shared/feature/                                                         #
+# //////////////////////////////////////////////////////////////////////////// #
 
 /libs/shared/feature/ng-app-acc-sidebar/ @Ali
 /libs/shared/feature/ng-app-footer/ @Ali
@@ -46,12 +144,20 @@
 /libs/shared/feature/ng-x-profile-info/ @Ali
 /libs/shared/feature/ng-x-users/ @Ali
 
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/shared/map/                                                             #
+# //////////////////////////////////////////////////////////////////////////// #
+
 /libs/shared/map/ng-auth/ @Ali
 /libs/shared/map/ng-config/ @Ali
 /libs/shared/map/ng-translations/ @Ali
 /libs/shared/map/ng-x-credit/ @Ali
 /libs/shared/map/ng-x-profile-info/ @Ali
 /libs/shared/map/ng-x-users/ @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/shared/page/                                                            #
+# //////////////////////////////////////////////////////////////////////////// #
 
 /libs/shared/page/ng-account/ @Ali
 /libs/shared/page/ng-auth/ @Ali
@@ -60,6 +166,10 @@
 /libs/shared/page/ng-not-found/ @Ali
 /libs/shared/page/ng-test/ @Ali
 /libs/shared/page/ng-x-users/ @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/shared/ui/                                                              #
+# //////////////////////////////////////////////////////////////////////////// #
 
 /libs/shared/ui/app-shell/ @Ali
 /libs/shared/ui/base/ @Ali
@@ -82,6 +192,10 @@
 /libs/shared/ui/ng-x-profile-info/ @Ali
 /libs/shared/ui/ng-x-users/ @Ali
 /libs/shared/ui/tailwindcss/ @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# libs/shared/util/                                                            #
+# //////////////////////////////////////////////////////////////////////////// #
 
 /libs/shared/util/formatters/src/lib/date-v1/ @Ali
 /libs/shared/util/formatters/src/lib/language-v1/ @Ali
@@ -111,3 +225,9 @@
 /libs/shared/util/ng-services/src/lib/html-editor-v1/ @Ali
 /libs/shared/util/ng-services/src/lib/service-worker-v1/ @Ali
 /libs/shared/util/ng-services/src/lib/tracking-v1/ @Ali
+
+# //////////////////////////////////////////////////////////////////////////// #
+# _OBS/ (personal / legacy — not product code)                                 #
+# //////////////////////////////////////////////////////////////////////////// #
+
+/_OBS/ali/ @Ali

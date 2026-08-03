@@ -9,10 +9,15 @@ The **ng-profile-info** functionality shows the logged-in user's profile details
 
 ## 🗺️ Overview
 
-ng-profile-info is a **mixed** functionality (map + data-access + ui + feature): it fetches profile and credit data from the server, then presents them in an interactive card that other pages (e.g. the Dashboard) compose.
+ng-profile-info is a **mixed** functionality (owns `data-access` + `feature`; this example also has `map` + `ui`): it fetches profile and credit data from the server, then presents them in an interactive card that other pages (e.g. the Dashboard) compose. Those pages are consumers — they do not make this functionality `mixed+`.
 
 - In scope: fetching profile + credit; presenting the card; "Read more" and style-toggle interactions; loading/error states.
-- Out of scope: the details view opened by "Read more" (a separate functionality); editing the profile.
+
+## 🚫 Non-Goals & Why
+
+- **Not the details view behind "Read more".** It is a full screen with its own data and route; keeping it separate lets this card stay composable inside any page.
+- **No profile editing.** Reading and writing differ in permissions and validation; mixing them would put a write path inside a presentational card.
+- **Rejected — one component switching views via `dataType`.** Covering the card and the details view in a single component was considered and dropped: they differ in data and lifecycle, so separating them keeps each independently testable.
 
 ## 👥 Users
 

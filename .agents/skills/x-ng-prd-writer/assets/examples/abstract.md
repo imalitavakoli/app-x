@@ -9,10 +9,15 @@ The **ng-user-geo** functionality resolves the current user's geographic context
 
 ## 🗺️ Overview
 
-Many functionalities need the user's country and currency (e.g. to format money or show region-specific content). ng-user-geo centralises that lookup behind a shared data-access lib. It is **abstract**: it has no UI of its own; it exposes data to other libs.
+Many functionalities need the user's country and currency (e.g. to format money or show region-specific content). ng-user-geo centralises that lookup behind a shared data-access lib. It is **abstract**: `data-access` (+ `map` here because it calls an API); no UI of its own — it exposes data to other libs.
 
 - In scope: fetching and caching the user's geo context; exposing it to consumers.
-- Out of scope: any visual presentation; changing the user's region (a settings UI is a separate functionality).
+
+## 🚫 Non-Goals & Why
+
+- **No visual presentation.** This functionality exposes data only; each consumer renders it in its own context, so a shared UI would have to guess at layouts it cannot know.
+- **Not changing the user's region.** Editing carries its own permissions and confirmation flow — a separate functionality, not a write path bolted onto a lookup.
+- **Rejected — a cached copy per consumer.** Simpler to build, but it would issue the same request several times per page and let copies drift out of step. One centrally cached instance won.
 
 ## 👥 Users
 

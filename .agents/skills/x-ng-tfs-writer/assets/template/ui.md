@@ -1,6 +1,6 @@
 <!--
 Template for `docs/x/{name}/TFS/ui.md` — the `ui` lib spec + its FR/BR.
-Include this file only for visual functionalities (visual / visual+ / mixed / mixed+).
+Include this file only when this functionality **owns** a `ui` lib (optional for visual / visual+ / mixed / mixed+).
 Lib name: `{domain}-ui-ng-{name}`. Remove `>` helpers from the final draft.
 Repeat the `##### Component: …` block per exported component. Register every FR/BR ID in the README's 🧭 ID Index.
 -->

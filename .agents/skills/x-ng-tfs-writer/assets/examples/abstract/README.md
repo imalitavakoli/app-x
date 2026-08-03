@@ -1,4 +1,4 @@
-<!-- Example TFS folder for an ABSTRACT functionality (map + data-access). Mirrors docs/x/ng-user-geo/TFS/. -->
+<!-- Example TFS folder for an ABSTRACT functionality that uses map + data-access (map is optional in general — required here because it calls an API). Mirrors docs/x/ng-user-geo/TFS/. -->
 
 # TFS — ng-user-geo
 
@@ -22,6 +22,12 @@
 ### Rationale
 
 user-geo only resolves the user's geographic context from the server and exposes it to other functionalities; it has no UI. So it needs a `map` lib (to fetch/normalise) and its sister `data-access` lib (to store + expose), and nothing else.
+
+### Non-Goals & Why
+
+- **No `ui` / `feature` libs.** Consumers render the geo context themselves; a UI here would have no screen of its own to live on.
+- **Rejected — `entity` state structure.** It fits pure CRUD; this lib resolves one context per user and only reads it, so `single-instance` matches the lifecycle without the entity ceremony.
+- **Rejected — folding the fetch into `data-access`.** A separate `map` lib keeps the normalise step a testable unit on its own and matches every other fetching functionality here.
 
 ## 🔗 Existing Dependencies & Reuse
 

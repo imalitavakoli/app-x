@@ -1,6 +1,6 @@
 <!--
 Template for `docs/x/{name}/TFS/page.md` — the `page` lib spec + its FR/BR.
-Include this file only for visual+ / mixed+ functionalities. Lib name: `{domain}-page-ng-{name}`.
+Include this file only when this functionality **owns** a `page` lib (`visual+` / `mixed+`). Lib name: `{domain}-page-{name}` (same `{name}` as the functionality — never a consumer page's name).
 Remove `>` helpers from the final draft. Register every FR/BR ID in the README's 🧭 ID Index.
 -->
 

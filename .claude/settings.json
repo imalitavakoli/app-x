@@ -8,7 +8,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/inject-agents.mjs"
+            "command": "node .claude/hooks/inject-agents-file.mjs"
           }
         ]
       }

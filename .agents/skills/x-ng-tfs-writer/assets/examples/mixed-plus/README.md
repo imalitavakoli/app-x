@@ -1,4 +1,4 @@
-<!-- Example TFS folder for a MIXED+ functionality (map + data-access + ui + feature + page). Mirrors docs/x/ng-x-wallet/TFS/. A plain mixed functionality is identical but omits page.md. -->
+<!-- Example TFS folder for a MIXED+ functionality with the full optional set (map + data-access + ui + feature + page). mixed+ requires page + data-access; map/ui/feature are optional. A plain mixed requires data-access + feature and omits page.md. Mirrors docs/x/ng-x-wallet/TFS/. -->
 
 # TFS — ng-x-wallet
 
@@ -22,6 +22,12 @@
 ### Rationale
 
 x-wallet fetches its own data (accounts, then the selected account's balance), presents an interactive balance card, refreshes the balance live, polls while the balance is processing, and is itself an app page with an order-of-one child route — so it needs all five lib types.
+
+### Non-Goals & Why
+
+- **Rejected — polling inside the dependency chain.** It would re-run the whole chain on every tick; the poll lives in its own `_util` service, started once all data is ready.
+- **Rejected — `entity` state structure.** The balance write sends an `extra` payload beyond the entity, so it is not pure CRUD; `multi-instance` is used instead.
+- **Not promoted to `shared` yet.** The libs stay app-scoped until a second app needs them — promoting early would fix a public contract before there is a second consumer to shape it.
 
 ## 🔗 Existing Dependencies & Reuse
 

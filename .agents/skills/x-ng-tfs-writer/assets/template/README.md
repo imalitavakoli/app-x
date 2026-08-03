@@ -18,15 +18,27 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 
 ### Functionality Classification
 
-> Choose exactly one (see `docs/getting-started/library-types-and-their-relationship.md`): **abstract** (map + data-access) · **visual** (ui + feature) · **visual+** (ui + feature + page) · **mixed** (map + data-access + ui + feature) · **mixed+** (map + data-access + ui + feature + page). This decides which sibling `{libtype}.md` files exist.
+> Choose exactly one (see `docs/getting-started/library-types-and-their-relationship.md` — Functionality types). Shorthand (required · optional):
+>
+> - **abstract** — `data-access` · optional `map`
+> - **visual** — `ui` and/or `feature` (no owned `page`)
+> - **visual+** — owned `page` · optional `ui` / `feature`
+> - **mixed** — `data-access` + `feature` · optional `map` / `ui` (no owned `page`)
+> - **mixed+** — `page` + `data-access` · optional `map` / `ui` / `feature`
+>
+> Emit only the sibling `{libtype}.md` files for libs this functionality **owns**. Also state the **natural entry lib** (same doc).
 
 ### Domain
 
-> The functionality's domain (scope). If you cannot infer it from the PRD/context, ask: is it **shared** (usable by any app) or specific to one app in the workspace? A **shared** functionality's libs live under `libs/shared/…`; an app-specific one under `libs/{domain}/…` (the domain is that app's name). The domain is the first segment of every lib name (`{domain}-{type}-ng-{name}`). Library boundaries per domain are enforced in `.eslintrc.json`.
+> The functionality's domain (scope). If you cannot infer it from the PRD/context, ask: is it **shared** (usable by any app) or specific to one app in the workspace? A **shared** functionality's libs live under `libs/shared/…`; an app-specific one under `libs/{domain}/…` (the domain is that app's name). The domain is the first segment of every **owned** lib name (`{domain}-{type}-{name}`), and every owned lib uses this functionality's **same** `{name}`. Library boundaries per domain are enforced in `.eslintrc.json`.
 
 ### Rationale
 
-> Why this classification. Name any existing libs reused (so a lib type may be absent because an existing one covers it).
+> Why this classification and which natural entry lib. Name any existing libs **reused** (other functionalities) so a lib type may be absent here. If other pages compose this functionality, say so — that does **not** add an owned `page`.
+
+### Non-Goals & Why
+
+> What this functionality deliberately does **not** do technically — and the reason for each. Include any **approach considered and rejected**: a different lib split, another `data-access` structure, a shared lib deliberately not reused, a pattern ruled out. State why each lost. This keeps a future reader from re-litigating a settled decision, and it is the only durable record of the alternatives — the planning documents that discussed them do not survive the cycle.
 
 ## 🔗 Existing Dependencies & Reuse
 

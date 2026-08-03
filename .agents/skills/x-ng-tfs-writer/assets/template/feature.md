@@ -1,13 +1,13 @@
 <!--
 Template for `docs/x/{name}/TFS/feature.md` — the `feature` lib spec + its FR/BR,
 followed by the 🧳 User Experience & Flows journey (one sub-section per exported feature component).
-Include this file for visual / mixed functionalities. Lib name: `{domain}-feature-ng-{name}`.
+Include this file only when this functionality **owns** a `feature` lib (required for mixed; optional for visual / visual+ / mixed+). Lib name: `{domain}-feature-{name}` (same `{name}` as the functionality).
 Remove `>` helpers from the final draft. Register every FR/BR ID in the README's 🧭 ID Index.
 -->
 
 ### 🧩 'feature' Library Specification
 
-> The last piece of a visual/mixed functionality. `feature` components fetch data (via `data-access`) and drive `ui` inputs. They extend `V2BaseFeatureExtComponent`.
+> Often the natural entry lib for visual / mixed. `feature` components fetch data (via owned or reused `data-access`) and drive `ui` inputs (owned or reused). They extend `V2BaseFeatureExtComponent`.
 
 #### Lib Name
 

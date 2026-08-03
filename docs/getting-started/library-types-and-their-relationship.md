@@ -105,7 +105,9 @@ Pages initialize multiple '_feature_' libs to bring up a much bigger functionali
 
 ### 'app' type
 
-**What are they?** These are actually our apps and not libs! Technically, apps are also considered as libs since they are buildable libraries within the workspace.
+**What are they?** These are our **final products** in the workspace — real applications, not reusable feature libs. They live under `apps/` (every other type lives under `libs/`), they are buildable/deployable, and they compose functionalities to deliver value to end users.
+
+They still carry a `type:app` tag in `project.json` / `.eslintrc.json` so module-boundary rules can treat them like the other types — but that is a workspace convention only. Conceptually they are apps, not libs.
 
 **What other lib types they can import?** They can import ALL type of libs, except '_api_' types.
 
@@ -137,15 +139,30 @@ The versioning folder names can be something like `v1`, `v2`, etc. They can also
 
 ## Functionality types
 
-A functionality is actually a feature that we build for our applications. It can consist of multiple lib types.
+A functionality is a feature that we build for our applications. It is classified into one of the types below, and is made of one or more lib types from the Abstract and/or Visual groups ('_map_', '_data-access_', '_ui_', '_feature_', '_page_').
 
-For example, a 'profile' functionality that fetches the user's profile details from the server and displays them across multiple Angular applications, belongs to the shared 'domain' and may consist of the following libraries:
+For example, a `profile` functionality that fetches the user's profile from the server and displays it across multiple Angular apps belongs to the shared domain and may look like this:
 
 - `shared-map-ng-profile`
 - `shared-data-access-ng-profile`
 - `shared-ui-ng-profile`
 - `shared-feature-ng-profile`
 - `shared-page-ng-profile`
+
+> **Important! — Library vs functionality (when PRD / TFS apply)**
+>
+> A **library type** (`api`, `util`, `map`, `data-access`, `ui`, `feature`, `page`, `app`) describes what a single lib is allowed to do.
+> A **functionality type** (`abstract`, `visual`, `visual+`, `mixed`, `mixed+`) describes a product feature that may be one lib or several libs working together.
+>
+> **PRD and TFS docs exist only for functionalities** (`docs/x/{name}/`). They do **not** exist for a bare library that is not a functionality.
+>
+> - '_util_', '_api_', and '_app_' **never** form a functionality — alone or as part of one. Generating or editing one of these does **not** call for a PRD or a TFS.
+>   - '_util_' / '_api_' are supporting libs (shared utilities / proxy doors).
+>   - '_app_' is different again: it is a final product under `apps/` (see the '_app_' type above), not a functionality and not a reusable lib.
+> - '_data-access_', '_ui_', '_feature_', and '_page_' **can** each be a functionality on their own (see the types below), or be part of a larger one — then a PRD/TFS **does** apply.
+> - '_map_' is never a functionality by itself: if present, it always sits under an '_abstract_' / '_mixed_' / '_mixed+_' functionality together with '_data-access_'.
+>
+> Before writing or updating a PRD/TFS, ask: _"Is this a functionality (a product feature), or just a lib?"_ If it is only a '_util_', '_api_', or '_app_' lib — stop; no functionality docs.
 
 > **Note!**
 > Functionalities must **not** have their own '_util_' libs. Instead, they should reuse existing '_util_' libs. These libs contain low-level utilities that can be shared across multiple functionalities.
@@ -160,47 +177,95 @@ For example, a 'profile' functionality that fetches the user's profile details f
 > **Note!**
 > In most cases, functionalities also don't have their own '_page_' lib, because pages are meant to compose multiple functionalities.
 >
-> However, if a functionality represents an entire page by itself, for example, a `profile` page that only displays the user's profile, it is perfectly fine to have a `shared-page-ng-profile` lib.
+> However, if a functionality represents an entire page by itself — for example, a `profile` page that only displays the user's profile — it is perfectly fine to have a `shared-page-ng-profile` lib.
+
+**Natural entry lib (for using the functionality as a whole)**
+
+When another lib wants to _use_ a functionality (interact with it — dispatch actions, select state, render its smart component / page, etc.), it should import that functionality's **natural entry lib**. That is the lib type that represents the functionality as a whole for interaction purposes.
+
+This does **not** mean other libs of that functionality are never imported. For example, a '_map_' lib may still be imported so other libs can read its Map interfaces (read-only typing). The entry lib is about _using_ the functionality, not about every possible import.
 
 &nbsp;
 
 ### 'abstract' type
 
-**What is it?** A functionality which consists of '_map_' and '_data-access_' lib types.
+**What is it?** A functionality made of Abstract-group libs only — '_data-access_', and optionally '_map_'.
 
-**Which lib is imported by other libs?** '_data-access_' lib.
+It can exist with **only** a '_data-access_' lib when that lib's effects do not need to call API endpoints or load external assets (e.g. DEP JSON files). Typical examples: async work against Local Storage, SQLite, or similar local/device sources — anything other than fetching from the outside world via an API or loading an asset.
+
+If the functionality **does** have a '_map_' lib (to call an API endpoint or load an asset), it **must** also have a '_data-access_' lib to store the fetched data. So valid shapes are:
+
+- '_data-access_' only
+- '_map_' + '_data-access_'
+
+**Natural entry lib:** '_data-access_'.
 
 &nbsp;
 
 ### 'visual' type
 
-**What is it?** A functionality which consists of '_ui_' and '_feature_' lib types.
+**What is it?** A functionality made of Visual-group libs — '_ui_' and/or '_feature_' — and **without** a '_page_' lib.
 
-**Which lib is imported by other libs?** '_feature_' lib.
+It does **not** require both. Valid shapes include:
+
+- '_ui_' only — a presentational piece reused by different '_feature_' libs
+- '_feature_' only — a smart lib that uses one or more '_data-access_' libs (from other, typically abstract, functionalities) and renders via other '_ui_' libs
+- '_ui_' + '_feature_'
+
+**Natural entry lib:**
+
+- If the functionality has a '_feature_' lib → '_feature_'
+- If it is '_ui_' only → '_ui_'
 
 &nbsp;
 
 ### 'visual+' type
 
-**What is it?** A functionality which consists of '_ui_', '_feature_', and '_page_' lib types.
+**What is it?** Same idea as `'visual'`, but it **definitely includes a '_page_' lib**. The presence of '_page_' is what makes it `'visual+'` rather than `'visual'`.
 
-**Which lib is imported by other libs?** '_feature_' lib.
+It can consist of '_ui_' and/or '_feature_' together with '_page_', or even of a '_page_' lib alone. Valid shapes include:
+
+- '_page_' only
+- '_page_' + '_ui_'
+- '_page_' + '_feature_'
+- '_page_' + '_ui_' + '_feature_'
+
+**Natural entry lib:** '_feature_' when the functionality has one; otherwise '_page_' (e.g. page-only).
 
 &nbsp;
 
 ### 'mixed' type
 
-**What is it?** A functionality which consists of '_map_', '_data-access_', '_ui_', and '_feature_' lib types.
+**What is it?** A mix of `'visual'` and `'abstract'`: the functionality **owns** its data **and must represent it**, but it is **not** a full page (no '_page_' lib).
 
-**Which lib is imported by other libs?** '_feature_' lib.
+It **must** have:
+
+- '_data-access_' (owns the data/state)
+- '_feature_' (represents that data — the smart side)
+
+It **may** skip:
+
+- '_map_' — same rule as `'abstract'`: only needed when talking to an API or loading an external asset; local/async sources can live in '_data-access_' alone
+- '_ui_' — the '_feature_' may reuse '_ui_' libs from other functionalities to present the data it fetches
+
+So the required core is '_data-access_' + '_feature_'; optional '_map_' and/or '_ui_'.
+
+**Natural entry lib:** '_feature_'.
 
 &nbsp;
 
 ### 'mixed+' type
 
-**What is it?** A functionality which consists of '_map_', '_data-access_', '_ui_', '_feature_', and '_page_' lib types.
+**What is it?** A mix of `'visual+'` and `'abstract'`: the functionality **owns** its data **and** exposes it as a **page**.
 
-**Which lib is imported by other libs?** '_feature_' lib.
+It **must** have:
+
+- '_page_'
+- '_data-access_'
+
+It **may** also have '_map_', '_ui_', and/or '_feature_' (same optional rules as `'mixed'` / `'visual+'` for those). The presence of '_page_' + owned '_data-access_' is what makes it `'mixed+'` rather than `'mixed'` or `'visual+'`.
+
+**Natural entry lib:** '_page_' (the functionality is consumed as a page; other libs of it may still be imported for partial reuse — e.g. '_feature_' or '_data-access_').
 
 &nbsp;
 

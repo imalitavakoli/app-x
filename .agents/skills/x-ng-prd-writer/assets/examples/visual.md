@@ -12,7 +12,12 @@ The **ng-avatar-badge** functionality displays a user's avatar image, name, and 
 ng-avatar-badge is a **visual** functionality (ui + feature) with no data-access of its own. It reads the user's data from the shared **user** abstract functionality's data-access lib, then presents it and emits interaction events.
 
 - In scope: rendering avatar + name + online dot; emitting a click event; a loading state until the user data is available.
-- Out of scope: fetching or storing user data (owned by the shared `user` functionality); deciding what a click does (the composing page decides).
+
+## 🚫 Non-Goals & Why
+
+- **Not fetching or storing user data.** The shared `user` abstract functionality owns it; fetching here would give a page two sources of truth for the same user.
+- **Not deciding what a click does.** The badge emits the event and the composing page decides, so the same badge works in a header, a list or a menu unchanged.
+- **Rejected — its own `data-access` lib.** Considered so the badge could stand alone, dropped because it would re-fetch data the composing page has already loaded.
 
 ## 👥 Users
 

@@ -2,7 +2,7 @@
 
 A `feature` lib (`shared-feature-ng-x-profile-info`) composed on the **dashboard** page. The file lives at `apps/{app}-e2e/src/e2e/page/dashboard/x-profile-info.cy.ts` — **folder = composition context** (`page/dashboard/`), **file = the feature under test**. (`.cy.ts` is the current runner's extension — read your workspace's e2e setup for today's runner.)
 
-Conventions shown: **no wrapping `describe`** (the file name names the feature); `describe` = a **US** (from `apps/{app}-e2e/user-stories.md`), `it` = an **AC** (from the PRD); `Given/When/Then` in the `it` title, **AAA** in the body; assert **only what the user observes** (DOM via `data-cy`) — never internal state; selectors + helpers come from the **Page Object**; login + stubs keep the test **hermetic** and **independent**.
+Conventions shown: **no wrapping `describe`** (the file name names the feature); `describe` = a **US** (from `apps/{app}-e2e/user-stories.md`), `it` = an **AC** (from the PRD); `Given/When/Then` in the `it` title, **AAA** in the body; assert **only what the user observes** (DOM via `data-cy`) — never internal state; selectors + helpers come from the **Page Object**; login + **hermetic** intercepts (external boundaries found **code-first** from this feature's `data-access` — not by runtime spying) keep the test independent. Intercepts are registered **before** visit.
 
 ```ts
 import { dashboardPo } from '../../../support/page/dashboard.po';
@@ -13,9 +13,12 @@ beforeEach(() => {
   // Independent & deterministic: cache login once (cy.session), restore per test.
   cy.login('ada@example.com');
 
-  // Hermetic: stub ONLY the external boundary (a third-party API), never internal app code.
+  // Hermetic: stub ONLY the external boundary found in this feature's data-access
+  // (users API). Never stub internal app modules. Register BEFORE visit.
   cy.intercept('GET', 'https://jsonplaceholder.typicode.com/users', {
-    fixture: 'users.json', // shared test data lives in src/fixtures/
+    // Fixture path is relative to src/fixtures/; placed by owner —
+    // this feature owns the stubbed users API → feature/{feature-name}/.
+    fixture: 'feature/x-profile-info/users.json',
   }).as('getUsers');
 });
 

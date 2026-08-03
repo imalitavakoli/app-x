@@ -1,4 +1,4 @@
-<!-- Example TFS folder for a VISUAL functionality (ui + feature). Mirrors docs/x/ng-x-profile/TFS/. A visual+ functionality would add page.md — see the mixed-plus example. -->
+<!-- Example TFS folder for a VISUAL functionality with ui + feature (either alone is also valid visual). Mirrors docs/x/ng-x-profile/TFS/. A visual+ owns a page — add page.md (see mixed-plus example for page.md shape). -->
 
 # TFS — ng-x-profile
 
@@ -22,6 +22,12 @@
 ### Rationale
 
 x-profile presents the user's profile in two forms — a compact card and an expanded detail. It has no `map`/`data-access` of its own: it reuses the shared `ng-user` **abstract** functionality's `data-access` lib for the data. So it needs `ui` + `feature` only.
+
+### Non-Goals & Why
+
+- **No `map` / `data-access` libs.** The shared `ng-user` abstract functionality already exposes this data; our own would duplicate its fetch and its cache.
+- **Rejected — one exported component with a `dataType` switch.** The compact card and the expanded detail differ in data and lifecycle, so two exported components keep each independently testable.
+- **Rejected — a `page` lib.** Nothing routes to this functionality directly; it is always composed by a host page, so a page lib would add a route no one navigates to.
 
 ## 🔗 Existing Dependencies & Reuse
 

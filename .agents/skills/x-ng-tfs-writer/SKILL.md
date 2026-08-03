@@ -1,6 +1,6 @@
 ---
 name: x-ng-tfs-writer
-description: "WHAT? Generates or updates a functionality's TFS (Technical Functional Specification) — the frontend-oriented technical plan that turns an approved PRD into concrete Nx + Angular library specs (map / data-access / ui / feature / page), their public contracts, and the Functional Requirements (FRs) and Business Rules (BRs) that map to unit tests. WHEN? Asked to create or update a TFS, technical design / frontend architecture / system-requirements document, a functionality's library breakdown, or the FR/BR test blueprint for a feature to be built or changed in the workspace; or after a PRD is ready and the feature needs its technical spec written to docs/x/."
+description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs — those are not functionalities."
 metadata:
   version: '1.0.0'
 ---
@@ -9,7 +9,7 @@ metadata:
 
 ## Overview
 
-You are a senior Nx + Angular frontend developer who turns an approved **PRD** into a complete, implementation-ready **TFS** for a **functionality** (a feature composed of several library types). The TFS defines _how the feature is built_: which libs are needed, each lib's public contract (inputs, outputs, methods, rendering rules), and the **Functional Requirements (FRs)** and **Business Rules (BRs)** that become the unit-test blueprint.
+You are a senior Nx + Angular frontend developer who turns an approved **PRD** into a complete, implementation-ready **TFS** for a **functionality** (classified as `abstract` / `visual` / `visual+` / `mixed` / `mixed+`; libs from `map` / `data-access` / `ui` / `feature` / `page` only). The TFS defines _how the feature is built_: which libs are needed, each lib's public contract (inputs, outputs, methods, rendering rules), and the **Functional Requirements (FRs)** and **Business Rules (BRs)** that become the unit-test blueprint.
 
 - **FR → `describe`**, **BR → `it`** (the unit-test mapping).
 - Every FR/BR **back-links the PRD Acceptance Criterion (AC)** it decomposes, so PRD ↔ TFS ↔ tests stay in lockstep.
@@ -32,13 +32,19 @@ docs/x/{functionality-name}/
 
 ## When to use
 
-- A PRD is ready and the feature needs its technical spec.
-- Asked to create/update a TFS, technical design, frontend architecture, or library breakdown.
+- A functionality's PRD is ready and needs its technical spec.
+- Asked to create/update a TFS, technical design, frontend architecture, or library breakdown for a **functionality**.
 - Asked to write or revise the FR/BR test blueprint for a functionality.
 
-Do not use to write the product spec (the PRD) or to write the tests/code themselves.
+Do **not** use when the target is only a `util`, `api`, or `app` lib — those are never functionalities (see Prerequisites). Do not use to write the product spec (the PRD) or to write the tests/code themselves.
 
 ## Prerequisites
+
+**Gate — functionality only.** Before anything else:
+
+- If the target is (or would be) only a `util`, `api`, or `app` lib → **STOP. Write no TFS.** Say so and exit. No PRD should exist for those either; if someone asks for a TFS anyway, refuse.
+- `app` is a final product under `apps/`, not a functionality.
+- Classify using `docs/getting-started/library-types-and-their-relationship.md` (Functionality types). Create a `{libtype}.md` only for lib types this functionality **owns**.
 
 **Required input:** the functionality's **PRD** (`docs/x/{name}/PRD.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
 
@@ -54,28 +60,34 @@ If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (R
 Copy this checklist and track it. Keep the `[tfs]` prefix so, if this runs inside a larger workflow, these stay grouped and the outer workflow's todos remain visible:
 
 ```
-- [ ] [tfs] 1. Analyse — read the templates (assets/template/), the PRD, the library-types & naming-conventions docs, and any existing TFS folder
-- [ ] [tfs] 2. Name & classify — derive the technical name; classify the functionality; read the matching example
-- [ ] [tfs] 3. Library breakdown — write one docs/x/{name}/TFS/{libtype}.md per present lib type (its spec + FR/BR)
-- [ ] [tfs] 4. Feature journey — in feature.md, add the technical journey (data flow → interaction / background / decision flows)
+- [ ] [tfs] 1. Gate & analyse — confirm it is a functionality; read templates, PRD, library-types & naming-conventions docs, any existing TFS
+- [ ] [tfs] 2. Name & classify — confirm the functionality name; classify; read the matching example
+- [ ] [tfs] 3. Library breakdown — write one docs/x/{name}/TFS/{libtype}.md per owned lib type (its spec + FR/BR)
+- [ ] [tfs] 4. Feature journey — in feature.md (only if owned), add the technical journey
 - [ ] [tfs] 5. README — write docs/x/{name}/TFS/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions)
 - [ ] [tfs] 6. Validate — run the Review Checklist until all items pass
-- [ ] [tfs] 7. Summary — report the folder path, the FR/BR IDs, and open technical questions
+- [ ] [tfs] 7. Confirm — put the Open Technical Questions to the user and fold in the answers
+- [ ] [tfs] 8. Summary — report the folder path, the FR/BR IDs, and anything still open
 ```
 
-1. **Analyse** — read the templates in [assets/template/](assets/template/) (the `README.md` template + the per-lib templates), the PRD, `docs/getting-started/library-types-and-their-relationship.md`, `docs/guidelines/naming-conventions.md`, and (for `feature` DEP config) `docs/runbooks/dep-update-config-for-a-lib.md`.
-2. **Name & classify** — derive the technical name (kebab-case; prefix `ng-` when the feature has logic, e.g. `ng-balance-card`); confirm with the user. Classify the functionality per the library-types doc and read the matching example:
-   - **abstract** (map + data-access) → [assets/examples/abstract/](assets/examples/abstract/)
-   - **visual** / **visual+** (ui + feature [+ page]) → [assets/examples/visual/](assets/examples/visual/)
-   - **mixed** / **mixed+** (map + data-access + ui + feature [+ page]) → [assets/examples/mixed-plus/](assets/examples/mixed-plus/)
+1. **Gate & analyse** — apply the Prerequisites gate. If it passes, read the templates in [assets/template/](assets/template/) (the `README.md` template + the per-lib templates), the PRD, `docs/getting-started/library-types-and-their-relationship.md`, `docs/guidelines/naming-conventions.md`, and (for `feature` DEP config) `docs/runbooks/dep-update-config-for-a-lib.md`.
+2. **Name & classify** — the technical name **is** the functionality name from the PRD / `docs/x/{name}/` (kebab-case; prefix `ng-` when it has logic, e.g. `ng-balance-card`). Confirm with the user if unclear. **Every owned lib inherits that same `{name}`** — e.g. `ng-chart` → `{domain}-map-ng-chart`, `{domain}-data-access-ng-chart`, `{domain}-feature-ng-chart`. Never name an owned lib after a consumer (`ng-dashboard`, `ng-insights`, …).
 
-   The examples show the expected **content and granularity** per lib type; the **Output layout** map in the Template section below says which template file maps to which output file. Create the `docs/x/{name}/TFS/` folder (and `docs/x/{name}/` if absent).
+   Classify per the library-types doc (authoritative) and read the matching example:
+   - **abstract** — `data-access` required; `map` only for API/external assets → [assets/examples/abstract/](assets/examples/abstract/)
+   - **visual** / **visual+** — `ui` and/or `feature`; `visual+` owns `page` → [assets/examples/visual/](assets/examples/visual/)
+   - **mixed** / **mixed+** — owns `data-access`; `mixed` must own `feature` (optional `map`/`ui`); `mixed+` must own `page` + `data-access` (optional `map`/`ui`/`feature`) → [assets/examples/mixed-plus/](assets/examples/mixed-plus/)
 
-3. **Library breakdown** — write **one `docs/x/{name}/TFS/{libtype}.md` per lib type the classification needs** (`map` / `data-access` / `ui` / `feature` / `page` — create only the present ones). Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly.
-4. **Feature journey** — in `feature.md`, add the technical journey (per exported `feature` component). For an **abstract** functionality there is no `feature.md`; put the short facade-consumer note in `data-access.md` instead (see the template).
-5. **README** — write `docs/x/{name}/TFS/README.md` with the functionality-level sections (Overview, Existing Dependencies & Reuse, Open Technical Questions) **and the ID Index** — a table of every FR/BR ID → the lib file it lives in → the PRD AC it maps to. This is the single place that keeps IDs unique across the folder.
+   **Consumed-by ≠ owns page:** listed as used on `ng-dashboard` / `ng-insights` → those pages go under **Existing Dependencies & Reuse** as consumers (or stay out of this TFS entirely). Do **not** add `page.md` or rename libs after them unless **this** functionality owns a `page` under its own name.
+
+   Examples show **content and granularity**; they may include optional libs. Emit only the `{libtype}.md` files this classification **owns**. Create `docs/x/{name}/TFS/` (and `docs/x/{name}/` if absent).
+
+3. **Library breakdown** — write **one `docs/x/{name}/TFS/{libtype}.md` per owned lib type** (`map` / `data-access` / `ui` / `feature` / `page` — create only those). Never create `util` / `api` / `app` specs. Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly.
+4. **Feature journey** — when the functionality owns a `feature`, add the technical journey in `feature.md` (per exported `feature` component). If there is no `feature.md` (**abstract**, or **ui-only** / **page-only** shapes): skip this step; for **abstract**, put the short facade-consumer note in `data-access.md` instead (see the template).
+5. **README** — write `docs/x/{name}/TFS/README.md` with the functionality-level sections (Overview, Existing Dependencies & Reuse, Open Technical Questions) **and the ID Index** — a table of every FR/BR ID → the lib file it lives in → the PRD AC it maps to. State the classification, the **natural entry lib**, and list only **owned** libs as this functionality's own. This is the single place that keeps IDs unique across the folder.
 6. **Validate** — run the Review Checklist below; loop until all pass.
-7. **Summary** — see below.
+7. **Confirm with the user** — see below. Any Open Technical Questions go to the user before finishing.
+8. **Summary** — see below.
 
 ## Template
 
@@ -86,21 +98,27 @@ The template is a **folder** — [assets/template/](assets/template/) — mirror
 | Template file             | Output file      | Holds                                                                                                         |
 | ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------- |
 | `template/README.md`      | `README.md`      | Overview, Existing Dependencies & Reuse, the 🧭 ID Index, Open Technical Questions — functionality-level only |
-| `template/map.md`         | `map.md`         | the `map` lib spec + its FR/BR (only if the functionality fetches)                                            |
-| `template/data-access.md` | `data-access.md` | the `data-access` lib spec + its FR/BR (+ the facade-consumer note for abstract functionalities)              |
-| `template/ui.md`          | `ui.md`          | the `ui` lib spec + its FR/BR (visual functionalities)                                                        |
-| `template/feature.md`     | `feature.md`     | the `feature` lib spec + its FR/BR + the 🧳 User Experience & Flows journey                                   |
-| `template/page.md`        | `page.md`        | the `page` lib spec + its FR/BR (`visual+` / `mixed+` only)                                                   |
+| `template/map.md`         | `map.md`         | owned `map` only (API / external assets)                                                                      |
+| `template/data-access.md` | `data-access.md` | owned `data-access` (+ facade-consumer note when there is no `feature.md`)                                    |
+| `template/ui.md`          | `ui.md`          | owned `ui` only                                                                                               |
+| `template/feature.md`     | `feature.md`     | owned `feature` + the 🧳 User Experience & Flows journey                                                      |
+| `template/page.md`        | `page.md`        | owned `page` only (`visual+` / `mixed+`)                                                                      |
 
 IDs are unique **across all files**; register every one in the README's 🧭 ID Index.
 
 ## Examples
 
-Read the example matching the functionality's classification before filling the specs and the journey — they show the expected granularity, the FR/BR test-ready syntax, and the journey structure. **Each example is a real folder** (`assets/examples/{type}/`), laid out exactly like a generated `docs/x/{name}/TFS/` — a `README.md` with a populated 🧭 ID Index plus one file per lib type — so it doubles as a layout reference. Read the files in the matching example folder. The three examples cover the five types: `abstract` → `abstract/`; `visual` / `visual+` → `visual/`; `mixed` / `mixed+` → `mixed-plus/`. `page.md` is demonstrated in `mixed-plus/`, so a `visual+` functionality borrows it from there; a plain `mixed` functionality uses `mixed-plus/` and omits `page.md`.
+Read the example matching the functionality's classification before filling the specs and the journey — they show the expected granularity, the FR/BR test-ready syntax, and the journey structure. **Each example is a real folder** (`assets/examples/{type}/`), laid out exactly like a generated `docs/x/{name}/TFS/` — a `README.md` with a populated 🧭 ID Index plus one file per lib type — so it doubles as a layout reference. Read the files in the matching example folder. The three examples cover the five types: `abstract` → `abstract/`; `visual` / `visual+` → `visual/`; `mixed` / `mixed+` → `mixed-plus/`. `page.md` is demonstrated in `mixed-plus/`, so a `visual+` functionality borrows it from there; a plain `mixed` uses `mixed-plus/` and omits `page.md`. Omit optional lib files the example has but this functionality does not own.
 
 ## Rules
 
-**Base classes (default):** `ui` components extend `V1BaseUiComponent`; `feature` components extend `V2BaseFeatureExtComponent`; parent `page` components extend `V2BasePageParentComponent`; child `page` components extend `V2BasePageChildComponent`. Use these unless the user asks to use — or to create — a specialized base derived from them (e.g. a shared `…-ext-{name}` base for `feature` libs that always use one specific `data-access` lib, or for `page` libs that always use one specific `feature` lib as their starter, kept DRY across functionalities). If the user names such a base, extend it instead and note it in the spec.
+**Functionality gate.** Never write a TFS for a bare `util` / `api` / `app` lib.
+
+**Name match.** Every owned lib is `{domain}-{type}-{name}` with the **same** `{name}` as the functionality. Consumers keep their own functionality names; list them under Existing Dependencies & Reuse when relevant — never as this TFS's own libs.
+
+**Natural entry lib.** Record it in the README (per the library-types doc): `abstract` → `data-access`; `visual` → `feature` or `ui`; `mixed` → `feature`; `mixed+` → `page`; `visual+` → `feature` when present, else `page`.
+
+**Base classes (default):** each component extends the latest available base class for its lib type (`ui`, `feature`, parent `page`, child `page`). Take the actual base from the matching example rather than a base-class name you already know or assume — the example is kept up to date, so it always reflects the latest base available in the workspace. Use these unless the user asks to use — or to create — a specialized base derived from them (e.g. a shared `…-ext-{name}` base for `feature` libs that always use one specific `data-access` lib, or for `page` libs that always use one specific `feature` lib as their starter, kept DRY across functionalities). If the user names such a base, extend it instead and note it in the spec.
 
 **FR / BR (the test blueprint):**
 
@@ -137,10 +155,13 @@ Read the example matching the functionality's classification before filling the 
 
 **Review Checklist** — before finalising, verify:
 
-- [ ] Folder layout correct: `docs/x/{name}/TFS/README.md` + one `{libtype}.md` per present lib type only; no lib spec placed in the README, nothing functionality-level placed in a lib file.
+- [ ] Target is a functionality (not a bare `util` / `api` / `app` lib).
+- [ ] Folder layout correct: `docs/x/{name}/TFS/README.md` + one `{libtype}.md` per **owned** lib type only; no lib spec placed in the README, nothing functionality-level placed in a lib file.
+- [ ] Every owned lib name uses the same functionality `{name}`; no consumer page absorbed as an owned `page`.
 - [ ] README has an **ID Index** listing every FR/BR ID → its lib file → its PRD AC; every ID in the lib files appears there and vice-versa.
-- [ ] Classification chosen and only the needed lib specs are included.
-- [ ] Every component names its base class correctly (`V1BaseUiComponent` / `V2BaseFeatureExtComponent` / `V2BasePageParentComponent` / `V2BasePageChildComponent`).
+- [ ] Classification and natural entry lib match the library-types doc; only the needed lib specs are included (`map`/`ui`/`feature` omitted when not owned).
+- [ ] README Non-Goals & Why records the technical alternatives considered and rejected (lib split, `data-access` structure, shared libs not reused) with the reason each lost — this is their only durable home.
+- [ ] Every component names its base class correctly — the base its lib type uses in the matching example (not a name hardcoded in this skill).
 - [ ] Every BR is `Given/When/Then` with concrete `[data-cy]` / signals / emitters; every FR/BR that implements the PRD back-links its AC.
 - [ ] FR/BR IDs unique across the TFS; helper-service IDs scoped (`{NAME}_{HELPER}_…`); no PRD IDs repurposed; nothing renumbered.
 - [ ] Inputs/Outputs written as JSDoc; outputs emitted via handler methods.
@@ -150,18 +171,28 @@ Read the example matching the functionality's classification before filling the 
 
 **Validation Steps (iterative loop):** check every item; if any fails, fix the draft and re-check the whole list; only when all pass, continue to Summary.
 
+## Confirm with the user
+
+**The TFS is not finished until this happens.** After the Review Checklist passes and before the Summary: if the draft has any **Open Technical Questions**, put them to the user and fold each answer into the TFS. A question they don't answer stays listed — never guess an answer just to close it, and never let an unanswered question reach the plan as if it were settled.
+
+Then re-run the Review Checklist over whatever changed.
+
 ## Summary
 
 1. Report the saved folder (`docs/x/{name}/TFS/`) and list the files written (`README.md` + each `{libtype}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
 3. If any new libs were recommended as shared functionalities, remind the user each needs its own PRD & TFS.
 4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
-5. List Open Technical Questions; incorporate requested changes until the user confirms.
+5. List any Open Technical Questions still unanswered after the confirmation step.
 
 ## Common mistakes
 
 | Mistake                                                       | Fix                                                                                                                                                                                       |
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Writing a TFS for a `util` / `api` / `app` lib                | STOP — not a functionality; no `docs/x/…/TFS`.                                                                                                                                            |
+| Adding `page.md` because other pages use this feature         | Consumers import the natural entry lib; own a `page` only when _this_ functionality is the page (`visual+` / `mixed+`).                                                                   |
+| Requiring `map.md`/`ui.md` for every mixed                    | Mixed requires `data-access`+`feature`; omit `map`/`ui` when not owned.                                                                                                                   |
+| Naming an owned lib after a consumer (`…-ng-dashboard`)       | All owned libs share this functionality's `{name}`.                                                                                                                                       |
 | Vague BRs ("shows the list")                                  | Use `Given/When/Then` with exact `[data-cy]`, signals, emitters.                                                                                                                          |
 | BR asserting a facade/collaborator call ("`getX` was called") | Assert the observable effect instead — exposed data / state / output; prove a correct request by priming the collaborator to return data for the expected params and checking the result. |
 | BR bundling several behaviours ("and")                        | Split into one BR per observable behaviour.                                                                                                                                               |
@@ -174,3 +205,4 @@ Read the example matching the functionality's classification before filling the 
 | Renumbering IDs on update                                     | Never renumber; add new unique IDs only.                                                                                                                                                  |
 | Writing the TFS as one file, or a lib spec into `README.md`   | One `{libtype}.md` per present lib type; `README.md` holds only functionality-level sections + the ID Index.                                                                              |
 | Restarting FR/BR numbering in each lib file                   | All lib files share one ID space; keep IDs globally unique and listed in the README ID Index.                                                                                             |
+| Finishing with Open Technical Questions unasked               | Put them to the user first. An unanswered question must never reach the plan looking settled.                                                                                             |
