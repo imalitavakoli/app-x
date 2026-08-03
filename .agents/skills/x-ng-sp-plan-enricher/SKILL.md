@@ -55,7 +55,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 
 1. **Locate** — identify the functionality name; open the plan, `docs/x/{name}/PRD.md`, and every file in `docs/x/{name}/TFS/` (the README ID Index is the map of every FR/BR → lib file → PRD AC). Confirm the chosen execution mode (`interactive` / `auto`) — if it is unknown, stop and ask before editing anything.
 2. **Source the conventions** — the workspace test/lib conventions to inject are exactly the ones the workflow loads before planning. Their authoritative list lives in **`AGENTS.md` → Superpowers-First Workflow (the _Before `writing-plans`_ hook)** — read them from there if they are not already fresh in your context (e.g. after a compaction). Do **not** hardcode a list of source skills here; defer to that hook.
-3. **Enrich Global Constraints** (**merge** into the existing block — never duplicate an existing one). Add, as concise text:
+3. **Enrich Global Constraints** (**merge** into the existing block — never duplicate an existing one). **Keep each constraint to one line** — that is the format `writing-plans`' own Global Constraints template prescribes, and this block is re-sent verbatim in _every_ implementer dispatch, so length here is multiplied by the task count. Carry paths, not prose. Add, as concise text:
    - **Execution mode** — state it first, since it changes how the rest is executed (`auto` is the workspace recommended default when asking the user; never assume it here):
      - `auto` → _"Execution mode: AUTO. Execute with `subagent-driven-development` as Superpowers defines it (implementer subagent per task, commit per task, task + final reviews)."_
      - `interactive` → _"Execution mode: INTERACTIVE. Execute with `executing-plans` (in-session, no implementer subagents). Work on the feature branch but do NOT commit, push, merge, or open a PR. After each task, stop: summarize the files changed and how to verify them, then wait for the user. The user verifies and decides when to commit."_
@@ -99,6 +99,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 - [ ] CODEOWNERS steps exist only when the plan creates owned paths or the plan/user explicitly states a handoff; no handoff was inferred; no standalone CODEOWNERS task otherwise.
 - [ ] No workspace helper skill is named; the convention source-set defers to `AGENTS.md`'s hook.
 - [ ] Every PRD AC and TFS FR/BR this cycle implements maps to a task; any gap was reported and asked about, never silently filled.
+- [ ] Each injected constraint is one line, carrying pointers rather than prose — the block is re-sent in every dispatch.
 - [ ] Nothing was built, scaffolded, or tested — only the plan was edited.
 
 **Validation Steps (iterative loop):** check every item; if any fails, fix and re-check the whole list; only when all pass, report.
