@@ -2,7 +2,7 @@
 name: x-ng-tfs-writer
 description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs — those are not functionalities."
 metadata:
-  version: '1.1.0'
+  version: '1.1.1'
 ---
 
 # TFS Writer
@@ -183,7 +183,7 @@ Then re-run the Review Checklist over whatever changed.
 
 1. Report the saved folder (`docs/x/{name}/TFS/`) and list the files written (`README.md` + each `{libtype}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
-3. If any new libs were recommended as shared functionalities, remind the user each needs its own PRD & TFS.
+3. If any new libs were recommended as shared **functionalities**, remind the user each needs its own PRD & TFS. If any `[RECOMMENDED]` entries are `util` / `api` / `app`, remind that those never get `docs/x/` — they are created/updated via the plan, not via writers.
 4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
 5. List any Open Technical Questions still unanswered after the confirmation step.
 

@@ -42,19 +42,19 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 
 ## 🔗 Existing Dependencies & Reuse
 
-> List only libs that **do not belong to this functionality** — i.e. libs from _other_ functionalities/shared infra that this one reuses. Do not list this functionality's own map/data-access/ui/feature/page libs here. Ask the user what to reuse; do not assume. Flag anything recommended-but-not-yet-built with `[RECOMMENDED]` (it needs its own PRD & TFS).
+> List only libs that **do not belong to this functionality** — i.e. libs from _other_ functionalities/shared infra that this one reuses. Do not list this functionality's own map/data-access/ui/feature/page libs here. Ask the user what to reuse; do not assume. Flag anything recommended-but-not-yet-built with `[RECOMMENDED]`. Meaning of that flag depends on lib type: a recommended **functionality** (`map` / `data-access` / `ui` / `feature` / `page`) needs its **own** PRD & TFS; a recommended `util` / `api` / `app` **never** gets `docs/x/` — list it here as shared reuse (creating/updating it is plan work, not an owned lib of this TFS).
 
 ### Used map / data-access libs
 
-> Per lib: name → class/interface → the methods/observables used, and why. Often `NONE` — a functionality's own map/data-access libs do not rely on other functionalities' map/data-access libs (things like the base URL are provided by the calling page/feature, not fetched by depending on the config libs here).
+> Per lib: name → class/interface → the methods/observables used, and why. Often `NONE` — a functionality's own map/data-access libs do not rely on other functionalities' map/data-access libs (things like the base URL are provided by the calling page/feature, not fetched by depending on the config libs here). Use `[RECOMMENDED]` when the reused functionality is not built yet.
 
 ### Used ui / feature / page libs
 
-> Per lib: name → what it provides. `NONE` if none.
+> Per lib: name → what it provides. `NONE` if none. Use `[RECOMMENDED]` when the reused functionality is not built yet.
 
 ### Used util libs
 
-> Per lib: name → the class/function used, and why reuse is appropriate. (Functionalities never own a `util`/`api`/`app` lib — they reuse shared ones.)
+> Per lib: name → the class/function used, and why reuse is appropriate. (Functionalities never own a `util`/`api`/`app` lib — they reuse shared ones.) Use `[RECOMMENDED]` when that shared util is not built yet — still not a PRD/TFS target.
 
 ## 🧭 ID Index
 
