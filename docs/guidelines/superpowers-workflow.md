@@ -46,6 +46,25 @@ Skipping `docs/x/` PRD/TFS does **not** skip unit tests. When the plan or brains
 
 [🔝](#superpowers-first-workflow--rationale-🦸)
 
+## Why the Missing-docs gate exists
+
+A functionality's durable identity in this workspace is `docs/x/{name}/` (PRD + TFS). Family-named libs (`…-feature-ng-users`, `…-ui-ng-users`, …) are a strong hint, not proof — without those docs there is no reliable record of which libs the functionality owns. Humans often still "know" the grouping; agents do not.
+
+Path A used to treat every functionality-type cycle as **write/refresh PRD & TFS**. For a small update to an **existing** lib with no docs yet, that forced a first-time product/technical interview the user never asked for — or left the writers stuck on "STOP and ask" for a full description, then the enricher stuck on missing PRD/TFS.
+
+The **Missing-docs gate** (document now / skip) fixes the control flow:
+
+- **Document now** — first-time PRD/TFS (writers may bootstrap from existing libs + Q&A; still no inventing, still AC approval), then A2–A4 as usual.
+- **Skip** — intentional limited cycle: Superpowers brainstorm → plan → implement (and TDD if tests are in scope), **without** A1–A4. No our FR/BR/AC ID conventions for that cycle. Same shape as the Functionality gate's util/api/app skip, but chosen by the user for an undocumented functionality lib.
+
+**New** functionalities (libs not yet in the workspace) do not get the skip offer — creating them is creating the functionality; docs stay on the path.
+
+The writers stay atomic (HOW to bootstrap). The ask/skip decision stays in `AGENTS.md` (WHEN). This rationale doc holds only the WHY.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
 ## Why the PRD/TFS steps precede `writing-plans`
 
 `brainstorming` declares an exclusive exit: _"The terminal state is invoking writing-plans. Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans."_ Our _Before `writing-plans`_ hook inserts steps into exactly that gap, so it is worth being precise about why that is legitimate:

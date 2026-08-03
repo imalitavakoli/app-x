@@ -2,7 +2,7 @@
 name: x-ng-tfs-writer
 description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs — those are not functionalities."
 metadata:
-  version: '1.0.0'
+  version: '1.1.0'
 ---
 
 # TFS Writer
@@ -49,6 +49,8 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 **Required input:** the functionality's **PRD** (`docs/x/{name}/PRD.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
 
 If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly.
+
+**First-time for existing libs** — when there is no `docs/x/{name}/TFS/` yet but owned libs already exist: read [references/bootstrap-existing.md](references/bootstrap-existing.md) after the PRD is ready. Still derive from the PRD; use existing libs only to ground contracts and Open Technical Questions — never invent FRs/BRs the PRD does not support.
 
 ## Inputs & output
 

@@ -2,7 +2,7 @@
 name: x-ng-prd-writer
 description: "WHAT? A functionality's PRD at docs/x/{name}/PRD.md — its product-level spec, whose Acceptance Criteria (ACs) later map to e2e tests. WHEN? Asked to create or update a PRD, product / scope / feature document, acceptance criteria, or product spec for a functionality; or when a brainstorm concludes and the feature needs its product spec. Not for util, api, or app libs — those are not functionalities."
 metadata:
-  version: '1.0.0'
+  version: '1.1.0'
 ---
 
 # PRD Writer
@@ -36,6 +36,8 @@ Classify using `docs/getting-started/library-types-and-their-relationship.md` (F
 **Required input:** a feature description (or brainstorm conclusions) for one functionality. If it is missing or unclear, STOP and ask — do not research or invent it.
 
 If the functionality already has a `docs/x/{name}/PRD.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber.
+
+**First-time for existing libs** — when there is no `docs/x/{name}/PRD.md` yet but owned libs already exist in the workspace: read [references/bootstrap-existing.md](references/bootstrap-existing.md) before drafting. Still require a clear description / brainstorm conclusions and user AC approval; never invent product facts from code alone.
 
 ## Inputs & output
 

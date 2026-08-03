@@ -120,14 +120,16 @@ Each path below is a Superpowers workflow with our steps attached at its hooks. 
 
 - **hook** — a point in the Superpowers lifecycle where we attach work. Example: 🪝 _A2 · Before `writing-plans`_.
 - **step** — one piece of our work at a hook. Example: A2's numbered items 1–3; each becomes one todo (Operating rule 3).
+- **gate** — a condition that decides whether a set of hooks (or a whole doc-hook band) applies. Example: 🚧 _Functionality gate_ (skip A1–A4 for `util` / `api` / `app`). Not a self-triggering skill (**guard**) and not a lifecycle attach-point (**hook**).
 - **guard** — a Superpowers skill that self-triggers on the agent's own behaviour instead of being routed to, so it has no fixed position in a path. Examples: `verification-before-completion` (fires on any "it's done" claim) and `receiving-code-review` (fires when you give feedback).
 - **mode** — the execution mode of a path-A cycle: it decides which Superpowers skill runs execution and whether the agent commits. The user picks it once per cycle. See the 🎛️ block under _A3_.
 
 Structure rules:
 
 - **Shape of a hook:** `#### 🪝 {ID} · {when}` — optionally ` — {condition}` — then its steps: a numbered list when there are several, prose when there is one. A second paragraph is fine for a caveat that applies to the whole hook; past that, the detail belongs in the named skill or the rationale doc. Close with any `> Override:` / `> Note:` block.
-- **Only a hook gets a `####` heading, and only a hook gets an `{ID}`.** Anything else inside a path — a reference block, a list of step-less hooks — is an icon plus a bold lead line, so the outline stays a clean list of hooks and nothing borrows a hook's identity.
-- **Icons are landmarks, and these four are reserved:** 🛣️ a path · 🪝 a hook with steps · ⚪ a hook with none yet · 🎛️ the execution-mode reference. Never use those four for anything else; any other section may take its own distinct icon.
+- **Shape of a gate:** `> 🚧 **{Name} gate.** {condition and effect}` — a blockquote on the path (or under a hook when it only narrows that hook's band). No `####`, no `{ID}`. Promote only conditions that skip/apply **more than one hook** or a whole doc-hook band; a single-hook `— {condition}` stays in the hook heading.
+- **Only a hook gets a `####` heading, and only a hook gets an `{ID}`.** Anything else inside a path — a gate, a reference block, a list of step-less hooks — is an icon plus a bold lead line (or a gate blockquote), so the outline stays a clean list of hooks and nothing borrows a hook's identity.
+- **Icons are landmarks, and these five are reserved:** 🛣️ a path · 🪝 a hook with steps · ⚪ a hook with none yet · 🎛️ the execution-mode reference · 🚧 a gate. Never use those five for anything else; any other section may take its own distinct icon.
 - **Hooks with no step yet** are listed on the path's ⚪ line — a bold line, not a subsection, since they carry no steps. Give a hook its own `#### 🪝` subsection the moment it gains one. A hook listed there is still part of the workflow — for execution and `test-driven-development`, our rules arrive through the enriched plan (Operating rule 4).
 - **Where new content goes:** a rule an agent must follow → this file; the reasoning behind it → `/docs/guidelines/superpowers-workflow.md`; how to perform a step → inside the named skill. Keep each fact in exactly one of the three.
 
@@ -137,13 +139,17 @@ Structure rules:
 
 **Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD + TFS + e2e verdict** → `writing-plans` → **mode + enricher** → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **doc/ID re-tag** _(only if new IDs)_ → `finishing-a-development-branch`
 
-> **Functionality gate.** Hooks A1–A4 apply only when the work is (or produces) a **functionality** — libs from `map` / `data-access` / `ui` / `feature` / `page`. `util`, `api`, and `app` **never** form a functionality (see `/docs/getting-started/library-types-and-their-relationship.md` → Functionality types): they get **no** `docs/x/{name}/` PRD or TFS (and therefore no PRD ACs). If the cycle is only creating or updating one of those, **skip A1–A4** — no PRD/TFS writers, no e2e verdict, no enricher. Still run Superpowers' own `brainstorming` → `writing-plans` → branch → execution as needed (including `test-driven-development` when tests are in scope). For lib shape, load `x-ng-lib-build-helper` (its fallback covers `util` / `api`). When unit tests are in scope for **`util`** or product **`app`**, load `x-ng-test-unit-helper` and follow its `references/libs/util.md` / `app.md`: FR/BR IDs come from a local `requirements.md` (`UTIL-…` / `APP-…`), not from TFS. **`api`** has no `requirements.md` (proxy-only).
+> 🚧 **Functionality gate.** Hooks A1–A4 apply only when the work is (or produces) a **functionality** — libs from `map` / `data-access` / `ui` / `feature` / `page`. `util`, `api`, and `app` **never** form a functionality (see `/docs/getting-started/library-types-and-their-relationship.md` → Functionality types): they get **no** `docs/x/{name}/` PRD or TFS (and therefore no PRD ACs). If the cycle is only creating or updating one of those, **skip A1–A4** — no PRD/TFS writers, no e2e verdict, no enricher. Still run Superpowers' own `brainstorming` → `writing-plans` → branch → execution as needed (including `test-driven-development` when tests are in scope). For lib shape, load `x-ng-lib-build-helper` (its fallback covers `util` / `api`). When unit tests are in scope for **`util`** or product **`app`**, load `x-ng-test-unit-helper` and follow its `references/libs/util.md` / `app.md`: FR/BR IDs come from a local `requirements.md` (`UTIL-…` / `APP-…`), not from TFS. **`api`** has no `requirements.md` (proxy-only).
+
+> 🚧 **Missing-docs gate.** When the Functionality gate applies and the work updates an existing `map` / `data-access` / `ui` / `feature` / `page` lib with no `docs/x/{name}/` for its functionality name: ask whether to **document now** (first-time PRD/TFS; continue A2–A4) or **skip** A1–A4 for this cycle (vanilla Superpowers: plan → implement; no writers, e2e verdict, or enricher; no our FR/BR/AC ID conventions). New functionalities (libs not yet in the workspace) always document — do not offer skip. Run this ask before A2 (typically with A1).
 
 #### 🪝 A1 · Before `brainstorming`
 
 If this functionality already has docs in `docs/x/{name}/` (`PRD.md` and/or the `TFS/` folder), read them first — they shape the design questions.
 
 #### 🪝 A2 · Before `writing-plans`
+
+Only when A1–A4 were not skipped (Functionality gate or Missing-docs gate):
 
 1. **Write/refresh the PRD & TFS** — `x-ng-prd-writer`, then `x-ng-tfs-writer`. If `x-ng-tfs-writer` flags a product-observable gap (a `(new — suggest a PRD AC)` entry), ask the user; if approved, re-run `x-ng-prd-writer` to add the AC, then re-run `x-ng-tfs-writer` to back-link it.
 2. **Decide e2e now** — it applies only if the functionality has a `page` lib, or a `feature` that initializes another `feature`, **and** the PRD ACs describe user-observable cases. State the verdict and a one-line why.
@@ -152,6 +158,8 @@ If this functionality already has docs in `docs/x/{name}/` (`PRD.md` and/or the 
 > **Override:** these steps override `brainstorming`'s stated exclusive exit ("the ONLY skill you invoke after brainstorming is `writing-plans`"). Authorized by the precedence rule: that exclusivity guards against _implementation_ skills jumping to code — these write documents only, and `writing-plans` is still the next Superpowers skill.
 
 #### 🪝 A3 · After `writing-plans`, before execution
+
+Only when A1–A4 were not skipped (Functionality gate or Missing-docs gate):
 
 1. **Ask the user the execution mode** for this cycle — auto (recommended) or interactive; see the 🎛️ block below.
 2. **`x-ng-sp-plan-enricher`** — fold into the plan's Global Constraints: the chosen mode, the PRD/TFS IDs and rules, the commit-message pointer, and the CODEOWNERS pointer when the plan creates owned paths or explicitly states a handoff. Carry in the e2e verdict from A2 and tag the test tasks.
@@ -181,7 +189,7 @@ In **auto** mode the tree has already been reviewed, so route the re-tag through
 
 No execution mode here — that question belongs to path A only. For git, see _Git contract_.
 
-> **Functionality gate.** B1 applies only when the fix is to a **functionality** (it updates `docs/x/` PRD/TFS). A change that only touches a `util`, `api`, or `app` never has those docs — **skip B1**. Unit tests for **`util`** / product **`app`** still follow TDD / `x-ng-test-unit-helper` when tests are in scope; FR/BR IDs come from local `requirements.md` (retag as part of normal test edits, not via B1's PRD/TFS writers). **`api`** has no `requirements.md`.
+> 🚧 **Functionality gate.** B1 applies only when the fix is to a **functionality** (it updates `docs/x/` PRD/TFS). A change that only touches a `util`, `api`, or `app` never has those docs — **skip B1**. Unit tests for **`util`** / product **`app`** still follow TDD / `x-ng-test-unit-helper` when tests are in scope; FR/BR IDs come from local `requirements.md` (retag as part of normal test edits, not via B1's PRD/TFS writers). **`api`** has no `requirements.md`.
 
 #### 🪝 B1 · After `verification-before-completion` — only if the fix introduced new FR/BR/AC IDs
 

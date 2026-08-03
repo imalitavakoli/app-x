@@ -2,7 +2,7 @@
 name: x-ng-test-unit-helper
 description: "WHAT? The workspace conventions for a lib's Jest unit tests — FR/BR ID mapping from TFS (functionalities) or local requirements.md (util/app), what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for map / data-access / ui / feature / page, or for util / app when tests are in scope; when deciding a spec's IDs, structure, mocking, or readability. Api libs have no requirements.md. Read references/libs/util.md or app.md when testing those lib types."
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # Test Unit Helper
@@ -32,6 +32,8 @@ Writing or updating a `*.spec.ts` for any testable TypeScript/JavaScript in a wo
 ## Map each block to a TFS ID (functionality libs only)
 
 **Skip this section** when the lib under test is `util` or product `app` — use [Lib-type extras](#lib-type-extras-read-on-demand) instead. **Skip** for `api` — ID-less titles only if ever tested.
+
+**No TFS in scope:** if there is no `docs/x/{name}/TFS/` for the functionality under test and this work is not producing one, **do not** require FR/BR IDs — use plain titles. Do not invent IDs and do not create a TFS from here.
 
 For a **functionality** lib, the TFS — the `docs/x/{name}/TFS/` folder, specifically the `{libtype}.md` file for the lib you're testing (its FR/BR live in that file; the README's ID Index lists every ID and where it lives) — is the source of the IDs. Each exported component and helper service owns its own. Use the **exact IDs written in the TFS** (the TFS defines their format; don't invent your own).
 
@@ -82,6 +84,7 @@ For util/app local FR/BR registries, imitate [assets/examples/requirements.md](a
 | Inventing FR/BR IDs for an `api` lib                               | No `requirements.md` for api — ID-less titles only if ever tested; do not invent IDs or create functionality docs.                                          |
 | Using TFS / `docs/x/` paths for util/app IDs                       | IDs come from the local `requirements.md` beside the inner (util) or app README.                                                                            |
 | A real functionality behavior tested without a TFS ID              | Don't invent an ID or write an untraceable test; flag it as a TFS gap (the TFS author adds the FR/BR, then the test uses it). Don't edit the TFS from here. |
+| Requiring TFS IDs when no TFS is in scope                          | No `docs/x/{name}/TFS/` and none being written — plain titles; do not invent IDs or create a TFS from here.                                                 |
 | Asserting a mock was called                                        | Test the unit's real observable output; asserting on mocks is a TDD anti-pattern.                                                                           |
 | Re-stubbing Capacitor / Firebase for import safety                 | The preset already makes their imports safe — read it before adding any stub.                                                                               |
 | Manually setting up jQuery / browser globals                       | The preset installs them before module evaluation.                                                                                                          |
