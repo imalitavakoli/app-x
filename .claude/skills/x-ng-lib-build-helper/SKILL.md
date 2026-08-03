@@ -1,6 +1,6 @@
 ---
 name: x-ng-lib-build-helper
-description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming."
+description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming. For util/api, use the fallback (ask which lib to imitate); those are not functionalities."
 ---
 
 # x-ng-lib-build-helper (pointer)

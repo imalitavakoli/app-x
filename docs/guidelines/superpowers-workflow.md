@@ -34,6 +34,18 @@ A worktree's one real benefit is running two feature cycles at the same time, or
 
 [🔝](#superpowers-first-workflow--rationale-🦸)
 
+## Why Path A/B skip PRD/TFS for `util` / `api` / `app`
+
+PRD and TFS under `docs/x/{name}/` exist only for **functionalities** (product features built from `map` / `data-access` / `ui` / `feature` / `page`). That distinction already lived in `docs/getting-started/library-types-and-their-relationship.md` and in the writers' own STOP gates — but Path A's typical flow ("PRD + TFS + e2e verdict") had no skip, so an agent following the path after a util-only brainstorm still invoked A2 and expected functionality docs. The writers would refuse; the enricher would then "stop and ask" for a missing PRD — friction that looked like a gap rather than a correct exclusion.
+
+The **Functionality gate** on Path A (and the matching note on Path B's B1) moves that decision into control flow: skip A1–A4 / B1 when the cycle is only `util` / `api` / `app`. The skills stay the second line of defense if they are invoked anyway. Superpowers' own brainstorming → writing-plans → execution still runs; only the functionality-doc hooks are omitted.
+
+Skipping PRD/TFS does **not** skip unit tests. Those lib types may still be tested when the plan or brainstorm includes specs — there are simply no AC / FR / BR IDs for `describe` / `it` to match. `x-ng-test-unit-helper` still supplies preset, formatting, and TDD practice; only its FR/BR ID contract is offline.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
 ## Why the PRD/TFS steps precede `writing-plans`
 
 `brainstorming` declares an exclusive exit: _"The terminal state is invoking writing-plans. Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans."_ Our _Before `writing-plans`_ hook inserts steps into exactly that gap, so it is worth being precise about why that is legitimate:

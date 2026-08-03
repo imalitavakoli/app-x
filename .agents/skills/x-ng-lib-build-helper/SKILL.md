@@ -1,8 +1,8 @@
 ---
 name: x-ng-lib-build-helper
-description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming."
+description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming. For util/api, use the fallback (ask which lib to imitate); those are not functionalities."
 metadata:
-  version: '1.0.0'
+  version: '1.1.0'
 ---
 
 # Lib Build Helper
@@ -16,6 +16,8 @@ This skill is a **helper**: it puts the workspace's canonical library examples i
 ## When to use
 
 Building or updating a functionality's `map`, `data-access`, `ui`, `feature`, or `page` lib — or deciding its structure, base class, versioning, READMEs, or `data-cy` naming. Not for non-lib code.
+
+`util`, `api`, and `app` are **not** functionalities — they have **no** PRD/TFS under `docs/x/` (`docs/getting-started/library-types-and-their-relationship.md`). This skill's examples cover functionality lib types only; for `util` / `api`, use [Fallback](#fallback--only-when-the-example-doesnt-cover-it) (ask which existing lib to imitate).
 
 ## Pick the matching example
 
@@ -64,6 +66,7 @@ Lib types & import boundaries: `docs/getting-started/library-types-and-their-rel
 | Mistake                                        | Fix                                                                                                                                         |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | Copying an arbitrary existing lib              | Use the `assets/examples/` example for that type — it is the source of truth.                                                               |
+| Expecting a PRD/TFS for a `util` / `api` / `app` | Those are never functionalities — no `docs/x/…` docs; build the lib without them.                                                         |
 | Inventing a base class                         | Extend whatever base the matching `assets/examples/` example uses for that lib type (a specialized `…Ext{Name}` only if the TFS names one). |
 | Only an outer README                           | Add the inner, copy-paste-ready README too.                                                                                                 |
 | `entity` data-access for a non-pure-CRUD write | Use single- or multi-instance.                                                                                                              |

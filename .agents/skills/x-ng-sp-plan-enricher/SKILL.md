@@ -2,7 +2,7 @@
 name: x-ng-sp-plan-enricher
 description: "WHAT? A just-written Superpowers plan, edited so the workspace's execution mode, PRD/TFS traceability, and test, lib and CODEOWNERS conventions reach context-isolated execution subagents — the plan being their only carrier. WHEN? At the after-`writing-plans`, before-execution hook of the Superpowers-First Workflow; whenever a Superpowers plan for a functionality must make execution follow our workspace conventions."
 metadata:
-  version: '1.0.0'
+  version: '1.1.0'
 ---
 
 # SP Plan Enricher
@@ -17,12 +17,14 @@ It **edits documents only** — it builds nothing, scaffolds nothing, and writes
 
 ## When to use
 
-- At the **after-`writing-plans`, before-execution** hook of the Superpowers-First Workflow (see `AGENTS.md` → Superpowers-First Workflow, Hook table A).
+- At the **after-`writing-plans`, before-execution** hook of the Superpowers-First Workflow (see `AGENTS.md` → Superpowers-First Workflow, Path A) — **only for a functionality**.
 - Whenever a Superpowers plan for a functionality needs the workspace's PRD/TFS traceability + test/lib conventions folded in before execution.
 
-Do not use to build libs or write tests; do not use for the bug-fix path (that runs in-session, reads `AGENTS.md` directly — no plan carrier needed).
+Do not use to build libs or write tests; do not use for the bug-fix path (that runs in-session, reads `AGENTS.md` directly — no plan carrier needed). Do **not** use when the plan's target is only a `util`, `api`, or `app` lib — those are never functionalities and Path A skips this hook for them.
 
 ## Prerequisites
+
+**Gate — functionality only.** Before anything else: if the plan's target is (or would be) only a `util`, `api`, or `app` lib → **STOP. Do not enrich.** Those never have PRD/TFS (`docs/getting-started/library-types-and-their-relationship.md` → Functionality types). Say so and exit — do **not** ask for a missing PRD.
 
 **Required inputs — if any is missing, STOP and ask:**
 
@@ -31,7 +33,7 @@ Do not use to build libs or write tests; do not use for the bug-fix path (that r
 - The functionality's **TFS folder**: `docs/x/{name}/TFS/` (its `README.md` ID Index + the per-lib files).
 - The **execution mode** the user chose for this cycle — `interactive` or `auto`. The workflow asks for it just before this skill runs; if it was not asked, stop and ask (never assume a mode — it decides which execution skill runs and whether the agent commits).
 
-If the PRD/TFS don't exist, the earlier hook steps were skipped — stop and ask rather than enriching from nothing.
+If the target is a functionality but the PRD/TFS don't exist, the earlier hook steps were skipped — stop and ask rather than enriching from nothing.
 
 ## Inputs & output
 
@@ -116,6 +118,8 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 
 | Mistake                                                         | Fix                                                                                                                                                                             |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enriching a plan for a `util` / `api` / `app` lib               | STOP — not a functionality; no PRD/TFS to fold in. Path A skips this hook for those.                                                                                            |
+| Asking for a missing PRD when the target is util/api/app        | Exit — do not ask; those never get functionality docs. Only ask when the target _is_ a functionality and docs are missing.                                                      |
 | Leaving the test convention generic ("map `describe` to an FR") | Tag each task with the **exact IDs** its component owns, from the TFS ID Index.                                                                                                 |
 | Pasting whole TFS specs into the plan                           | Inject pointers + the concrete IDs; the plan carries, it doesn't copy.                                                                                                          |
 | Adding a second Global Constraints block                        | Merge into the existing one.                                                                                                                                                    |
