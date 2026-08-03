@@ -221,15 +221,15 @@ Scenarios outside the build (A) and bug-fix (B) paths. `writing-skills` and `dis
 
 Two are **writers** (they produce docs), four are **helpers** (their examples/guidelines just enter the agent's context — someone else does the actual building, test-writing or authoring), and one is an **enricher**. The kind is always the name's last segment. See each skill's `SKILL.md` for what it does and how.
 
-| Skill                   | Produces / supplies                                                                   |
-| ----------------------- | ------------------------------------------------------------------------------------- |
-| `x-ng-prd-writer`       | `docs/x/{name}/PRD.md` — the ACs                                                      |
-| `x-ng-tfs-writer`       | `docs/x/{name}/TFS/` — `README.md` (ID Index) + one `{libtype}.md` per lib (FRs/BRs)  |
-| `x-ng-lib-build-helper` | canonical lib-structure examples + guidelines                                         |
+| Skill                   | Produces / supplies                                                                                                                                 |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `x-ng-prd-writer`       | `docs/x/{name}/PRD.md` — the ACs                                                                                                                    |
+| `x-ng-tfs-writer`       | `docs/x/{name}/TFS/` — `README.md` (ID Index) + one `{libtype}.md` per lib (FRs/BRs)                                                                |
+| `x-ng-lib-build-helper` | canonical lib-structure examples + guidelines                                                                                                       |
 | `x-ng-test-unit-helper` | unit-test conventions — functionalities: `describe`↔FR, `it`↔BR from the TFS; `util` / `app`: same from local `requirements.md`; `api`: no ID doc |
-| `x-ng-test-e2e-helper`  | the e2e rule — `describe`↔US from the app's `user-stories.md`, `it`↔AC from the PRD |
-| `x-ng-sp-plan-enricher` | the Superpowers plan, enriched — Global Constraints + tagged test tasks               |
-| `x-skill-build-helper`  | the conventions and per-kind templates for building or updating a workspace skill     |
+| `x-ng-test-e2e-helper`  | the e2e rule — `describe`↔US from the app's `user-stories.md`, `it`↔AC from the PRD                                                               |
+| `x-ng-sp-plan-enricher` | the Superpowers plan, enriched — Global Constraints + tagged test tasks                                                                             |
+| `x-skill-build-helper`  | the conventions and per-kind templates for building or updating a workspace skill                                                                   |
 
 &nbsp;
 
