@@ -81,6 +81,21 @@ The override is named inline in the hook row on purpose. An agent that has just 
 
 [🔝](#superpowers-first-workflow--rationale-🦸)
 
+## Why PRD/TFS outrank the brainstorm spec for planning
+
+Superpowers `writing-plans` is built to plan from the brainstorm **spec** and to self-check coverage against that file. In this workspace, A2 sits between brainstorm and planning so the user can approve durable PRD/TFS decisions — and those decisions often **change** what the spec said. If the agent then plans from the stale spec, the plan fights the docs we just wrote (and the enricher's ID coverage check against PRD/TFS cannot fully repair architecture or product choices baked into a stale design).
+
+We do **not** move PRD/TFS before brainstorm: the writers need brainstorm conclusions as input. We also do **not** fork `writing-plans`. Instead, when A1–A4 ran:
+
+1. **Layered source of truth** (📌 _PRD/TFS over cycle spec_) — PRD/TFS are primary; on conflicts they win; for plan needs they do not cover (companion util/api/app, narrative detail), use the brainstorm spec; invent nothing that appears in neither.
+2. **Spec sync at A2** — update `.superpowers/specs/…` so overlapping decisions match the approved PRD/TFS, while leaving legitimate gap material in the spec — so Superpowers' native "read the spec" path stays aligned (the spec stays git-ignored and uncommitted).
+
+When A1–A4 were skipped, there is no PRD/TFS carrier — the brainstorm spec alone remains the plan's requirements source, same as vanilla Superpowers.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
 ## Why the execution-mode question is ours to ask
 
 Vanilla `writing-plans` already ends by offering two execution paths — "Subagent-Driven (recommended)" or "Inline Execution" (`executing-plans`) — and only falls back to inline on its own when the harness has no subagents. The choice is Superpowers'; we are not bolting on a foreign concept. We change exactly three things:
