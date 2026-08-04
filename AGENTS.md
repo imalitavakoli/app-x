@@ -149,7 +149,8 @@ Structure rules:
 
 #### 🪝 A1 · Before `brainstorming`
 
-If this functionality already has docs in `docs/x/{name}/` (`PRD.md` and/or the `TFS/` folder), read them first — they shape the design questions.
+1. **Always** read `docs/getting-started/library-types-and-their-relationship.md` (functionality / lib types, natural entry, what util/api/app never own) and `docs/guidelines/naming-conventions.md` (especially lib and functionality naming) — they shape the design questions even when no PRD/TFS exists yet.
+2. If this functionality already has docs in `docs/x/{name}/` (`PRD.md` and/or the `TFS/` folder), read them too.
 
 #### 🪝 A2 · Before `writing-plans`
 
