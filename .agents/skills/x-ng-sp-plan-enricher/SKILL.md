@@ -2,7 +2,7 @@
 name: x-ng-sp-plan-enricher
 description: "WHAT? A just-written Superpowers plan, edited so the workspace's execution mode, PRD/TFS traceability, and test, lib and CODEOWNERS conventions reach context-isolated execution subagents — the plan being their only carrier. WHEN? At the after-`writing-plans`, before-execution hook of the Superpowers-First Workflow; whenever a Superpowers plan for a functionality must make execution follow our workspace conventions."
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # SP Plan Enricher
@@ -49,7 +49,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 ```
 - [ ] [enrich] 1. Locate — the plan, the functionality's docs/x/{name}/PRD.md and TFS/ folder, and the chosen execution mode
 - [ ] [enrich] 2. Source the conventions — from AGENTS.md's Superpowers-First Workflow (re-read if not in context)
-- [ ] [enrich] 3. Global Constraints — fold the execution mode + source-doc pointers + the test/lib/CODEOWNERS rules into the plan (merge, don't duplicate)
+- [ ] [enrich] 3. Global Constraints — fold the execution mode + source-doc pointers + the test/lib/CODEOWNERS rules (and DEP JSON pair when relevant) into the plan (merge, don't duplicate)
 - [ ] [enrich] 4. Tag tasks — annotate each test task with the exact FR/BR/AC IDs it owns (from the TFS ID Index)
 - [ ] [enrich] 5. E2e — carry the verdict decided before planning into the plan; tag the e2e task with its AC IDs
 - [ ] [enrich] 6. CODEOWNERS — same-commit step only if the plan creates owned paths, or the plan/user explicitly states a handoff (else skip)
@@ -70,7 +70,8 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
    - **Lib-structure pointer** — build each lib to the workspace's canonical lib examples (folder layout, base class, versioned naming, outer + inner README, `data-cy` naming `{lib}-v1_{component}_{part}`). **Write the resolvable repo-relative path** to the example for each lib type the plan touches — an implementer subagent reads files, never skills, so a pointer it cannot resolve is no pointer at all. Give the path; do not copy the example in.
    - **Commit-message pointer** — commit messages follow the Git section of `docs/guidelines/naming-conventions.md#git`. (Implementer subagents commit but don't read `AGENTS.md`, so this pointer must live in the plan.) In `interactive` mode nobody commits during execution — keep the pointer, but phrase it as guidance for the commit the **user** will make.
    - **CODEOWNERS pointer** — when this plan **creates** an app/lib/version-folder, or when the **plan or user explicitly states** an ownership handoff (named path + new owner), update root `CODEOWNERS` in the **same commit**, following the rules at the top of that file. Do **not** infer a handoff from ordinary feature work or from editing files under an existing path. Point to `CODEOWNERS`; do not paste its rules. In `interactive` mode, "same commit" means the user's commit — the `CODEOWNERS` edit must be made and left staged/uncommitted alongside the task's other changes, never deferred.
-4. **Tag each task** — for every task that writes/updates tests, list the **exact FR/BR IDs** that task's component(s) own (read them from the TFS ID Index / the per-lib file), and for any e2e task the **AC IDs** it covers. A test convention is useless to a subagent unless the task says _which_ IDs belong to it.
+   - **DEP JSON pair (only when relevant)** — if the TFS and/or plan involves **DEP config and/or DEP assets** for a wired app (feature reads `$dataConfigDep()?.libs…` / `$dataConfigDep()?.assets…`, or tasks touch `DEP_config*.json`): when updating that app's DEP JSON, update **both** `apps/{app-name}/src/assets/DEP_config.json` and `apps/{app-name}/src/assets/DEP_config.development.json` **when the app has both files**. Skip this constraint entirely when the cycle has no DEP config/asset wiring.
+4. **Tag each task** — for every task that writes/updates tests, list the **exact FR/BR IDs** that task's component(s) own (read them from the TFS ID Index / the per-lib file), and for any e2e task the **AC IDs** it covers. A test convention is useless to a subagent unless the task says _which_ IDs belong to it. If a task edits an app's `DEP_config.json` (or the development twin) and the app has both files, ensure that task's Files/steps name **both** paths (annotate only — do not mint a new task).
 5. **E2e (carry the verdict, never re-decide it)** — the e2e verdict was decided **before** planning, so that the plan itself could contain a fully-specified e2e task. Do not re-derive it here. State it — yes/no plus the one-line why — in Global Constraints and repeat it in the relevant task(s), so a subagent neither invents e2e nor wrongly skips it, and tag the e2e task with the AC IDs it covers. **If e2e applies but the plan has no e2e task, stop and ask** — that is a gap in the plan, and a task minted at this stage would lack the test code and exact paths every plan task must carry.
 6. **CODEOWNERS (when relevant)** — add a same-commit `CODEOWNERS` update step only when:
    - the plan **creates** a new app, lib, or shared version-folder, **or**
@@ -100,6 +101,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 - [ ] The e2e verdict for THIS functionality is stated explicitly (yes/no + one-line why), consistent between Global Constraints and the tasks, and the e2e task (if any) is tagged with its AC IDs. If e2e applies and the plan has no e2e task, you stopped and asked rather than minting one.
 - [ ] The lib-structure convention, the commit-message pointer (`naming-conventions.md#git`), and the CODEOWNERS pointer are present as pointers (not pasted copies).
 - [ ] Every example pointer is a **resolvable repo-relative path**, never a description of where the examples live — lib structure, unit spec, and the e2e examples when e2e applies. A path an implementer cannot open is no pointer at all.
+- [ ] If this cycle wires DEP config/assets: Global Constraints includes the DEP JSON pair rule (both `DEP_config.json` and `DEP_config.development.json` when the app has both); any task that edits those files names both paths when both exist. If no DEP wiring, that constraint is absent.
 - [ ] CODEOWNERS steps exist only when the plan creates owned paths or the plan/user explicitly states a handoff; no handoff was inferred; no standalone CODEOWNERS task otherwise.
 - [ ] No workspace helper skill is named; the convention source-set defers to `AGENTS.md`'s hook.
 - [ ] Every PRD AC and TFS FR/BR this cycle implements maps to a task; any gap was reported and asked about, never silently filled.
@@ -114,7 +116,8 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 2. List the tasks you tagged and the FR/BR/AC IDs added to each.
 3. State the e2e determination (applies / does not apply, and why).
 4. State whether CODEOWNERS steps were added (which paths; create vs explicit handoff) or skipped.
-5. Note any prerequisite gaps you had to stop for (missing PRD/TFS), if applicable.
+5. State whether the DEP JSON pair constraint was added or skipped (and why).
+6. Note any prerequisite gaps you had to stop for (missing PRD/TFS), if applicable.
 
 ## Common mistakes
 
@@ -137,3 +140,5 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 | Inferring a handoff from feature work / file edits              | Handoff only if the plan or user explicitly states path + new owner; otherwise do not change ownership.                                                                         |
 | Picking the execution mode yourself (or assuming `auto`)        | The user chooses it before this skill runs; if unknown, stop and ask.                                                                                                           |
 | Recording the mode only in chat, not in the plan                | The plan is the carrier — an unrecorded mode is lost to a compaction or a fresh session.                                                                                        |
+| DEP task / constraint only names `DEP_config.json`              | When the wired app has both files, require **both** prod and `DEP_config.development.json`.                                                                                     |
+| Always injecting the DEP JSON pair constraint                   | Only when TFS/plan wires DEP config or assets; otherwise omit it.                                                                                                               |
