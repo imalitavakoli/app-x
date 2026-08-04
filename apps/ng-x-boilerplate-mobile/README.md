@@ -43,26 +43,73 @@ Here's the list of unique **brand-specific color & style variables** that this a
 
 ## Capacitor (building native apps)
 
-- Run `nx run ng-x-boilerplate-mobile:cap-assets-android` to generate app's Icons & Splash-Screens (ONLY for Android).
-- Run `nx run ng-x-boilerplate-mobile:cap-assets-ios` to generate app's Icons & Splash-Screens (ONLY for iOS).
+### Production
 
-- Run `nx run ng-x-boilerplate-mobile:sync:ios` to sync ios native app.
-- Run `nx run ng-x-boilerplate-mobile:sync:android` to sync android native app.
-
-- _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-assets` to generate app's Icons & Splash-Screens.
-- _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-build:ios` to build ios native app.
-- _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-build:android` to build android native app.
+- Run `nx run ng-x-boilerplate-mobile:cap-assets-android` to generate native app's **Icons & Splash-Screens** (ONLY for **Android**).
+- Run `nx run ng-x-boilerplate-mobile:cap-assets-ios` to generate native app's **Icons & Splash-Screens** (ONLY for **iOS**).
 
 &nbsp;
 
-**live-reload the app in native devices:**  
-While developing and working with native plugins in app, you may need to quickly see results on native devices.
-Steps to do that:
+- Run `nx run ng-x-boilerplate-mobile:sync:ios` to **sync iOS** (the WebView loads the bundled `webDir`).
+- Run `nx run ng-x-boilerplate-mobile:sync:android` to **sync Android** (the WebView loads the bundled `webDir`).
+
+&nbsp;
+
+- Run `nx run ng-x-boilerplate-mobile:cap-release:ios` to app-shell (web) + sync + build native **iOS** (**release**; no live-reload; ready for signing/uploading).
+- Run `nx run ng-x-boilerplate-mobile:cap-release:android` to app-shell (web) + sync + build native **Android** (**release**; no live-reload; ready for signing/uploading).
+
+&nbsp;
+
+- _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-assets` to generate native app's Icons & Splash-Screens.
+- _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-build:ios` to build native iOS.
+- _Optional!_ Run `nx run ng-x-boilerplate-mobile:cap-build:android` to build native Android.
+
+### Development
+
+- Run `nx run ng-x-boilerplate-mobile:cap-sync-live:ios` to **sync iOS with live-reload** (points the native WebView at the local dev server).
+- Run `nx run ng-x-boilerplate-mobile:cap-sync-live:android` to **sync Android with live-reload**.
+
+### live-reload the native app
+
+While developing and working with native plugins in app, you may need to quickly see results on native devices. i.e., instead of bundling the web-app into the native project, the native WebView can load the running dev server over your local network (LAN IP is auto-detected in `capacitor.config.ts`), so every code change is reflected on the device immediately. In order to do that, use `cap-sync-live`:
+
+1. Terminal A — start (and leave running): `nx serve ng-x-boilerplate-mobile --host 0.0.0.0` (listen on all interfaces so a phone on the same LAN can reach the PC).
+2. Terminal B — sync once: `nx run ng-x-boilerplate-mobile:cap-sync-live:android` (or `:ios`).
+3. Run the app on a real device/emulator/simulator (from AndroidStudio/XCode, or via `pnpm nx run ng-x-boilerplate-mobile:run:android`). A native rebuild is needed, because the synced assets have changed.
+
+**Live-reload manually:**
 
 - Find out about your machine's IP address (on Mac, run: `ifconfig | grep inet`; on Windows, run: `ipconfig`).
-- Mention your IP address in `capacitor.config.ts` file, by adding the following _temporarily_ code in `config.server`: `url: 'http://192.168.1.xxx:4200', cleartext: true,`.
+- Mention your IP address in `capacitor.config.ts` file, by adding the following _temporarily_ code in `config.server` → `url: 'http://192.168.1.xxx:4200', cleartext: true,`.
 - Run the sync command for iOS or Android.
 - Run the serve command with `--host 0.0.0.0` option (to tell Angular to listen on all network interfaces, not just `localhost`).
+
+### Environment variables
+
+- `CAP_LIVE_RELOAD` — set by `cap-sync-live` targets (so you normally never set it yourself); enables live-reload (do not set for release/production sync). see comments in `capacitor.config.ts`.
+- `CAP_LIVE_RELOAD_HOST` — optional; use when auto-detect picks a wrong IP, or a special host is needed (e.g. `localhost` for iOS Simulator, or a fixed LAN IP).
+- `CAP_LIVE_RELOAD_PORT` — optional; use when serve isn’t on `4200` (default).
+
+Examples:
+
+- `CAP_LIVE_RELOAD_HOST=localhost nx run ng-x-boilerplate-mobile:cap-sync-live:ios`
+- `CAP_LIVE_RELOAD_HOST=192.168.1.42 CAP_LIVE_RELOAD_PORT=4200 nx run ng-x-boilerplate-mobile:cap-sync-live:android`
+
+(On PowerShell: `$env:CAP_LIVE_RELOAD_HOST = "localhost"; nx run ng-x-boilerplate-mobile:cap-sync-live:ios`.)
+
+### Debugging
+
+**Check live-reload vs production mode**  
+Open the generated config: `apps/ng-x-boilerplate-mobile/android/app/src/main/assets/capacitor.config.json`. Live-reload mode has `server.url` and `"cleartext": true`; production mode has neither.
+
+**Plain `sync` turns off live-reload**  
+`nx run ng-x-boilerplate-mobile:sync` (or `:sync:android` / `:sync:ios`) resets the native project to the bundled/`webDir` form and kills live-reload — intentional, so `cap-release` stays safe. Use `cap-sync-live` for development, `cap-release` for shipping, and plain `sync` as “reset to production”.
+
+**Device can’t reach the dev server**  
+Almost always the machine firewall: on Windows, accept the Defender prompt that allows Node on private networks; on Ubuntu with `ufw` enabled, run `sudo ufw allow 4200/tcp`.
+
+**Cleartext / ATS — no manual manifest edits**  
+You no longer need `android:usesCleartextTraffic="true"` in `AndroidManifest.xml`. Android uses `server.cleartext` from the live-reload config; iOS allows plain http in debug via Capacitor’s template (App Transport Security). If iOS shows a blank screen, check that Info.plist ATS setting first — and never relax it in a release build.
 
 ## Deployment notes
 

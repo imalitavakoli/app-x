@@ -292,6 +292,41 @@
         }
       }
     },
+    "cap-sync-live": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx cap sync",
+        "cwd": "apps/ng-x-boilerplate-mobile",
+        "env": {
+          "CAP_LIVE_RELOAD": "1"
+        }
+      },
+      "configurations": {
+        "ios": {
+          "command": "npx cap sync ios"
+        },
+        "android": {
+          "command": "npx cap sync android"
+        }
+      }
+    },
+    "cap-release": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npx cap sync", "npx cap build"],
+        "cwd": "apps/ng-x-boilerplate-mobile",
+        "parallel": false
+      },
+      "configurations": {
+        "ios": {
+          "commands": ["npx cap sync ios", "npx cap build ios"]
+        },
+        "android": {
+          "commands": ["npx cap sync android", "npx cap build android"]
+        }
+      },
+      "dependsOn": ["app-shell"]
+    },
     "cap-assets": {
       "command": "npx @capacitor/assets generate --assetPath \"apps/ng-x-boilerplate-mobile/src/assets/native\" --iosProject \"apps/ng-x-boilerplate-mobile/ios/App\" --androidProject \"apps/ng-x-boilerplate-mobile/android\" --ios --android"
     },
