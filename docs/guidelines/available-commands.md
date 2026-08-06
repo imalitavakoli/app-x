@@ -152,7 +152,7 @@ Here are the Angular related commands.
 
 - Run `nx g @nx/angular:stories projname` to generate stories for any other components that have been added to a project later on.
 
-**Tip!** As we already know, for serving an app we can run `nx serve {appname}`. But to visit the served app on your mobile devices (you may need it for the times that you're developing mobile apps), you can (1) run `ipconfig` and see what's your machine's local IP address (IPv4 Address / Wi-Fi interface's local IP); (2) then run `nx serve {appname} --host 0.0.0.0 --disable-host-check --port 4200`. In this way, you can visit `http://192.168.x.x:4200` on your mobile device's browser to visit the locally served app.
+**Tip!** As we already know, for serving an app we can run `nx serve {appname}`. But to visit the served app on your mobile device's browser (your computer and phone should be connected to the same Wi-Fi), you can (1) run `ipconfig` and see what's your machine's local IP address (IPv4 Address / Wi-Fi interface's local IP); (2) then run `nx serve {appname} --host 0.0.0.0 --disable-host-check --port 4200`. In this way, you can visit `http://192.168.x.x:4200` on your mobile device's browser to visit the locally served app. **Developing a mobile app?** (by the help of Ionic/Capacitor), then your app should have some other commands (targets) available to let you, not just run it on your mobile device's browser, but install your native app in your mobile device and run it.
 
 &nbsp;
 
