@@ -34,11 +34,21 @@ A worktree's one real benefit is running two feature cycles at the same time, or
 
 [🔝](#superpowers-first-workflow--rationale-🦸)
 
+## Why hooks are gated or close-out (not a new landmark)
+
+🚧 **gate** stays a landmark. **`[gated]`** and **`[close-out]`** are only kinds of 🪝 **hook** (optional heading tags), so a gate rule can stay path-agnostic: a gate may skip or apply **gated** hooks or **`[gated]` step bands**; it must **not** skip a **close-out** hook. Label kinds on paths that use gates / close-out (Path A; B1 on Path B); omit them on paths that don't (Path C today). Prefer **one hook per Superpowers before/after attach-point**; put gate-skippable work in a **`[gated]`** step band inside a `[close-out]` hook rather than inventing a second hook at the same point (e.g. do not add an `A2b`).
+
+Hierarchy inside a path: **hook → step bands (`[gated]` / Always) → steps**. A **▶️ resume block** is not a step band — it is a post-hard-stop contract (blockquote + icon), used today on A3 after the plan-review wait; any future hard-stop hook can add one the same way. A close-out hook may contain a `[gated]` band (Path A's PRD/TFS work inside A2; enricher inside A3): the hook always runs; that band is what the gate skips.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
 ## Why Path A/B skip PRD/TFS for `util` / `api` / `app`
 
 PRD and TFS under `docs/x/{name}/` exist only for **functionalities** (product features built from `map` / `data-access` / `ui` / `feature` / `page`). That distinction already lived in `docs/getting-started/library-types-and-their-relationship.md` and in the writers' own STOP gates — but Path A's typical flow ("PRD + TFS + e2e verdict") had no skip, so an agent following the path after a util-only brainstorm still invoked A2 and expected functionality docs. The writers would refuse; the enricher would then "stop and ask" for a missing PRD — friction that looked like a gap rather than a correct exclusion.
 
-The **Functionality gate** on Path A (and the matching note on Path B's B1) moves that decision into control flow: skip A1–A4 / B1 when the cycle is only `util` / `api` / `app`. The skills stay the second line of defense if they are invoked anyway. Superpowers' own brainstorming → writing-plans → execution still runs; only the functionality-doc hooks are omitted.
+The **Functionality gate** on Path A (and the matching note on Path B's B1) moves that decision into control flow: when the cycle is only `util` / `api` / `app`, skip Path A's gated hooks/steps (A1, A2's gated steps, A3's enricher step, A4) and skip B1. The skills stay the second line of defense if they are invoked anyway. Close-out still runs: A2 always (mode → `writing-plans` with mode in Global Constraints) → A3 hard-stops. Execution starts only after the user proceeds. Only the functionality-doc work is omitted — not the plan-review boundary.
 
 Skipping `docs/x/` PRD/TFS does **not** skip unit tests. When the plan or brainstorm includes specs, **`util`** and product **`app`** still get unit tests — their FR/BR IDs live in a local **`requirements.md`** (beside the util version README, or at `apps/{app-name}/requirements.md`), owned by the `x-ng-test-unit-helper` convention (`references/libs/util.md` / `app.md`), not under `docs/x/`. **`api`** stays without that doc (proxy-only). E2e apps keep `user-stories.md` for US IDs.
 
@@ -54,8 +64,8 @@ Path A used to treat every functionality-type cycle as **write/refresh PRD & TFS
 
 The **Missing-docs gate** (document now / skip) fixes the control flow:
 
-- **Document now** — first-time PRD/TFS (writers may bootstrap from existing libs + Q&A; still no inventing, still AC approval), then A2–A4 as usual.
-- **Skip** — intentional limited cycle: Superpowers brainstorm → plan → implement (and TDD if tests are in scope), **without** A1–A4. No our FR/BR/AC ID conventions for that cycle. Same shape as the Functionality gate's util/api/app skip, but chosen by the user for an undocumented functionality lib.
+- **Document now** — first-time PRD/TFS (writers may bootstrap from existing libs + Q&A; still no inventing, still AC approval), then gated Documentation hooks + A4 as usual.
+- **Skip** — intentional limited cycle: Superpowers brainstorm → A2 always (mode → `writing-plans` with mode in the plan) → A3 hard stop → implement after the user proceeds (and TDD if tests are in scope), **without** A2's gated steps / enricher / A4. No our FR/BR/AC ID conventions for that cycle. Same shape as the Functionality gate's util/api/app skip, but chosen by the user for an undocumented functionality lib.
 
 **New** functionalities (libs not yet in the workspace) do not get the skip offer — creating them is creating the functionality; docs stay on the path.
 
@@ -85,12 +95,12 @@ The override is named inline in the hook row on purpose. An agent that has just 
 
 Superpowers `writing-plans` is built to plan from the brainstorm **spec** and to self-check coverage against that file. In this workspace, A2 sits between brainstorm and planning so the user can approve durable PRD/TFS decisions — and those decisions often **change** what the spec said. If the agent then plans from the stale spec, the plan fights the docs we just wrote (and the enricher's ID coverage check against PRD/TFS cannot fully repair architecture or product choices baked into a stale design).
 
-We do **not** move PRD/TFS before brainstorm: the writers need brainstorm conclusions as input. We also do **not** fork `writing-plans`. Instead, when A1–A4 ran:
+We do **not** move PRD/TFS before brainstorm: the writers need brainstorm conclusions as input. We also do **not** fork `writing-plans`. Instead, when gated Documentation hooks ran:
 
 1. **Layered source of truth** (📌 _PRD/TFS over cycle spec_) — PRD/TFS are primary; on conflicts they win; for plan needs they do not cover (companion util/api/app, narrative detail), use the brainstorm spec; invent nothing that appears in neither.
 2. **Spec sync at A2** — update `.superpowers/specs/…` so overlapping decisions match the approved PRD/TFS, while leaving legitimate gap material in the spec — so Superpowers' native "read the spec" path stays aligned (the spec stays git-ignored and uncommitted).
 
-When A1–A4 were skipped, there is no PRD/TFS carrier — the brainstorm spec alone remains the plan's requirements source, same as vanilla Superpowers.
+When A2's gated steps were skipped, there is no PRD/TFS carrier — the brainstorm spec alone remains the plan's requirements source, same as vanilla Superpowers; A2's always band still asks mode, `writing-plans` still records it, and A3 still hard-stops.
 
 &nbsp;
 
@@ -100,15 +110,37 @@ When A1–A4 were skipped, there is no PRD/TFS carrier — the brainstorm spec a
 
 Vanilla `writing-plans` already ends by offering two execution paths — "Subagent-Driven (recommended)" or "Inline Execution" (`executing-plans`) — and only falls back to inline on its own when the harness has no subagents. The choice is Superpowers'; we are not bolting on a foreign concept. We change exactly three things:
 
-1. **We always ask, and ask earlier.** Vanilla asks at the end of `writing-plans`; we ask right after it, before the enricher, so the answer can be written into the plan. We never let it be decided silently by harness capability.
+1. **We always ask on Path A, and ask before `writing-plans`.** Vanilla asks at the end of `writing-plans`; we ask in A2's always band, then `writing-plans` writes the chosen mode (🎛️ Plan line) into the plan's Global Constraints so the plan is born handoff-ready — **whether or not** the enricher runs later. We never let mode be decided silently by harness capability, and we do not let vanilla re-ask at the end as a substitute.
 2. **We keep Superpowers' recommended default** — auto / subagent-driven.
 3. **Interactive adds a no-commit contract** on top of `executing-plans`. `executing-plans` itself is otherwise untouched.
+
+Mode is just another line `writing-plans` puts in the plan; the post-plan close-out is enricher-or-skip + hard stop.
 
 Everything else runs as Superpowers defines it: TDD, the plan's task order and steps, `systematic-debugging` if something breaks mid-task, and `verification-before-completion` are identical in both modes.
 
 **Why interactive switches skills rather than muting git in the subagent path.** `subagent-driven-development`'s quality gates are built on commit ranges — the task reviewer reads a package produced by `review-package BASE HEAD`, and the progress ledger records commit SHAs as its post-compaction recovery map. Suppressing commits there would hand every reviewer an empty diff while still reporting "reviewed". `executing-plans` has no commit contract at all, so it is the honest home for a no-commit flow.
 
 **The known trade-off:** the per-task reviewer and the final whole-branch review belong to `subagent-driven-development`, so interactive mode does not get them — the user is the reviewer at each stop. That trade-off is Superpowers' own, inherent to its inline path; our customization did not introduce it.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why Path A stops after the plan is ready (close-out always)
+
+Path A is two parts: **Documentation** (through A3's plan-review stop) and **Execution** (after the user proceeds). The stop is the boundary.
+
+Documentation uses the shared gated / close-out kinds: **gated** hooks/steps (A1, A2's gated steps, enricher, A4) may be listed on a 🚧 gate; **A2** and **A3** are **`[close-out]`** (A2: gated docs band + always mode/`writing-plans`; A3: enricher if docs in scope → hard stop). A future gate only names gated hooks/steps — the vocabulary already forbids skipping a close-out hook.
+
+We stop for three reasons:
+
+1. **Human plan review** — one deliberate look at the plan before any implementation.
+2. **Stable handoff when context is full** — by the end of Documentation the session context may be large; a hard stop lets the user switch agents or sessions without losing a complete, mode-bearing plan.
+3. **Handoff-ready artifact** — mode is in Global Constraints from `writing-plans` (asked in A2's always band); another session can continue from the plan path alone whether or not the enricher ran.
+
+**Plan phase line.** A mid-cycle stop can leave a draft plan; a finished Documentation stop must be unmistakable. So Global Constraints carry `Path A phase: Documentation (draft).` right after `writing-plans`, then **replace** it with `Path A phase: ready for Execution.` at the A3 hard stop. Same key, two values — no ambiguity. Those lines nest under Path A's 🚪 **Entry** as its payload (not a separate landmark): Entry reads the line — ready → ▶️ Resume; draft or missing → ask (execute vs keep drafting). That hybrid avoids wrong Execution on a draft without nagging when the plan is clearly ready.
+
+The plan-review hard stop is **control flow in `AGENTS.md`** (Path A Documentation close-out), not inside `x-ng-sp-plan-enricher` (that skill only runs when functionality docs are in scope). Branch creation and execution skills run only after the user proceeds.
 
 &nbsp;
 
