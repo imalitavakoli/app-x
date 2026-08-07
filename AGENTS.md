@@ -119,7 +119,7 @@ Branch and commit names follow `/docs/guidelines/naming-conventions.md#git`. No 
 Each path below is a Superpowers workflow. Hierarchy, used consistently throughout this file:
 
 **Spine:** 🛣️ Path → 🪝 hook → (step bands → steps)  
-**On a path (not inside a hook):** 🚪 entry · 🚧 gate · 📌 constraint · ⚪ hooks with no step yet  
+**On a path (not inside a hook):** set · 🚪 entry · 🚧 gate · 📌 constraint · ⚪ hooks with no step yet  
 **Under a hook (not step bands):** 🎛️ mode block · ▶️ resume block
 
 Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example**). Definitions stay path-agnostic; **Example** may cite a concrete path. Add, remove, or edit landmarks by changing only the matching entry (and the spine lines above if placement changes). Future editors (human or agent): put a new landmark under the correct hierarchy group (**Spine** / **On a path (not inside a hook)** / **Under a hook (not step bands)** / **Outside the spine**), in semantic order within that group (follow the spine lines), and give it a reserved icon only if it is a true landmark — never reuse an existing reserved icon.
@@ -132,14 +132,14 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
   - **Example:** `### 🛣️ Path A — Build a feature, or change an existing feature's behavior`
 
 - **🪝 hook** — a point in the Superpowers lifecycle where we attach work. **One hook per Superpowers before/after attach-point** (e.g. one _Before `writing-plans`_, not two). Kind tags (`[gated]` / `[close-out]`) are kinds of hook — not separate landmarks.
-  - **Meaning:** `[gated]` — a 🚧 gate may skip or apply the whole hook. `[close-out]` — the hook runs whenever the path reaches that lifecycle point; gates must **not** skip it (it may still contain a skippable `[gated]` step band). Omit the kind when the path has no gates and no close-out. Optional but recommended on a `[gated]` hook when a 🚧 gate on that path can skip it.
+  - **Meaning:** `[gated]` — a 🚧 gate's answer may skip the whole hook. `[close-out]` — the hook runs whenever the path reaches that lifecycle point; gates must **not** skip it (it may still contain a skippable `[gated]` step band). Omit the kind when the path has no gates and no close-out. Optional but recommended on a `[gated]` hook when a 🚧 gate on that path can skip it.
   - **Shape:** `#### 🪝 {ID} · {when}` — optionally `[gated]` or `[close-out]`, then optionally `— {condition}` — then step bands / steps. A second paragraph is fine for a caveat that applies to the whole hook; past that, the detail belongs in the named skill or the rationale doc. Close with any `> Override:` / `> Note:` block. Only a hook gets a `####` heading and an `{ID}`.
   - **Example:** `#### 🪝 A2 · Before writing-plans [close-out]`
 
 - **step band** — a labeled group of **steps** inside a hook (especially a `[close-out]` hook), so readers see what a gate may skip. No landmark icon.
   - **Meaning:** `**[gated]**` — a gate may skip this band only (not the whole close-out hook). `**Always:**` — runs every time the hook runs; not gate-skippable.
   - **Shape:** inside the hook — `**[gated]** — {when}:` or `**Always:**` — then the numbered steps for that band.
-  - **Example:** `**[gated]** — only when docs in scope …` / `**Always:**` (Path A A2)
+  - **Example:** `**[gated]** — part of the docs-in-scope set …` / `**Always:**` (Path A A2)
 
 - **step** — one piece of work inside a step band (or directly under a simple `[gated]` hook). No landmark icon.
   - **Meaning:** Each step becomes one todo (Operating rule 3).
@@ -148,20 +148,26 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 
 **On a path (not inside a hook)**
 
+- **set** — a named group of gated hooks/steps that the path's gates control together. No landmark icon.
+  - **Meaning:** Declared **once per path**, above that path's gates. Gates, gated hooks, and `[gated]` step bands refer to it **by name** instead of re-listing its members, so a hook joining or leaving the set is one edit. It states three things: its **members**, how multiple gates **combine**, and the **complement** (what runs regardless). Not a landmark and not payload of one block — any block on the path may reference it. A path with a single gate and a single gated hook may skip it.
+  - **Shape:** `**{Name} set** — **Members:** {hooks/steps, separated by ·}. **Combine:** {how the path's gates combine}. **Regardless:** {what runs whatever they answer}.` — bold lead on the path, above its gates. No `####`, no `{ID}`. `·` separates items **within** a part; the parts themselves are separated by their bold labels.
+  - **Example:** Path A `**Docs-in-scope set** — … **A1** · **A2's `[gated]` band** · …`
+
 - **🚪 entry** — join/handoff contract for the path.
-  - **Meaning:** Apply when the user is joining or rejoining this path using **existing path state** — e.g. they provide a plan path (or equivalent pointer), or ask to continue/execute work that already has the Global Constraints lines (or other payload) this Entry declares. **Do not** apply when starting the path from the beginning with no such state — follow the path from its first Superpowers skill. May declare the verbatim Global Constraints lines it reads (hooks write those lines; do **not** promote that payload to its own landmark). May route into a ▶️ resume block. Distinct from ▶️ resume (join/rejoin the path vs continue after a hard stop). Not a hook.
+  - **Meaning:** Route here when the user is joining or rejoining this path using **existing path state** — e.g. they provide a plan path (or equivalent pointer), or ask to continue/execute work that already has the Global Constraints lines (or other payload) this Entry declares. **Do not** route here when starting the path from the beginning with no such state — follow the path from its first Superpowers skill. May declare the verbatim Global Constraints lines it reads (hooks write those lines; do **not** promote that payload to its own landmark). May route into a ▶️ resume block. Distinct from ▶️ resume (join/rejoin the path vs continue after a hard stop). Not a hook.
   - **Shape:** `🚪 **Entry — {when}.**` — optional nested payload (the GC lines this Entry reads), then numbered rules. No `####`, no `{ID}`.
   - **Example:** Path A `🚪 **Entry — user provides a plan path.**` (with nested Plan phase lines)
 
-- **🚧 gate** — condition that decides whether gated hooks / `[gated]` step bands / gated steps apply.
-  - **Meaning:** Lists only what it skips or applies among **gated** hooks/steps — never a close-out hook. Not a guard and not a hook. Promote only conditions that skip/apply **more than one** gated hook/step or a whole `[gated]` step band; a single-hook `— {condition}` stays in the hook heading.
-  - **Shape:** `> 🚧 **{Name} gate.** {condition and effect}` — blockquote on the path (or under a hook only when it narrows that hook's band). No `####`, no `{ID}`.
-  - **Example:** Path A `> 🚧 **Functionality gate.** …`
+- **🚧 gate** — a yes/no question whose answer decides whether the path's gated set runs.
+  - **Meaning:** A gate **asks** and **answers**; hooks and bands **run** or are **skipped**. Kind tags: `[auto]` — answered from the work itself (lib type, file presence); `[ask]` — answered by the user. Each gate is answered **on its own terms and never references another gate's answer**; **any gate answering No skips the whole set**. A gate names only **gated** hooks/steps — never a close-out hook. Not a guard and not a hook. Promote only conditions that control the whole set or a whole `[gated]` step band; a single-hook `— {condition}` stays in the hook heading.
+  - **Shape:** `> 🚧 **{Name} gate** [auto|ask] — **Asks:** {yes/no question}` then a blockquote list: a `**Yes** →` item, a `**No** →` item, and — for an `[ask]` gate that does not always fire — a `**Not asked when:**` item. Prose detail follows after a blank blockquote line. Blockquote on the path (or under a hook only when it narrows that hook's band). No `####`, no `{ID}`.
+  - **Example:** Path A `> 🚧 **Functionality gate** [auto] — **Asks:** …`
 
-- **📌 constraint** — path-level rule that spans more than one lifecycle point without skipping/applying a hook band.
-  - **Meaning:** Not a gate (does not skip hooks) and not a single-hook `> Note:`. Use when the rule spans docs / plan / enricher (or similar).
-  - **Shape:** `📌 **{Short name}.** {condition and effect}` — bold lead on the path (not a blockquote — so it does not look like a gate). No `####`, no `{ID}`. Do not put it in a hook's `> Note:`.
-  - **Example:** Path A `📌 **Companion util/api/app.** …`
+- **📌 constraint** — path-level rule that **spans** more than one lifecycle point without skipping any of them.
+  - **Meaning:** A constraint **spans** — it adds a rule to steps that already run. Not a gate (never skips a hook or band) and not a single-hook `> Note:`. Use when the rule spans docs / plan / enricher (or similar). Constraints never share a **set** the way gates do, and need none however many are added — each governs different steps in a different way, so `Spans:` is the only index they need.
+  - **Shape:** `📌 **{Short name}** — **Spans:** {hooks/steps, separated by ·}. **Leaves alone:** {what it does not change}.` then the rule on the following lines. `·` separates items **within** a part; the parts themselves are separated by their bold labels. Bold lead on the path (not a blockquote — so it does not look like a gate). No `####`, no `{ID}`. Do not put it in a hook's `> Note:`. **`Spans:` names hooks by their `{ID}`** (`A2's [gated] band`, `A3 step 1`, `B1`) — never in prose — so "what governs A3?" is one search of this file, with no index to keep in sync.
+  - **Example:** Path A `📌 **Companion work — …** — **Spans:** …`
+  - **Past ~4 constraints on one path:** move the `Spans:` lines out of the bodies into a single table above them, so spans still live in exactly one place.
 
 - **⚪ hooks with no step yet** — Superpowers lifecycle points on the path that still have no workspace steps.
   - **Meaning:** Still part of the workflow; listed on one bold line per path (not a `####` subsection). Give a hook its own `#### 🪝` subsection the moment it gains a step. For execution and `test-driven-development`, our rules arrive through the enriched plan (Operating rule 4).
@@ -190,6 +196,8 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 **Cross-cutting**
 
 - **Only a hook gets a `####` heading, and only a hook gets an `{ID}`.** Anything else inside a path uses its landmark shape above, so the outline stays a clean list of hooks.
+- **Reserved verbs — keep them distinct.** Gates **ask** and **answer** (Yes / No); hooks and step bands **run** or are **skipped**; constraints **span**; entries **route**; mode blocks **select**. Never write "the gate applies" — it reads both as _the gate is in force_ and as _the gate let us through_. Say which way it answered.
+- **Constraints never collide and never gate.** A constraint adds a rule to steps that already run — it can never skip a hook or band (that is a 🚧 gate's job). If a new constraint would contradict an existing one on the same step, **amend the existing constraint** rather than adding a second: one step's rule lives in one constraint. Constraints are **path-scoped**, so the same name may appear on two paths carrying different rules; the no-collision rule applies within a path.
 - **Icons are landmarks, and these eight are reserved:** 🛣️ path · 🪝 hook · 🚪 entry · ⚪ hooks with no step yet · 🎛️ mode · ▶️ resume · 🚧 gate · 📌 constraint. Never use those eight for anything else; any other section may take its own distinct icon.
 - **Where new content goes:** a rule an agent must follow → this file; the reasoning behind it → `/docs/guidelines/superpowers-workflow.md`; how to perform a step → inside the named skill. Keep each fact in exactly one of the three.
 
@@ -197,7 +205,7 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 
 ### 🛣️ Path A — Build a feature, or change an existing feature's behavior
 
-**Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD + TFS + spec sync + e2e verdict** _(A2 gated steps)_ → **mode + `writing-plans`** _(A2 always)_ → **(enricher |) plan-review stop** _(A3)_ → _(user proceeds)_ → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **doc/ID re-tag** _(gated, only if new IDs)_ → `finishing-a-development-branch`
+**Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD + TFS + spec sync + e2e verdict** _(A2 `[gated]` band)_ → **mode + `writing-plans`** _(A2 Always band)_ → **(enricher |) plan-review stop** _(A3)_ → _(user proceeds)_ → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **doc/ID re-tag** _(gated, only if new IDs)_ → `finishing-a-development-branch`
 
 Path A has two parts: **Documentation** (through the plan-review stop) and **Execution** (after the user proceeds — same session or another session with the plan path).
 
@@ -218,17 +226,38 @@ Read `Path A phase` from the plan's Global Constraints, then:
    - **Draft** → stay in **Documentation** (continue from the appropriate A2/A3 point; do not start Execution).
 3. User may override (“execute anyway” / “keep drafting”).
 
-> 🚧 **Functionality gate.** A1, A2's gated steps, A3's enricher step, and A4 apply only when the work is (or produces) a **functionality** — libs from `map` / `data-access` / `ui` / `feature` / `page`. `util`, `api`, and `app` **never** form a functionality (see `/docs/getting-started/library-types-and-their-relationship.md` → Functionality types): they get **no** `docs/x/{name}/` PRD or TFS (and therefore no PRD ACs). If the cycle is only creating or updating one of those, **skip** A1, A2's gated steps, A3's enricher step, and A4 — no PRD/TFS writers, no e2e verdict, no enricher. Still run Superpowers' `brainstorming` and Path A close-out (A2 always: mode → `writing-plans` with mode in the plan → A3 hard stop), and `test-driven-development` when tests are in scope. For lib shape, load `x-ng-lib-build-helper` (its fallback covers `util` / `api`). When unit tests are in scope for **`util`** or product **`app`**, load `x-ng-test-unit-helper` and follow its `references/libs/util.md` / `app.md`: FR/BR IDs come from a local `requirements.md` (`UTIL-…` / `APP-…`), not from TFS. **`api`** has no `requirements.md` (proxy-only).
+**Docs-in-scope set** — **Members:** **A1** · **A2's `[gated]` band** · **A3's enricher step** · **A4**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A2's Always band (mode → `writing-plans` with mode in the plan), A3's hard stop, and `test-driven-development` when tests are in scope.
 
-> 🚧 **Missing-docs gate.** When the Functionality gate applies and the work updates an existing `map` / `data-access` / `ui` / `feature` / `page` lib with no `docs/x/{name}/` for its functionality name: ask whether to **document now** (first-time PRD/TFS; continue A1, A2's gated steps, enricher, and A4 as applicable) or **skip** A1, A2's gated steps, A3's enricher step, and A4 for this cycle (no writers, e2e verdict, or enricher; no our FR/BR/AC ID conventions). New functionalities (libs not yet in the workspace) always document — do not offer skip. Run this ask before A2 (typically with A1).
+> 🚧 **Functionality gate** [auto] — **Asks:** is the work (or does it produce) a lib from `map` / `data-access` / `ui` / `feature` / `page`?
+>
+> - **Yes** → the docs-in-scope set runs.
+> - **No** (`util` / `api` / `app` only) → **skip the set**: no PRD/TFS writers, no e2e verdict, no enricher, none of our FR/BR/AC ID conventions.
+>
+> `util`, `api`, and `app` **never** form a functionality (see `/docs/getting-started/library-types-and-their-relationship.md` → Functionality types): they get **no** `docs/x/{name}/` PRD or TFS, and therefore no PRD ACs. For lib shape, load `x-ng-lib-build-helper`. When unit tests are in scope, load `x-ng-test-unit-helper` — it owns where those libs' FR/BR IDs come from.
 
-📌 **PRD/TFS over cycle spec.** When A2's gated steps ran this cycle (functionality docs in scope), for `writing-plans` (and A3's enricher coverage check): (1) read `docs/x/{name}/` **PRD and TFS as the primary source of truth**; (2) on any **conflict** with the Superpowers brainstorm spec under `.superpowers/specs/`, **PRD/TFS win** (user decisions during the writers win); (3) for anything the plan still needs that PRD/TFS **do not cover** (e.g. companion util/api/app tasks, plan-level narrative), use the **synced** brainstorm spec; (4) do **not invent** requirements that appear in neither — ask. A2 syncs the spec so Superpowers' native "plan from the spec" path stays aligned with (1)–(2). When those gated steps were skipped, the brainstorm spec alone remains the plan's requirements source (vanilla Superpowers); A2's always band still asks mode and `writing-plans` still records it, then A3 hard-stops.
+> 🚧 **Missing-docs gate** [ask] — **Asks:** the work updates an **existing** `map` / `data-access` / `ui` / `feature` / `page` lib that has no `docs/x/{name}/` for its functionality name — document it now?
+>
+> - **Yes** → the docs-in-scope set runs (first-time PRD/TFS).
+> - **No** → **skip the set** for this cycle: no writers, no e2e verdict, no enricher, none of our FR/BR/AC ID conventions.
+> - **Not asked when:** the lib already has `docs/x/{name}/`, or the functionality is **new** (not yet in the workspace) — creating it is creating the functionality, so it always documents; never offer skip.
+>
+> Ask before A2 (typically with A1).
 
-📌 **Companion util/api/app.** When brainstorm concludes a `util`, `api`, and/or `app` must be created or updated **in the same cycle** as a functionality: A1, A2's gated steps, A3's enricher step, and A4 still follow the Functionality / Missing-docs gates for that functionality only. The companion lib is **never** owned by the functionality and **never** gets `docs/x/` PRD or TFS. When A2's gated steps run, list it under TFS **Existing Dependencies & Reuse** as `[RECOMMENDED]` if it is not built yet (and in the PRD **Dependencies & Risks** when product-relevant). `writing-plans` **must** include create/update tasks for that companion lib **before** tasks that depend on it; when unit tests are in scope, **`util`** / product **`app`** use local `requirements.md` (`UTIL-…` / `APP-…`), and **`api`** has none. A3's enricher (when it runs) still folds only the functionality's PRD/TFS — it does not invent or coverage-check companion-lib tasks (those must already be fully specified in the plan).
+📌 **PRD/TFS over cycle spec** — **Spans:** `writing-plans` · A3 step 1 (the enricher's coverage check). **Leaves alone:** which hooks run — that is the gates' answer, not this rule.
+
+When A2's `[gated]` band ran this cycle, for `writing-plans` (and A3's enricher coverage check): (1) read `docs/x/{name}/` **PRD and TFS as the primary source of truth**; (2) on any **conflict** with the Superpowers brainstorm spec under `.superpowers/specs/`, **PRD/TFS win** (user decisions during the writers win); (3) for anything the plan still needs that PRD/TFS **do not cover** (e.g. companion-lib tasks, plan-level narrative), use the **synced** brainstorm spec; (4) do **not invent** requirements that appear in neither — ask. A2 syncs the spec so Superpowers' native "plan from the spec" path stays aligned with (1)–(2). When that band was skipped, the brainstorm spec alone remains the plan's requirements source (vanilla Superpowers); A2's Always band still asks mode and `writing-plans` still records it, then A3 hard-stops.
+
+📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** `writing-plans` (task order) · both gates (re-answered for the companion) · A2's `[gated]` band and A3 step 1 (once per functionality). **Leaves alone:** the current functionality's own gate answers and its docs.
+
+When brainstorm concludes that a `util`, `api`, or `app` lib — or a `map` / `data-access` / `ui` / `feature` / `page` lib belonging to **another** functionality (not the one this cycle is creating or updating) — must be created or updated in the **same cycle**:
+
+1. **Order.** `writing-plans` must include the create/update tasks for that companion lib **before** any task of the current functionality that depends on it.
+2. **Gates re-answer per companion.** The Functionality gate and the Missing-docs gate are answered for the companion work on its own terms: a companion `util` / `api` / `app` always answers **No**; another functionality's libs answer by their own lib types and their own `docs/x/{name}/`.
+3. **Docs are per functionality.** When the gates answer **Yes** for more than one functionality this cycle, A2's `[gated]` band and A3's enricher step run **once per functionality**, each against its own `docs/x/{name}/`.
 
 #### 🪝 A1 · Before `brainstorming` [gated]
 
-Only when gated Documentation hooks apply this cycle (see Functionality / Missing-docs gates):
+Part of the docs-in-scope set — runs only when both gates answer **Yes**:
 
 1. **Always** read `docs/getting-started/library-types-and-their-relationship.md` (functionality / lib types, natural entry, what util/api/app never own) and `docs/guidelines/naming-conventions.md` (especially lib and functionality naming) — they shape the design questions even when no PRD/TFS exists yet.
 2. If this functionality already has docs in `docs/x/{name}/` (`PRD.md` and/or the `TFS/` folder), read them too.
@@ -237,12 +266,12 @@ Only when gated Documentation hooks apply this cycle (see Functionality / Missin
 
 Always runs on Path A before invoking `writing-plans`. One hook at this attach-point (do not split into a second before-`writing-plans` hook).
 
-**[gated]** — only when docs in scope (see Functionality / Missing-docs gates); skip this band when those gates say so:
+**[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
-1. **Write/refresh the PRD & TFS** — `x-ng-prd-writer`, then `x-ng-tfs-writer`. If `x-ng-tfs-writer` flags a product-observable gap (a `(new — suggest a PRD AC)` entry), ask the user; if approved, re-run `x-ng-prd-writer` to add the AC, then re-run `x-ng-tfs-writer` to back-link it.
+1. **Write/refresh the PRD & TFS** — `x-ng-prd-writer`, then `x-ng-tfs-writer`, **once per functionality in scope this cycle** (📌 _Companion work_). If `x-ng-tfs-writer` flags a product-observable gap (a `(new — suggest a PRD AC)` entry), ask the user; if approved, re-run `x-ng-prd-writer` to add the AC, then re-run `x-ng-tfs-writer` to back-link it.
 2. **Sync the Superpowers spec** — update this cycle's brainstorm spec under `.superpowers/specs/` so it matches the approved PRD/TFS on overlapping decisions (step 1 wins on conflicts). Fix conflicting sections in the spec body; at minimum put a short note at the top that `docs/x/{name}/` PRD and TFS are primary and win on conflicts, and link those paths. Keep spec-only material that PRD/TFS never cover (gap filler for planning). Do **not** commit the spec (see _Workspace preferences_).
-3. **Decide e2e now** — it applies only if the functionality has a `page` lib, or a `feature` that initializes another `feature`, **and** the PRD ACs describe user-observable cases. State the verdict and a one-line why.
-4. **Load the reference guidelines** — `x-ng-lib-build-helper` and `x-ng-test-unit-helper` always, and `x-ng-test-e2e-helper` **only if step 3 said e2e applies** — so all of it is in context and `writing-plans` drafts from PRD/TFS first, then the synced spec for gaps (📌 _PRD/TFS over cycle spec_).
+3. **Decide e2e now** — e2e is in scope only if the functionality has a `page` lib, or a `feature` that initializes another `feature`, **and** the PRD ACs describe user-observable cases. State the verdict and a one-line why.
+4. **Load the reference guidelines** — `x-ng-lib-build-helper` and `x-ng-test-unit-helper` always, and `x-ng-test-e2e-helper` **only if step 3 put e2e in scope** — so all of it is in context and `writing-plans` drafts from PRD/TFS first, then the synced spec for gaps (📌 _PRD/TFS over cycle spec_).
 
 > **Override:** the `[gated]` band overrides `brainstorming`'s stated exclusive exit ("the ONLY skill you invoke after brainstorming is `writing-plans`"). Authorized by the precedence rule: that exclusivity guards against _implementation_ skills jumping to code — these write documents only. The Always band below still ends in `writing-plans`.
 
@@ -266,9 +295,9 @@ Interactive trades away `subagent-driven-development`'s per-task and final whole
 
 Always runs on Path A after `writing-plans` produces a plan. This is the end of **Documentation**; **Execution** starts only on resume.
 
-**[gated]** — only when docs in scope (see Functionality / Missing-docs gates):
+**[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
-1. **Enrich** — run **`x-ng-sp-plan-enricher`**: fold into the plan's Global Constraints the PRD/TFS IDs and rules, the commit-message pointer, and the CODEOWNERS pointer when the plan creates owned paths or explicitly states a handoff; carry in the e2e verdict from A2 and tag the test tasks. If docs were not in scope, skip this step.
+1. **Enrich** — run **`x-ng-sp-plan-enricher`**: fold into the plan's Global Constraints the PRD/TFS IDs and rules, the commit-message pointer, and the CODEOWNERS pointer when the plan creates owned paths or explicitly states a handoff; carry in the e2e verdict from A2 and tag the test tasks. Run it **once per functionality documented this cycle** (📌 _Companion work_): each run folds only its own `docs/x/{name}/` and tags only that functionality's test tasks, and Global Constraints are merged, never replaced.
 
 **Always:**
 
@@ -281,7 +310,7 @@ Always runs on Path A after `writing-plans` produces a plan. This is the end of 
 
 #### 🪝 A4 · Before `finishing-a-development-branch` [gated] — only if implementation introduced new FR/BR/AC IDs
 
-Only when gated late hooks apply this cycle (functionality docs in scope — see Functionality / Missing-docs gates) **and** implementation introduced new FR/BR/AC IDs:
+Part of the docs-in-scope set — runs only when both gates answer **Yes** **and** implementation introduced new FR/BR/AC IDs:
 
 Update the docs (`x-ng-prd-writer`, then `x-ng-tfs-writer`), then re-tag the affected unit and (if applicable) e2e test titles with the newly minted IDs — **rename only**: the coverage already exists (an execution subagent may not invent an ID; it flags a gap instead).
 
@@ -297,9 +326,32 @@ In **auto** mode the tree has already been reviewed, so route the re-tag through
 
 No execution mode here — that question belongs to path A only. For git, see _Git contract_.
 
-> 🚧 **Functionality gate.** B1 applies only when the fix is to a **functionality** (it updates `docs/x/` PRD/TFS). A change that only touches a `util`, `api`, or `app` never has those docs — **skip B1**. Unit tests for **`util`** / product **`app`** still follow TDD / `x-ng-test-unit-helper` when tests are in scope; FR/BR IDs come from local `requirements.md` (retag as part of normal test edits, not via B1's PRD/TFS writers). **`api`** has no `requirements.md`.
+**Docs-in-scope set** — **Members:** **B1**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips B1** for this fix. **Regardless:** `systematic-debugging`, `test-driven-development`, and `verification-before-completion`.
+
+> 🚧 **Functionality gate** [auto] — **Asks:** is the fix to a lib from `map` / `data-access` / `ui` / `feature` / `page`?
+>
+> - **Yes** → B1 runs.
+> - **No** (`util` / `api` / `app` only) → **skip B1**: those never have `docs/x/` docs to update.
+>
+> Unit tests for those libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TFS writers.
+
+> 🚧 **Missing-docs gate** [auto] — **Asks:** does that lib's functionality already have `docs/x/{name}/`?
+>
+> - **Yes** → B1 runs.
+> - **No** → **skip B1**: with no `docs/x/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TFS FR/BRs — so the fix cannot have minted new IDs, and B1 has no docs to refresh and no test titles to re-tag.
+>
+> `[auto]` here, not `[ask]` as on Path A: a bug fix is not the place for a first-time PRD/TFS interview. If the user wants that functionality documented, that is a Path A cycle.
+
+📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** both gates (answered per functionality) · B1 (once per functionality). **Leaves alone:** the fix and its tests, and the order of any of it — Path B has no plan, so nothing here orders work.
+
+When the fix touches a `util`, `api`, or `app` lib, or libs belonging to more than one functionality:
+
+1. **Gates answer per functionality.** A `util` / `api` / `app` part always answers **No** — it never has `docs/x/` to update. Each functionality's part is answered on its own lib types and its own `docs/x/{name}/`.
+2. **B1 runs per functionality** whose gates both answer **Yes** and whose part of the fix introduced new IDs — each against its own `docs/x/{name}/`.
 
 #### 🪝 B1 · After `verification-before-completion` [gated] — only if the fix introduced new FR/BR/AC IDs
+
+Part of the docs-in-scope set — runs only when both gates answer **Yes** **and** the fix introduced new FR/BR/AC IDs:
 
 Update the docs (`x-ng-prd-writer`, then `x-ng-tfs-writer`), then re-tag the affected unit and (if applicable) e2e test titles with the newly minted IDs — **rename only**: the coverage already exists. Follow `x-ng-test-unit-helper` and `x-ng-test-e2e-helper`.
 
