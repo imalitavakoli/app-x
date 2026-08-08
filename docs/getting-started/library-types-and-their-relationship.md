@@ -29,15 +29,19 @@ In overall we have 8 library types which can be categorized into 3 groups:
 
 **What other lib types they can import?** They can import ALL type of libs, except '_util_', and '_api_' types.
 
+**Tip!** In practice an '_api_' lib has almost no implementation of its own — its `src/index.ts` imports a small set of symbols from another lib and re-exports them. Naming often mirrors the proxied lib (e.g. `shared-api-data-access-ng-auth` re-exports selected symbols from `@x/shared-data-access-ng-auth`, or `shared-api-feature-ng-x-users` from `@x/shared-feature-ng-x-users`). See the existing `libs/shared/api/` libs for the pattern.
+
 &nbsp;
 
 ### 'util' type
 
 **What are they?** These are libs that contain low-level utilities used by many libs and apps. They can contain services or non-technology related vanilla JavaScript utility functions that are not specifically related to UI. e.g., encapsulate functions that format dates or detect user's device.
 
+They can also wrap utility services, or wrap third-party utility classes (e.g. Capacitor plugin classes), so other libs depend on our wrapper rather than the original.
+
 **What other lib types they can import?** They can import '_util_', '_map_', and '_api_' types.
 
-**Tip!** This lib can contain components/services that don't need '_data-access_' typed libs, and if such libs are (slightly) needed, they can be accepted as an input, method argument, or imported from '_api_' typed libs.
+**Note!** '_util_' libs cannot import '_data-access_' or '_feature_' libs directly (boundary rules forbid it). Prefer accepting such a dependency as an input or method argument when that is enough. If the '_util_' lib must import one, first expose the needed symbols through an '_api_' lib (that '_api_' lib imports the '_data-access_' or '_feature_' lib and re-exports only what is required — see the '_api_' tip above), then import that '_api_' lib from the '_util_' lib.
 
 &nbsp;
 
@@ -62,6 +66,12 @@ They initialize '_map_' libs to call their methods and fetch data from server (o
 **What other lib types they can import?** They can import '_util_', '_map_', and '_data-access_' types.
 
 **Note!** Generate '_guards_' and '_interceptors_' (or similar files) inside of the '_data-access_' libs (their code can sit beside the `+state` folder of the lib), because these services may (heavily) need data access, and it makes sense to hold them in such libs.
+
+**Important! — Fetching from the outside world**
+
+Whenever you load a JSON file, call API endpoints, or otherwise fetch data from the outside world, that MUST always happen through Abstract libs via this funnel: '_map_' lib → '_data-access_' lib. The '_map_' lib fetches the data (and maps it, if necessary); the '_data-access_' lib stores the data and makes it available to other libs.
+
+NEVER put that fetching in a plain TS class/service, and NEVER create a '_util_' lib for it. Keeping the funnel consistent makes updating and maintaining these behaviours easier across the workspace.
 
 &nbsp;
 
@@ -98,6 +108,8 @@ Pages initialize multiple '_feature_' libs to bring up a much bigger functionali
 **What other lib types they can import?** They can import ALL type of libs, except '_api_' types.
 
 **Note!** Pages are the ONLY lib types that can navigate to different app routes! How they can understand when to navigate? Well, the initialized '_feature_' libs may output an event (e.g., based on user interactions), pages listen to those outputs, and handle them.
+
+**Note!** Only '_page_' libs may take inputs from URL Query Params. NEVER read URL Query Params in '_feature_' or '_ui_' libs — read them in the '_page_' lib and pass the values down to other libs through inputs.
 
 **Note!** A '_page_' lib is wired into an app **only** from that app's route file — e.g. `apps/{app-name}/src/app/app.routes.ts` (typically via `loadChildren` / the page lib's exported routes). Other libs must not import a '_page_' lib to "use" it as a page ('_feature_' is already forbidden from importing '_page_' by the boundary rules). Nested/child routes for that page may live inside the page lib itself; the app's route file remains the sole outside entry.
 
@@ -213,7 +225,7 @@ If the functionality **does** have a '_map_' lib (to call an API endpoint or loa
 It does **not** require both. Valid shapes include:
 
 - '_ui_' only — a presentational piece reused by different '_feature_' libs
-- '_feature_' only — a smart lib that uses one or more '_data-access_' libs (from other, typically abstract, functionalities) and renders via other '_ui_' libs
+- '_feature_' only — a smart lib that uses one or more '_data-access_' libs (from other, typically abstract, functionalities) and renders via '_ui_' libs from other '_ui_'-only functionalities (see [Reuse across functionalities](#reuse-across-functionalities))
 - '_ui_' + '_feature_'
 
 **Natural entry lib:**
@@ -250,7 +262,7 @@ It **must** have:
 It **may** skip:
 
 - '_map_' — same rule as `'abstract'`: only needed when talking to an API or loading an external asset; local/async sources can live in '_data-access_' alone
-- '_ui_' — the '_feature_' may reuse '_ui_' libs from other functionalities to present the data it fetches
+- '_ui_' — the '_feature_' may reuse '_ui_' libs from other **'_ui_'-only** functionalities to present the data it fetches (see [Reuse across functionalities](#reuse-across-functionalities))
 
 So the required core is '_data-access_' + '_feature_'; optional '_map_' and/or '_ui_'.
 
@@ -270,6 +282,52 @@ It **must** have:
 It **may** also have '_map_', '_ui_', and/or '_feature_' (same optional rules as `'mixed'` / `'visual+'` for those). The presence of '_page_' + owned '_data-access_' is what makes it `'mixed+'` rather than `'mixed'` or `'visual+'`.
 
 **Natural entry lib:** '_page_' (consumed as a page — imported only from an app's route file, e.g. `apps/{app-name}/src/app/app.routes.ts`; other libs of this functionality may still be imported for partial reuse — e.g. '_feature_' or '_data-access_').
+
+&nbsp;
+
+[🔝](#library-types--their-relationship-📚)
+
+## Reuse across functionalities
+
+The '_type_' rules at the top of this document say what a lib **may** import. This section answers a narrower question: what a lib may import **from another functionality's family** — the libs named after a different functionality.
+
+**Why ESLint cannot enforce this.** `@nx/enforce-module-boundaries` matches the tags in each `project.json`, and we tag only two dimensions — '_type_' and '_domain_'. Neither encodes which **functionality family** a lib belongs to, and we deliberately do not add a third: families multiply as the workspace grows, so a family dimension would mean one boundary rule per functionality, forever. Even then, two of the rules below still could not be expressed — the rule engine sees a project-to-project edge, so it can tell neither a type-only import from a runtime one, nor "imported from the app's route file" from "imported anywhere in the app". **So these are conventions: humans and agents enforce them, not lint.**
+
+### What may be reused
+
+| Lib type          | May a **different** functionality import it?                                                                                                                               |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| '_data-access_'   | **Yes** — this is the sanctioned reuse point for owned data. A '_feature_' or '_page_' lib may initialize several '_data-access_' libs from different families.             |
+| '_feature_'       | **Yes** — it is the natural entry lib of '_visual_' / '_mixed_' functionalities, so importing it is how another lib uses that functionality.                                |
+| '_ui_'            | **Only if its own family is '_ui_'-only** — i.e. a '_visual_' functionality with no '_feature_' lib. A '_ui_' lib that sits beside its family's '_feature_' lib is private. |
+| '_map_'           | **Types only.** Reading its interfaces for typing is fine; **initializing it** (calling its methods) from another family's '_data-access_' lib is not.                      |
+| '_page_'          | **No** — its only consumers are an app's route file and, as the one exception, another '_page_' lib (see below).                                                            |
+
+**'_ui_' — why "'_ui_'-only".** A '_ui_' lib built beside a '_feature_' lib was shaped for that feature's data and lifecycle; it is part of that functionality, not a shared asset. A '_ui_' lib that **is** the whole functionality was built to be reused, and that is what makes it importable.
+
+**'_map_' — why types are fine but initialization is not.** Every '_map_' lib has its own family '_data-access_' lib, which is the sanctioned way to reach that data. If your '_data-access_' lib needs an API endpoint another family's '_map_' lib already calls, do **not** add a facade method (actions + effect) that calls the same endpoint. '_feature_' and '_page_' libs can always initialize several '_data-access_' libs, so the endpoint is already reachable through the owning family's '_data-access_' lib. Importing a '_map_' lib to read its interfaces stays allowed — see _Natural entry lib_ above.
+
+**'_page_' — the one exception.** A '_page_' lib is wired in from an app's route file only. Other functionalities are imported **into** pages, never the other way round. The single exception is another '_page_' lib: a page usually keeps its child routes inside itself (see the '_page_' type above), but when an author knowingly chooses to import a separate '_page_' lib instead, that is allowed and not prevented.
+
+### When reuse is blocked, offer a way forward
+
+Wanting to import a private '_ui_' lib or initialize another family's '_map_' lib is a signal that something reusable is trapped inside a family — not that the author is doing something careless. Work down this ladder and stop at the first rung that applies:
+
+**0. A legal route already exists — take it.** Usually nothing needs refactoring:
+
+- Need data another family owns → import that family's '_data-access_' lib. A '_feature_' or '_page_' lib may initialize as many as it needs, from as many families as it needs.
+- Need a presentational piece that already lives in a '_ui_'-only functionality → import it; that is exactly what it is for.
+
+**1. Refactor now — extract what is genuinely shared.** The need is real today, so YAGNI is satisfied and the extraction is justified now rather than pre-emptive:
+
+- **Presentation trapped in a family.** Split the wanted part out into its own '_ui_'-only '_visual_' functionality, then import it from both the original family and the new one.
+- **An endpoint trapped in a non-abstract family.** If the owning functionality is already '_abstract_', there is nothing to do — go to rung 0 and import its '_data-access_' lib. If it is **not** abstract, extract that '_map_' + '_data-access_' pair into its own '_abstract_' functionality, so both the original and the new functionality import its '_data-access_' lib.
+
+Cost: it touches an existing family and its `docs/x/{name}/` PRD & TFS.
+
+**2. Duplicate, and skip the refactor.** Build the equivalent inside the functionality being worked on. It is not DRY, and that is an accepted, deliberate trade — a lighter change now, in exchange for two implementations that can drift.
+
+Rung 1 versus rung 2 is the author's call. The blocked import itself is not: it stays blocked either way.
 
 &nbsp;
 

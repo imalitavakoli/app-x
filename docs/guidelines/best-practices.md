@@ -25,14 +25,6 @@ To improve teamwork, we follow some best practices:
 
 &nbsp;
 
-- **Always use 'Abstract' libs when fetching data from the outside world**. So if you want to load a JSON file or call API endpoints, NEVER use TS classes, services, or even creating a '_util_' lib! Fetching data from the outside world MUST always happen through this funnel: '_map_' lib → '_data-access_' lib. '_map_' lib fetches the data (and maps it, if necessary), then '_data-access_' lib stores the data and makes it available to other libs. In this way, updating/maintaining such behaviours would be consitant and easy across the workspace.
-
-&nbsp;
-
-- **Only '_page_' libs' inputs come as URL Query Params**. So NEVER read URL Query Params in '_feature_' or '_ui_' libs! If you need that, you read them in your '_page_' lib, and pass them to other libs through its inputs.
-
-&nbsp;
-
 [🔝](#best-practices-👌)
 
 ## Documenting
