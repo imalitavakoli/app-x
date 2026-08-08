@@ -118,7 +118,7 @@ Read the example matching the functionality's classification before filling the 
 
 **Name match.** Every owned lib is `{domain}-{type}-{name}` with the **same** `{name}` as the functionality. Consumers keep their own functionality names; list them under Existing Dependencies & Reuse when relevant — never as this TFS's own libs.
 
-**Natural entry lib.** Record it in the README (per the library-types doc): `abstract` → `data-access`; `visual` → `feature` or `ui`; `mixed` → `feature`; `mixed+` → `page`; `visual+` → `feature` when present, else `page`.
+**Natural entry lib.** Record it in the README (per the library-types doc): `abstract` → `data-access`; `visual` → `feature` or `ui`; `mixed` → `feature`; `visual+` → `page`; `mixed+` → `page`.
 
 **Base classes (default):** each component extends the latest available base class for its lib type (`ui`, `feature`, parent `page`, child `page`). Take the actual base from the matching example rather than a base-class name you already know or assume — the example is kept up to date, so it always reflects the latest base available in the workspace. Use these unless the user asks to use — or to create — a specialized base derived from them (e.g. a shared `…-ext-{name}` base for `feature` libs that always use one specific `data-access` lib, or for `page` libs that always use one specific `feature` lib as their starter, kept DRY across functionalities). If the user names such a base, extend it instead and note it in the spec.
 

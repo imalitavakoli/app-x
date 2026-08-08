@@ -32,7 +32,7 @@
 > - **Abstract** (entry = `data-access`; optional own `map`): list API endpoints and/or local sources — SQLite, Local Storage, Cookies. e.g. `GET /users/{id}/something` (auth), or `read 'blahblah' from Local Storage`.
 > - **Visual** (entry = `feature` when present, else `ui`; data usually from another functionality's `data-access`): list the entry component's **inputs**, and name any shared data-access it reads from.
 > - **Mixed** (entry = `feature`; owns `data-access`, optional `map`/`ui`): list the `feature` **inputs** and what it fetches/reads itself (API and/or local).
-> - **`visual+`** (owns a `page`; entry = `feature` when present, else `page`): same as visual, plus **URL query params** on the `page`.
+> - **`visual+`** (owns a `page`; entry = `page`): list page **URL query params**, and any inputs the page (or its optional `feature` / `ui`) needs from elsewhere — data usually from another functionality's `data-access`.
 > - **`mixed+`** (must own `page` + `data-access`; entry = `page`): list page **URL query params** and the owned data sources (API and/or local).
 >
 > Being composed into other pages does **not** add query-param / page requirements here — those belong to the consumer pages' own docs.

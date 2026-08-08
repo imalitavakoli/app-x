@@ -68,7 +68,7 @@ Copy this checklist and track it. Keep the `[prd]` prefix so, if this runs insid
 
    **Consumed-by ≠ owns page:** if `ng-chart` is used on `ng-dashboard` and `ng-insights`, those are **other** page libs/functionalities that **import** this one's natural entry lib. That does **not** make this functionality `visual+` / `mixed+`, and it must **not** gain a `page` lib or absorb those pages' names.
 
-   **Page delta** (only when this functionality **owns** a `page`): capture URL query params, navigation, and route outcomes in Data Requirements, flows, and ACs. Natural entry: `mixed+` → `page`; `visual+` → `feature` when present, else `page`. Keep every requirement atomic and testable. Do not invent facts — mark unknowns as Open Questions and ask.
+   **Page delta** (only when this functionality **owns** a `page`): capture URL query params, navigation, and route outcomes in Data Requirements, flows, and ACs. Natural entry: `visual+` → `page`; `mixed+` → `page`. Keep every requirement atomic and testable. Do not invent facts — mark unknowns as Open Questions and ask.
 
 4. **Validate** — run the Review Checklist below; loop until all items pass.
 5. **Confirm with the user** — see below. The PRD is not done until the Open Questions have been put to the user and every AC is approved.
