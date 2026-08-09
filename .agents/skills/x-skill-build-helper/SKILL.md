@@ -175,17 +175,17 @@ A rule is rarely written in one place. Changing it where you happened to be read
 
 Where the same rule commonly repeats — check each that exists:
 
-| Place | Why it holds a copy |
-| --- | --- |
-| the `SKILL.md` body | where the rule is stated |
-| its **Common mistakes** table | rows often restate the rule instead of naming the fix |
-| its **todo checklist** | must name every obligation its step carries — an obligation the todos omit is one that gets skipped |
+| Place                                                                                      | Why it holds a copy                                                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| the `SKILL.md` body                                                                        | where the rule is stated                                                                                                                                                                                                                                   |
+| its **Common mistakes** table                                                              | rows often restate the rule instead of naming the fix                                                                                                                                                                                                      |
+| its **todo checklist**                                                                     | must name every obligation its step carries — an obligation the todos omit is one that gets skipped                                                                                                                                                        |
 | every file under `assets/template.md` **or** `assets/template/` **or** `assets/templates/` | the shape the writer must produce — a skill often has **several** (one per output file, or one scaffold per kind), and the rule can sit in a `>` helper note, a heading, sample content, or a table row alike. Check them all, not just the one you edited |
-| `assets/examples/*` | worked examples demonstrate the rule |
-| `references/*` | the long-form version |
-| **another skill** | one that must inject the rule somewhere it cannot otherwise reach (e.g. into a plan read by execution subagents) |
-| `AGENTS.md` | when the workflow states the rule as control flow |
-| the `.claude/` stub | only when the `description` carries it |
+| `assets/examples/*`                                                                        | worked examples demonstrate the rule                                                                                                                                                                                                                       |
+| `references/*`                                                                             | the long-form version                                                                                                                                                                                                                                      |
+| **another skill**                                                                          | one that must inject the rule somewhere it cannot otherwise reach (e.g. into a plan read by execution subagents)                                                                                                                                           |
+| `AGENTS.md`                                                                                | when the workflow states the rule as control flow                                                                                                                                                                                                          |
+| the `.claude/` stub                                                                        | only when the `description` carries it                                                                                                                                                                                                                     |
 
 **Remove drift sites while you are there.** Two habits cut the number of copies:
 
@@ -198,25 +198,25 @@ Write every skill so it stands on its own and triggers from its own `description
 
 ## Common mistakes
 
-| Mistake                                                  | Fix                                                                                                        |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Canonical skill updated, stub left behind                | Same commit, every stub — the `description` is the one duplicated field.                                   |
+| Mistake                                                  | Fix                                                                                                                                  |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Canonical skill updated, stub left behind                | Same commit, every stub — the `description` is the one duplicated field.                                                             |
 | Rule changed in one file, its copies left stale          | Grep a distinctive phrase from the replaced text across `.agents/skills/`, `.claude/skills/` and `AGENTS.md` before calling it done. |
-| Mistakes row restating a rule instead of naming the fix  | The row carries the fix action; the body owns the rule. A restatement is a second copy that will drift.     |
-| Step gains an obligation the todo checklist doesn't name | Update the checklist too — agents follow todos under context pressure, so an unnamed obligation is skipped. |
-| Copying the skill's content into the stub                | The stub is a pointer: frontmatter + one line. Content stays single-sourced.                               |
-| Adding `metadata`/`version` to a stub                    | Stubs carry `name` + `description` only.                                                                   |
-| Inline `metadata: { version: '1.0.0' }`                  | Use block form under `metadata:`.                                                                          |
-| Tech segment on a tech-agnostic skill                    | Omit it — `ng` only when the skill is genuinely Angular-tied.                                              |
-| Inventing a kind suffix                                  | Use the suffix for the kind; if no kind fits, ask rather than coining one.                                 |
-| Description that summarises the skill's workflow         | WHAT names the output in one clause; the mechanics stay in the body.                                       |
-| Changing a description without bumping the version       | Trigger changes are minor bumps.                                                                           |
-| Naming another skill                                     | Name the artifact it produces. Reading another skill's internals is the only exception.                    |
-| Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                            |
-| Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                   |
-| Wiring the new skill into a path's hook or skills table  | Don't — skills stand alone unless the user explicitly asks for wiring.                                     |
-| Creating a skill that duplicates one that already exists | Extend the existing skill and bump it; overlapping skills cannot coordinate.                               |
-| Widening a description without reading the neighbours'   | A new trigger phrase can capture a sibling's requests. Check, then bind it narrowly or extend the sibling. |
-| Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                       |
-| Relocating content so an agent can reach it              | Leave it where it is and give the path.                                                                    |
-| Skill-relative path handed to an execution agent         | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.        |
+| Mistakes row restating a rule instead of naming the fix  | The row carries the fix action; the body owns the rule. A restatement is a second copy that will drift.                              |
+| Step gains an obligation the todo checklist doesn't name | Update the checklist too — agents follow todos under context pressure, so an unnamed obligation is skipped.                          |
+| Copying the skill's content into the stub                | The stub is a pointer: frontmatter + one line. Content stays single-sourced.                                                         |
+| Adding `metadata`/`version` to a stub                    | Stubs carry `name` + `description` only.                                                                                             |
+| Inline `metadata: { version: '1.0.0' }`                  | Use block form under `metadata:`.                                                                                                    |
+| Tech segment on a tech-agnostic skill                    | Omit it — `ng` only when the skill is genuinely Angular-tied.                                                                        |
+| Inventing a kind suffix                                  | Use the suffix for the kind; if no kind fits, ask rather than coining one.                                                           |
+| Description that summarises the skill's workflow         | WHAT names the output in one clause; the mechanics stay in the body.                                                                 |
+| Changing a description without bumping the version       | Trigger changes are minor bumps.                                                                                                     |
+| Naming another skill                                     | Name the artifact it produces. Reading another skill's internals is the only exception.                                              |
+| Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                                                      |
+| Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                                             |
+| Wiring the new skill into a path's hook or skills table  | Don't — skills stand alone unless the user explicitly asks for wiring.                                                               |
+| Creating a skill that duplicates one that already exists | Extend the existing skill and bump it; overlapping skills cannot coordinate.                                                         |
+| Widening a description without reading the neighbours'   | A new trigger phrase can capture a sibling's requests. Check, then bind it narrowly or extend the sibling.                           |
+| Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                                                 |
+| Relocating content so an agent can reach it              | Leave it where it is and give the path.                                                                                              |
+| Skill-relative path handed to an execution agent         | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.                                  |

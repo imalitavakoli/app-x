@@ -150,9 +150,9 @@ Incorporate whatever they change, re-run the Review Checklist, and ask again. On
 | Generalising a provided endpoint / param           | Use the exact value the user gave.                                                 |
 | AC bundling several outcomes ("and")               | Split into one AC per observable outcome.                                          |
 | AC that only asserts an emitted output/event       | A feature's output is a component contract → a BR in the TFS, not an AC.           |
-| AC asserting a reused component's colour/styling   | Its owner's PRD. Keep only the decision that drove it (_presented as critical_).    |
-| AC asserting a reused util's format or rounding    | The util's own `requirements.md`. Keep only that the value is displayed.            |
-| AC covering a change we asked another team to make | Requirements follow the lib, not the requester → Dependencies & Risks.              |
-| Fusing our decision with their rendering in one AC | Split: keep the decision, shed the rendering.                                       |
+| AC asserting a reused component's colour/styling   | Its owner's PRD. Keep only the decision that drove it (_presented as critical_).   |
+| AC asserting a reused util's format or rounding    | The util's own `requirements.md`. Keep only that the value is displayed.           |
+| AC covering a change we asked another team to make | Requirements follow the lib, not the requester → Dependencies & Risks.             |
+| Fusing our decision with their rendering in one AC | Split: keep the decision, shed the rendering.                                      |
 | Finishing without the user approving the ACs       | Present the full set and wait. They become e2e tests and the TFS's FRs/BRs.        |
 | Guessing an answer to close an Open Question       | Ask the user. Unanswered questions stay listed, not silently resolved.             |

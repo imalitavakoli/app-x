@@ -70,16 +70,16 @@ Sections below follow dependency order (light → composed), then `api` as the b
 
 What each type **may import** — matches `@nx/enforce-module-boundaries` in `.eslintrc.json`. Rows = consumer; columns = dependency.
 
-| Consumer ↓ / may import → | util | map  | data-access | ui  | feature | page | api |
-| ------------------------- | :--: | :--: | :---------: | :-: | :-----: | :--: | :-: |
-| **util**                  |  ✓   |  ✓³  |     —¹      |  —  |   —¹    |  —   |  ✓  |
-| **map**                   |  ✓   |  ✓³  |      —      |  —  |    —    |  —   |  —  |
-| **data-access**           |  ✓   |  ✓⁴  |      ✓      |  —  |    —    |  —   |  —  |
-| **ui**                    |  ✓   |  ✓³  |      —      |  ✓  |    —    |  —   |  —  |
-| **feature**               |  ✓   |  ✓³  |      ✓      |  ✓  |    ✓    |  —   |  —  |
-| **page**                  |  ✓   |  ✓³  |      ✓      |  ✓  |    ✓    |  ✓²  |  —  |
-| **app**                   |  ✓   |  ✓³  |      ✓      |  ✓  |    ✓    |  ✓   |  —  |
-| **api**                   |  —   |  ✓³  |      ✓      |  ✓  |    ✓    |  ✓   |  —  |
+| Consumer ↓ / may import → | util | map | data-access | ui  | feature | page | api |
+| ------------------------- | :--: | :-: | :---------: | :-: | :-----: | :--: | :-: |
+| **util**                  |  ✓   | ✓³  |     —¹      |  —  |   —¹    |  —   |  ✓  |
+| **map**                   |  ✓   | ✓³  |      —      |  —  |    —    |  —   |  —  |
+| **data-access**           |  ✓   | ✓⁴  |      ✓      |  —  |    —    |  —   |  —  |
+| **ui**                    |  ✓   | ✓³  |      —      |  ✓  |    —    |  —   |  —  |
+| **feature**               |  ✓   | ✓³  |      ✓      |  ✓  |    ✓    |  —   |  —  |
+| **page**                  |  ✓   | ✓³  |      ✓      |  ✓  |    ✓    |  ✓²  |  —  |
+| **app**                   |  ✓   | ✓³  |      ✓      |  ✓  |    ✓    |  ✓   |  —  |
+| **api**                   |  —   | ✓³  |      ✓      |  ✓  |    ✓    |  ✓   |  —  |
 
 ¹ `util` must not import `data-access` or `feature` **directly**. Prefer an input/method argument; if an import is required, expose symbols via an `api` lib, then import that `api` lib.  
 ² Prefer keeping child routes inside the same `page` lib; importing another `page` is the rare exception (see [Reuse](#reuse-across-functionalities)).  
@@ -120,12 +120,12 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 
 ### 'map' type
 
-|                 |                                                                                                                                                                                               |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Role**        | Interact with back-end or external resources; optionally map fetched shapes for consumers.                                                                                                    |
-| **May import**  | `util`, `map` (types only from other maps)                                                                                                                                    |
+|                 |                                                                                                                                                                                    |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Role**        | Interact with back-end or external resources; optionally map fetched shapes for consumers.                                                                                         |
+| **May import**  | `util`, `map` (types only from other maps)                                                                                                                                         |
 | **Owns / does** | Load external resources (e.g. JSON); map object structures (sometimes with `util` help) so they satisfy `ui` inputs; hold Map interfaces (`lib-name.interfaces.ts`) for consumers. |
-| **Must not**    | Store app/feature state (that is `data-access`); call another `map`'s methods / endpoints (import other maps for shared types only).                                           |
+| **Must not**    | Store app/feature state (that is `data-access`); call another `map`'s methods / endpoints (import other maps for shared types only).                                               |
 
 **Notes**
 
@@ -135,11 +135,11 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 
 ### 'data-access' type
 
-|                 |                                                                                                                    |
-| --------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **Role**        | State management and data-access services for an app, `page`, or `feature`.                                        |
-| **May import**  | `util`, `map` (runtime — call methods), `data-access`                                                              |
-| **Owns / does** | NgRx-related state; initializes its related `map` libs to fetch; may hold guards, interceptors, and similar (beside `+state`). |
+|                 |                                                                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Role**        | State management and data-access services for an app, `page`, or `feature`.                                                                       |
+| **May import**  | `util`, `map` (runtime — call methods), `data-access`                                                                                             |
+| **Owns / does** | NgRx-related state; initializes its related `map` libs to fetch; may hold guards, interceptors, and similar (beside `+state`).                    |
 | **Must not**    | Skip `map` when talking to the outside world (use the fetch funnel); initialize another family's `map` (use that family's `data-access` instead). |
 
 **Notes**
@@ -181,7 +181,7 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 |                 |                                                                                                                                                                                            |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Role**        | App pages — compose multiple `feature` libs into a larger surface.                                                                                                                         |
-| **May import**  | `util`, `map` (types only), `data-access`, `ui`, `feature`, `page`                                                                                                                          |
+| **May import**  | `util`, `map` (types only), `data-access`, `ui`, `feature`, `page`                                                                                                                         |
 | **Owns / does** | May use `data-access`; read URL Query Params and pass them down as inputs; navigate routes in response to `feature` outputs. Usually app-specific (e.g. `libs/ng-boilerplate/page/home/`). |
 | **Must not**    | Import `api`; be imported by other libs as “the page” — only the app route file wires a page in (see below).                                                                               |
 
@@ -250,13 +250,13 @@ That does **not** forbid other imports from the same family (e.g. reading `map` 
 
 When the natural entry is `page`, the **only** consumer that imports it to use the functionality as a whole is an **app's route file** (e.g. `apps/{app-name}/src/app/app.routes.ts`) — not another lib.
 
-| Functionality type | Typical shape (shorthand)                                              | Natural entry                     |
-| ------------------ | ---------------------------------------------------------------------- | --------------------------------- |
-| **abstract**       | `data-access` · optional `map`                                         | `data-access`                     |
-| **visual**         | `ui` and/or `feature` · no `page`                                      | `feature` if present, else `ui`   |
-| **visual+**        | `page` · optional `ui` / `feature`                                     | `page`                            |
-| **mixed**          | required `data-access` + `feature` · optional `map` / `ui` · no `page` | `feature`                         |
-| **mixed+**         | required `page` + `data-access` · optional `map` / `ui` / `feature`    | `page`                            |
+| Functionality type | Typical shape (shorthand)                                              | Natural entry                   |
+| ------------------ | ---------------------------------------------------------------------- | ------------------------------- |
+| **abstract**       | `data-access` · optional `map`                                         | `data-access`                   |
+| **visual**         | `ui` and/or `feature` · no `page`                                      | `feature` if present, else `ui` |
+| **visual+**        | `page` · optional `ui` / `feature`                                     | `page`                          |
+| **mixed**          | required `data-access` + `feature` · optional `map` / `ui` · no `page` | `feature`                       |
+| **mixed+**         | required `page` + `data-access` · optional `map` / `ui` / `feature`    | `page`                          |
 
 &nbsp;
 
@@ -292,11 +292,11 @@ When the natural entry is `page`, the **only** consumer that imports it to use t
 
 ### 'visual+' type
 
-|                   |                                                                                                                                               |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Shape**         | Same idea as `visual`, but **includes a `page`**.                                                                                             |
-| **Valid**         | `page` only · `page` + `ui` · `page` + `feature` · `page` + `ui` + `feature`                                                                  |
-| **Natural entry** | `page` (import only from an app's route file when using as a page; optional `feature` / `ui` may still be imported for partial reuse).         |
+|                   |                                                                                                                                        |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Shape**         | Same idea as `visual`, but **includes a `page`**.                                                                                      |
+| **Valid**         | `page` only · `page` + `ui` · `page` + `feature` · `page` + `ui` + `feature`                                                           |
+| **Natural entry** | `page` (import only from an app's route file when using as a page; optional `feature` / `ui` may still be imported for partial reuse). |
 
 &nbsp;
 

@@ -1,4 +1,4 @@
-# Reuse boundary — what belongs in *this* PRD
+# Reuse boundary — what belongs in _this_ PRD
 
 Read this whenever the feature description names a lib or functionality that this one **reuses** — whether that lib already exists, must be created, or must be changed for us.
 
@@ -6,13 +6,13 @@ A functionality almost always stands on things it does not own: shared `util` fu
 
 ## Every requirement has exactly one home
 
-| The thing whose behaviour the requirement describes | Where that requirement lives |
-| --- | --- |
-| A lib **this** functionality owns | **this** `docs/x/{name}/PRD.md` — as an AC |
+| The thing whose behaviour the requirement describes                       | Where that requirement lives                            |
+| ------------------------------------------------------------------------- | ------------------------------------------------------- |
+| A lib **this** functionality owns                                         | **this** `docs/x/{name}/PRD.md` — as an AC              |
 | Another functionality's `map` / `data-access` / `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/PRD.md` |
-| A `util` lib | that util's own `requirements.md` |
-| An `api` lib | nowhere — `api` libs have no requirements doc |
-| An `app` | `apps/{app-name}/requirements.md` |
+| A `util` lib                                                              | that util's own `requirements.md`                       |
+| An `api` lib                                                              | nowhere — `api` libs have no requirements doc           |
+| An `app`                                                                  | `apps/{app-name}/requirements.md`                       |
 
 This holds no matter who asked for the change. "The banner needs a `severity` input **for us**" is still a requirement about the banner, so it is still the banner's PRD that gains it. Writing it here does not make it happen; it only mints an AC that this functionality's e2e suite will then try to verify.
 
@@ -29,15 +29,15 @@ A reused component's own **visual attributes** and a reused util's own **output 
 
 ## Decompose a boundary requirement — keep the decision, shed the rendering
 
-The hardest case is one sentence containing both. Split it: the part that is *our decision* stays as an AC; the part that is *their rendering* leaves.
+The hardest case is one sentence containing both. Split it: the part that is _our decision_ stays as an AC; the part that is _their rendering_ leaves.
 
-| One sentence in the description | Stays here (our decision) | Leaves (their rendering) |
-| --- | --- | --- |
-| "an alert over its threshold shows in the banner's red critical styling" | that an over-threshold alert is **presented as critical** | that critical **looks red** → the banner functionality's PRD |
-| "each alert's timestamp is displayed as `DD MMM YYYY`" | that each alert **displays its timestamp** (only if worth an AC at all) | the `DD MMM YYYY` **pattern** → the date util's `requirements.md` |
-| "the user closes a banner and it disappears from the list" | that the alert is **removed from the list** and the rest remain | that the banner **has a close affordance** → the banner functionality's PRD |
+| One sentence in the description                                          | Stays here (our decision)                                               | Leaves (their rendering)                                                    |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| "an alert over its threshold shows in the banner's red critical styling" | that an over-threshold alert is **presented as critical**               | that critical **looks red** → the banner functionality's PRD                |
+| "each alert's timestamp is displayed as `DD MMM YYYY`"                   | that each alert **displays its timestamp** (only if worth an AC at all) | the `DD MMM YYYY` **pattern** → the date util's `requirements.md`           |
+| "the user closes a banner and it disappears from the list"               | that the alert is **removed from the list** and the rest remain         | that the banner **has a close affordance** → the banner functionality's PRD |
 
-The test for whether a sentence still belongs here: *if this functionality were deleted tomorrow, would this outcome still have to hold?* If yes, it was never ours.
+The test for whether a sentence still belongs here: _if this functionality were deleted tomorrow, would this outcome still have to hold?_ If yes, it was never ours.
 
 ## Where reuse **is** recorded in this PRD
 
@@ -73,14 +73,14 @@ Do **not** add a "this was accurate when written" disclaimer. The PRD's **Last U
 
 ## Common mistakes
 
-| Mistake | Fix |
-| --- | --- |
-| An AC asserting a reused component's colour, styling, or animation | That is its owner's PRD. Keep only our decision that drove it. |
-| An AC asserting a shared util's output format or rounding | That is the util's `requirements.md`. Keep only that the value is displayed. |
-| An AC covering a change we asked another team to make | Requirements follow the lib, not the requester. Record it under Dependencies & Risks. |
-| An AC for a lib that does not exist yet | It belongs to that lib's own docs. Here it is a dependency and possibly an Open Question. |
-| Fusing our decision and their rendering into one AC | Split; keep the decision, shed the rendering. |
-| Dropping reuse from the PRD entirely to stay "clean" | Reuse belongs in Dependencies & Risks / Non-Goals / Data Requirements — just never as an AC. |
-| Updating a PRD and leaving stale "does not exist yet" / "must change for us" notes | Re-read Dependencies & Risks first and bring each note to the present. |
-| Clearing a reuse note because the work was "probably done" | Verify it, or leave it and raise an Open Question. |
-| Adding a "accurate when written" disclaimer to the section | Redundant with **Last Updated**, and it softens every statement instead of fixing the stale one. |
+| Mistake                                                                            | Fix                                                                                              |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| An AC asserting a reused component's colour, styling, or animation                 | That is its owner's PRD. Keep only our decision that drove it.                                   |
+| An AC asserting a shared util's output format or rounding                          | That is the util's `requirements.md`. Keep only that the value is displayed.                     |
+| An AC covering a change we asked another team to make                              | Requirements follow the lib, not the requester. Record it under Dependencies & Risks.            |
+| An AC for a lib that does not exist yet                                            | It belongs to that lib's own docs. Here it is a dependency and possibly an Open Question.        |
+| Fusing our decision and their rendering into one AC                                | Split; keep the decision, shed the rendering.                                                    |
+| Dropping reuse from the PRD entirely to stay "clean"                               | Reuse belongs in Dependencies & Risks / Non-Goals / Data Requirements — just never as an AC.     |
+| Updating a PRD and leaving stale "does not exist yet" / "must change for us" notes | Re-read Dependencies & Risks first and bring each note to the present.                           |
+| Clearing a reuse note because the work was "probably done"                         | Verify it, or leave it and raise an Open Question.                                               |
+| Adding a "accurate when written" disclaimer to the section                         | Redundant with **Last Updated**, and it softens every statement instead of fixing the stale one. |

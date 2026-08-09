@@ -63,11 +63,11 @@ Lib types & import boundaries: `docs/getting-started/library-types-and-their-rel
 
 ## Common mistakes
 
-| Mistake                                        | Fix                                                                                                                                         |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Copying an arbitrary existing lib              | Use the `assets/examples/` example for that type — it is the source of truth.                                                               |
-| Expecting a PRD/TFS for a `util` / `api` / `app` | Those are never functionalities — no `docs/x/…` docs; build the lib without them.                                                         |
-| Inventing a base class                         | Extend whatever base the matching `assets/examples/` example uses for that lib type (a specialized `…Ext{Name}` only if the TFS names one). |
-| Only an outer README                           | Add the inner, copy-paste-ready README too.                                                                                                 |
-| `entity` data-access for a non-pure-CRUD write | Use single- or multi-instance.                                                                                                              |
-| Treating this skill as a builder               | It only supplies references; the builder (an implementation plan, or you) does the actual building.                                         |
+| Mistake                                          | Fix                                                                                                                                         |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Copying an arbitrary existing lib                | Use the `assets/examples/` example for that type — it is the source of truth.                                                               |
+| Expecting a PRD/TFS for a `util` / `api` / `app` | Those are never functionalities — no `docs/x/…` docs; build the lib without them.                                                           |
+| Inventing a base class                           | Extend whatever base the matching `assets/examples/` example uses for that lib type (a specialized `…Ext{Name}` only if the TFS names one). |
+| Only an outer README                             | Add the inner, copy-paste-ready README too.                                                                                                 |
+| `entity` data-access for a non-pure-CRUD write   | Use single- or multi-instance.                                                                                                              |
+| Treating this skill as a builder                 | It only supplies references; the builder (an implementation plan, or you) does the actual building.                                         |

@@ -4,13 +4,13 @@ Read this whenever this functionality reuses a lib it does not own — existing,
 
 ## Every requirement has exactly one home
 
-| The thing whose behaviour the requirement describes | Where that requirement lives |
-| --- | --- |
-| A lib **this** functionality owns | this `docs/x/{name}/TFS/{libtype}.md` — as an FR/BR |
+| The thing whose behaviour the requirement describes                       | Where that requirement lives                          |
+| ------------------------------------------------------------------------- | ----------------------------------------------------- |
+| A lib **this** functionality owns                                         | this `docs/x/{name}/TFS/{libtype}.md` — as an FR/BR   |
 | Another functionality's `map` / `data-access` / `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/TFS/` |
-| A `util` lib | that util's own `requirements.md` |
-| An `api` lib | nowhere — `api` libs have no requirements doc |
-| An `app` | `apps/{app-name}/requirements.md` |
+| A `util` lib                                                              | that util's own `requirements.md`                     |
+| An `api` lib                                                              | nowhere — `api` libs have no requirements doc         |
+| An `app`                                                                  | `apps/{app-name}/requirements.md`                     |
 
 This holds no matter who asked for the change. A reused lib that must gain something **for us** is still that lib's requirement, so it is still its owner's doc that gains it — and its creation or update is a **companion task in the plan**, never an owned lib of this TFS.
 
@@ -18,11 +18,11 @@ This holds no matter who asked for the change. A reused lib that must gain somet
 
 Every entry under **🔗 Existing Dependencies & Reuse** carries its state for this cycle:
 
-| Marker | Means | What it implies |
-| --- | --- | --- |
-| _(none)_ | exists, used as-is | nothing — just record what we consume |
-| `[TO-CREATE]` | does not exist yet | companion task in the plan; a functionality needs its own PRD & TFS, a `util`/`app` its own `requirements.md`, an `api` nothing |
-| `[TO-UPDATE]` | exists, must gain something for us | same, plus: name the exact surface, its owning functionality, and the ACs it blocks |
+| Marker        | Means                              | What it implies                                                                                                                 |
+| ------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| _(none)_      | exists, used as-is                 | nothing — just record what we consume                                                                                           |
+| `[TO-CREATE]` | does not exist yet                 | companion task in the plan; a functionality needs its own PRD & TFS, a `util`/`app` its own `requirements.md`, an `api` nothing |
+| `[TO-UPDATE]` | exists, must gain something for us | same, plus: name the exact surface, its owning functionality, and the ACs it blocks                                             |
 
 Use exactly these two markers — never wording of your own (`[RECOMMENDED]`, `[UPDATE REQUIRED]`, `[NEEDS UPDATE]`, bold prose). The value of a marker is that one search finds every one of them across every TFS in the workspace; a synonym is invisible to that search.
 
@@ -52,22 +52,22 @@ Clearing a marker is **not** renumbering and **not** rewriting history: the mark
 
 `{OWNER}` in an ID is always a component or helper service of a lib **this functionality owns** — never a reused one. Where an owned lib drives a reused one, assert our side of the wire:
 
-| Assert this (ours) | Not this (theirs) |
-| --- | --- |
-| the reused banner **receives** `severity = 'critical'` from us | the banner **renders red** |
-| the reused facade was primed to return `U`, and the value we expose is `U` | the facade's `getUser` **was called** |
-| the value we bind to the row is the one our mapper produced | a reused `util` **formats** it as `DD MMM YYYY` |
+| Assert this (ours)                                                         | Not this (theirs)                               |
+| -------------------------------------------------------------------------- | ----------------------------------------------- |
+| the reused banner **receives** `severity = 'critical'` from us             | the banner **renders red**                      |
+| the reused facade was primed to return `U`, and the value we expose is `U` | the facade's `getUser` **was called**           |
+| the value we bind to the row is the one our mapper produced                | a reused `util` **formats** it as `DD MMM YYYY` |
 
 The last row is the subtle one: encoding another lib's output format into our BR makes our suite fail when that lib changes something it is entitled to change. Assert the value we produced, or that the element is populated — not the reused util's chosen shape.
 
 ## Common mistakes
 
-| Mistake | Fix |
-| --- | --- |
-| An FR/BR describing a reused lib's behaviour | It belongs to that lib's owner's docs. Spec only our side of the boundary. |
-| `{OWNER}` set to a reused component | `{OWNER}` is always an owned component or helper service. |
-| Inventing marker wording | `[TO-CREATE]` / `[TO-UPDATE]`, exactly — nothing else is greppable. |
-| A bare `[TO-UPDATE]` with no surface list | Name the surface, the owner, and the blocked ACs, so a reader can retire it. |
-| Updating a TFS without re-checking its markers | Re-verify every marker first; clear the ones whose work has landed. |
-| Clearing a marker because the work was "probably done" | Verify, or leave it and raise an Open Technical Question. |
-| A "these marks were accurate when written" disclaimer | Redundant with **Last Updated**, and it makes every marker unactionable. |
+| Mistake                                                | Fix                                                                          |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| An FR/BR describing a reused lib's behaviour           | It belongs to that lib's owner's docs. Spec only our side of the boundary.   |
+| `{OWNER}` set to a reused component                    | `{OWNER}` is always an owned component or helper service.                    |
+| Inventing marker wording                               | `[TO-CREATE]` / `[TO-UPDATE]`, exactly — nothing else is greppable.          |
+| A bare `[TO-UPDATE]` with no surface list              | Name the surface, the owner, and the blocked ACs, so a reader can retire it. |
+| Updating a TFS without re-checking its markers         | Re-verify every marker first; clear the ones whose work has landed.          |
+| Clearing a marker because the work was "probably done" | Verify, or leave it and raise an Open Technical Question.                    |
+| A "these marks were accurate when written" disclaimer  | Redundant with **Last Updated**, and it makes every marker unactionable.     |
