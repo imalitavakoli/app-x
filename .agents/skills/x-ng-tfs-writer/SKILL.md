@@ -2,7 +2,7 @@
 name: x-ng-tfs-writer
 description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs — those are not functionalities."
 metadata:
-  version: '1.1.1'
+  version: '1.2.0'
 ---
 
 # TFS Writer
@@ -48,7 +48,7 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 
 **Required input:** the functionality's **PRD** (`docs/x/{name}/PRD.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
 
-If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly.
+If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly. If its **Existing Dependencies & Reuse** carries any `[TO-CREATE]` / `[TO-UPDATE]` marker, re-verify each one against the workspace and clear those whose work has landed — see [references/reuse-boundary.md](references/reuse-boundary.md).
 
 **First-time for existing libs** — when there is no `docs/x/{name}/TFS/` yet but owned libs already exist: read [references/bootstrap-existing.md](references/bootstrap-existing.md) after the PRD is ready. Still derive from the PRD; use existing libs only to ground contracts and Open Technical Questions — never invent FRs/BRs the PRD does not support.
 
@@ -63,7 +63,7 @@ Copy this checklist and track it. Keep the `[tfs]` prefix so, if this runs insid
 
 ```
 - [ ] [tfs] 1. Gate & analyse — confirm it is a functionality; read templates, PRD, library-types & naming-conventions docs, any existing TFS
-- [ ] [tfs] 2. Name & classify — confirm the functionality name; classify; read the matching example
+- [ ] [tfs] 2. Name & classify — confirm the functionality name; classify; read the matching example; sort the reuse and mark it (clear any stale markers when updating)
 - [ ] [tfs] 3. Library breakdown — write one docs/x/{name}/TFS/{libtype}.md per owned lib type (its spec + FR/BR)
 - [ ] [tfs] 4. Feature journey — in feature.md (only if owned), add the technical journey
 - [ ] [tfs] 5. README — write docs/x/{name}/TFS/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions)
@@ -83,6 +83,8 @@ Copy this checklist and track it. Keep the `[tfs]` prefix so, if this runs insid
    **Consumed-by ≠ owns page:** listed as used on `ng-dashboard` / `ng-insights` → those pages go under **Existing Dependencies & Reuse** as consumers (or stay out of this TFS entirely). Do **not** add `page.md` or rename libs after them unless **this** functionality owns a `page` under its own name.
 
    Examples show **content and granularity**; they may include optional libs. Emit only the `{libtype}.md` files this classification **owns**. Create `docs/x/{name}/TFS/` (and `docs/x/{name}/` if absent).
+
+   **Sort the reuse now, before writing any lib spec** — list every lib this functionality reuses and mark each by its state for this cycle: unmarked (exists, used as-is), `[TO-CREATE]` (does not exist yet), `[TO-UPDATE]` (exists but must gain something for us). Doing this before step 3 keeps a reused lib from drifting into an owned lib's spec. **When updating an existing TFS, re-verify the markers already there and clear the ones whose work has landed.** The entries land in the README's **Existing Dependencies & Reuse** at step 5. Read [references/reuse-boundary.md](references/reuse-boundary.md) now if this functionality reuses anything or the existing TFS carries markers.
 
 3. **Library breakdown** — write **one `docs/x/{name}/TFS/{libtype}.md` per owned lib type** (`map` / `data-access` / `ui` / `feature` / `page` — create only those). Never create `util` / `api` / `app` specs. Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly.
 4. **Feature journey** — when the functionality owns a `feature`, add the technical journey in `feature.md` (per exported `feature` component). If there is no `feature.md` (**abstract**, or **ui-only** / **page-only** shapes): skip this step; for **abstract**, put the short facade-consumer note in `data-access.md` instead (see the template).
@@ -119,6 +121,14 @@ Read the example matching the functionality's classification before filling the 
 **Name match.** Every owned lib is `{domain}-{type}-{name}` with the **same** `{name}` as the functionality. Consumers keep their own functionality names; list them under Existing Dependencies & Reuse when relevant — never as this TFS's own libs.
 
 **Natural entry lib.** Record it in the README (per the library-types doc): `abstract` → `data-access`; `visual` → `feature` or `ui`; `mixed` → `feature`; `visual+` → `page`; `mixed+` → `page`.
+
+**Reuse markers.** Every entry under **Existing Dependencies & Reuse** carries its state for this cycle: **unmarked** = exists, used as-is; **`[TO-CREATE]`** = does not exist yet; **`[TO-UPDATE]`** = exists but must gain something for us. Use exactly these two markers, never wording of your own — one search must find them across every TFS. Either marker means the work is a **companion task in the plan**, its requirements live in that lib's own docs, and **no FR/BR here describes it**. A `[TO-UPDATE]` also names the exact surface it must gain, its owning functionality, and the ACs it blocks — that surface is what lets a future reader retire the marker.
+
+**Keep markers true on update.** A marker is cycle state in a durable doc. When updating an existing TFS, re-verify every marker **before** writing anything else and clear the ones whose work has landed; if you cannot tell, leave it and raise an Open Technical Question rather than clearing on assumption.
+
+**FR/BR describe libs this functionality owns.** `{OWNER}` in an ID is always a component or helper service of an owned lib — never a reused one. Where an owned lib drives a reused one, the BR asserts **our side of the boundary**: that the reused component _receives_ `severity = 'critical'` from us, not that it _renders red_ (that is its owner's BR).
+
+Details, worked boundary examples and the full clearing procedure: [references/reuse-boundary.md](references/reuse-boundary.md) — read it when this functionality reuses anything, and whenever updating a TFS that already carries markers.
 
 **Base classes (default):** each component extends the latest available base class for its lib type (`ui`, `feature`, parent `page`, child `page`). Take the actual base from the matching example rather than a base-class name you already know or assume — the example is kept up to date, so it always reflects the latest base available in the workspace. Use these unless the user asks to use — or to create — a specialized base derived from them (e.g. a shared `…-ext-{name}` base for `feature` libs that always use one specific `data-access` lib, or for `page` libs that always use one specific `feature` lib as their starter, kept DRY across functionalities). If the user names such a base, extend it instead and note it in the spec.
 
@@ -166,6 +176,9 @@ Read the example matching the functionality's classification before filling the 
 - [ ] Every component names its base class correctly — the base its lib type uses in the matching example (not a name hardcoded in this skill).
 - [ ] Every BR is `Given/When/Then` with concrete `[data-cy]` / signals / emitters; every FR/BR that implements the PRD back-links its AC.
 - [ ] FR/BR IDs unique across the TFS; helper-service IDs scoped (`{NAME}_{HELPER}_…`); no PRD IDs repurposed; nothing renumbered.
+- [ ] No FR/BR takes a reused lib as its `{OWNER}` or asserts a reused lib's own behaviour; boundary BRs assert our side (what we pass in / what we do with what comes back).
+- [ ] Every Existing Dependencies & Reuse entry is unmarked, `[TO-CREATE]`, or `[TO-UPDATE]` — no invented wording; each `[TO-UPDATE]` names the surface needed, its owning functionality, and the ACs it blocks.
+- [ ] **On update only:** every pre-existing marker was re-verified — cleared where the work landed (with its "blocks" note), narrowed where it partly landed, or left with an Open Technical Question where it could not be determined.
 - [ ] Inputs/Outputs written as JSDoc; outputs emitted via handler methods.
 - [ ] `ui` DEP styles and `feature` DEP asset/config listed with examples.
 - [ ] `data-access` style justified against the decision rule (+ non-pure-CRUD note applied).
@@ -183,7 +196,7 @@ Then re-run the Review Checklist over whatever changed.
 
 1. Report the saved folder (`docs/x/{name}/TFS/`) and list the files written (`README.md` + each `{libtype}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
-3. If any new libs were recommended as shared **functionalities**, remind the user each needs its own PRD & TFS. If any `[RECOMMENDED]` entries are `util` / `api` / `app`, remind that those never get `docs/x/` — they are created/updated via the plan, not via writers.
+3. **Report the companion work.** List every `[TO-CREATE]` and `[TO-UPDATE]` entry. For each that is a **functionality**, remind the user it needs its own PRD & TFS — a separate writer run, not part of this one. For each `util` / `api` / `app`, remind that those never get `docs/x/` (a `util`/`app` records requirements in its own `requirements.md`; an `api` has none) — they are created/updated via the plan. Flag any PRD AC of this functionality that a companion entry blocks.
 4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
 5. List any Open Technical Questions still unanswered after the confirmation step.
 
@@ -204,6 +217,11 @@ Then re-run the Review Checklist over whatever changed.
 | Splitting the journey into sequential phases                  | Declare the whole dependency chain in one place; the ready callback fires once when all data is ready.                                                                                    |
 | Polling inside the dependency chain                           | Start polling in `_xInitOrUpdateAfterAllDataReady`, in a `_util/*.service.ts`.                                                                                                            |
 | Adding an Analytics section to a lib spec                     | Analytics live in the PRD, not the TFS.                                                                                                                                                   |
+| FR/BR written for a reused lib, or `{OWNER}` = a reused one   | Requirements follow the lib. Spec our side of the boundary only; the reused lib's behaviour is its owner's TFS.                                                                           |
+| Inventing wording for "must change" (`[UPDATE REQUIRED]`, …) | Use `[TO-UPDATE]` exactly, so it stays greppable across every TFS.                                                                                                                       |
+| A `[TO-UPDATE]` entry with no owner or blocked ACs named      | Name the owning functionality and which of our ACs it blocks — it is a delivery risk, not a footnote.                                                                                    |
+| Updating a TFS and leaving old markers untouched              | Re-verify every marker first; clear the ones whose work landed, with their "blocks" notes.                                                                                               |
+| Clearing a marker because the work was "probably done"        | Verify it, or leave the marker and raise an Open Technical Question.                                                                                                                     |
 | Renumbering IDs on update                                     | Never renumber; add new unique IDs only.                                                                                                                                                  |
 | Writing the TFS as one file, or a lib spec into `README.md`   | One `{libtype}.md` per present lib type; `README.md` holds only functionality-level sections + the ID Index.                                                                              |
 | Restarting FR/BR numbering in each lib file                   | All lib files share one ID space; keep IDs globally unique and listed in the README ID Index.                                                                                             |

@@ -38,7 +38,10 @@ x-profile presents the user's profile in two forms — a compact card and an exp
 
 ### Used ui / feature / page libs
 
-- `shared-ui-ng-popup`: the detail's "expand" popup.
+- **`[TO-UPDATE]`** `shared-ui-ng-popup` — the detail's "expand" popup.
+  - **Surface it must gain for us:** a `size` input (`'sm' | 'lg'`), so the expanded detail can open at the large size.
+  - **Owner:** `ng-popup` (a separate visual functionality). Its requirements live in its own PRD & TFS; a companion task in the plan. No FR/BR here describes it.
+  - **Blocks:** `XPROFILE-AC-02`.
 
 ### Used util libs
 

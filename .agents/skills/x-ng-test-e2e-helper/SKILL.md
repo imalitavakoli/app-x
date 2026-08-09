@@ -1,8 +1,8 @@
 ---
 name: x-ng-test-e2e-helper
-description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that initializes another `feature`); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs."
+description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that composes another functionality's `feature`, once an app page hosts it); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs."
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # Test E2e Helper
@@ -18,7 +18,8 @@ e2e traces to the functionality's **PRD**: **US → `describe`, AC → `it`**. e
 Only libs a user drives end-to-end in a real app:
 
 - **`page`** libs — always (a page composes features into a real screen).
-- **`feature`** libs — **only if the feature initializes _another_ `feature` lib** (a cross-functionality interaction worth proving end-to-end). A `feature` that only wires its own `ui` is covered by unit tests, and its composed behaviour is e2e'd via the page that hosts it.
+- **`feature`** libs — **only if the feature composes _another functionality's_ `feature` lib** — i.e. it renders that feature's exported entry component and drives it. That is a cross-functionality interaction worth proving end-to-end, and "renders it" **is** "initializes it": a feature is initialized by whoever uses it as a whole. A `feature` that only wires its own `ui` is covered by unit tests.
+  - **And only if some app page hosts that composition — already, or by the end of this cycle.** A `feature` lib is not routable, so there is nothing to drive until an app page composes it; that page is the e2e target (see below). A cycle that wires the feature into a page **does** put e2e in scope — the page need not have pre-existed. Only when nothing hosts it and nothing will does e2e wait for a later cycle, rather than inventing a harness page.
 - **Not** `ui` / `map` / `data-access` libs, nor abstract functionalities.
 - **Never** a standalone `util`, `api`, or `app` — those are not functionalities and have no PRD ACs to map (`docs/getting-started/library-types-and-their-relationship.md`).
 - **No PRD in scope:** if there is no `docs/x/{name}/PRD.md` for the functionality under test and this work is not producing one, **do not** require AC IDs and **do not** invent ACs or a PRD from here. Prefer not writing new e2e then; if tests are still in scope, use plain titles (no AC mapping).
@@ -119,4 +120,4 @@ The examples show the conventions independent of the test runner. Confirm the **
 | Requiring PRD AC IDs when no PRD is in scope                   | No `docs/x/{name}/PRD.md` and none being written — plain titles; do not invent ACs or a PRD from here.                                                                               |
 | Duplicating selectors across specs                             | Put them in the lib's Page Object (`support/page/*.po.ts`).                                                                                                                         |
 | Dumping every fixture flat / copying for reuse                 | Place under the owning lib (`page/{page-name}/` or `feature/{feature-name}/`); flat root only when there's no owner. Other specs reference the path — never copy or move for reuse. |
-| Writing e2e for a `ui` / `data-access` / self-wiring `feature` | Only `page` libs, and a `feature` that initializes another `feature`.                                                                                                               |
+| Writing e2e for a `ui` / `data-access` / self-wiring `feature` | Only `page` libs, and a `feature` that composes another functionality's `feature` once an app page hosts that composition.                                                          |

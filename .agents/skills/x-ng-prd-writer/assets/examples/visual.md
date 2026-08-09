@@ -55,7 +55,10 @@ No direct data access or auth logic — it presents data from the shared `user` 
 
 ## ⚠️ Dependencies & Risks
 
-- Depends on the shared **user** abstract functionality (`shared-data-access-ng-user`) for its data, and a shared avatar/image UI lib for the placeholder.
+- Depends on the shared **user** abstract functionality (`shared-data-access-ng-user`) for its data. Used as-is.
+- Depends on a shared avatar/image UI lib for the placeholder. Used as-is.
+- Depends on the shared **popup** functionality for the expanded detail. **It must change for us**: it needs a `size` input so the detail can open at the large size. That change is specified in the popup functionality's own docs, not here. Blocks `XPROFILE-AC-02`.
+- Risk: until the popup gains its `size` input, the expanded detail cannot be demonstrated at the intended size.
 - Risk: very long names must truncate without breaking layout.
 
 ## ✔️ Acceptance Criteria

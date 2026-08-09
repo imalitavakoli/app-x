@@ -42,19 +42,25 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 
 ## 🔗 Existing Dependencies & Reuse
 
-> List only libs that **do not belong to this functionality** — i.e. libs from _other_ functionalities/shared infra that this one reuses. Do not list this functionality's own map/data-access/ui/feature/page libs here. Ask the user what to reuse; do not assume. Flag anything recommended-but-not-yet-built with `[RECOMMENDED]`. Meaning of that flag depends on lib type: a recommended **functionality** (`map` / `data-access` / `ui` / `feature` / `page`) needs its **own** PRD & TFS; a recommended `util` / `api` / `app` **never** gets `docs/x/` — list it here as shared reuse (creating/updating it is plan work, not an owned lib of this TFS).
+> List only libs that **do not belong to this functionality** — i.e. libs from _other_ functionalities/shared infra that this one reuses. Do not list this functionality's own map/data-access/ui/feature/page libs here. Ask the user what to reuse; do not assume.
+>
+> **Mark each entry by its state for this cycle** — unmarked = exists and is used as-is; `[TO-CREATE]` = does not exist yet; `[TO-UPDATE]` = exists but must change for us (a new input/output, a new rendering rule, a new method). Use exactly these two markers so the plan and a future reader can find them; do not coin your own wording.
+>
+> What the marker implies depends on the lib type: a marked **functionality** (`map` / `data-access` / `ui` / `feature` / `page`) carries its requirements in its **own** PRD & TFS; a marked `util` / `api` / `app` **never** gets `docs/x/` (a `util`/`app` records them in its own `requirements.md`; an `api` has none). Either way the work is a **companion task in the plan**, never an owned lib of this TFS — so no FR/BR here describes it. If a `[TO-UPDATE]` or `[TO-CREATE]` dependency blocks one of this functionality's PRD ACs, say which ones: that is a real delivery risk.
+>
+> **A marker states this cycle's state, and goes stale when the companion work lands.** So write each one so a reader can retire it without re-deriving the decision — a `[TO-UPDATE]` names the exact surface the lib must gain, so anyone can open that lib and see whether it is still true. And when this TFS is **updated** later, re-verify every marker already here: clear the ones whose work has landed (with their "blocks" note), narrow the ones that partly landed, and leave anything you cannot confirm as an Open Technical Question. Do **not** add a "these were accurate when written" disclaimer — **Last Updated** above already says that.
 
 ### Used map / data-access libs
 
-> Per lib: name → class/interface → the methods/observables used, and why. Often `NONE` — a functionality's own map/data-access libs do not rely on other functionalities' map/data-access libs (things like the base URL are provided by the calling page/feature, not fetched by depending on the config libs here). Use `[RECOMMENDED]` when the reused functionality is not built yet.
+> Per lib: name → class/interface → the methods/observables used, and why. Often `NONE` — a functionality's own map/data-access libs do not rely on other functionalities' map/data-access libs (things like the base URL are provided by the calling page/feature, not fetched by depending on the config libs here). Mark `[TO-CREATE]` / `[TO-UPDATE]` per the state rule above.
 
 ### Used ui / feature / page libs
 
-> Per lib: name → what it provides. `NONE` if none. Use `[RECOMMENDED]` when the reused functionality is not built yet.
+> Per lib: name → what it provides. `NONE` if none. Mark `[TO-CREATE]` / `[TO-UPDATE]` per the state rule above; for a `[TO-UPDATE]`, list the exact inputs/outputs/rules it must gain for us, and name the functionality that owns that work.
 
 ### Used util libs
 
-> Per lib: name → the class/function used, and why reuse is appropriate. (Functionalities never own a `util`/`api`/`app` lib — they reuse shared ones.) Use `[RECOMMENDED]` when that shared util is not built yet — still not a PRD/TFS target.
+> Per lib: name → the class/function used, and why reuse is appropriate. (Functionalities never own a `util`/`api`/`app` lib — they reuse shared ones.) Mark `[TO-CREATE]` / `[TO-UPDATE]` per the state rule above — either way still not a PRD/TFS target; a `util`'s requirements live in its own `requirements.md`.
 
 ## 🧭 ID Index
 

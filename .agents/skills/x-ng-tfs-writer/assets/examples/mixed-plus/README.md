@@ -46,6 +46,7 @@ _NONE_ — x-wallet's own `map`/`data-access` do not depend on other functionali
 - `shared-util-ng-bases` → `V1BaseUiComponent`, `V1BaseMap`, `V1BaseFacade`, `V1BaseEffects`.
 - `shared-util-ng-bases-consumer` → `V2BaseFeatureExtComponent`, `V2BasePageParentComponent`, `V2BasePageChildComponent`.
 - `shared-util-ng-capacitor` → `V1CapacitorCoreService` (`onPause`/`onResume`, for the poll & sync services).
+- **`[TO-CREATE]`** `shared-util-ng-money` → `formatAmount(minorUnits, currency)`, for the balance and transaction amounts. Does not exist yet. A `util` never gets `docs/x/` — its requirements live in its own `requirements.md`, and creating it is a companion task in the plan. **Blocks:** `XWALLET-AC-01`.
 
 ## 🧭 ID Index
 

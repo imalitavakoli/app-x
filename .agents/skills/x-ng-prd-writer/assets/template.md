@@ -66,6 +66,10 @@
 ## ⚠️ Dependencies & Risks
 
 > Which functionalities / libs / external services does this depend on (e.g. the shared `something` data-access)? What are the known risks (e.g. `blahblah could be slow`)?
+>
+> **This is where reuse lives — never as an Acceptance Criterion.** Per dependency, say what it provides and its state: used **as-is**; **does not exist yet**; or **must change for us**. For the last two, name the exact surface needed and which of this PRD's ACs it blocks — a dependency that can hold up an AC is a real delivery risk. The requirements for that creation or change belong to the dependency's own docs (another functionality's PRD/TFS, a `util`/`app`'s own `requirements.md`), never to this PRD.
+>
+> **Keep these notes true on update.** They describe the state when written. When updating this PRD, re-read this section first: drop "does not exist yet" once it exists, drop "must change for us" once the surface has landed (narrowing it if only part landed), and remove the matching blocked-AC note with it. If you cannot tell whether it landed, leave it and raise it under Open Questions — never clear it on assumption. Do not add a "this was accurate when written" disclaimer; **Last Updated** above already says that.
 
 ## ✔️ Acceptance Criteria
 

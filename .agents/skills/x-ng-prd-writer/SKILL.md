@@ -2,7 +2,7 @@
 name: x-ng-prd-writer
 description: "WHAT? A functionality's PRD at docs/x/{name}/PRD.md — its product-level spec, whose Acceptance Criteria (ACs) later map to e2e tests. WHEN? Asked to create or update a PRD, product / scope / feature document, acceptance criteria, or product spec for a functionality; or when a brainstorm concludes and the feature needs its product spec. Not for util, api, or app libs — those are not functionalities."
 metadata:
-  version: '1.1.0'
+  version: '1.2.0'
 ---
 
 # PRD Writer
@@ -35,7 +35,7 @@ Classify using `docs/getting-started/library-types-and-their-relationship.md` (F
 
 **Required input:** a feature description (or brainstorm conclusions) for one functionality. If it is missing or unclear, STOP and ask — do not research or invent it.
 
-If the functionality already has a `docs/x/{name}/PRD.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber.
+If the functionality already has a `docs/x/{name}/PRD.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber. If its **Dependencies & Risks** says a reused lib "does not exist yet" or "must change for us", re-verify each such note and bring it to the present — see [references/reuse-boundary.md](references/reuse-boundary.md).
 
 **First-time for existing libs** — when there is no `docs/x/{name}/PRD.md` yet but owned libs already exist in the workspace: read [references/bootstrap-existing.md](references/bootstrap-existing.md) before drafting. Still require a clear description / brainstorm conclusions and user AC approval; never invent product facts from code alone.
 
@@ -49,7 +49,7 @@ If the functionality already has a `docs/x/{name}/PRD.md`, read it first and **u
 Copy this checklist and track it. Keep the `[prd]` prefix so, if this runs inside a larger workflow, these stay grouped and the outer workflow's todos remain visible:
 
 ```
-- [ ] [prd] 1. Gate & analyse — confirm it is a functionality; read the template, library-types doc, description, any existing PRD
+- [ ] [prd] 1. Gate & analyse — confirm it is a functionality; read the template, library-types doc, description, any existing PRD; if the description names reused libs, read references/reuse-boundary.md
 - [ ] [prd] 2. Draft — create the file mirroring the template headings
 - [ ] [prd] 3. Fill — map the description into each section; classify the functionality and read the matching example
 - [ ] [prd] 4. Validate — run the Review Checklist until all items pass
@@ -57,7 +57,7 @@ Copy this checklist and track it. Keep the `[prd]` prefix so, if this runs insid
 - [ ] [prd] 6. Summary — report the saved path, the AC IDs, and anything still open
 ```
 
-1. **Gate & analyse** — apply the Prerequisites gate. If it passes, read [assets/template.md](assets/template.md), the feature description, and `docs/getting-started/library-types-and-their-relationship.md` (Functionality types — authoritative shapes and natural entry libs). If a PRD already exists, read it too.
+1. **Gate & analyse** — apply the Prerequisites gate. If it passes, read [assets/template.md](assets/template.md), the feature description, and `docs/getting-started/library-types-and-their-relationship.md` (Functionality types — authoritative shapes and natural entry libs). If a PRD already exists, read it too. **If the description names any lib or functionality this one reuses** — existing, to be created, or needing a change for us — also read [references/reuse-boundary.md](references/reuse-boundary.md) before writing any AC.
 2. **Draft** — create `docs/x/{name}/PRD.md` (create the `docs/x/{name}/` folder if absent) mirroring the template's headings (content can be incomplete at first). The folder/`{name}` **is** the functionality name (e.g. `ng-chart`). Replace the feature-key placeholder `{NAME}` with one consistent key derived from that name (e.g. `ng-profile-info` → `PROFILE`).
 3. **Fill** — map the description into the correct sections. Classify the functionality (shapes below — details in the library-types doc), then read the matching example before writing the flows and ACs:
    - **abstract** — `data-access` required; `map` only if API/external assets → [assets/examples/abstract.md](assets/examples/abstract.md)
@@ -90,6 +90,7 @@ Read the example matching the functionality's type before filling the User Exper
 - **The user journey starts at functionality initialization, never outside the app.** The first step is the component coming to life — e.g. _"Initialization: the lib is in a 'loading' state until the `userId` input is provided."_ Never begin with "the user opens the app", "logs in", or "navigates to the Dashboard".
 - **Acceptance Criteria carry stable, unique IDs** in the form `{NAME}-AC-01`, `{NAME}-AC-02`, … ACs are the feature's observable, product-level outcomes; they map to e2e test cases later. When updating an existing PRD, never renumber existing IDs — add new ones.
 - **Write ACs as good, testable criteria.** Each AC is a single, **observable** outcome — one per AC; if it needs an "and", split it — kept **independent and deterministic**, at **product altitude** (the meaningful primary + alternate/error outcomes a user or consumer would notice), and **not** an internal/technical or component-contract detail (an output a feature merely emits to its host is a **BR** in the TFS, not an AC). Where an AC maps depends on the functionality type: **visual / visual+ / mixed / mixed+** (has UI or a page) → user-observable outcomes verified by **e2e** when e2e applies (anchor on stable `[data-cy]` / visible text); **abstract** (no UI) → observable **data-contract** outcomes (data available / loading / error / cache) verified by the **data-access** unit tests. Either way, the TFS decomposes each AC into FRs/BRs.
+- **Give this PRD only ACs whose subject is ours.** Every AC asserts something about a subject; here that subject is one of four things — **data** this functionality produces or exposes, a **state** it owns (loading / empty / error / data), a **decision** it makes (which items qualify, their order, which remain after an action), or the **presence or absence** of something it places on screen. A reused component's visual attributes (colour, styling, animation) and a reused util's output format (date pattern, rounding, truncation) are their owner's subject; record the reuse under **Dependencies & Risks** / **Non-Goals & Why** instead, with no AC ID. When one sentence contains both — _"an over-threshold alert shows in the banner's red critical styling"_ — **keep the decision, shed the rendering**: the AC is that the alert is _presented as critical_; that critical looks red belongs to the banner's own PRD. This holds even when the reused lib must change **for us**: requirements follow the lib, not the requester. See [references/reuse-boundary.md](references/reuse-boundary.md).
 - **Respect provided granularity.** If the user gave exact details (API endpoints, URL query params, field names), use them verbatim; do not generalise or override them.
 - **Minimise re-asking.** Reuse everything already in the brainstorm conclusions / description; only ask about genuine gaps.
 - **Do not invent facts.** Unknowns go to Open Questions and are raised with the user.
@@ -106,6 +107,9 @@ Read the example matching the functionality's type before filling the User Exper
 - [ ] Non-Goals & Why records both excluded scope and any approach considered and rejected, each with its reason — not a bare list of exclusions.
 - [ ] Every Acceptance Criterion has a unique `{NAME}-AC-01`-style ID.
 - [ ] Each AC is one observable outcome (no "and"), independent, and not a component-contract/technical detail (those are BRs).
+- [ ] Every AC's subject is ours — our data, state, decision, or what we place on screen — and none asserts a reused component's visual attributes or a reused util's output format, even where that lib must change for us.
+- [ ] Reused libs/functionalities appear under Dependencies & Risks / Non-Goals & Why / Data Requirements, never as an AC.
+- [ ] **On update only:** every "does not exist yet" / "must change for us" note in Dependencies & Risks was re-verified — cleared where the work landed, narrowed where it partly landed, or left with an Open Question where it could not be determined.
 - [ ] Provided granularity (endpoints, params, field names) is preserved verbatim.
 - [ ] No invented facts; unknowns are in Open Questions.
 
@@ -146,5 +150,9 @@ Incorporate whatever they change, re-run the Review Checklist, and ask again. On
 | Generalising a provided endpoint / param           | Use the exact value the user gave.                                                 |
 | AC bundling several outcomes ("and")               | Split into one AC per observable outcome.                                          |
 | AC that only asserts an emitted output/event       | A feature's output is a component contract → a BR in the TFS, not an AC.           |
+| AC asserting a reused component's colour/styling   | Its owner's PRD. Keep only the decision that drove it (_presented as critical_).    |
+| AC asserting a reused util's format or rounding    | The util's own `requirements.md`. Keep only that the value is displayed.            |
+| AC covering a change we asked another team to make | Requirements follow the lib, not the requester → Dependencies & Risks.              |
+| Fusing our decision with their rendering in one AC | Split: keep the decision, shed the rendering.                                       |
 | Finishing without the user approving the ACs       | Present the full set and wait. They become e2e tests and the TFS's FRs/BRs.        |
 | Guessing an answer to close an Open Question       | Ask the user. Unanswered questions stay listed, not silently resolved.             |
