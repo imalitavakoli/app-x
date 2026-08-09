@@ -28,7 +28,7 @@ A worktree exists to keep your trunk safe while an agent works, and a feature br
 
 A worktree's one real benefit is running two feature cycles at the same time, or letting an agent build while you keep using your own checkout — **not** parallel implementers, which `subagent-driven-development` forbids regardless ("Never dispatch multiple implementation subagents in parallel").
 
-**If we ever want that:** drop the "do not create a worktree" preference in `AGENTS.md` and `using-git-worktrees` returns to its own default (it asks for consent and creates one), then give the ignored files above a home outside the worktree. Nothing else moves — the hook tables, their order, and both execution modes stay exactly as they are.
+**If we ever want that:** drop the "do not create a worktree" preference in `AGENTS.md` and `using-git-worktrees` returns to its own default (it asks for consent and creates one), then give the ignored files above a home outside the worktree. Nothing else moves — the paths and their hooks, their order, and both execution modes stay exactly as they are.
 
 &nbsp;
 

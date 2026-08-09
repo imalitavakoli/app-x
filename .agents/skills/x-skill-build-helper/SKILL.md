@@ -2,7 +2,7 @@
 name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, or where its templates and examples live."
 metadata:
-  version: '1.0.0'
+  version: '1.1.0'
 ---
 
 # Skill Build Helper
@@ -167,15 +167,43 @@ Keep linking a skill's own files the normal way — relative to the skill root (
 
 One line, and whoever carries the path onward copies something that resolves instead of reconstructing it.
 
+## Before calling a rule change done — sweep for its other homes
+
+A rule is rarely written in one place. Changing it where you happened to be reading is the easy half; the copies are what drift. This bites hardest when the rule change is **incidental to some larger design work** — the edit you set out to make gets made, and "where else does this rule live?" never comes up.
+
+**The check, at completion time:** take a distinctive phrase from the text you just replaced and grep `.agents/skills/`, `.claude/skills/`, and `AGENTS.md` for it. Fix every hit in the same commit. It costs seconds, and it is the only thing that reliably finds the copies you forgot you wrote.
+
+Where the same rule commonly repeats — check each that exists:
+
+| Place | Why it holds a copy |
+| --- | --- |
+| the `SKILL.md` body | where the rule is stated |
+| its **Common mistakes** table | rows often restate the rule instead of naming the fix |
+| its **todo checklist** | must name every obligation its step carries — an obligation the todos omit is one that gets skipped |
+| every file under `assets/template.md` **or** `assets/template/` **or** `assets/templates/` | the shape the writer must produce — a skill often has **several** (one per output file, or one scaffold per kind), and the rule can sit in a `>` helper note, a heading, sample content, or a table row alike. Check them all, not just the one you edited |
+| `assets/examples/*` | worked examples demonstrate the rule |
+| `references/*` | the long-form version |
+| **another skill** | one that must inject the rule somewhere it cannot otherwise reach (e.g. into a plan read by execution subagents) |
+| `AGENTS.md` | when the workflow states the rule as control flow |
+| the `.claude/` stub | only when the `description` carries it |
+
+**Remove drift sites while you are there.** Two habits cut the number of copies:
+
+- **State a rule once per file.** A Common-mistakes row should carry the _fix action_ ("use `[TO-UPDATE]` exactly"), not a re-derivation of the rule it belongs to. A row that restates the rule is a second copy that will silently go stale.
+- **Point rather than copy.** A skill should refer to `AGENTS.md` instead of restating it — **unless** it must place the text somewhere `AGENTS.md` cannot reach, which is the one case where duplication is genuinely forced. Then it is a known drift site: sweep it every time.
+
 ## Workflow wiring is not the skill's business
 
-Write every skill so it stands on its own and triggers from its own `description`. **Do not add it to a workflow hook table** — not as part of creating it, and not afterwards. If it should be wired into one, the user will say so; treat that as a separate, explicitly requested change.
+Write every skill so it stands on its own and triggers from its own `description`. **Do not wire it into the workflow** — no step naming it inside a path's `🪝` hook in `AGENTS.md`, and no row in that file's table of workspace skills. Not as part of creating it, and not afterwards. If it should be wired in, the user will say so; treat that as a separate, explicitly requested change.
 
 ## Common mistakes
 
 | Mistake                                                  | Fix                                                                                                        |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | Canonical skill updated, stub left behind                | Same commit, every stub — the `description` is the one duplicated field.                                   |
+| Rule changed in one file, its copies left stale          | Grep a distinctive phrase from the replaced text across `.agents/skills/`, `.claude/skills/` and `AGENTS.md` before calling it done. |
+| Mistakes row restating a rule instead of naming the fix  | The row carries the fix action; the body owns the rule. A restatement is a second copy that will drift.     |
+| Step gains an obligation the todo checklist doesn't name | Update the checklist too — agents follow todos under context pressure, so an unnamed obligation is skipped. |
 | Copying the skill's content into the stub                | The stub is a pointer: frontmatter + one line. Content stays single-sourced.                               |
 | Adding `metadata`/`version` to a stub                    | Stubs carry `name` + `description` only.                                                                   |
 | Inline `metadata: { version: '1.0.0' }`                  | Use block form under `metadata:`.                                                                          |
@@ -186,7 +214,7 @@ Write every skill so it stands on its own and triggers from its own `description
 | Naming another skill                                     | Name the artifact it produces. Reading another skill's internals is the only exception.                    |
 | Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                            |
 | Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                   |
-| Adding the new skill to a workflow hook table            | Don't — skills stand alone unless the user explicitly asks for wiring.                                     |
+| Wiring the new skill into a path's hook or skills table  | Don't — skills stand alone unless the user explicitly asks for wiring.                                     |
 | Creating a skill that duplicates one that already exists | Extend the existing skill and bump it; overlapping skills cannot coordinate.                               |
 | Widening a description without reading the neighbours'   | A new trigger phrase can capture a sibling's requests. Check, then bind it narrowly or extend the sibling. |
 | Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                       |
