@@ -101,6 +101,10 @@ It's also worth mentioning that, beside using the BEM methodology naming convent
 - **CSS class names**: Use `e-{short-lib-name}` schema. For example, `e-chart`.  
   **Tip!** Of course for styling different HTML elements in your lib, you can use BEM methodology. For example to style 'series' elements in Chart lib: `e-chart__series-ic-color-0`.
 
+  **Note — no lib version in the class name.** A shared lib is versioned in its folders and exported symbols (`v2/`, `V2PopupComponent`, selector `x-popup-v2` — see [Versioning shared libs](/docs/getting-started/library-types-and-their-relationship.md#versioning-shared-libs)), but its CSS class stays `e-{short-lib-name}` with **no** version segment — `e-popup`, never `e-popup-v2`. In practice an app uses the latest version of a lib, so a versioned class would add noise to every selector and every CSS variable to solve a problem that rarely arises.
+
+  Accept the consequence knowingly: while **two versions are live in the same app**, they share one class, so a DEP style override reaches both. That is intended — the versions are the same component redesigned, so they should usually look alike. If a specific case genuinely needs them styled apart, scope it from the consumer side (a wrapper class or the version's own selector) rather than versioning the lib's class.
+
 &nbsp;
 
 - **CSS variables for changing text color in light/dark mode**: Use `--e-{css-class-name}--color--{light,dark}` schema. For example, `--e-header-desktop--color--light`.

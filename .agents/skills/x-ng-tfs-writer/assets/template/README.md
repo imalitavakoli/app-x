@@ -41,7 +41,9 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 
 ### Non-Goals & Why
 
-> What this functionality deliberately does **not** do technically — and the reason for each. Include any **approach considered and rejected**: a different lib split, another `data-access` structure, a shared lib deliberately not reused, a pattern ruled out. State why each lost. This keeps a future reader from re-litigating a settled decision, and it is the only durable record of the alternatives — the planning documents that discussed them do not survive the cycle.
+> What this functionality deliberately does **not** do technically **today** — and the reason for each. This is **current scope**: e.g. `no owned ui lib — each row is a reused feature, and a ui may not import a feature`. Keep it short; it is what a reader needs to understand the technical boundary.
+>
+> **An option considered and rejected does not belong here** — a different lib split, another `data-access` structure, a shared lib deliberately not reused, a pattern ruled out. Those are decision _history_ and grow without bound, so they go in `DECISIONS.md` → Rejected approaches, with the date and why each lost. That file is their durable record; the plan and brainstorm that weighed them do not survive the cycle.
 
 ## 🔗 Existing Dependencies & Reuse
 

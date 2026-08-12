@@ -41,15 +41,15 @@ Details and valid shapes: [Functionality types](#functionality-types).
 
 Two shapes of the same library type. Only the first can be a functionality.
 
-|                                     | **Single-purpose**                                         | **Grab-bag**                                                                          |
-| ----------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| **What it holds**                   | one product concern — everything in the lib serves it      | several unrelated items sharing only a technical kind (directives, pipes, animations) |
-| **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`         | each item versions on its own — `src/lib/toggle-me-v1/`                                |
-| **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info`   | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                        |
-| **A functionality?**                | **yes** — PRD + TFS under `docs/x/{name}/`                 | **no** — it is shared infrastructure                                                  |
-| **Requirements live in**            | `docs/x/{name}/PRD.md` + `docs/x/{name}/TFS/`              | a `requirements.md` beside **each item's** inner version README                       |
+|                                     | **Single-purpose**                                       | **Grab-bag**                                                                          |
+| ----------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **What it holds**                   | one product concern — everything in the lib serves it    | several unrelated items sharing only a technical kind (directives, pipes, animations) |
+| **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`       | each item versions on its own — `src/lib/toggle-me-v1/`                               |
+| **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info` | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                       |
+| **A functionality?**                | **yes** — PRD + TFS under `docs/x/{name}/`               | **no** — it is shared infrastructure                                                  |
+| **Requirements live in**            | `docs/x/{name}/PRD/README.md` + `docs/x/{name}/TFS/`     | a `requirements.md` beside **each item's** inner version README                       |
 
-**The test:** does the lib have **one** product concern, or is it a bucket of unrelated items that merely share a mechanism? For a **shared** lib the folder shape is the tell — independently versioned items *are* independent concerns. **App-domain** libs have no version folders ([Versioning shared libs](#versioning-shared-libs)), so apply the concern test directly.
+**The test:** does the lib have **one** product concern, or is it a bucket of unrelated items that merely share a mechanism? For a **shared** lib the folder shape is the tell — independently versioned items _are_ independent concerns. **App-domain** libs have no version folders ([Versioning shared libs](#versioning-shared-libs)), so apply the concern test directly.
 
 **Only three lib types can be a grab-bag: `util`, `ui`, `feature`.** A `map` and a `data-access` are bound to one functionality by construction, and a `page` is one screen — so never ask the question for those.
 

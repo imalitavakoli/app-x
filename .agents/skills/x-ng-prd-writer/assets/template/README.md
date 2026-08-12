@@ -18,7 +18,11 @@
 
 ## 🚫 Non-Goals & Why
 
-> What this functionality deliberately does **not** do — and the reason for each. Cover both: scope left out (e.g. `not building the something view — the X functionality already owns it`), and any **approach considered and rejected**, with why it lost. This is the only place a future reader learns that a choice was deliberate rather than accidental, so record the reasoning, not just the exclusion. Nothing here becomes an Acceptance Criterion.
+> What this functionality deliberately does **not** do **today** — and the reason for each. This is **current scope**: e.g. `not building the something view — the X functionality already owns it`. Keep it short; it is what a reader needs to understand the boundary of the feature.
+>
+> **An approach considered and rejected does not belong here** — it is decision _history_ and grows without bound, so it goes in `DECISIONS.md` → Rejected approaches, with the date and why it lost. The split: this section says _what is out of scope now_; `DECISIONS.md` says _what we weighed and dropped_.
+>
+> Nothing here becomes an Acceptance Criterion.
 
 ## 👥 Users
 

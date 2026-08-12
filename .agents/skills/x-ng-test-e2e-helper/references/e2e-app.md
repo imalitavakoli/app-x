@@ -18,7 +18,7 @@ Example: `apps/ng-boilerplate-e2e/user-stories.md`.
 
 ## What a US is
 
-A US groups the **Acceptance Criteria (ACs)** — defined in functionalities' PRDs (`docs/x/{name}/PRD.md`) — that a user pursues in one story. A US **may span functionalities**, which is why it lives in the e2e app registry, not in a single functionality's PRD.
+A US groups the **Acceptance Criteria (ACs)** — defined in functionalities' PRDs (`docs/x/{name}/PRD/README.md`) — that a user pursues in one story. A US **may span functionalities**, which is why it lives in the e2e app registry, not in a single functionality's PRD.
 
 ## Spec mapping (reminder)
 
@@ -33,9 +33,9 @@ Imitate [../assets/examples/user-stories.md](../assets/examples/user-stories.md)
 
 ## Common mistakes
 
-| Mistake | Fix |
-| --- | --- |
-| Putting US registry on the product `app` | It belongs in `{app}-e2e`, not `apps/{app-name}/` |
-| Using `requirements.md` for e2e US/AC | `requirements.md` is for util/app **unit** tests; e2e uses `user-stories.md` + PRD ACs |
-| Inventing a US ID that already exists | Reuse the existing US when it fits |
-| Renumbering US IDs | Never renumber; only add |
+| Mistake                                  | Fix                                                                                    |
+| ---------------------------------------- | -------------------------------------------------------------------------------------- |
+| Putting US registry on the product `app` | It belongs in `{app}-e2e`, not `apps/{app-name}/`                                      |
+| Using `requirements.md` for e2e US/AC    | `requirements.md` is for util/app **unit** tests; e2e uses `user-stories.md` + PRD ACs |
+| Inventing a US ID that already exists    | Reuse the existing US when it fits                                                     |
+| Renumbering US IDs                       | Never renumber; only add                                                               |

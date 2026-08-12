@@ -47,7 +47,7 @@ State the output path. Say what deliberately does NOT belong in this document.>
 ```
 
 ## Template
-**Always use [assets/template.md](assets/template.md) exactly** — same sections, same order.
+**Always use the template exactly** — `assets/template.md` when the skill writes one file, or `assets/template/` with one template per output file when it writes a folder — same sections, same order.
 <Drop the `>` quote-helpers from the final draft; keep every heading. Note any optional section.>
 
 ## Examples

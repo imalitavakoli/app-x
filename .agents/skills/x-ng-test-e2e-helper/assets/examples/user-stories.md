@@ -10,10 +10,10 @@
 
 Covered ACs:
 
-- `XPI-AC-01` — x-profile-info (`docs/x/x-profile-info/PRD.md`)
+- `XPI-AC-01` — x-profile-info (`docs/x/x-profile-info/PRD/README.md`)
 
 ## XPI-US-02 — As the product, the x-profile-info widget appears only when enabled in config
 
 Covered ACs:
 
-- `XPI-AC-02` — x-profile-info (`docs/x/x-profile-info/PRD.md`)
+- `XPI-AC-02` — x-profile-info (`docs/x/x-profile-info/PRD/README.md`)

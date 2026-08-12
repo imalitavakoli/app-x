@@ -213,16 +213,21 @@ Path A has two parts: **Documentation** (through the plan-review stop) and **Exe
 
 **Plan phase (Global Constraints)** — payload this Entry reads (not a landmark). Hooks write exactly one of these lines (same key, distinguishable values); replace the draft line with the ready line at hard stop — do not keep both:
 
-| When written                                               | Verbatim line                          |
-| ---------------------------------------------------------- | -------------------------------------- |
-| After `writing-plans` creates/updates the plan (A2 Always) | `Path A phase: Documentation (draft).` |
-| At A3 hard stop (after enricher-or-skip, before wait)      | `Path A phase: ready for Execution.`   |
+| When written                                               | Verbatim line                                     |
+| ---------------------------------------------------------- | ------------------------------------------------- |
+| After `writing-plans` creates/updates the plan (A2 Always) | `Path A phase: Documentation (draft).`            |
+| At A3 hard stop (after enricher-or-skip, before wait)      | `Path A phase: ready for Execution (YYYY-MM-DD).` |
+
+The **date** on the ready line is when the plan was declared ready. It exists because the plan lives at a git-ignored path, so nothing else can date it — and a plan is only safe to execute against the docs and code it was written from.
 
 Read `Path A phase` from the plan's Global Constraints, then:
 
-1. **`Path A phase: ready for Execution.`** → enter ▶️ **Resume** (skip Documentation). Do not re-run A2/A3 close-out unless the user asks to revise the plan.
+1. **`Path A phase: ready for Execution (YYYY-MM-DD).`** → **first check the plan is still current**, then enter ▶️ **Resume** (skip Documentation). Do not re-run A2/A3 close-out unless the user asks to revise the plan.
+
+   **Freshness check** — has anything under this functionality's `docs/x/{name}/`, or the libs the plan's tasks touch, been committed **since that date**? If **no**, resume. If **yes**, the plan may have been written against docs or code that have since moved: re-read the PRD/TFS and confirm the plan's IDs, paths and companion entries still hold. Where they no longer do, return to A2/A3 rather than executing — a plan is only valid against the state it was written from. If the line carries **no date** (written before this rule), treat it as unknown and run the check.
+
 2. **`Path A phase: Documentation (draft).`** or **phase missing** → **ask**: is this plan ready to execute, or still a draft?
-   - **Ready** → set/confirm `Path A phase: ready for Execution.` if needed, then ▶️ Resume.
+   - **Ready** → set/confirm `Path A phase: ready for Execution (YYYY-MM-DD).` with today's date, then ▶️ Resume. (Dating it now is honest: the user has just confirmed the plan against the current state.)
    - **Draft** → stay in **Documentation** (continue from the appropriate A2/A3 point; do not start Execution).
 3. User may override (“execute anyway” / “keep drafting”).
 
@@ -261,7 +266,7 @@ When brainstorm concludes that a `util`, `api`, `app`, or **grab-bag** `ui` / `f
 Part of the docs-in-scope set — runs only when both gates answer **Yes**:
 
 1. **Always** read `docs/getting-started/library-types-and-their-relationship.md` (functionality / lib types, natural entry, what util/api/app never own) and `docs/guidelines/naming-conventions.md` (especially lib and functionality naming) — they shape the design questions even when no PRD/TFS exists yet.
-2. If this functionality already has docs in `docs/x/{name}/` (`PRD.md` and/or the `TFS/` folder), read them too.
+2. If this functionality already has docs in `docs/x/{name}/` (the `PRD/` folder and/or the `TFS/` folder), read them too.
 
 #### 🪝 A2 · Before `writing-plans` [close-out]
 
@@ -305,7 +310,7 @@ Always runs on Path A after `writing-plans` produces a plan. This is the end of 
 
 **Always:**
 
-2. **Hard stop — plan review gate.** In the plan's Global Constraints, **replace** `Path A phase: Documentation (draft).` with `Path A phase: ready for Execution.` (one phase line only). Do **not** create the feature branch and do **not** start execution. Tell the user the plan is ready at its path; they can review it; if it looks good, either continue execution in this session or give the plan path to another agent in another session. Then **wait**.
+2. **Hard stop — plan review gate.** In the plan's Global Constraints, **replace** `Path A phase: Documentation (draft).` with `Path A phase: ready for Execution (YYYY-MM-DD).`, using today's date (one phase line only — the date is what lets 🚪 Entry tell a fresh plan from a stale one). Do **not** create the feature branch and do **not** start execution. Tell the user the plan is ready at its path; they can review it; if it looks good, either continue execution in this session or give the plan path to another agent in another session. Then **wait**.
 
 > ▶️ **Resume** (after the user proceeds). Not a step band — Execution starts here. For other-session / plan-path entry, also follow 🚪 **Entry** at the top of Path A.
 >
@@ -372,7 +377,7 @@ When the fix touches a `util`, `api`, or `app` lib, or libs belonging to more th
 
 #### 🪝 B1 · After `verification-before-completion` [close-out]
 
-Always runs on Path B once the fix is proven. **This hook verifies; only its actions are conditional.** Path B has no plan and no A2, so this is the *only* point at which the docs meet what shipped — and a bug fix very often means the documented behaviour was the thing that was wrong.
+Always runs on Path B once the fix is proven. **This hook verifies; only its actions are conditional.** Path B has no plan and no A2, so this is the _only_ point at which the docs meet what shipped — and a bug fix very often means the documented behaviour was the thing that was wrong.
 
 **[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
@@ -408,7 +413,7 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 
 | Skill                   | Produces / supplies                                                                                                                                 |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `x-ng-prd-writer`       | `docs/x/{name}/PRD.md` — the ACs                                                                                                                    |
+| `x-ng-prd-writer`       | `docs/x/{name}/PRD/README.md` — the ACs                                                                                                             |
 | `x-ng-tfs-writer`       | `docs/x/{name}/TFS/` — `README.md` (ID Index) + one `{libtype}.md` per lib (FRs/BRs)                                                                |
 | `x-ng-lib-build-helper` | canonical lib-structure examples + guidelines                                                                                                       |
 | `x-ng-test-unit-helper` | unit-test conventions — functionalities: `describe`↔FR, `it`↔BR from the TFS; `util` / `app`: same from local `requirements.md`; `api`: no ID doc |
@@ -420,7 +425,7 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 
 ### Locations & rollout
 
-- Functionality docs live in `docs/x/{name}/` — `PRD.md` (single doc) and a `TFS/` folder (`README.md` + one `{libtype}.md` per lib type). `util`, `api`, and `app` never get those docs (they are not functionalities). **`util`** may have `requirements.md` beside each inner/version README; product **`app`** may have `apps/{app-name}/requirements.md` — both supply unit-test FR/BR IDs (`UTIL-…` / `APP-…`). **`api`** has no `requirements.md`. Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
+- Functionality docs live in `docs/x/{name}/` — a `PRD/` folder (`README.md` + `DECISIONS.md`) and a `TFS/` folder (`README.md` + one `{libtype}.md` per lib type). `util`, `api`, and `app` never get those docs (they are not functionalities). **`util`** may have `requirements.md` beside each inner/version README; product **`app`** may have `apps/{app-name}/requirements.md` — both supply unit-test FR/BR IDs (`UTIL-…` / `APP-…`). **`api`** has no `requirements.md`. Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
 - All seven skills above exist. **If a referenced skill is missing, say so and ask** — do not skip its step silently. (A later step whose required input never arrived will stop and ask per its own prerequisite guard, rather than produce wrong output.)
 
 &nbsp;

@@ -9,7 +9,7 @@ Adding a new AC needs nothing from this file: mint the next number and carry on.
 | The outcome itself… | Case | What happens to the ID |
 | --- | --- | --- |
 | still exists, but the AC **describes it wrongly** | **amend** | **kept** — correct the text under it |
-| **no longer exists** (the behaviour was removed) | **retire** | **burned** — removed, never recycled |
+| **no longer exists** (the behaviour was removed) | **retire** | **burned** — moved to `DECISIONS.md`, never recycled |
 | has been **replaced by a different outcome** | **retire + add** | old burned, new number minted |
 
 The test for amend vs retire+add: *is this the same observable outcome, described wrongly — or a different outcome?* "Presented as critical **at or above** the threshold" instead of "above" is the **same** outcome corrected → amend. Replacing "a retry button is presented" with "it retries automatically" is a **different** outcome → retire and add.
@@ -23,11 +23,11 @@ The test for amend vs retire+add: *is this the same observable outcome, describe
 
 ## Retire
 
-1. **Remove the AC** from the Acceptance Criteria section.
+1. **Move the AC to `PRD/DECISIONS.md`** — cut it out of the Acceptance Criteria section in `PRD/README.md` and add a row to that file's **Retired Acceptance Criteria** table with the ID, what it required, the date, **why**, and what replaced it (`—` if nothing). Moving rather than deleting is what keeps the burned number traceable: a reader who finds `AC-08` in an old e2e title or review comment can still learn what it was and why it went.
 2. **Never recycle the number.** `{NAME}-AC-08` stays burned, so an old commit, test title or review comment never resolves to a different outcome later.
 3. **Report the orphans it leaves** — every TFS FR/BR that back-linked it, and any e2e `it` titled with it. Those must be retired or re-pointed in their own runs; this skill does not touch them.
 4. **Check the flow text.** An AC rarely lives alone: the User Experience & Flows section usually describes the same behaviour in prose. Retiring the AC without correcting the flow leaves the PRD contradicting itself.
-5. **Consider Non-Goals.** A behaviour deliberately removed often belongs in **Non-Goals & Why** with the reason — that is how a future reader learns it was dropped on purpose rather than forgotten.
+5. **Record the rejection too, when there was one.** If the behaviour was dropped in favour of a different approach, that belongs in `PRD/DECISIONS.md` → **Rejected approaches**. Keep `PRD/README.md` → Non-Goals & Why for **current** scope exclusions ("we do not build X — the Y functionality owns it"); the *decision history* lives in `DECISIONS.md`.
 
 ## Both cases overturn an approved decision — so neither is silent
 
@@ -44,8 +44,8 @@ Every AC in this PRD was **explicitly approved** by the user when it was written
 | --- | --- |
 | Minting a new AC because the outcome changed | Same outcome, corrected wording → **amend** under the existing ID |
 | Amending when the outcome was actually replaced | Different outcome → retire the old, add a new number |
-| Renumbering to close the gap a retirement leaves | Never — a burned number stays burned |
+| Renumbering to close the gap a retirement leaves | Never — a burned number stays burned, and its row in `DECISIONS.md` is why it stays readable |
 | Retiring an AC and leaving its FR/BRs back-linking it | Report every orphan; they are corrected in their own TFS run |
 | Retiring an AC but leaving the flow text describing it | The PRD then contradicts itself — correct the flows too |
 | Rewriting an approved AC without showing old vs new | It reverses a user approval — show both texts and get confirmation |
-| Silently dropping a behaviour with no trace | Record it in **Non-Goals & Why** with the reason it was dropped |
+| Silently dropping a behaviour with no trace | Move the AC to `PRD/DECISIONS.md` with the reason; record the rejected alternative there too |

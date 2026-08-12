@@ -36,14 +36,14 @@ These guard this skill's own contract; the decision about **whether** the workfl
 
 - The **functionality name** this run is for (a plan may cover several; this skill enriches one per run).
 - The Superpowers **plan** just written (the file `writing-plans` produced).
-- The functionality's **PRD**: `docs/x/{name}/PRD.md`.
+- The functionality's **PRD**: `docs/x/{name}/PRD/README.md`.
 - The functionality's **TFS folder**: `docs/x/{name}/TFS/` (its `README.md` ID Index + the per-lib files).
 
 If the target is a functionality but the PRD/TFS don't exist **and** docs were supposed to be in scope, the earlier steps were skipped by mistake — stop and ask rather than enriching from nothing.
 
 ## Inputs & output
 
-- **Reads:** the plan; `docs/x/{name}/PRD.md`; `docs/x/{name}/TFS/` (README ID Index **and its Existing Dependencies & Reuse section** + per-lib files); **for each companion entry, that companion's own source of truth** — another functionality's `docs/x/{its-name}/` (including **its** reuse section, for the one-level chain check) or a `util`/`app`'s own `requirements.md`; and `AGENTS.md` → Superpowers-First Workflow for the authoritative set of workspace conventions to inject (see Workflow step 2).
+- **Reads:** the plan; `docs/x/{name}/PRD/README.md`; `docs/x/{name}/TFS/` (README ID Index **and its Existing Dependencies & Reuse section** + per-lib files); **for each companion entry, that companion's own source of truth** — another functionality's `docs/x/{its-name}/` (including **its** reuse section, for the one-level chain check) or a `util`/`app`'s own `requirements.md`; and `AGENTS.md` → Superpowers-First Workflow for the authoritative set of workspace conventions to inject (see Workflow step 2).
 - **Writes:** the enriched **plan** — its Global Constraints and task edits. Nothing else.
 
 ## Workflow
@@ -51,7 +51,7 @@ If the target is a functionality but the PRD/TFS don't exist **and** docs were s
 Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger workflow, these stay grouped and the outer workflow's todos remain visible:
 
 ```
-- [ ] [enrich] 1. Locate — the one functionality this run is for, the plan, its docs/x/{name}/PRD.md and TFS/ folder
+- [ ] [enrich] 1. Locate — the one functionality this run is for, the plan, its docs/x/{name}/PRD/README.md and TFS/ folder
 - [ ] [enrich] 2. Source the conventions — from AGENTS.md's Superpowers-First Workflow (re-read if not in context)
 - [ ] [enrich] 3. Global Constraints — fold source-doc pointers + the test/lib/CODEOWNERS rules into the plan (merge, don't duplicate), plus the conditional ones that apply: DEP JSON pair · companion scope guard · deferred chain
 - [ ] [enrich] 4. Tag tasks — annotate this functionality's test tasks with the exact FR/BR/AC IDs they own (from its TFS ID Index)
@@ -62,10 +62,10 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 - [ ] [enrich] 8. Validate — run the Review Checklist until all items pass
 ```
 
-1. **Locate** — identify the **one** functionality name this run is for; open the plan, `docs/x/{name}/PRD.md`, and every file in `docs/x/{name}/TFS/` (the README ID Index is the map of every FR/BR → lib file → PRD AC).
+1. **Locate** — identify the **one** functionality name this run is for; open the plan, `docs/x/{name}/PRD/README.md`, and every file in `docs/x/{name}/TFS/` (the README ID Index is the map of every FR/BR → lib file → PRD AC).
 2. **Source the conventions** — the workspace test/lib conventions to inject are exactly the ones the workflow loads before planning. Their authoritative list lives in **`AGENTS.md` → Superpowers-First Workflow, Path A hook A2's `[gated]` band (Before `writing-plans`)** — read them from there if they are not already fresh in your context (e.g. after a compaction). Do **not** hardcode a list of source skills here; defer to that band.
 3. **Enrich Global Constraints** (**merge** into the existing block — never duplicate an existing one). **Keep each constraint to one line** — that is the format `writing-plans`' own Global Constraints template prescribes, and this block is re-sent verbatim in _every_ implementer dispatch, so length here is multiplied by the task count. Carry paths, not prose. Add, as concise text:
-   - **Source-of-truth pointers** — `docs/x/{name}/PRD.md` (ACs) and `docs/x/{name}/TFS/` (the README ID Index + the per-lib files); tell implementers to read the matching TFS lib file before coding, and to keep IDs exactly as written.
+   - **Source-of-truth pointers** — `docs/x/{name}/PRD/README.md` (ACs) and `docs/x/{name}/TFS/` (the README ID Index + the per-lib files); tell implementers to read the matching TFS lib file before coding, and to keep IDs exactly as written.
    - **Unit-test contract** — each `describe` maps a TFS Functional-Requirement (FR) ID; each `it` maps a Business-Rule (BR) ID; use the exact IDs from the TFS. Add the **resolvable repo-relative path** to the workspace's annotated unit-spec example so the implementer matches its structure (block dividers, `Given/When/Then` + AAA, observable-effect assertions) instead of inventing one.
    - **Test-config pointer** — before writing any spec, read the workspace's root test-runner preset (`jest.preset.js` today) and the files it references under `tools/jest/`. Do **not** re-stub what the preset already handles (native modules, browser globals), and never declare a project-level `transformIgnorePatterns` or `moduleNameMapper` — the runner _replaces_ those arrays rather than merging, silently dropping the preset's. Point at the files; do not paste what they contain, since it changes over time.
    - **E2e contract + this functionality's determination** — the rule (e2e only for a `page` lib, or a `feature` lib that **composes another functionality's `feature`** and whose composition an app page hosts) **and** the explicit yes/no for this functionality (step 5). When e2e applies, add the **resolvable repo-relative paths** to the annotated e2e examples the task needs — spec layout, Page Object, shared commands, fixtures, and the user-story registry format.
@@ -108,7 +108,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 
 **Review Checklist** — before finalising, verify:
 
-- [ ] Global Constraints points to `docs/x/{name}/PRD.md` and the `TFS/` folder (README ID Index + per-lib files), merged into the existing block (no duplicate).
+- [ ] Global Constraints points to `docs/x/{name}/PRD/README.md` and the `TFS/` folder (README ID Index + per-lib files), merged into the existing block (no duplicate).
 - [ ] The unit-test contract (`describe`↔FR, `it`↔BR, exact IDs) is present.
 - [ ] The test-config pointer is present: read the runner preset + `tools/jest/`, don't re-stub what it covers, never declare a project-level `transformIgnorePatterns` / `moduleNameMapper`.
 - [ ] Every test task **for this functionality** is tagged with the exact FR/BR IDs its component(s) own; any e2e task of this functionality is tagged with its AC IDs.

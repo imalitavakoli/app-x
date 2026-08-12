@@ -18,9 +18,12 @@ Output: a **folder** `docs/x/{functionality-name}/TFS/` — a `README.md` for th
 
 ```
 docs/x/{functionality-name}/
-├── PRD.md                (the functionality's product spec)
+├── PRD/                  (the functionality's product spec — not this skill's)
+│   ├── README.md
+│   └── DECISIONS.md
 └── TFS/
     ├── README.md         Overview, Existing Dependencies & Reuse, the ID Index, Open Technical Questions
+    ├── DECISIONS.md      retired FR/BRs · rejected technical approaches · reversed decisions
     ├── map.md            (only the lib types this functionality actually has)
     ├── data-access.md
     ├── ui.md
@@ -29,6 +32,8 @@ docs/x/{functionality-name}/
 ```
 
 `README.md` holds only functionality-level content; each `{libtype}.md` holds that lib's spec **and its FR/BR** (and, for `feature.md`, its technical journey). The README's **ID Index** lists every FR/BR ID, the file it lives in, and the PRD AC it maps to — so IDs stay unique across the whole folder and traceability is visible at a glance.
+
+**`DECISIONS.md` holds only history** — retired FR/BRs, rejected technical options, reversed decisions. Nothing in it is live: **no ID there appears in the ID Index**, and none of it is ever tested. That separation is what keeps the Index a truthful answer to "what is covered?" while the numbers of retired entries stay burned and traceable.
 
 ## When to use
 
@@ -47,7 +52,7 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 - `app` is a final product under `apps/`, not a functionality.
 - Classify using `docs/getting-started/library-types-and-their-relationship.md` (Functionality types). Create a `{libtype}.md` only for lib types this functionality **owns**.
 
-**Required input:** the functionality's **PRD** (`docs/x/{name}/PRD.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
+**Required input:** the functionality's **PRD** (`docs/x/{name}/PRD/README.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
 
 If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. **If anything already in it is no longer true** — an FR/BR whose expectation changed, or whose behaviour no longer exists — that is an **amend** or a **retire**, not an add: read [references/amend-and-retire.md](references/amend-and-retire.md) before touching it, because both reverse an approved decision and neither may be done silently. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly. If its **Existing Dependencies & Reuse** carries any `[TO-CREATE]` / `[TO-UPDATE]` marker, re-verify each one against the workspace and clear those whose work has landed — see [references/reuse-boundary.md](references/reuse-boundary.md).
 
@@ -56,7 +61,7 @@ If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (R
 ## Inputs & output
 
 - **Reads:** the PRD; `docs/getting-started/library-types-and-their-relationship.md` (classify the functionality); `docs/guidelines/naming-conventions.md` (lib/CSS naming, esp. `#styling`); `docs/guidelines/best-practices.md` (Organizing / Mindset — file structure); `docs/runbooks/dep-update-config-for-a-lib.md` (DEP config) and `docs/runbooks/dep-update-assets-for-a-lib.md` (DEP assets — a `ui` lib's custom icon/image whose path the `feature` reads from DEP config); and the existing TFS if any.
-- **Writes:** the `docs/x/{functionality-name}/TFS/` folder — `README.md` plus one `{libtype}.md` per present lib type.
+- **Writes:** the `docs/x/{functionality-name}/TFS/` folder — `README.md`, one `{libtype}.md` per **owned** lib type, and `DECISIONS.md` whenever an FR/BR is retired or a technical option is rejected.
 
 ## Workflow
 
@@ -67,7 +72,7 @@ Copy this checklist and track it. Keep the `[tfs]` prefix so, if this runs insid
 - [ ] [tfs] 2. Name & classify — confirm the functionality name; classify; read the matching example; sort the reuse and mark it (clear any stale markers when updating)
 - [ ] [tfs] 3. Library breakdown — write one docs/x/{name}/TFS/{libtype}.md per owned lib type (its spec + FR/BR)
 - [ ] [tfs] 4. Feature journey — in feature.md (only if owned), add the technical journey
-- [ ] [tfs] 5. README — write docs/x/{name}/TFS/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions)
+- [ ] [tfs] 5. README — write docs/x/{name}/TFS/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions); write DECISIONS.md if anything was retired or rejected
 - [ ] [tfs] 6. Validate — run the Review Checklist until all items pass
 - [ ] [tfs] 7. Confirm — put the Open Technical Questions to the user and fold in the answers
 - [ ] [tfs] 8. Summary — report the folder path, the FR/BR IDs, and anything still open
@@ -100,18 +105,21 @@ The template is a **folder** — [assets/template/](assets/template/) — mirror
 
 **Output layout** — `docs/x/{name}/TFS/` (template → output):
 
-| Template file             | Output file      | Holds                                                                                                         |
-| ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------- |
-| `template/README.md`      | `README.md`      | Overview, Existing Dependencies & Reuse, the 🧭 ID Index, Open Technical Questions — functionality-level only |
-| `template/map.md`         | `map.md`         | owned `map` only (API / external assets)                                                                      |
-| `template/data-access.md` | `data-access.md` | owned `data-access` (+ facade-consumer note when there is no `feature.md`)                                    |
-| `template/ui.md`          | `ui.md`          | owned `ui` only                                                                                               |
-| `template/feature.md`     | `feature.md`     | owned `feature` + the 🧳 User Experience & Flows journey                                                      |
-| `template/page.md`        | `page.md`        | owned `page` only (`visual+` / `mixed+`)                                                                      |
+| Template file             | Output file      | Holds                                                                                                                                |
+| ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `template/README.md`      | `README.md`      | Overview, Existing Dependencies & Reuse, the 🧭 ID Index, Open Technical Questions — functionality-level only                        |
+| `template/DECISIONS.md`   | `DECISIONS.md`   | retired FR/BRs · rejected technical approaches · reversed decisions · retired lib versions — **history only, never in the ID Index** |
+| `template/map.md`         | `map.md`         | owned `map` only (API / external assets)                                                                                             |
+| `template/data-access.md` | `data-access.md` | owned `data-access` (+ facade-consumer note when there is no `feature.md`)                                                           |
+| `template/ui.md`          | `ui.md`          | owned `ui` only                                                                                                                      |
+| `template/feature.md`     | `feature.md`     | owned `feature` + the 🧳 User Experience & Flows journey                                                                             |
+| `template/page.md`        | `page.md`        | owned `page` only (`visual+` / `mixed+`)                                                                                             |
 
 IDs are unique **across all files**; register every one in the README's 🧭 ID Index.
 
 ## Examples
+
+**`DECISIONS.md`** is demonstrated once, in [assets/examples/visual/DECISIONS.md](assets/examples/visual/DECISIONS.md) — its shape does not vary by classification, so the `abstract/` and `mixed-plus/` folders omit it (nothing was retired or rejected in those). Read it whenever this run retires an FR/BR or records a rejected option: it shows retirements paired with the PRD AC that drove them, and a rejected option stated with the reason it lost.
 
 Read the example matching the functionality's classification before filling the specs and the journey — they show the expected granularity, the FR/BR test-ready syntax, and the journey structure. **Each example is a real folder** (`assets/examples/{type}/`), laid out exactly like a generated `docs/x/{name}/TFS/` — a `README.md` with a populated 🧭 ID Index plus one file per lib type — so it doubles as a layout reference. Read the files in the matching example folder. The three examples cover the five types: `abstract` → `abstract/`; `visual` / `visual+` → `visual/`; `mixed` / `mixed+` → `mixed-plus/`. `page.md` is demonstrated in `mixed-plus/`, so a `visual+` functionality borrows it from there; a plain `mixed` uses `mixed-plus/` and omits `page.md`. Omit optional lib files the example has but this functionality does not own.
 
@@ -122,6 +130,14 @@ Read the example matching the functionality's classification before filling the 
 **Emit a `{libtype}.md` only for a lib this functionality OWNS — and a disclaimer never licenses one.** The file set is decided by **ownership**, not by which libs the cycle touches. Never create a `{libtype}.md` for a reused lib, and **adding a note such as "this file documents a lib this functionality does not own" does not make it acceptable** — that note is the proof the file should not exist. Watch for the pair symptom: a stray `map.md` dragging a `data-access.md` in behind it.
 
 **A reused lib's spec has a home — find it, never improvise one.** If you feel the need for a spec file that the routing in [references/reuse-boundary.md](references/reuse-boundary.md) gives no home for, that is a signal to **stop and report**, never to add a file here. Honoring the requirements-home rule in the README (a correct `[TO-UPDATE]` entry) does **not** also license a spec file — those are two separate decisions, and both must be right.
+
+**Lib versions live inside the lib's file, not in extra files.** A **shared** lib is versioned (`src/lib/v1/`, `src/lib/v2/` — `docs/getting-started/library-types-and-their-relationship.md` → Versioning shared libs), and when two versions ship at once **both stay documented**: consumers on v1 still need their spec. Keep **one `{libtype}.md` per owned lib type** and give each live version its own sub-section inside it — never `ui-v1.md` / `ui-v2.md`. The file set answers "which lib **types** does this functionality own?"; a version is sub-structure within one lib's spec. App-domain libs are unversioned, so they have exactly one section.
+
+**The version goes in `{OWNER}`.** Since a lib's exported symbols already carry it (`V1PopupComponent`, selector `x-popup-v1`), so does the ID's owner segment: `POPUP_POPUPV1_FR-01` for v1, `POPUP_POPUPV2_FR-01` for v2. Numbering therefore **restarts per version** — the owner differs, so nothing collides and nothing is renumbered. Without this, a v2 would reuse v1's IDs and the ID Index would lie about which version a test covers. Two exceptions: an **existing** bare owner (`POPUP_POPUP_…`) is never renamed — leave it and version only from the next one; and an **unversioned** app-domain lib keeps a bare owner.
+
+**Retiring a version.** When a shared version folder is finally deleted (all dependents migrated off), move its FR/BRs to `DECISIONS.md` per [references/amend-and-retire.md](references/amend-and-retire.md), drop their ID Index rows, delete the version's sub-section, and record the version removal under `DECISIONS.md` → Retired lib versions. Its numbers stay burned like any other retirement.
+
+**What the version does _not_ touch.** The **CSS class** stays `e-{short-lib-name}` with no version segment (`e-popup`, never `e-popup-v2`) — and so do its DEP style variables. `docs/guidelines/naming-conventions.md#styling` owns that rule and its reasoning; do not invent a versioned class in a spec. The **`data-cy`** convention is unaffected too: it already carries the version (`{lib}-v1_{component}_{part}`), so a v2's selectors read `popup-v2_…` naturally.
 
 **Name match.** Every owned lib is `{domain}-{type}-{name}` with the **same** `{name}` as the functionality. Consumers keep their own functionality names; list them under Existing Dependencies & Reuse when relevant — never as this TFS's own libs.
 
@@ -178,10 +194,12 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 - [ ] Every owned lib name uses the same functionality `{name}`; no consumer page absorbed as an owned `page`.
 - [ ] README has an **ID Index** listing every FR/BR ID → its lib file → its PRD AC; every ID in the lib files appears there and vice-versa.
 - [ ] Classification and natural entry lib match the library-types doc; only the needed lib specs are included (`map`/`ui`/`feature` omitted when not owned).
-- [ ] README Non-Goals & Why records the technical alternatives considered and rejected (lib split, `data-access` structure, shared libs not reused) with the reason each lost — this is their only durable home.
+- [ ] README Non-Goals & Why records **current** technical exclusions with a reason each — rejected alternatives (lib split, `data-access` structure, shared libs not reused) live in `DECISIONS.md`, not here.
+- [ ] `DECISIONS.md` exists whenever an FR/BR was retired or a technical option was rejected this cycle, with the date and reason per entry; no retired ID appears in the 🧭 ID Index, none remains in a `{libtype}.md`, and no retired number was recycled.
 - [ ] Every component names its base class correctly — the base its lib type uses in the matching example (not a name hardcoded in this skill).
 - [ ] Every BR is `Given/When/Then` with concrete `[data-cy]` / signals / emitters; every FR/BR that implements the PRD back-links its AC.
 - [ ] FR/BR IDs unique across the TFS; helper-service IDs scoped (`{NAME}_{HELPER}_…`); no PRD IDs repurposed; nothing renumbered.
+- [ ] For a **versioned shared lib**: one `{libtype}.md` with a sub-section per **live** version (never `ui-v1.md` / `ui-v2.md`); the version is in `{OWNER}` (`POPUPV2`), so numbering restarts per version and nothing collides; an existing bare owner was left unrenamed; a version whose folder is gone was retired to `DECISIONS.md`.
 - [ ] **No FR/BR describes behaviour the code no longer has**, and none states an expectation the code now contradicts — every pre-existing entry was checked against what shipped, not just the new ones.
 - [ ] **On amend / retire only:** the ID was kept (amend) or burned and never recycled (retire); a retired entry's **ID Index row and AC back-link** went with it; the old text was shown beside the new and explicitly confirmed; the functionalities reusing the affected lib were named.
 - [ ] No FR/BR takes a reused lib as its `{OWNER}` or asserts a reused lib's own behaviour; boundary BRs assert our side (what we pass in / what we do with what comes back).
@@ -205,7 +223,7 @@ Then re-run the Review Checklist over whatever changed.
 1. Report the saved folder (`docs/x/{name}/TFS/`) and list the files written (`README.md` + each `{libtype}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
 3. **Report the companion work.** List every `[TO-CREATE]` and `[TO-UPDATE]` entry. For each that is a **functionality**, remind the user it needs its own PRD & TFS — a separate writer run, not part of this one. For each `util` / `api` / `app`, or **grab-bag** `ui` / `feature`, remind that those never get `docs/x/` (a `util` / `app` / grab-bag item records requirements in its own `requirements.md`; an `api` has none) — they are created/updated via the plan. Flag any PRD AC of this functionality that a companion entry blocks.
-4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
+4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD/README.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
 5. List any Open Technical Questions still unanswered after the confirmation step.
 
 ## Common mistakes
@@ -214,9 +232,9 @@ Then re-run the Review Checklist over whatever changed.
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Writing a TFS for a `util` / `api` / `app` lib                | STOP — not a functionality; no `docs/x/…/TFS`.                                                                                                                                            |
 | Writing a TFS for a grab-bag `ui` / `feature` lib             | STOP — its items use a local `requirements.md`, not a TFS.                                                                                                                                |
-| A `{libtype}.md` for a **reused** lib, with a disclaimer note  | Delete it. The note proves it should not exist; ownership decides the file set. See `references/reuse-boundary.md`.                                                                       |
-| A stray `map.md` dragging a `data-access.md` in with it        | The sister-lib rule applies to an **owned** map only — never to a reused one.                                                                                                            |
-| Parking a reused lib's spec here because it has nowhere to go  | Report that the reused functionality has no docs of its own and stop — writing them is a separate decision and a separate run. Never improvise a home.                                    |
+| A `{libtype}.md` for a **reused** lib, with a disclaimer note | Delete it. The note proves it should not exist; ownership decides the file set. See `references/reuse-boundary.md`.                                                                       |
+| A stray `map.md` dragging a `data-access.md` in with it       | The sister-lib rule applies to an **owned** map only — never to a reused one.                                                                                                             |
+| Parking a reused lib's spec here because it has nowhere to go | Report that the reused functionality has no docs of its own and stop — writing them is a separate decision and a separate run. Never improvise a home.                                    |
 | Adding `page.md` because other pages use this feature         | Consumers import the natural entry lib; own a `page` only when _this_ functionality is the page (`visual+` / `mixed+`).                                                                   |
 | Requiring `map.md`/`ui.md` for every mixed                    | Mixed requires `data-access`+`feature`; omit `map`/`ui` when not owned.                                                                                                                   |
 | Naming an owned lib after a consumer (`…-ng-dashboard`)       | All owned libs share this functionality's `{name}`.                                                                                                                                       |
@@ -235,10 +253,14 @@ Then re-run the Review Checklist over whatever changed.
 | Updating a TFS and leaving old markers untouched              | Re-verify every marker first; clear the ones whose work landed, with their "blocks" notes.                                                                                                |
 | Clearing a marker because the work was "probably done"        | Verify it, or leave the marker and raise an Open Technical Question.                                                                                                                      |
 | Renumbering IDs on update                                     | Never renumber; add new unique IDs only.                                                                                                                                                  |
-| Minting a new ID because an expectation changed               | Same rule, corrected wording → **amend** under the existing ID. See `references/amend-and-retire.md`.                                                                                    |
+| Minting a new ID because an expectation changed               | Same rule, corrected wording → **amend** under the existing ID. See `references/amend-and-retire.md`.                                                                                     |
 | Deleting an entry but leaving its ID Index row                | The row advertises coverage that no longer exists — remove the row and the AC back-link with it.                                                                                          |
 | Recycling a retired number                                    | A burned number stays burned, so old commits and test titles never resolve to a different rule.                                                                                           |
 | Amending or retiring without showing old vs new               | Both reverse an approved decision — show both texts, get confirmation, and name the functionalities reusing that lib.                                                                     |
 | Writing the TFS as one file, or a lib spec into `README.md`   | One `{libtype}.md` per present lib type; `README.md` holds only functionality-level sections + the ID Index.                                                                              |
 | Restarting FR/BR numbering in each lib file                   | All lib files share one ID space; keep IDs globally unique and listed in the README ID Index.                                                                                             |
+| A `ui-v2.md` (or any per-version lib file)                    | One file per owned lib **type**; each live version is a sub-section inside it.                                                                                                            |
+| A v2 reusing v1's FR/BR numbers                               | Put the version in `{OWNER}` (`POPUP_POPUPV2_BR-01`) — then numbering restarts safely.                                                                                                    |
+| Deleting v1's spec because v2 shipped                         | Both stay documented while both ship — consumers still on v1 need theirs.                                                                                                                 |
+| Renaming an existing bare owner to add `V1`                   | Never — that renames live IDs. Leave it bare; version from the next one.                                                                                                                  |
 | Finishing with Open Technical Questions unasked               | Put them to the user first. An unanswered question must never reach the plan looking settled.                                                                                             |

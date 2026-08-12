@@ -23,7 +23,7 @@ Only libs a user drives end-to-end in a real app:
 - **Not** `ui` / `map` / `data-access` libs, nor abstract functionalities.
 - **Never a grab-bag `ui` / `feature` lib** — a bucket of unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`), e.g. `shared-ui-ng-directives`. A grab-bag is not a functionality, so it has no PRD and therefore no ACs to drive an `it`. Its items are covered by unit tests against their own `requirements.md`. Definition: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - **Never** a standalone `util`, `api`, or `app` — those are not functionalities and have no PRD ACs to map (`docs/getting-started/library-types-and-their-relationship.md`).
-- **No PRD in scope:** if there is no `docs/x/{name}/PRD.md` for the functionality under test and this work is not producing one, **do not** require AC IDs and **do not** invent ACs or a PRD from here. Prefer not writing new e2e then; if tests are still in scope, use plain titles (no AC mapping).
+- **No PRD in scope:** if there is no `docs/x/{name}/PRD/README.md` for the functionality under test and this work is not producing one, **do not** require AC IDs and **do not** invent ACs or a PRD from here. Prefer not writing new e2e then; if tests are still in scope, use plain titles (no AC mapping).
 
 ## Find the target e2e app
 
@@ -73,7 +73,7 @@ Just as a spec/Page Object is placed by _which lib it belongs to_, a **fixture i
 
 Skip AC mapping when there is no PRD in scope (see [When to use](#when-to-use--which-libs-get-e2e)).
 
-- **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/{name}/PRD.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
+- **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/{name}/PRD/README.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
 - **`describe` ↔ User Story (US)** from the e2e app's **`apps/{app}-e2e/user-stories.md`** registry. Title: `<US-id> | As a …`.
 - **Registry rules** (create/update, uniqueness, format, lifecycle) — read [references/e2e-app.md](references/e2e-app.md) before adding or reusing a US. See also [assets/examples/user-stories.md](assets/examples/user-stories.md).
 
@@ -118,7 +118,7 @@ The examples show the conventions independent of the test runner. Confirm the **
 | CSS or visible-text selectors                                  | Use the stable `data-cy` test-ids.                                                                                                                                                  |
 | Order-dependent tests                                          | Each test sets up its own state; independent & deterministic.                                                                                                                       |
 | `describe` / `it` without US / AC IDs                          | `describe = <US-id>` (from the app's `user-stories.md`), `it = <AC-id>` (from the PRD).                                                                                             |
-| Requiring PRD AC IDs when no PRD is in scope                   | No `docs/x/{name}/PRD.md` and none being written — plain titles; do not invent ACs or a PRD from here.                                                                              |
+| Requiring PRD AC IDs when no PRD is in scope                   | No `docs/x/{name}/PRD/README.md` and none being written — plain titles; do not invent ACs or a PRD from here.                                                                       |
 | Duplicating selectors across specs                             | Put them in the lib's Page Object (`support/page/*.po.ts`).                                                                                                                         |
 | Dumping every fixture flat / copying for reuse                 | Place under the owning lib (`page/{page-name}/` or `feature/{feature-name}/`); flat root only when there's no owner. Other specs reference the path — never copy or move for reuse. |
 | Writing e2e for a `ui` / `data-access` / self-wiring `feature` | Only `page` libs, and a `feature` that composes another functionality's `feature` once an app page hosts that composition.                                                          |

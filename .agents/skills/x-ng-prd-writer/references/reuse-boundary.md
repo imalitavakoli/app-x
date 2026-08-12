@@ -8,8 +8,8 @@ A functionality almost always stands on things it does not own: shared `util` fu
 
 | The thing whose behaviour the requirement describes                       | Where that requirement lives                            |
 | ------------------------------------------------------------------------- | ------------------------------------------------------- |
-| A lib **this** functionality owns                                         | **this** `docs/x/{name}/PRD.md` — as an AC              |
-| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/PRD.md` |
+| A lib **this** functionality owns                                         | **this** `docs/x/{name}/PRD/README.md` — as an AC              |
+| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/PRD/README.md` |
 | An item in a **grab-bag** `ui` / `feature` lib                            | that item's own `requirements.md` — a grab-bag is not a functionality, so it has no PRD |
 | A `util` lib                                                              | that util's own `requirements.md`                       |
 | An `api` lib                                                              | nowhere — `api` libs have no requirements doc           |

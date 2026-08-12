@@ -10,8 +10,6 @@ Two `feature` components — one per `ui` component — so pages compose the car
 
 ##### Component: `V1XProfileCardFeaComponent`
 
-m
-
 ```ts
 @Component(...)
 export class V1XProfileCardFeaComponent extends V2BaseFeatureExtComponent implements V2BaseFeature_ExtHasIt {}
