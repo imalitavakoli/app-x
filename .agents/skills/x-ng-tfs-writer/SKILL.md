@@ -1,15 +1,15 @@
 ---
 name: x-ng-tfs-writer
-description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs — those are not functionalities."
+description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # TFS Writer
 
 ## Overview
 
-You are a senior Nx + Angular frontend developer who turns an approved **PRD** into a complete, implementation-ready **TFS** for a **functionality** (classified as `abstract` / `visual` / `visual+` / `mixed` / `mixed+`; libs from `map` / `data-access` / `ui` / `feature` / `page` only). The TFS defines _how the feature is built_: which libs are needed, each lib's public contract (inputs, outputs, methods, rendering rules), and the **Functional Requirements (FRs)** and **Business Rules (BRs)** that become the unit-test blueprint.
+You are a senior Nx + Angular frontend developer who turns an approved **PRD** into a complete, implementation-ready **TFS** for a **functionality** (classified as `abstract` / `visual` / `visual+` / `mixed` / `mixed+`; libs from `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` only). The TFS defines _how the feature is built_: which libs are needed, each lib's public contract (inputs, outputs, methods, rendering rules), and the **Functional Requirements (FRs)** and **Business Rules (BRs)** that become the unit-test blueprint.
 
 - **FR → `describe`**, **BR → `it`** (the unit-test mapping).
 - Every FR/BR **back-links the PRD Acceptance Criterion (AC)** it decomposes, so PRD ↔ TFS ↔ tests stay in lockstep.
@@ -43,6 +43,7 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 **Gate — functionality only.** Before anything else:
 
 - If the target is (or would be) only a `util`, `api`, or `app` lib → **STOP. Write no TFS.** Say so and exit. No PRD should exist for those either; if someone asks for a TFS anyway, refuse.
+- If it is a **grab-bag** `ui` / `feature` lib → **STOP. Write no TFS.** A grab-bag holds several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`) — e.g. `shared-ui-ng-directives`. Its requirements live in a `requirements.md` beside each item's inner version README. **Adding an item to a grab-bag never creates a functionality.** Definition and the test: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - `app` is a final product under `apps/`, not a functionality.
 - Classify using `docs/getting-started/library-types-and-their-relationship.md` (Functionality types). Create a `{libtype}.md` only for lib types this functionality **owns**.
 
@@ -86,7 +87,7 @@ Copy this checklist and track it. Keep the `[tfs]` prefix so, if this runs insid
 
    **Sort the reuse now, before writing any lib spec** — list every lib this functionality reuses and mark each by its state for this cycle: unmarked (exists, used as-is), `[TO-CREATE]` (does not exist yet), `[TO-UPDATE]` (exists but must gain something for us). Doing this before step 3 keeps a reused lib from drifting into an owned lib's spec. **When updating an existing TFS, re-verify the markers already there and clear the ones whose work has landed.** The entries land in the README's **Existing Dependencies & Reuse** at step 5. Read [references/reuse-boundary.md](references/reuse-boundary.md) now if this functionality reuses anything or the existing TFS carries markers.
 
-3. **Library breakdown** — write **one `docs/x/{name}/TFS/{libtype}.md` per owned lib type** (`map` / `data-access` / `ui` / `feature` / `page` — create only those). Never create `util` / `api` / `app` specs. Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly.
+3. **Library breakdown** — write **one `docs/x/{name}/TFS/{libtype}.md` per owned lib type** (`map` / `data-access` / `ui` / `feature` / `page` — create only those). Never create `util` / `api` / `app` specs, and never a spec for a **grab-bag** `ui` / `feature` lib. Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly.
 4. **Feature journey** — when the functionality owns a `feature`, add the technical journey in `feature.md` (per exported `feature` component). If there is no `feature.md` (**abstract**, or **ui-only** / **page-only** shapes): skip this step; for **abstract**, put the short facade-consumer note in `data-access.md` instead (see the template).
 5. **README** — write `docs/x/{name}/TFS/README.md` with the functionality-level sections (Overview, Existing Dependencies & Reuse, Open Technical Questions) **and the ID Index** — a table of every FR/BR ID → the lib file it lives in → the PRD AC it maps to. State the classification, the **natural entry lib**, and list only **owned** libs as this functionality's own. This is the single place that keeps IDs unique across the folder.
 6. **Validate** — run the Review Checklist below; loop until all pass.
@@ -116,7 +117,11 @@ Read the example matching the functionality's classification before filling the 
 
 ## Rules
 
-**Functionality gate.** Never write a TFS for a bare `util` / `api` / `app` lib.
+**Functionality gate.** Never write a TFS for a bare `util` / `api` / `app` lib, nor for a **grab-bag** `ui` / `feature` lib.
+
+**Emit a `{libtype}.md` only for a lib this functionality OWNS — and a disclaimer never licenses one.** The file set is decided by **ownership**, not by which libs the cycle touches. Never create a `{libtype}.md` for a reused lib, and **adding a note such as "this file documents a lib this functionality does not own" does not make it acceptable** — that note is the proof the file should not exist. Watch for the pair symptom: a stray `map.md` dragging a `data-access.md` in behind it.
+
+**A reused lib's spec has a home — find it, never improvise one.** If you feel the need for a spec file that the routing in [references/reuse-boundary.md](references/reuse-boundary.md) gives no home for, that is a signal to **stop and report**, never to add a file here. Honoring the requirements-home rule in the README (a correct `[TO-UPDATE]` entry) does **not** also license a spec file — those are two separate decisions, and both must be right.
 
 **Name match.** Every owned lib is `{domain}-{type}-{name}` with the **same** `{name}` as the functionality. Consumers keep their own functionality names; list them under Existing Dependencies & Reuse when relevant — never as this TFS's own libs.
 
@@ -167,8 +172,9 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 
 **Review Checklist** — before finalising, verify:
 
-- [ ] Target is a functionality (not a bare `util` / `api` / `app` lib).
+- [ ] Target is a functionality — not a bare `util` / `api` / `app` lib, and not a **grab-bag** `ui` / `feature` lib.
 - [ ] Folder layout correct: `docs/x/{name}/TFS/README.md` + one `{libtype}.md` per **owned** lib type only; no lib spec placed in the README, nothing functionality-level placed in a lib file.
+- [ ] **No `{libtype}.md` exists for a reused lib** — with or without a disclaimer note. Cross-check the file list against the owned lib types, not against the libs the cycle touches; a correct `[TO-UPDATE]` entry in the README does not license a file.
 - [ ] Every owned lib name uses the same functionality `{name}`; no consumer page absorbed as an owned `page`.
 - [ ] README has an **ID Index** listing every FR/BR ID → its lib file → its PRD AC; every ID in the lib files appears there and vice-versa.
 - [ ] Classification and natural entry lib match the library-types doc; only the needed lib specs are included (`map`/`ui`/`feature` omitted when not owned).
@@ -196,7 +202,7 @@ Then re-run the Review Checklist over whatever changed.
 
 1. Report the saved folder (`docs/x/{name}/TFS/`) and list the files written (`README.md` + each `{libtype}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
-3. **Report the companion work.** List every `[TO-CREATE]` and `[TO-UPDATE]` entry. For each that is a **functionality**, remind the user it needs its own PRD & TFS — a separate writer run, not part of this one. For each `util` / `api` / `app`, remind that those never get `docs/x/` (a `util`/`app` records requirements in its own `requirements.md`; an `api` has none) — they are created/updated via the plan. Flag any PRD AC of this functionality that a companion entry blocks.
+3. **Report the companion work.** List every `[TO-CREATE]` and `[TO-UPDATE]` entry. For each that is a **functionality**, remind the user it needs its own PRD & TFS — a separate writer run, not part of this one. For each `util` / `api` / `app`, or **grab-bag** `ui` / `feature`, remind that those never get `docs/x/` (a `util` / `app` / grab-bag item records requirements in its own `requirements.md`; an `api` has none) — they are created/updated via the plan. Flag any PRD AC of this functionality that a companion entry blocks.
 4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
 5. List any Open Technical Questions still unanswered after the confirmation step.
 
@@ -205,6 +211,10 @@ Then re-run the Review Checklist over whatever changed.
 | Mistake                                                       | Fix                                                                                                                                                                                       |
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Writing a TFS for a `util` / `api` / `app` lib                | STOP — not a functionality; no `docs/x/…/TFS`.                                                                                                                                            |
+| Writing a TFS for a grab-bag `ui` / `feature` lib             | STOP — its items use a local `requirements.md`, not a TFS.                                                                                                                                |
+| A `{libtype}.md` for a **reused** lib, with a disclaimer note  | Delete it. The note proves it should not exist; ownership decides the file set. See `references/reuse-boundary.md`.                                                                       |
+| A stray `map.md` dragging a `data-access.md` in with it        | The sister-lib rule applies to an **owned** map only — never to a reused one.                                                                                                            |
+| Parking a reused lib's spec here because it has nowhere to go  | Report that the reused functionality has no docs of its own and stop — writing them is a separate decision and a separate run. Never improvise a home.                                    |
 | Adding `page.md` because other pages use this feature         | Consumers import the natural entry lib; own a `page` only when _this_ functionality is the page (`visual+` / `mixed+`).                                                                   |
 | Requiring `map.md`/`ui.md` for every mixed                    | Mixed requires `data-access`+`feature`; omit `map`/`ui` when not owned.                                                                                                                   |
 | Naming an owned lib after a consumer (`…-ng-dashboard`)       | All owned libs share this functionality's `{name}`.                                                                                                                                       |

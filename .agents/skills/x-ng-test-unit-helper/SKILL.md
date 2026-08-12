@@ -1,8 +1,8 @@
 ---
 name: x-ng-test-unit-helper
-description: "WHAT? The workspace conventions for a lib's Jest unit tests — FR/BR ID mapping from TFS (functionalities) or local requirements.md (util/app), what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for map / data-access / ui / feature / page, or for util / app when tests are in scope; when deciding a spec's IDs, structure, mocking, or readability. Api libs have no requirements.md. Read references/libs/util.md or app.md when testing those lib types."
+description: "WHAT? The workspace conventions for a lib's Jest unit tests — FR/BR ID mapping from TFS (single-purpose functionalities) or a local requirements.md (util / app / grab-bag ui-feature), what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for map / data-access / ui / feature / page, or for util / app / a grab-bag lib when tests are in scope; when deciding a spec's IDs, structure, mocking, or readability. Api libs have no requirements.md. Read references/libs/util.md, app.md or grab-bag.md when testing those lib types."
 metadata:
-  version: '1.3.0'
+  version: '1.4.0'
 ---
 
 # Test Unit Helper
@@ -11,7 +11,9 @@ metadata:
 
 This skill is a **helper**: it puts the workspace's unit-test conventions into your context. It **produces nothing** — whoever is doing the work writes the tests, following these conventions.
 
-For a **functionality** lib, unit tests trace to that functionality's **TFS**: **FR → `describe`, BR → `it`**. For a **`util`** or product **`app`**, there is still **no** `docs/x/` PRD/TFS — FR/BR IDs come from a local **`requirements.md`** instead (see [Lib-type extras](#lib-type-extras-read-on-demand)). **`api`** libs have no code and no `requirements.md`; if somehow tested, use ID-less titles.
+For a **functionality** lib, unit tests trace to that functionality's **TFS**: **FR → `describe`, BR → `it`**. For a **`util`**, a product **`app`**, or an item in a **grab-bag** `ui`/`feature` lib, there is still **no** `docs/x/` PRD/TFS — FR/BR IDs come from a local **`requirements.md`** instead (see [Lib-type extras](#lib-type-extras-read-on-demand)). **`api`** libs have no code and no `requirements.md`; if somehow tested, use ID-less titles.
+
+**A `ui` or `feature` lib is only a functionality when it is single-purpose.** A **grab-bag** — several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`), e.g. `shared-ui-ng-directives` — is not, and takes the local `requirements.md` route. The tell and the authoritative definition are in `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 
 It only adds **workspace specifics** (FR/BR IDs from the right source, test config, formatting) on top of good unit-testing practice. For _how_ to write the tests themselves, follow standard **TDD**: test real, observable behavior — **never assert on a mock** — and mock only what is unavoidable, at the lowest level, keeping mocks complete. Superpowers' `test-driven-development` (and the rest of execution) still owns the RED-GREEN cycle for these libs the same as for functionalities.
 
@@ -19,7 +21,8 @@ It only adds **workspace specifics** (FR/BR IDs from the right source, test conf
 
 Writing or updating a `*.spec.ts` for any testable TypeScript/JavaScript in a workspace lib:
 
-- **Functionality libs** (`map` / `data-access` / `ui` / `feature` / `page`) — a component, service, directive, pipe, guard, or a pure helper inside one. Use the full FR/BR ID contract from the TFS below.
+- **Functionality libs** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) — a component, service, directive, pipe, guard, or a pure helper inside one. Use the full FR/BR ID contract from the TFS below.
+- **Grab-bag `ui` / `feature`** — read [references/libs/grab-bag.md](references/libs/grab-bag.md) first: create/update that **item's** `requirements.md` beside its inner version README and map `describe`/`it` to its `UI-…` / `FEA-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS, and never e2e.
 - **`util`** — when the workflow, brainstorm, or plan includes unit tests. Read [references/libs/util.md](references/libs/util.md) first: create/update that version's `requirements.md` and map `describe`/`it` to its `UTIL-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS.
 - **`app`** (product under `apps/{app-name}/`, not `{app}-e2e`) — when unit tests are in scope. Read [references/libs/app.md](references/libs/app.md) first: create/update `apps/{app-name}/requirements.md` and map to `APP-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS. E2e apps use `user-stories.md`, not this file.
 - **`api`** — no `requirements.md` (proxy-only, no code). Do not invent FR/BR IDs or functionality docs for them.
@@ -28,10 +31,11 @@ Writing or updating a `*.spec.ts` for any testable TypeScript/JavaScript in a wo
 
 - **`util`** — [references/libs/util.md](references/libs/util.md)
 - **`app`** (product app, not e2e) — [references/libs/app.md](references/libs/app.md)
+- **grab-bag `ui` / `feature`** — [references/libs/grab-bag.md](references/libs/grab-bag.md)
 
 ## Map each block to a TFS ID (functionality libs only)
 
-**Skip this section** when the lib under test is `util` or product `app` — use [Lib-type extras](#lib-type-extras-read-on-demand) instead. **Skip** for `api` — ID-less titles only if ever tested.
+**Skip this section** when the lib under test is `util`, a product `app`, or a **grab-bag** `ui`/`feature` — use [Lib-type extras](#lib-type-extras-read-on-demand) instead. **Skip** for `api` — ID-less titles only if ever tested.
 
 **No TFS in scope:** if there is no `docs/x/{name}/TFS/` for the functionality under test and this work is not producing one, **do not** require FR/BR IDs — use plain titles. Do not invent IDs and do not create a TFS from here.
 

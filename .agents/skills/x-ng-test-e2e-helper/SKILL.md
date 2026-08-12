@@ -1,8 +1,8 @@
 ---
 name: x-ng-test-e2e-helper
-description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that composes another functionality's `feature`, once an app page hosts it); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs."
+description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that composes another functionality's `feature`, once an app page hosts it); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs, nor for grab-bag ui/feature libs."
 metadata:
-  version: '1.3.0'
+  version: '1.4.0'
 ---
 
 # Test E2e Helper
@@ -21,6 +21,7 @@ Only libs a user drives end-to-end in a real app:
 - **`feature`** libs — **only if the feature composes _another functionality's_ `feature` lib** — i.e. it renders that feature's exported entry component and drives it. That is a cross-functionality interaction worth proving end-to-end, and "renders it" **is** "initializes it": a feature is initialized by whoever uses it as a whole. A `feature` that only wires its own `ui` is covered by unit tests.
   - **And only if some app page hosts that composition — already, or by the end of this cycle.** A `feature` lib is not routable, so there is nothing to drive until an app page composes it; that page is the e2e target (see below). A cycle that wires the feature into a page **does** put e2e in scope — the page need not have pre-existed. Only when nothing hosts it and nothing will does e2e wait for a later cycle, rather than inventing a harness page.
 - **Not** `ui` / `map` / `data-access` libs, nor abstract functionalities.
+- **Never a grab-bag `ui` / `feature` lib** — a bucket of unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`), e.g. `shared-ui-ng-directives`. A grab-bag is not a functionality, so it has no PRD and therefore no ACs to drive an `it`. Its items are covered by unit tests against their own `requirements.md`. Definition: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - **Never** a standalone `util`, `api`, or `app` — those are not functionalities and have no PRD ACs to map (`docs/getting-started/library-types-and-their-relationship.md`).
 - **No PRD in scope:** if there is no `docs/x/{name}/PRD.md` for the functionality under test and this work is not producing one, **do not** require AC IDs and **do not** invent ACs or a PRD from here. Prefer not writing new e2e then; if tests are still in scope, use plain titles (no AC mapping).
 

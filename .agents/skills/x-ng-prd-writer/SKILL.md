@@ -1,15 +1,15 @@
 ---
 name: x-ng-prd-writer
-description: "WHAT? A functionality's PRD at docs/x/{name}/PRD.md — its product-level spec, whose Acceptance Criteria (ACs) later map to e2e tests. WHEN? Asked to create or update a PRD, product / scope / feature document, acceptance criteria, or product spec for a functionality; or when a brainstorm concludes and the feature needs its product spec. Not for util, api, or app libs — those are not functionalities."
+description: "WHAT? A functionality's PRD at docs/x/{name}/PRD.md — its product-level spec, whose Acceptance Criteria (ACs) later map to e2e tests. WHEN? Asked to create or update a PRD, product / scope / feature document, acceptance criteria, or product spec for a functionality; or when a brainstorm concludes and the feature needs its product spec. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # PRD Writer
 
 ## Overview
 
-You are a product owner writing a clear, professional PRD for a **functionality** (a product feature classified as `abstract` / `visual` / `visual+` / `mixed` / `mixed+`, made of one or more of `map` / `data-access` / `ui` / `feature` / `page`). The PRD is the product-level source of truth: who the users are, what data is involved, how the experience flows, and — most importantly — the **Acceptance Criteria (ACs)**, the observable outcomes that later map to e2e test cases.
+You are a product owner writing a clear, professional PRD for a **functionality** (a product feature classified as `abstract` / `visual` / `visual+` / `mixed` / `mixed+`, made of one or more of `map` / `data-access` / **single-purpose** `ui` / `feature` / `page`). The PRD is the product-level source of truth: who the users are, what data is involved, how the experience flows, and — most importantly — the **Acceptance Criteria (ACs)**, the observable outcomes that later map to e2e test cases.
 
 This PRD does **not** contain Functional Requirements or Business Rules — those are granular, test-level rules that live in the TFS, which derives them from this PRD's ACs and description.
 
@@ -28,8 +28,9 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 **Gate — functionality only.** Before anything else, decide: is the target a **functionality**, or just a lib?
 
 - If it is (or would be) only a `util`, `api`, or `app` lib → **STOP. Write no PRD.** Say so and exit. Example: brainstorm concludes "shared date-formatting util" → that is a `util` lib, not a functionality — no `docs/x/…/PRD.md`.
+- If it is a **grab-bag** `ui` or `feature` lib → **STOP. Write no PRD.** A grab-bag holds several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`) — e.g. `shared-ui-ng-directives`. Its requirements live in a `requirements.md` beside each item's inner version README, never in a PRD. **Adding an item to a grab-bag never creates a functionality**, so "add a directive to the shared directives lib" is not a PRD job. Definition and the test: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - `app` is a final product under `apps/`, not a functionality and not a reusable lib.
-- A single `data-access`, `ui`, `feature`, or `page` lib **can** be a functionality; a `map` lib alone cannot (it always pairs with `data-access` under `abstract` / `mixed` / `mixed+`).
+- A single **single-purpose** `data-access`, `ui`, `feature`, or `page` lib **can** be a functionality; a `map` lib alone cannot (it always pairs with `data-access` under `abstract` / `mixed` / `mixed+`).
 
 Classify using `docs/getting-started/library-types-and-their-relationship.md` (Functionality types). Do not invent a sixth type.
 
@@ -84,7 +85,7 @@ Read the example matching the functionality's type before filling the User Exper
 
 ## Rules
 
-- **Functionality gate.** Never write a PRD for a bare `util` / `api` / `app` lib. "Brainstorm said create a util" is still not a functionality.
+- **Functionality gate.** Never write a PRD for a bare `util` / `api` / `app` lib, nor for a **grab-bag** `ui` / `feature` lib. "Brainstorm said create a util" is still not a functionality — and neither is "add one more directive to the shared directives lib".
 - **Own libs share the functionality name.** Consumers keep their own names; reuse is dependency, not ownership.
 - **No Functional Requirements or Business Rules.** They belong to the TFS. If the description states them, capture their intent here as Acceptance Criteria and/or Data Requirements; the TFS will decompose them into FRs/BRs.
 - **The user journey starts at functionality initialization, never outside the app.** The first step is the component coming to life — e.g. _"Initialization: the lib is in a 'loading' state until the `userId` input is provided."_ Never begin with "the user opens the app", "logs in", or "navigates to the Dashboard".
@@ -99,7 +100,7 @@ Read the example matching the functionality's type before filling the User Exper
 
 **Review Checklist** — before finalising, verify:
 
-- [ ] Target is a functionality (not a bare `util` / `api` / `app` lib).
+- [ ] Target is a functionality — not a bare `util` / `api` / `app` lib, and not a **grab-bag** `ui` / `feature` lib.
 - [ ] Classification matches the library-types doc (required vs optional libs); being used by other pages did not incorrectly add a `page`.
 - [ ] All template sections are present, in order (Introduction first).
 - [ ] No Functional Requirements and no Business Rules sections exist.
@@ -141,6 +142,7 @@ Incorporate whatever they change, re-run the Review Checklist, and ask again. On
 | Mistake                                            | Fix                                                                                |
 | -------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | Writing a PRD for a `util` / `api` / `app` lib     | STOP — not a functionality; no `docs/x/…` PRD.                                     |
+| Writing a PRD for a grab-bag `ui` / `feature` lib  | STOP — a bucket of unrelated items is not a product feature; its items use a local `requirements.md`. |
 | Treating "used on page X/Y" as owning a `page`     | Consumers import this functionality; only own a `page` if _this_ name is the page. |
 | Forcing `map`+`ui` on every mixed                  | Mixed requires `data-access`+`feature`; `map`/`ui` are optional.                   |
 | Adding Functional Requirements / Business Rules    | Remove them — they live in the TFS. Keep only ACs here.                            |

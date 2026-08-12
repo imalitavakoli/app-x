@@ -228,18 +228,18 @@ Read `Path A phase` from the plan's Global Constraints, then:
 
 **Docs-in-scope set** — **Members:** **A1** · **A2's `[gated]` band** · **A3's enricher step** · **A4**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A2's Always band (mode → `writing-plans` with mode in the plan), A3's hard stop, and `test-driven-development` when tests are in scope.
 
-> 🚧 **Functionality gate** [auto] — **Asks:** is the work (or does it produce) a lib from `map` / `data-access` / `ui` / `feature` / `page`?
+> 🚧 **Functionality gate** [auto] — **Asks:** is the work (or does it produce) a **single-purpose** lib from `map` / `data-access` / `ui` / `feature` / `page`?
 >
 > - **Yes** → the docs-in-scope set runs.
-> - **No** (`util` / `api` / `app` only) → **skip the set**: no PRD/TFS writers, no e2e verdict, no enricher, none of our FR/BR/AC ID conventions.
+> - **No** (`util` / `api` / `app`, or a **grab-bag** `ui` / `feature`) → **skip the set**: no PRD/TFS writers, no e2e verdict, no enricher, none of our FR/BR/AC ID conventions.
 >
-> `util`, `api`, and `app` **never** form a functionality (see `/docs/getting-started/library-types-and-their-relationship.md` → Functionality types): they get **no** `docs/x/{name}/` PRD or TFS, and therefore no PRD ACs. For lib shape, load `x-ng-lib-build-helper`. When unit tests are in scope, load `x-ng-test-unit-helper` — it owns where those libs' FR/BR IDs come from.
+> `util`, `api`, and `app` **never** form a functionality, and neither does a **grab-bag** `ui` / `feature` lib — a bucket of unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`), e.g. `shared-ui-ng-directives`. See `/docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag, which owns the definition and the test. None of them get `docs/x/{name}/` PRD or TFS, and therefore no PRD ACs. Adding an item to a grab-bag never creates a functionality. For lib shape, load `x-ng-lib-build-helper`. When unit tests are in scope, load `x-ng-test-unit-helper` — it owns where those libs' FR/BR IDs come from.
 
-> 🚧 **Missing-docs gate** [ask] — **Asks:** the work updates an **existing** `map` / `data-access` / `ui` / `feature` / `page` lib that has no `docs/x/{name}/` for its functionality name — document it now?
+> 🚧 **Missing-docs gate** [ask] — **Asks:** the work updates an **existing** `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` lib that has no `docs/x/{name}/` for its functionality name — document it now?
 >
 > - **Yes** → the docs-in-scope set runs (first-time PRD/TFS).
 > - **No** → **skip the set** for this cycle: no writers, no e2e verdict, no enricher, none of our FR/BR/AC ID conventions.
-> - **Not asked when:** the lib already has `docs/x/{name}/`, or the functionality is **new** (not yet in the workspace) — creating it is creating the functionality, so it always documents; never offer skip.
+> - **Not asked when:** the lib already has `docs/x/{name}/`; the functionality is **new** (not yet in the workspace) — creating it is creating the functionality, so it always documents, never offer skip; or the lib is a **grab-bag** — it has no functionality name, so there is nothing to offer to document.
 >
 > Ask before A2 (typically with A1).
 
@@ -249,10 +249,10 @@ When A2's `[gated]` band ran this cycle, for `writing-plans` (and A3's enricher 
 
 📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** `writing-plans` (task order) · both gates (re-answered for the companion) · A2's `[gated]` band, A3 step 1 and A4 (once per functionality). **Leaves alone:** the current functionality's own gate answers and its docs.
 
-When brainstorm concludes that a `util`, `api`, or `app` lib — or a `map` / `data-access` / `ui` / `feature` / `page` lib belonging to **another** functionality (not the one this cycle is creating or updating) — must be created or updated in the **same cycle**:
+When brainstorm concludes that a `util`, `api`, `app`, or **grab-bag** `ui` / `feature` lib — or a `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` lib belonging to **another** functionality (not the one this cycle is creating or updating) — must be created or updated in the **same cycle**:
 
 1. **Order.** `writing-plans` must include the create/update tasks for that companion lib **before** any task of the current functionality that depends on it.
-2. **Gates re-answer per companion.** The Functionality gate and the Missing-docs gate are answered for the companion work on its own terms: a companion `util` / `api` / `app` always answers **No**; another functionality's libs answer by their own lib types and their own `docs/x/{name}/`.
+2. **Gates re-answer per companion.** The Functionality gate and the Missing-docs gate are answered for the companion work on its own terms: a companion `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, always answers **No**; another functionality's libs answer by their own lib types and their own `docs/x/{name}/`.
 3. **Docs are per functionality.** When the gates answer **Yes** for more than one functionality this cycle, A2's `[gated]` band, A3's enricher step and **A4** each run **once per functionality**, against that functionality's own `docs/x/{name}/` — including A4's re-tag when implementation minted new IDs in a companion functionality's libs. (A companion `util` / `app` has no `docs/x/`, so A4 never applies to it: its `requirements.md` IDs are re-tagged as part of that lib's normal test edits.) **Give each functionality its own todo at A2 and A4** rather than one todo for the step — after a long A2 the second functionality is the one that gets dropped.
 4. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–3 apply to the companions of **this cycle's** functionality only. If a companion turns out to need work in a **further** lib (its own companion), that is **not** this cycle's work: report the chain to the user — naming the libs and the ACs it puts at risk — and let them choose to widen the cycle, do the deeper work first in its own cycle, or defer it. Do **not** re-answer the gates for it, do **not** run A2's band or A3's enricher step for it, and do **not** add its tasks to the plan. Resolving companions recursively would turn one requested feature into an unbounded number of documentation cycles, each with its own AC-approval interview, that the user never asked for.
 
@@ -332,12 +332,12 @@ No execution mode here — that question belongs to path A only. For git, see _G
 
 **Docs-in-scope set** — **Members:** **B1**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips B1** for this fix. **Regardless:** `systematic-debugging`, `test-driven-development`, and `verification-before-completion`.
 
-> 🚧 **Functionality gate** [auto] — **Asks:** is the fix to a lib from `map` / `data-access` / `ui` / `feature` / `page`?
+> 🚧 **Functionality gate** [auto] — **Asks:** is the fix to a **single-purpose** lib from `map` / `data-access` / `ui` / `feature` / `page`?
 >
 > - **Yes** → B1 runs.
-> - **No** (`util` / `api` / `app` only) → **skip B1**: those never have `docs/x/` docs to update.
+> - **No** (`util` / `api` / `app`, or a **grab-bag** `ui` / `feature`) → **skip B1**: those never have `docs/x/` docs to update.
 >
-> Unit tests for those libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TFS writers.
+> Grab-bag `ui` / `feature` libs are defined in `/docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Unit tests for all of these libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TFS writers.
 
 > 🚧 **Missing-docs gate** [auto] — **Asks:** does that lib's functionality already have `docs/x/{name}/`?
 >
@@ -350,7 +350,7 @@ No execution mode here — that question belongs to path A only. For git, see _G
 
 When the fix touches a `util`, `api`, or `app` lib, or libs belonging to more than one functionality:
 
-1. **Gates answer per functionality.** A `util` / `api` / `app` part always answers **No** — it never has `docs/x/` to update. Each functionality's part is answered on its own lib types and its own `docs/x/{name}/`.
+1. **Gates answer per functionality.** A `util` / `api` / `app` part, or a **grab-bag** `ui` / `feature` part, always answers **No** — none of them has `docs/x/` to update. Each functionality's part is answered on its own lib types and its own `docs/x/{name}/`.
 2. **B1 runs per functionality** whose gates both answer **Yes** and whose part of the fix introduced new IDs — each against its own `docs/x/{name}/`.
 3. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–2 cover the libs **this fix touches**. If fixing one of them turns out to require work in a **further** lib, that is not this fix's scope: report it to the user and let them decide. Do not widen the fix, and do not run B1 for a functionality this fix never touched.
 

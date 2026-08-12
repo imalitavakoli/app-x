@@ -1,6 +1,7 @@
 <!--
 Template for `docs/x/{name}/TFS/data-access.md` — the `data-access` lib spec + its FR/BR.
-A `map` lib ALWAYS has a sister `data-access` lib, so include this whenever there is a map.md.
+A `map` lib ALWAYS has a sister `data-access` lib, so include this whenever this functionality OWNS a map lib.
+Ownership decides the file set — never include this because a REUSED lib has a map/data-access pair.
 For an ABSTRACT functionality (no feature/ui), also add the short facade-consumer note at the end.
 Lib name: `{domain}-data-access-ng-{name}`. Remove `>` helpers from the final draft.
 Register every FR/BR ID in the README's 🧭 ID Index.

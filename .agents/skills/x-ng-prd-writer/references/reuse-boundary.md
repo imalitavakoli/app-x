@@ -9,7 +9,8 @@ A functionality almost always stands on things it does not own: shared `util` fu
 | The thing whose behaviour the requirement describes                       | Where that requirement lives                            |
 | ------------------------------------------------------------------------- | ------------------------------------------------------- |
 | A lib **this** functionality owns                                         | **this** `docs/x/{name}/PRD.md` — as an AC              |
-| Another functionality's `map` / `data-access` / `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/PRD.md` |
+| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/PRD.md` |
+| An item in a **grab-bag** `ui` / `feature` lib                            | that item's own `requirements.md` — a grab-bag is not a functionality, so it has no PRD |
 | A `util` lib                                                              | that util's own `requirements.md`                       |
 | An `api` lib                                                              | nowhere — `api` libs have no requirements doc           |
 | An `app`                                                                  | `apps/{app-name}/requirements.md`                       |
@@ -53,8 +54,8 @@ Nothing in those sections gets an AC ID, and nothing in them becomes an e2e test
 
 A reused lib that does not exist yet changes nothing about ownership — it is still not this PRD's to specify:
 
-- A missing **functionality** (`map` / `data-access` / `ui` / `feature` / `page`) needs its **own** PRD and TFS. Name it under Dependencies & Risks; do not absorb its ACs.
-- A missing **`util` / `api` / `app`** never gets `docs/x/` at all. Name it under Dependencies & Risks; creating it is plan work.
+- A missing **functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) needs its **own** PRD and TFS. Name it under Dependencies & Risks; do not absorb its ACs.
+- A missing **`util` / `api` / `app`**, or an item in a **grab-bag** `ui` / `feature` lib, never gets `docs/x/` at all. Name it under Dependencies & Risks; creating it is plan work.
 
 If the description leans on a lib that does not exist yet and the user has not said who builds it, that is an **Open Question**, not an assumption to resolve by writing its behaviour into this PRD.
 

@@ -1,6 +1,6 @@
 # First-time TFS when libs already exist
 
-Use this only when `docs/x/{name}/TFS/` does **not** exist yet, but one or more `map` / `data-access` / `ui` / `feature` / `page` libs that share the functionality `{name}` already exist in the workspace.
+Use this only when `docs/x/{name}/TFS/` does **not** exist yet, but one or more `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` libs that share the functionality `{name}` already exist in the workspace. A **grab-bag** `ui` / `feature` lib has no functionality name and never gets a TFS — do not bootstrap one for it.
 
 Prerequisite still holds: the **PRD** must exist (or be provided). If it is missing, STOP and ask — do not invent a TFS from code.
 

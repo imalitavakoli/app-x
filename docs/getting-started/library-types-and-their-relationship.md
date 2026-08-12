@@ -28,12 +28,36 @@ Nx module boundaries (`@nx/enforce-module-boundaries` in `.eslintrc.json`) contr
 - `util`, `api`, and `app` **never** form a functionality — alone or as part of one. Editing one of these does **not** call for a PRD or TFS.
   - `util` / `api` — supporting libs (utilities / proxy doors).
   - `app` — a final product under `apps/`, not a functionality and not a reusable lib.
-- `data-access`, `ui`, `feature`, and `page` **can** each be a functionality on their own, or part of a larger one — then PRD/TFS **do** apply.
+- `data-access`, `ui`, `feature`, and `page` **can** each be a functionality on their own, or part of a larger one — then PRD/TFS **do** apply — **but only when the lib is single-purpose**. A **grab-bag** `ui` or `feature` lib is never a functionality; see [Single-purpose vs grab-bag](#single-purpose-vs-grab-bag).
 - `map` is never a functionality by itself: if present, it always sits under an `abstract` / `mixed` / `mixed+` functionality together with `data-access`.
 
-Before writing or updating a PRD/TFS, ask: _"Is this a functionality (a product feature), or just a lib?"_ If it is only a `util`, `api`, or `app` lib — stop; no functionality docs.
+Before writing or updating a PRD/TFS, ask: _"Is this a functionality (a product feature), or just a lib?"_ If it is only a `util`, `api`, or `app` lib — or a **grab-bag** `ui` / `feature` lib — stop; no functionality docs.
 
 Details and valid shapes: [Functionality types](#functionality-types).
+
+&nbsp;
+
+### Single-purpose vs grab-bag
+
+Two shapes of the same library type. Only the first can be a functionality.
+
+|                                     | **Single-purpose**                                         | **Grab-bag**                                                                          |
+| ----------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **What it holds**                   | one product concern — everything in the lib serves it      | several unrelated items sharing only a technical kind (directives, pipes, animations) |
+| **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`         | each item versions on its own — `src/lib/toggle-me-v1/`                                |
+| **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info`   | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                        |
+| **A functionality?**                | **yes** — PRD + TFS under `docs/x/{name}/`                 | **no** — it is shared infrastructure                                                  |
+| **Requirements live in**            | `docs/x/{name}/PRD.md` + `docs/x/{name}/TFS/`              | a `requirements.md` beside **each item's** inner version README                       |
+
+**The test:** does the lib have **one** product concern, or is it a bucket of unrelated items that merely share a mechanism? For a **shared** lib the folder shape is the tell — independently versioned items *are* independent concerns. **App-domain** libs have no version folders ([Versioning shared libs](#versioning-shared-libs)), so apply the concern test directly.
+
+**Only three lib types can be a grab-bag: `util`, `ui`, `feature`.** A `map` and a `data-access` are bound to one functionality by construction, and a `page` is one screen — so never ask the question for those.
+
+**A `util` may be either shape, and it changes nothing:** a `util` is never a functionality either way, and its `requirements.md` already lives beside the **inner version README** — which resolves per item for a grab-bag (`formatters/src/lib/date-v1/requirements.md`) and per lib for a single-purpose one (`ng-capacitor/src/lib/v1/requirements.md`). The distinction matters only for `ui` and `feature`, where it decides whether the lib is a functionality at all.
+
+**Why a grab-bag is not a functionality:** a single PRD would have to state Acceptance Criteria spanning every unrelated item in the bucket — that documents a container, not a product feature. Its items are verified by unit tests against the local `requirements.md` (`UI-…` / `FEA-…` IDs), and a grab-bag never gets e2e.
+
+**Adding an item to a grab-bag never creates a functionality.** A new directive in `shared-ui-ng-directives` is a new version folder plus its `requirements.md` — not a new `docs/x/` folder, and not a reason to split the lib.
 
 &nbsp;
 
@@ -222,7 +246,7 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 
 ## Functionality types
 
-A **functionality** is a product feature built for our applications. It is classified into one of the types below and is made of one or more lib types from the Abstract and/or Visual groups (`map`, `data-access`, `ui`, `feature`, `page`).
+A **functionality** is a product feature built for our applications. It is classified into one of the types below and is made of one or more lib types from the Abstract and/or Visual groups (`map`, `data-access`, `ui`, `feature`, `page`) — each of them **single-purpose**; a [grab-bag](#single-purpose-vs-grab-bag) `ui` / `feature` lib is never part of a functionality.
 
 Example — a `profile` functionality for **Angular** (`ng` in the lib names), shared domain, might look like:
 

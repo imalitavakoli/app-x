@@ -2,6 +2,8 @@
 
 Read this when writing or updating unit tests for a **`util`** lib version folder.
 
+A `util` may be **single-purpose** (one concern, one `src/lib/v1/`) or a **grab-bag** (several unrelated helpers, each with its own `src/lib/{name}-v1/`). **It changes nothing here** — a `util` is never a functionality either way, and the location rule below already resolves per item for a grab-bag and per lib for a single-purpose one. (For `ui` / `feature` the shape *does* decide whether the lib is a functionality — see [grab-bag.md](grab-bag.md).)
+
 ## Where
 
 Beside the **inner** (version) README:

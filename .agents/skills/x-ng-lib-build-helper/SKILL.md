@@ -1,8 +1,8 @@
 ---
 name: x-ng-lib-build-helper
-description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming. For util/api, use the fallback (ask which lib to imitate); those are not functionalities."
+description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page, util, and grab-bag ui/feature) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming. For api and app there is no example — use the fallback (ask which lib to imitate)."
 metadata:
-  version: '1.1.0'
+  version: '1.2.0'
 ---
 
 # Lib Build Helper
@@ -15,9 +15,13 @@ This skill is a **helper**: it puts the workspace's canonical library examples i
 
 ## When to use
 
-Building or updating a functionality's `map`, `data-access`, `ui`, `feature`, or `page` lib — or deciding its structure, base class, versioning, READMEs, or `data-cy` naming. Not for non-lib code.
+Building or updating a functionality's `map`, `data-access`, **single-purpose** `ui`, `feature`, or `page` lib — or deciding its structure, base class, versioning, READMEs, or `data-cy` naming. Not for non-lib code.
 
-`util`, `api`, and `app` are **not** functionalities — they have **no** PRD/TFS under `docs/x/` (`docs/getting-started/library-types-and-their-relationship.md`). This skill's examples cover functionality lib types only; for `util` / `api`, use [Fallback](#fallback--only-when-the-example-doesnt-cover-it) (ask which existing lib to imitate).
+**Grab-bag `ui` / `feature` libs** (unrelated items sharing only a technical kind, each versioned on its own — `shared-ui-ng-directives`, `shared-ui-ng-pipes`) are **not** functionalities: no `docs/x/` PRD or TFS, and each item carries its own `requirements.md`. Build the item to [assets/examples/ui-grab-bag.md](assets/examples/ui-grab-bag.md). Its lib-level scaffolding (`project.json`, tags, tsconfigs, outer README) already exists — adding an item only creates a folder and one `index.ts` line. See `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
+
+**`util` libs** are likewise never functionalities, whatever their shape — build them to [assets/examples/util.md](assets/examples/util.md).
+
+`util`, `api`, and `app` are **not** functionalities — they have **no** PRD/TFS under `docs/x/` (`docs/getting-started/library-types-and-their-relationship.md`) — and neither is a **grab-bag** `ui` / `feature`. That does not mean they have no example: `util` has [assets/examples/util.md](assets/examples/util.md) and grab-bag items have [assets/examples/ui-grab-bag.md](assets/examples/ui-grab-bag.md). Only **`api`** (a proxy lib with no code) and **`app`** have no example — for those, use [Fallback](#fallback--only-when-the-example-doesnt-cover-it) (ask which existing lib to imitate).
 
 ## Pick the matching example
 
@@ -25,9 +29,11 @@ Building or updating a functionality's `map`, `data-access`, `ui`, `feature`, or
 | ------------- | ------------------------------------------------------------------------------------------------- |
 | `map`         | `assets/examples/map.md`                                                                          |
 | `data-access` | `assets/examples/data-access-{single-instance,multi-instance,entity}.md` (by variant — see below) |
-| `ui`          | `assets/examples/ui.md`                                                                           |
+| `ui` (single-purpose) | `assets/examples/ui.md`                                                                   |
+| `ui` / `feature` (**grab-bag**) | `assets/examples/ui-grab-bag.md` — pipes / directives; per-item folders, per-item `requirements.md`, no PRD/TFS |
 | `feature`     | `assets/examples/feature.md`                                                                      |
 | `page`        | `assets/examples/page.md`                                                                         |
+| `util`        | `assets/examples/util.md` — plain `v{n}{FunName}` functions, per-item `requirements.md`, no PRD/TFS |
 
 **Handing an example to a subagent?** These files live under `.agents/skills/x-ng-lib-build-helper/assets/examples/` — give that full path. An execution agent resolves paths against the repo root and cannot read this skill, so the skill-relative paths above mean nothing to it.
 
@@ -67,6 +73,7 @@ Lib types & import boundaries: `docs/getting-started/library-types-and-their-rel
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | Copying an arbitrary existing lib                | Use the `assets/examples/` example for that type — it is the source of truth.                                                               |
 | Expecting a PRD/TFS for a `util` / `api` / `app` | Those are never functionalities — no `docs/x/…` docs; build the lib without them.                                                           |
+| Expecting a PRD/TFS for a grab-bag `ui` / `feature` | A bucket of unrelated items, each versioned on its own, is not a functionality — its items use a local `requirements.md`. See `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. |
 | Inventing a base class                           | Extend whatever base the matching `assets/examples/` example uses for that lib type (a specialized `…Ext{Name}` only if the TFS names one). |
 | Only an outer README                             | Add the inner, copy-paste-ready README too.                                                                                                 |
 | `entity` data-access for a non-pure-CRUD write   | Use single- or multi-instance.                                                                                                              |

@@ -129,6 +129,24 @@ A skill holds everything it needs and **does not name another skill**. When it d
 
 **The one exception — reading another skill's internals.** Name another skill only when you must read something _inside_ it (its template, examples, assets), not merely consume its output. Even then, prefer to **inline** the piece you need; name the skill only if that content must stay single-sourced there. Expected mainly in enrichers (`x-{tech}-{tool}-*`).
 
+## Don't depend on the workflow's landmarks
+
+A skill must not name the **control-flow vocabulary** of the workflow that happens to invoke it — gate names, hook IDs, constraint names, path letters. Doing so couples the skill to one workflow's current shape: rename a gate and the skill is wrong, and the skill can no longer be used outside that workflow at all.
+
+Express the **substance** instead, in terms the skill itself owns:
+
+| Instead of | Write |
+| --- | --- |
+| "its own Missing-docs gate must be answered first" | "its docs must be written first — a separate decision, and a separate run" |
+| "the Functionality gate answers No for those" | "those are never functionalities, so they have no such docs" |
+| "carried in at hook A2 and re-tagged at A4" | "supplied as an input; if it is missing, stop and ask" |
+
+The pattern: a skill states its **own** prerequisites, inputs and outputs, and reports what it cannot decide — it never describes *who* decides or *when*. That keeps control flow outside skills, which is where it belongs.
+
+**The one exception** is the `x-{tech}-{tool}-*` family (e.g. `x-ng-sp-plan-enricher`): it exists to operate on another tool's artifact inside that tool's lifecycle, so it may reference that lifecycle and the file that defines it. No other kind may.
+
+A skill's **own** guard is not a violation — a rule headed "Functionality gate" that stops the skill working on the wrong lib type is the skill guarding its own contract, even if the workflow happens to ask a similarly-named question.
+
 ## Don't hardcode paths to volatile code
 
 Refer _conceptually_ (e.g. "the base `ui` lib's root CSS variables") rather than naming a concrete file under `libs/` or `apps/`, or embedding a literal value — so the skill survives the workspace evolving. Name an exact code path or value **only when the user explicitly asks**.
@@ -213,6 +231,7 @@ Write every skill so it stands on its own and triggers from its own `description
 | Changing a description without bumping the version       | Trigger changes are minor bumps.                                                                                                     |
 | Naming another skill                                     | Name the artifact it produces. Reading another skill's internals is the only exception.                                              |
 | Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                                                      |
+| Naming a gate, hook ID, constraint or path letter        | State the substance the skill owns; only the `x-{tech}-{tool}-*` family may reference a tool's lifecycle.                            |
 | Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                                             |
 | Wiring the new skill into a path's hook or skills table  | Don't — skills stand alone unless the user explicitly asks for wiring.                                                               |
 | Creating a skill that duplicates one that already exists | Extend the existing skill and bump it; overlapping skills cannot coordinate.                                                         |

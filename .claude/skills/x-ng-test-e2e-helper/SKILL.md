@@ -1,6 +1,6 @@
 ---
 name: x-ng-test-e2e-helper
-description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that composes another functionality's `feature`, once an app page hosts it); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs."
+description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that composes another functionality's `feature`, once an app page hosts it); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs, nor for grab-bag ui/feature libs."
 ---
 
 # x-ng-test-e2e-helper (pointer)

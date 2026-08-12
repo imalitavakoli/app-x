@@ -1,6 +1,6 @@
 # First-time PRD when libs already exist
 
-Use this only when `docs/x/{name}/PRD.md` does **not** exist yet, but one or more `map` / `data-access` / `ui` / `feature` / `page` libs that share the functionality `{name}` already exist in the workspace.
+Use this only when `docs/x/{name}/PRD.md` does **not** exist yet, but one or more `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` libs that share the functionality `{name}` already exist in the workspace. A **grab-bag** `ui` / `feature` lib has no functionality name and never gets a PRD — do not bootstrap one for it.
 
 The **document now / skip** choice is control flow outside this skill. You are here only after the user chose to document.
 
