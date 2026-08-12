@@ -1,11 +1,15 @@
-# Requirements — {KEY} ({util version folder or app name})
+# Requirements — {KEY} ({util version folder, app name, or grab-bag item folder})
+
+- **Last Verified** (YYYY-MM-DD): {date}
 
 > Local FR/BR registry for unit tests. **Not** a `docs/x/` PRD/TFS.
 >
 > - **util:** IDs are `UTIL-{KEY}-FR-##` / `UTIL-{KEY}-BR-##`
 > - **app:** IDs are `APP-{KEY}-FR-##` / `APP-{KEY}-BR-##`
+> - **grab-bag `ui` / `feature` item:** IDs are `UI-{KEY}-FR-##` / `FEA-{KEY}-FR-##` (and `-BR-##`)
 > - Create/update this file when writing unit tests; never renumber existing IDs.
 > - `describe` ↔ FR, `it` ↔ BR.
+> - **`Last Verified`** is stamped by the post-execution verification step — including when nothing needed changing. Older than the lib's last commit ⇒ unverified against current behaviour.
 
 ## UTIL-DATE_FORMAT-FR-01 — formats a Date as an ISO date string
 

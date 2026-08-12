@@ -205,7 +205,7 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 
 ### 🛣️ Path A — Build a feature, or change an existing feature's behavior
 
-**Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD + TFS + spec sync + e2e verdict** _(A2 `[gated]` band)_ → **mode + `writing-plans`** _(A2 Always band)_ → **(enricher |) plan-review stop** _(A3)_ → _(user proceeds)_ → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **doc/ID re-tag** _(gated, only if new IDs)_ → `finishing-a-development-branch`
+**Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD + TFS + spec sync + e2e verdict** _(A2 `[gated]` band)_ → **mode + `writing-plans`** _(A2 Always band)_ → **(enricher |) plan-review stop** _(A3)_ → _(user proceeds)_ → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **verify docs vs. what shipped** _(A4 — always; actions conditional)_ → `finishing-a-development-branch`
 
 Path A has two parts: **Documentation** (through the plan-review stop) and **Execution** (after the user proceeds — same session or another session with the plan path).
 
@@ -226,7 +226,7 @@ Read `Path A phase` from the plan's Global Constraints, then:
    - **Draft** → stay in **Documentation** (continue from the appropriate A2/A3 point; do not start Execution).
 3. User may override (“execute anyway” / “keep drafting”).
 
-**Docs-in-scope set** — **Members:** **A1** · **A2's `[gated]` band** · **A3's enricher step** · **A4**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A2's Always band (mode → `writing-plans` with mode in the plan), A3's hard stop, and `test-driven-development` when tests are in scope.
+**Docs-in-scope set** — **Members:** **A1** · **A2's `[gated]` band** · **A3's enricher step** · **A4's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A2's Always band (mode → `writing-plans` with mode in the plan), A3's hard stop, **A4's Always band** (verifying `util` / `app` / grab-bag `requirements.md`), and `test-driven-development` when tests are in scope.
 
 > 🚧 **Functionality gate** [auto] — **Asks:** is the work (or does it produce) a **single-purpose** lib from `map` / `data-access` / `ui` / `feature` / `page`?
 >
@@ -247,13 +247,13 @@ Read `Path A phase` from the plan's Global Constraints, then:
 
 When A2's `[gated]` band ran this cycle, for `writing-plans` (and A3's enricher coverage check): (1) read `docs/x/{name}/` **PRD and TFS as the primary source of truth**; (2) on any **conflict** with the Superpowers brainstorm spec under `.superpowers/specs/`, **PRD/TFS win** (user decisions during the writers win); (3) for anything the plan still needs that PRD/TFS **do not cover** (e.g. companion-lib tasks, plan-level narrative), use the **synced** brainstorm spec; (4) do **not invent** requirements that appear in neither — ask. A2 syncs the spec so Superpowers' native "plan from the spec" path stays aligned with (1)–(2). When that band was skipped, the brainstorm spec alone remains the plan's requirements source (vanilla Superpowers); A2's Always band still asks mode and `writing-plans` still records it, then A3 hard-stops.
 
-📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** `writing-plans` (task order) · both gates (re-answered for the companion) · A2's `[gated]` band, A3 step 1 and A4 (once per functionality). **Leaves alone:** the current functionality's own gate answers and its docs.
+📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** `writing-plans` (task order) · both gates (re-answered for the companion) · A2's `[gated]` band, A3 step 1 and A4's `[gated]` band (once per functionality). **Leaves alone:** the current functionality's own gate answers and its docs.
 
 When brainstorm concludes that a `util`, `api`, `app`, or **grab-bag** `ui` / `feature` lib — or a `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` lib belonging to **another** functionality (not the one this cycle is creating or updating) — must be created or updated in the **same cycle**:
 
 1. **Order.** `writing-plans` must include the create/update tasks for that companion lib **before** any task of the current functionality that depends on it.
 2. **Gates re-answer per companion.** The Functionality gate and the Missing-docs gate are answered for the companion work on its own terms: a companion `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, always answers **No**; another functionality's libs answer by their own lib types and their own `docs/x/{name}/`.
-3. **Docs are per functionality.** When the gates answer **Yes** for more than one functionality this cycle, A2's `[gated]` band, A3's enricher step and **A4** each run **once per functionality**, against that functionality's own `docs/x/{name}/` — including A4's re-tag when implementation minted new IDs in a companion functionality's libs. (A companion `util` / `app` has no `docs/x/`, so A4 never applies to it: its `requirements.md` IDs are re-tagged as part of that lib's normal test edits.) **Give each functionality its own todo at A2 and A4** rather than one todo for the step — after a long A2 the second functionality is the one that gets dropped.
+3. **Docs are per functionality.** When the gates answer **Yes** for more than one functionality this cycle, A2's `[gated]` band, A3's enricher step and **A4's `[gated]` band** each run **once per functionality**, against that functionality's own `docs/x/{name}/` — including A4's verification of a companion functionality's docs against what implementation actually did to its libs. (A companion `util` / `app` has no `docs/x/`, so A4 never applies to it: its `requirements.md` IDs are re-tagged as part of that lib's normal test edits.) **Give each functionality its own todo at A2 and A4** rather than one todo for the step — after a long A2 the second functionality is the one that gets dropped.
 4. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–3 apply to the companions of **this cycle's** functionality only. If a companion turns out to need work in a **further** lib (its own companion), that is **not** this cycle's work: report the chain to the user — naming the libs and the ACs it puts at risk — and let them choose to widen the cycle, do the deeper work first in its own cycle, or defer it. Do **not** re-answer the gates for it, do **not** run A2's band or A3's enricher step for it, and do **not** add its tasks to the plan. Resolving companions recursively would turn one requested feature into an unbounded number of documentation cycles, each with its own AC-approval interview, that the user never asked for.
 
 #### 🪝 A1 · Before `brainstorming` [gated]
@@ -312,13 +312,29 @@ Always runs on Path A after `writing-plans` produces a plan. This is the end of 
 > - **Same session** — do not re-ask mode unless the user explicitly changes it. Continue from `using-git-worktrees` (work in place per _Workspace preferences_) → the execution skill for the mode already in the plan.
 > - **Other session** — user provides the plan path. Follow Path A's 🚪 **Entry** (phase line → Resume or ask draft vs ready). If mode is missing after they confirm ready, stop and ask, then ensure the plan records it before executing.
 
-#### 🪝 A4 · Before `finishing-a-development-branch` [gated] — only if implementation introduced new FR/BR/AC IDs
+#### 🪝 A4 · Before `finishing-a-development-branch` [close-out]
 
-Part of the docs-in-scope set — runs only when both gates answer **Yes** **and** implementation introduced new FR/BR/AC IDs:
+Always runs on Path A before finishing. **This hook verifies; only its actions are conditional** — there is no "did we mint IDs?" question to answer wrongly. The plan is the only carrier _into_ execution; this hook is the only carrier _out_ of it, so nothing else will catch what implementation changed.
 
-Update the docs (`x-ng-prd-writer`, then `x-ng-tfs-writer`), then re-tag the affected unit and (if applicable) e2e test titles with the newly minted IDs — **rename only**: the coverage already exists (an execution subagent may not invent an ID; it flags a gap instead).
+**[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
-In **auto** mode the tree has already been reviewed, so route the re-tag through a fix dispatch + scoped re-review like any other post-review change — never edit it from the controller session. Follow `x-ng-test-unit-helper` and `x-ng-test-e2e-helper` (in context from A2; re-read if gone).
+1. **Verify the PRD & TFS against what was actually built**, once per functionality (📌 _Companion work_). Walk this functionality's ACs and its TFS ID Index and compare each to the shipped code and tests. Then act on what you find:
+   - **Added** — implementation needed a requirement that has no ID → mint it in the docs (`x-ng-prd-writer`, then `x-ng-tfs-writer`) and re-tag the affected test titles. **Rename only** here: the coverage already exists, because an execution subagent may not invent an ID — it flags a gap instead.
+   - **Amended** — an existing AC/FR/BR is now described wrongly (its expectation changed) → correct its text **under its existing ID**. Never renumber, and never mint a second ID for the same behaviour.
+   - **Retired** — an existing AC/FR/BR describes behaviour that no longer exists → remove the entry, its **ID Index row**, and its **AC back-link**, and confirm its test was deleted too. **Never recycle the number.**
+   - **Unchanged** — the docs already match. Record that and move on; no edit.
+2. **Amending or retiring overturns an approved decision, so it is never silent.** The writers must show the old text beside the new and get explicit confirmation, and must say which other functionalities reuse the affected lib — their docs may now be wrong too. That procedure lives in the writers.
+3. **Stamp `Last Verified`** (date) on every doc checked — including the ones that needed no edit. That is the only outcome the writers cannot record, and it is what makes staleness mechanically detectable later.
+
+**Always:**
+
+4. **Verify the local `requirements.md`** of any `util`, product `app`, or grab-bag `ui`/`feature` lib this cycle touched, on the same four outcomes above, per `x-ng-test-unit-helper`. An `api` lib has no such doc — nothing to check. Stamp `Last Verified` here too.
+
+   Step 2's confirmation gate does **not** apply here: those entries were never user-approved, so there is no approval to overturn, and no writer owns the file. **But still report** an amend or retire — old text beside new — and, for a **shared** lib, name its consumers: a semantics change there reaches every consumer that was outside this cycle's test scope. Report, don't block.
+
+In **auto** mode the tree has already been reviewed, so route every resulting test-file change through a fix dispatch + scoped re-review like any other post-review change — never edit it from the controller session. Follow `x-ng-test-unit-helper` and `x-ng-test-e2e-helper` (in context from A2; re-read if gone).
+
+> **Note:** a stale doc does not stay a local problem. 📌 _PRD/TFS over cycle spec_ makes the PRD/TFS the **primary** source for the next cycle, so an uncorrected doc outranks a correct fresh brainstorm — and Path B's Missing-docs gate will answer **Yes** on it, carrying the error forward again. Verifying here is what stops drift compounding.
 
 ⚪ **Hooks with no workspace step yet** — `using-git-worktrees` (after the user proceeds from A3; work in place per _Workspace preferences_, so just create the branch, in both modes) · execution (`subagent-driven-development` / `executing-plans`, picked by the mode) · `test-driven-development` · `requesting-code-review`
 
@@ -326,41 +342,49 @@ In **auto** mode the tree has already been reviewed, so route the re-tag through
 
 ### 🛣️ Path B — Fix a bug, or change an existing feature via the debugging path
 
-**Typical flow** — each hook's own condition is what actually governs: `systematic-debugging` → `test-driven-development` → `verification-before-completion` → **doc/ID re-tag** _(only if new IDs)_ → `finishing-a-development-branch` _(only if the fix is on its own branch)_
+**Typical flow** — each hook's own condition is what actually governs: `systematic-debugging` → `test-driven-development` → `verification-before-completion` → **verify docs vs. the proven fix** _(B1 — always; actions conditional)_ → `finishing-a-development-branch` _(only if the fix is on its own branch)_
 
 No execution mode here — that question belongs to path A only. For git, see _Git contract_.
 
-**Docs-in-scope set** — **Members:** **B1**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips B1** for this fix. **Regardless:** `systematic-debugging`, `test-driven-development`, and `verification-before-completion`.
+**Docs-in-scope set** — **Members:** **B1's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips that band** for this fix. **Regardless:** `systematic-debugging`, `test-driven-development`, `verification-before-completion`, and **B1's Always band** (verifying `util` / `app` / grab-bag `requirements.md`).
 
 > 🚧 **Functionality gate** [auto] — **Asks:** is the fix to a **single-purpose** lib from `map` / `data-access` / `ui` / `feature` / `page`?
 >
-> - **Yes** → B1 runs.
-> - **No** (`util` / `api` / `app`, or a **grab-bag** `ui` / `feature`) → **skip B1**: those never have `docs/x/` docs to update.
+> - **Yes** → B1's `[gated]` band runs.
+> - **No** (`util` / `api` / `app`, or a **grab-bag** `ui` / `feature`) → **skip that band**: those never have `docs/x/` docs to verify. B1's Always band still verifies their local `requirements.md`.
 >
 > Grab-bag `ui` / `feature` libs are defined in `/docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Unit tests for all of these libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TFS writers.
 
 > 🚧 **Missing-docs gate** [auto] — **Asks:** does that lib's functionality already have `docs/x/{name}/`?
 >
-> - **Yes** → B1 runs.
-> - **No** → **skip B1**: with no `docs/x/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TFS FR/BRs — so the fix cannot have minted new IDs, and B1 has no docs to refresh and no test titles to re-tag.
+> - **Yes** → B1's `[gated]` band runs.
+> - **No** → **skip that band**: with no `docs/x/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TFS FR/BRs — so there is nothing to verify, amend, retire or re-tag.
 >
 > `[auto]` here, not `[ask]` as on Path A: a bug fix is not the place for a first-time PRD/TFS interview. If the user wants that functionality documented, that is a Path A cycle.
 
-📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** both gates (answered per functionality) · B1 (once per functionality). **Leaves alone:** the fix and its tests, and the order of any of it — Path B has no plan, so nothing here orders work.
+📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** both gates (answered per functionality) · B1's `[gated]` band (once per functionality). **Leaves alone:** the fix and its tests, and the order of any of it — Path B has no plan, so nothing here orders work.
 
 When the fix touches a `util`, `api`, or `app` lib, or libs belonging to more than one functionality:
 
 1. **Gates answer per functionality.** A `util` / `api` / `app` part, or a **grab-bag** `ui` / `feature` part, always answers **No** — none of them has `docs/x/` to update. Each functionality's part is answered on its own lib types and its own `docs/x/{name}/`.
-2. **B1 runs per functionality** whose gates both answer **Yes** and whose part of the fix introduced new IDs — each against its own `docs/x/{name}/`.
+2. **B1's `[gated]` band runs per functionality** whose gates both answer **Yes** — each against its own `docs/x/{name}/`. It runs whether or not that part of the fix minted an ID: verifying is the point, and an amended or retired requirement mints nothing.
 3. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–2 cover the libs **this fix touches**. If fixing one of them turns out to require work in a **further** lib, that is not this fix's scope: report it to the user and let them decide. Do not widen the fix, and do not run B1 for a functionality this fix never touched.
 
-#### 🪝 B1 · After `verification-before-completion` [gated] — only if the fix introduced new FR/BR/AC IDs
+#### 🪝 B1 · After `verification-before-completion` [close-out]
 
-Part of the docs-in-scope set — runs only when both gates answer **Yes** **and** the fix introduced new FR/BR/AC IDs:
+Always runs on Path B once the fix is proven. **This hook verifies; only its actions are conditional.** Path B has no plan and no A2, so this is the *only* point at which the docs meet what shipped — and a bug fix very often means the documented behaviour was the thing that was wrong.
 
-Update the docs (`x-ng-prd-writer`, then `x-ng-tfs-writer`), then re-tag the affected unit and (if applicable) e2e test titles with the newly minted IDs — **rename only**: the coverage already exists. Follow `x-ng-test-unit-helper` and `x-ng-test-e2e-helper`.
+**[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
-Docs come **after** the fix is proven, never before, so nothing documents behaviour that verification might still reject. The cycle is not done until this step has run — make the final completion report after it, not before.
+1. **Verify the PRD & TFS against the proven fix**, once per functionality (📌 _Companion work_), on the same four outcomes as Path A's A4 — **added** (mint + re-tag, rename only) · **amended** (correct the text under its existing ID) · **retired** (remove the entry, its ID Index row and its AC back-link; never recycle the number) · **unchanged** (record it, no edit). Use `x-ng-prd-writer`, then `x-ng-tfs-writer`.
+2. **Amending or retiring is never silent** — the writers show old beside new, get explicit confirmation, and name the other functionalities that reuse the affected lib.
+3. **Stamp `Last Verified`** on every doc checked, including those needing no edit.
+
+**Always:**
+
+4. **Verify the local `requirements.md`** of any `util`, product `app`, or grab-bag `ui`/`feature` lib the fix touched, on the same four outcomes, per `x-ng-test-unit-helper`. An `api` lib has none. Stamp `Last Verified` here too. As on Path A, step 2's confirmation gate does **not** apply — those entries were never approved — but **report** any amend or retire, and name a shared lib's consumers. Report, don't block.
+
+Docs come **after** the fix is proven, never before, so nothing documents behaviour that verification might still reject. The cycle is not done until this hook has run — make the final completion report after it, not before.
 
 ⚪ **Hooks with no workspace step yet** — `systematic-debugging` · `test-driven-development` · `finishing-a-development-branch` (only if the user put the fix on its own branch and asks to wrap it up)
 

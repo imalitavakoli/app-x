@@ -27,6 +27,19 @@ Writing or updating a `*.spec.ts` for any testable TypeScript/JavaScript in a wo
 - **`app`** (product under `apps/{app-name}/`, not `{app}-e2e`) — when unit tests are in scope. Read [references/libs/app.md](references/libs/app.md) first: create/update `apps/{app-name}/requirements.md` and map to `APP-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS. E2e apps use `user-stories.md`, not this file.
 - **`api`** — no `requirements.md` (proxy-only, no code). Do not invent FR/BR IDs or functionality docs for them.
 
+## Keeping a local `requirements.md` true
+
+When you touch a lib that already has one, its existing entries can go stale the same way a TFS does. Four outcomes, same as for a functionality's docs:
+
+| Outcome | What to do |
+| --- | --- |
+| **added** | mint the next `{PREFIX}-{KEY}-…` number and write its test |
+| **amended** | the rule still exists but is described wrongly → rewrite its text **under its existing ID**; never renumber, never mint a second ID for one rule |
+| **retired** | the behaviour is gone → remove the entry and confirm its test went too; **never recycle the number** |
+| **unchanged** | nothing to write |
+
+**Report an amend or a retire — old text beside new — but do not block on approval.** These entries were never user-approved (no writer owns this file), so there is nothing to overturn. For a **shared** lib, also name its consumers: a semantics change here reaches every consumer that was outside this cycle's test scope, and they may not have a test that notices.
+
 ## Lib-type extras (read on demand)
 
 - **`util`** — [references/libs/util.md](references/libs/util.md)

@@ -101,7 +101,7 @@ The **Missing-docs gate** (document now / skip) fixes the control flow:
 
 **New** functionalities (libs not yet in the workspace) do not get the skip offer — creating them is creating the functionality; docs stay on the path.
 
-**Why Path B's Missing-docs gate is `[auto]`, not `[ask]`.** Path B carries the same gate by name, but it never asks: an undocumented functionality simply skips B1. Two reasons. B1 is an **update-only** step, and its trigger is "the fix introduced new FR/BR/AC IDs" — but IDs only exist inside a PRD/TFS. A functionality with no `docs/x/{name}/` has no ID namespace, so a fix to it cannot mint one of our IDs in the first place; B1 would have no docs to refresh and no test titles to re-tag. And a bug fix is the worst moment to open a first-time product interview; the user came to fix something, not to document a functionality. When they do want it documented, that is a Path A cycle. Path A keeps `[ask]` because it is already a design conversation, and the docs it would produce are the input to a plan.
+**Why Path B's Missing-docs gate is `[auto]`, not `[ask]`.** Path B carries the same gate by name, but it never asks: an undocumented functionality simply skips B1. Two reasons. B1's `[gated]` band is an **update-only** step — it verifies an existing PRD/TFS against the proven fix — but IDs and those docs only exist together. A functionality with no `docs/x/{name}/` has no ID namespace at all, so there is nothing to verify, amend, retire or re-tag. And a bug fix is the worst moment to open a first-time product interview; the user came to fix something, not to document a functionality. When they do want it documented, that is a Path A cycle. Path A keeps `[ask]` because it is already a design conversation, and the docs it would produce are the input to a plan.
 
 The writers stay atomic (HOW to bootstrap). The ask/skip decision stays in `AGENTS.md` (WHEN). This rationale doc holds only the WHY.
 
@@ -195,6 +195,28 @@ This also explains why a pointer handed to an execution subagent must be a **res
 `verification-before-completion` is a **guard**, not a routed step: it self-triggers whenever the agent is about to claim work is complete, so it has no fixed position in a workflow to hang a hook on. The only skill that _invokes_ it by name is `systematic-debugging` — which is why **B1** can anchor to it and A4 cannot.
 
 Path A runs execution → (auto only) final whole-branch review → finishing, so a late doc/ID update belongs at the end of that chain, anchored to a point **both** execution modes reach: `executing-plans` names `finishing-a-development-branch` a required sub-skill, and `subagent-driven-development` hands off to it after the final review.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why A4 and B1 verify, instead of firing only on new IDs
+
+Both hooks used to run **only if implementation introduced new FR/BR/AC IDs**, and both bodies were shaped for that one case ("re-tag … with the newly minted IDs — rename only"). That trigger tested the wrong thing. Three outcomes fell straight through it:
+
+- an existing AC/FR/BR whose asserted behaviour **changed** — the docs now describe the code wrongly;
+- an existing one **retired** — the docs describe behaviour that no longer exists, and its ID Index row still advertises coverage;
+- the **stale ID Index row and AC back-link** either of those leaves behind.
+
+The workflow's own invariants made this worse rather than catching it. An execution subagent may not invent an ID, so a semantic change necessarily lands **under a pre-existing ID**. The writers forbid renumbering — correct, but it guarantees the ID looks untouched. So nothing downstream had a reason to look.
+
+Worse, the error gained authority. 📌 _PRD/TFS over cycle spec_ makes those docs the **primary** requirements source for the next cycle, so an uncorrected doc outranks a correct fresh brainstorm; and Path B's Missing-docs gate answers **Yes** on it, carrying the error forward again. Drift compounded instead of being corrected.
+
+The deeper cause is an asymmetry: the plan is the only carrier **into** execution (above), and there was no carrier **out** of it. The reviews all passed because they check code against the plan — never the plan and PRD against what actually shipped.
+
+So the trigger became **verification**: both hooks always run, and only their *actions* are conditional — **added** (mint + re-tag), **amended** (correct the text under the existing ID), **retired** (remove the entry, its Index row and its back-link; never recycle the number), **unchanged** (record it and move on). There is no longer a predicate to answer wrongly. `Last Verified` records the unchanged case, which is the one a writer structurally cannot report, and the enricher now tells implementers to report an **inaccurate or obsolete** requirement — not only a missing one — so the outbound signal exists at all.
+
+Both hooks also gained an **Always** band for `util` / `app` / grab-bag `requirements.md`. Those libs answer the Functionality gate **No**, so the whole `[gated]` set skipped them and no hook had ever verified their docs. The two-band shape is A2's, reused rather than inventing a landmark.
 
 &nbsp;
 

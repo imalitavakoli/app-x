@@ -36,7 +36,7 @@ Classify using `docs/getting-started/library-types-and-their-relationship.md` (F
 
 **Required input:** a feature description (or brainstorm conclusions) for one functionality. If it is missing or unclear, STOP and ask — do not research or invent it.
 
-If the functionality already has a `docs/x/{name}/PRD.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber. If its **Dependencies & Risks** says a reused lib "does not exist yet" or "must change for us", re-verify each such note and bring it to the present — see [references/reuse-boundary.md](references/reuse-boundary.md).
+If the functionality already has a `docs/x/{name}/PRD.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber. **If an AC already in it is no longer true** — its outcome changed, or that behaviour no longer exists — that is an **amend** or a **retire**, not an add: read [references/amend-and-retire.md](references/amend-and-retire.md) first, because both reverse an AC the user explicitly approved and neither may be done silently. If its **Dependencies & Risks** says a reused lib "does not exist yet" or "must change for us", re-verify each such note and bring it to the present — see [references/reuse-boundary.md](references/reuse-boundary.md).
 
 **First-time for existing libs** — when there is no `docs/x/{name}/PRD.md` yet but owned libs already exist in the workspace: read [references/bootstrap-existing.md](references/bootstrap-existing.md) before drafting. Still require a clear description / brainstorm conclusions and user AC approval; never invent product facts from code alone.
 
@@ -111,6 +111,8 @@ Read the example matching the functionality's type before filling the User Exper
 - [ ] Every AC's subject is ours — our data, state, decision, or what we place on screen — and none asserts a reused component's visual attributes or a reused util's output format, even where that lib must change for us.
 - [ ] Reused libs/functionalities appear under Dependencies & Risks / Non-Goals & Why / Data Requirements, never as an AC.
 - [ ] **On update only:** every "does not exist yet" / "must change for us" note in Dependencies & Risks was re-verified — cleared where the work landed, narrowed where it partly landed, or left with an Open Question where it could not be determined.
+- [ ] **No AC describes an outcome the product no longer has**, and none states an outcome the shipped behaviour contradicts — every pre-existing AC was checked, not just the new ones.
+- [ ] **On amend / retire only:** the ID was kept (amend) or burned and never recycled (retire); the old text was shown beside the new and explicitly confirmed; the orphaned TFS FR/BRs and any e2e `it` were reported; the flow text and Non-Goals were reconciled.
 - [ ] Provided granularity (endpoints, params, field names) is preserved verbatim.
 - [ ] No invented facts; unknowns are in Open Questions.
 
@@ -149,6 +151,10 @@ Incorporate whatever they change, re-run the Review Checklist, and ask again. On
 | Journey starts with "user opens the app / logs in" | Start at initialization (loading state until inputs arrive).                       |
 | Acceptance Criteria without IDs                    | Give each a unique `{NAME}-AC-01` ID.                                              |
 | Renumbering ACs when updating                      | Never renumber; add new IDs only.                                                  |
+| Minting a new AC because an outcome changed        | Same outcome, corrected wording → **amend** under the existing ID. See `references/amend-and-retire.md`. |
+| Recycling a retired AC number                      | A burned number stays burned, so old test titles never resolve to a different outcome. |
+| Retiring an AC and leaving its FR/BRs pointing at it | Report every orphaned FR/BR and e2e `it`; they are fixed in their own runs.        |
+| Amending or retiring an AC silently                | It reverses a user approval — show old beside new, get confirmation, name the reusers. |
 | Generalising a provided endpoint / param           | Use the exact value the user gave.                                                 |
 | AC bundling several outcomes ("and")               | Split into one AC per observable outcome.                                          |
 | AC that only asserts an emitted output/event       | A feature's output is a component contract → a BR in the TFS, not an AC.           |

@@ -3,7 +3,10 @@
 > Product Requirements Document for the **{name}** functionality. Replace `{NAME}` with one consistent feature key derived from the functionality name (e.g. `balance-card` → `BALANCE`). Remove every `>` helper note from the final draft; keep every section heading **with its icon**.
 
 - **Last Updated** (YYYY-MM-DD): {date}
+- **Last Verified** (YYYY-MM-DD): {date}
 - **Owner**: {owner}
+
+> **Last Updated vs Last Verified** — `Last Updated` is when this document's text last changed. `Last Verified` is when someone last confirmed it still matches the shipped code, **including when nothing needed changing** — that is the outcome a writer can never record, so only the post-execution verification step stamps it. A `Last Verified` older than the functionality's last commit means the PRD is unverified against current behaviour.
 
 ## 📖 Introduction
 
