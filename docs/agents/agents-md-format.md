@@ -16,7 +16,7 @@ Everything else goes behind a pointer. Before adding anything, ask what a reques
 
 This is a rule about **what qualifies**, not about length. A line budget would only relocate growth into whatever file received the overflow, so there is no line limit here — there is a bar.
 
-**Pointers are not free — and here they are paid twice.** The wording of an always-loaded pointer costs on every turn _whether or not it fires_, so in this file it earns harder pruning than anywhere else: name the destination and the condition, and stop. And when it does fire, the real bill is the target — a stray pointer here can pull a 262-line doc into a turn that never needed it.
+**Pointers are not free — and here they are paid twice.** The wording of an always-loaded pointer costs on every turn _whether or not it fires_, so in this file it earns harder pruning than anywhere else: name the destination and the condition, and stop. And when it does fire, the real bill is the target — a stray pointer here can pull an entire reference doc into a turn that never needed it.
 
 **How to write the pointer itself** — the condition, the verb, and the rule that every _other_ inbound pointer to the same target must filter too — is in [where-content-lives.md](where-content-lives.md) → _Writing a pointer_. Adding a reference to `AGENTS.md` without reading that is how a doc ends up loaded on turns that had no use for it.
 

@@ -36,18 +36,17 @@
 
 - This is an Nx-managed monorepo (see `nx.json`, `apps/`, `libs/`).
 - Apps live in `apps/`, shared code in `libs/`. Each app/lib has its own `project.json`.
-- Library types: `api`, `util`, `map`, `data-access`, `ui`, `feature`, `page`, `app` (see `/docs/getting-started/library-types-and-their-relationship.md`).
+- Library types: `api`, `util`, `map`, `data-access`, `ui`, `feature`, `page`, `app` — what each may own and import, and how they combine into a functionality: `/docs/getting-started/library-types-and-their-relationship.md`. It is long and multi-topic, so start at its **Quick decision cheat-sheet** (it answers most questions and links onward), and scan the headings for the section your question needs.
 - Code is composed by plugging libs into apps, following a Lego-like modular approach.
-- See `/docs/introduction/folder-structure.md` for directory conventions.
 
 &nbsp;
 
 # Project-Specific Conventions
 
-- **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. **Look the term up in it** (it is a lookup surface, not a read-through doc) when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. Adding or changing a term: `/docs/agents/context-md-format.md`.
-- Naming, folder, and code style conventions are in `/docs/guidelines/naming-conventions.md`.
+- **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. **Search it for the term in bold** (it is a lookup surface, not a read-through doc) when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. Adding or changing a term: `/docs/agents/context-md-format.md`.
+- Before naming a lib, folder, class, selector or CSS class: `/docs/guidelines/naming-conventions.md`.
 - Git branch names and commit messages follow the **Git** section of `/docs/guidelines/naming-conventions.md#git` (commits are `type(scope): summary`).
-- Best practices: `/docs/guidelines/best-practices.md`.
+- Before writing, changing or reviewing any code: `/docs/guidelines/best-practices.md` **in full** — Mindset, Documenting and Organizing. You will not know which of the three binds until you are into the work, so read it whole rather than picking a section.
 - Shared libraries are versioned and reused across apps (see `/docs/getting-started/library-types-and-their-relationship.md#versioning-shared-libs`).
 - For Angular, see `/docs/guidelines/available-commands.md#angular-related` for generation and build patterns.
 
@@ -57,7 +56,7 @@
 
 - Angular libs communicate via inputs and outputs, but indirect communications between nested components happens via the Communication service (a service in `shared-util-ng-services` lib) via well-defined interfaces; see `/docs/runbooks/communication-create-interface-for-a-lib.md`.
 - External dependencies are managed via `pnpm` and referenced in each `package.json`.
-- For decision about how to use 3rd-party frameworks, see `/docs/faq/boilerplate-apps.md#organizing`.
+- Before adding or using a 3rd-party framework or lib: `/docs/guidelines/best-practices.md#organizing`.
 
 &nbsp;
 
@@ -129,7 +128,7 @@ Read the shared rules and that path file **once, at the start of the cycle**, an
 
 **Why identification and not classification:** the routing decision already exists in `using-superpowers`, and duplicating it here only creates a second, weaker copy that can disagree with it. Our paths do not choose the Superpowers skill — they attach our hooks to the lifecycle of whichever one it chose.
 
-**If the request is genuinely ambiguous** — "this feature is wrong" can mean *we changed our mind* (design work → `brainstorming`) or *it never matched its spec* (a defect → `systematic-debugging`) — **ask the user rather than letting the match fall either way.** The tell: do you already know what the new behavior should be, or must you first find out **why** the current behavior happens?
+**If the request is genuinely ambiguous** — "this feature is wrong" can mean _we changed our mind_ (design work → `brainstorming`) or _it never matched its spec_ (a defect → `systematic-debugging`) — **ask the user rather than letting the match fall either way.** The tell: do you already know what the new behavior should be, or must you first find out **why** the current behavior happens?
 
 > **Editing the workflow?** How to edit this file: `/docs/agents/agents-md-format.md`. The path files' notation: `/docs/agents/sp-workflow-format.md`. Why any of it is shaped this way: `/docs/agents/sp-workflow-rationale.md`.
 
@@ -137,17 +136,17 @@ Read the shared rules and that path file **once, at the start of the cycle**, an
 
 ### Workspace skills hooked into the workflow
 
-Which of our skills the workflow invokes, and where. *For orientation* — each skill's own `description` says what it does, and each path file names the skills its hooks invoke.
+Which of our skills the workflow invokes, and where. _For orientation_ — each skill's own `description` says what it does, and each path file names the skills its hooks invoke.
 
-| Skill                   | Kind     | Invoked at            |
-| ----------------------- | -------- | --------------------- |
-| `x-ng-prd-writer`       | writer   | A1 · A3 · B1          |
-| `x-ng-tfs-writer`       | writer   | A1 · A3 · B1          |
-| `x-ng-lib-build-helper` | helper   | A1                    |
-| `x-ng-test-unit-helper` | helper   | A1 · A3 · B1          |
-| `x-ng-test-e2e-helper`  | helper   | A1 (if e2e) · A3      |
-| `x-ng-sp-plan-enricher` | enricher | A2                    |
-| `x-skill-build-helper`  | helper   | C1                    |
+| Skill                   | Kind     | Invoked at       |
+| ----------------------- | -------- | ---------------- |
+| `x-ng-prd-writer`       | writer   | A1 · A3 · B1     |
+| `x-ng-tfs-writer`       | writer   | A1 · A3 · B1     |
+| `x-ng-lib-build-helper` | helper   | A1               |
+| `x-ng-test-unit-helper` | helper   | A1 · A3 · B1     |
+| `x-ng-test-e2e-helper`  | helper   | A1 (if e2e) · A3 |
+| `x-ng-sp-plan-enricher` | enricher | A2               |
+| `x-skill-build-helper`  | helper   | C1               |
 
 **If a referenced skill is missing, say so and ask** — do not skip its step silently. (A later step whose required input never arrived will stop and ask per its own prerequisite guard, rather than produce wrong output.)
 
