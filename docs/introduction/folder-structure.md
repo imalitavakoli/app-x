@@ -35,7 +35,8 @@ x/
 ├── dist/apps/{app-name}/
 │             ├── browser/                          // Holds the distribution files of an app.
 │             └── server/                           // Holds the build-time generated files of an app which has app-shell. Can be deleted!
-├── docs/                                           // Holds the workspace documentation (introduction, getting-started, guidelines, runbooks).
+├── docs/                                           // Holds the workspace documentation — one folder per area (see this repo's README for the full index).
+│   ├── agents/                                     // Holds the AI-agent docs: the Superpowers workflow paths, their shared rules and notation, and how to edit `AGENTS.md` / `CONTEXT.md`.
 │   └── x/{functionality-name}/                     // Holds ONE functionality's specs — the source of truth its tests are written against.
 │       ├── PRD/                                    // 🆔 Product spec: the Acceptance Criteria (AC) an e2e `it` cites.
 │       └── TFS/                                    // 🆔 Technical spec, per lib type per live version: the FRs (`describe`) and BRs (`it`) a unit test cites, plus the README's ID Index.
@@ -60,7 +61,10 @@ x/
 ├── .eslintrc.json                                  // Defines the Eslint rules (library types constraints).
 ├── AGENTS.md                                       // Defines the AI agents' settings and instructions.
 ├── AGENTS.local.md                                 // Defines the AI agents' local (personal) settings and instructions (overrides `AGENTS.md` if exists).
+├── CLAUDE.md                                       // Claude Code's entry point — it delegates to `AGENTS.md` (and `AGENTS.local.md`). Other AI tools read `AGENTS.md` directly.
 ├── CODEOWNERS                                      // Defines individuals or teams (code-owners) who are expert in a specific code area.
+├── CONTEXT.md                                      // Defines the workspace's own vocabulary. Search it for a term in bold ('functionality', 'grab-bag', 'ID registry', 'burned', …) — it is a lookup surface, not a read-through doc.
+├── README.md                                       // The repo's front page, and the index of every doc under `docs/`.
 ├── nx.json                                         // Defines the NX workspace default configurations.
 └── tsconfig.base.json                              // Defines the TypeScript configurations and importable libraries alias paths.
 ```
