@@ -29,12 +29,12 @@ _Avoid_: {alternative names we do not use, comma-separated}
 
 Ask: **is this term specific to this workspace, or would it mean the same in any repo?** Only the first belongs here.
 
-| Leave out                                                    | Why                                                             |
-| ------------------------------------------------------------ | --------------------------------------------------------------- |
-| General programming concepts (mock, signal, guard, monorepo) | They mean the same everywhere; defining them is noise           |
-| Framework vocabulary (Angular, Nx, Jest, Cypress terms)       | Their own documentation owns them                               |
-| Anything with no competing name and no ambiguity              | An entry that could never be misread earns nothing              |
-| Consequences, procedures, examples of use                     | [where-content-lives.md](where-content-lives.md) routes these   |
+| Leave out                                                    | Why                                                           |
+| ------------------------------------------------------------ | ------------------------------------------------------------- |
+| General programming concepts (mock, signal, guard, monorepo) | They mean the same everywhere; defining them is noise         |
+| Framework vocabulary (Angular, Nx, Jest, Cypress terms)      | Their own documentation owns them                             |
+| Anything with no competing name and no ambiguity             | An entry that could never be misread earns nothing            |
+| Consequences, procedures, examples of use                    | [where-content-lives.md](where-content-lives.md) routes these |
 
 &nbsp;
 
@@ -55,6 +55,18 @@ Omit `_Avoid_` only when no alternative name is plausible.
 A `## Flagged ambiguities` section at the end holds terms that are **in use but not settled** — two readings in circulation, or a name nobody is happy with. Record the competing readings so the eventual resolution is a real decision rather than a fresh coinage.
 
 **This does not block anything.** It is deliberately weaker than a PRD's or TFS's Open Questions, which must be put to the user before that doc is finished. A glossary ambiguity is a parking spot: it exists so a contested term is not silently coined twice in two skills. Resolve one when the work makes the answer obvious, and move it into the body.
+
+&nbsp;
+
+## Keeping it a glossary as it grows
+
+`CONTEXT.md` is a **lookup surface**: a reader arrives with one unfamiliar term and wants one entry. That is why callers are told to _look a term up_ rather than _read the file_ — the whole point is that its size does not have to be paid to use it.
+
+Growth still matters, though, because a glossary that has absorbed things that are not terms stops being scannable and starts being a second copy of the docs.
+
+- **When it passes roughly 50 entries, prune before you add.** Re-run _What to leave out_ over the existing entries; entries drift in that would never have passed the test on the day they were written.
+- **Do not split it by topic.** A reader does not know which file holds their term, so splitting turns one lookup into several — the cost goes **up**, not down. The only sanctioned split is by _context_ (`CONTEXT-MAP.md`), and this workspace is single-context, so it does not apply.
+- **The symptom of a file that needs pruning** is entries whose definition needs a second sentence to stay true, or that could be replaced by a link to the doc that owns the subject. Both mean a consequence has crept in where a definition belongs.
 
 &nbsp;
 

@@ -2,7 +2,7 @@
 
 # 🛣️ Path C — Other Superpowers scenarios
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first.** It owns the Operating rules this path assumes. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md); the reasoning is in [sp-workflow-rationale.md](sp-workflow-rationale.md).
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first.** It owns the Operating rules this path assumes. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md); why it is shaped this way is in [sp-workflow-rationale.md](sp-workflow-rationale.md) — rationale only, never needed to execute a cycle.
 
 &nbsp;
 

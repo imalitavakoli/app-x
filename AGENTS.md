@@ -44,7 +44,7 @@
 
 # Project-Specific Conventions
 
-- **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. Read it when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. Adding or changing a term: `/docs/agents/context-md-format.md`.
+- **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. **Look the term up in it** (it is a lookup surface, not a read-through doc) when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. Adding or changing a term: `/docs/agents/context-md-format.md`.
 - Naming, folder, and code style conventions are in `/docs/guidelines/naming-conventions.md`.
 - Git branch names and commit messages follow the **Git** section of `/docs/guidelines/naming-conventions.md#git` (commits are `type(scope): summary`).
 - Best practices: `/docs/guidelines/best-practices.md`.

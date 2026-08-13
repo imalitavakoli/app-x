@@ -2,7 +2,7 @@
 
 # 🛣️ Path A — Build a feature, or change an existing feature's behavior
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. Without it you will miss that the plan is the only carrier into execution subagents (Operating rule 4). The notation used below (🪝 hook · 🚧 gate · 📌 constraint · 🚪 entry · 🎛️ mode · ▶️ resume) is defined in [sp-workflow-format.md](sp-workflow-format.md); the reasoning is in [sp-workflow-rationale.md](sp-workflow-rationale.md).
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. Without it you will miss that the plan is the only carrier into execution subagents (Operating rule 4). The notation used below (🪝 hook · 🚧 gate · 📌 constraint · 🚪 entry · 🎛️ mode · ▶️ resume) is defined in [sp-workflow-format.md](sp-workflow-format.md); why it is shaped this way is in [sp-workflow-rationale.md](sp-workflow-rationale.md) — rationale only, never needed to execute a cycle.
 
 &nbsp;
 
@@ -132,6 +132,7 @@ Always runs on Path A before finishing. **This hook verifies; only its actions a
    - **Amended** — an existing AC/FR/BR is now described wrongly (its expectation changed) → correct its text **under its existing ID**. Never renumber, and never mint a second ID for the same behaviour.
    - **Retired** — an existing AC/FR/BR describes behaviour that no longer exists → remove the entry, its **ID Index row**, and its **AC back-link**, and confirm its test was deleted too. **Never recycle the number.**
    - **Unchanged** — the docs already match. Record that and move on; no edit.
+
 2. **Amending or retiring overturns an approved decision, so it is never silent.** The writers must show the old text beside the new and get explicit confirmation, and must say which other functionalities reuse the affected lib — their docs may now be wrong too. That procedure lives in the writers.
 3. **Stamp `Last Verified`** (date) on every doc checked — including the ones that needed no edit. That is the only outcome the writers cannot record, and it is what makes staleness mechanically detectable later.
 
