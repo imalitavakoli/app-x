@@ -1,4 +1,4 @@
-[🔙](../../README.md#guidelines)
+[🔙](../../README.md#agents)
 
 # Where content lives 🗂️
 
@@ -22,8 +22,6 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 | **how to perform** a step               | the skill that owns it                      | that skill is invoked              |
 | how a **subsystem** works               | the relevant `docs/` page                   | working on that subsystem          |
 
-> **Status:** the `sp-workflow-*` files are being split out of `AGENTS.md`. Until that lands, those rules are still inline in `AGENTS.md` — the destinations above are the target, not yet all present.
-
 &nbsp;
 
 ## The sharp edge: a term's meaning vs its consequences
@@ -46,11 +44,7 @@ A skill or doc that needs the consequence writes **one line of consequence plus 
 
 ## What qualifies for `AGENTS.md`
 
-`AGENTS.md` is read in full on **every** request, so its budget is the scarcest in the workspace. A line earns its place only if **every** request needs it. Everything else goes behind a pointer.
-
-The pointer's own wording is paid every turn too, so it earns pruning harder than the body does: name the destination and the condition for reading it, nothing more.
-
-This is a rule about **what qualifies**, not about length. A line limit would only relocate growth into whatever file received the overflow.
+`AGENTS.md` is read in full on **every** request, so its budget is the scarcest in the workspace and its row above is the hardest to earn. The bar, and how to write a pointer that costs less than the content it replaces, live with the file they govern: [agents-md-format.md](agents-md-format.md).
 
 &nbsp;
 
@@ -58,4 +52,4 @@ This is a rule about **what qualifies**, not about length. A line limit would on
 
 Do not add a third. **Pick the home from the table, move the rule there, and replace the others with a pointer** — in the same change. Then take a distinctive phrase from what you removed and grep `AGENTS.md`, `CONTEXT.md`, `docs/` and `.agents/skills/` for it, so the copies you forgot writing surface now rather than after they contradict each other.
 
-[🔙](../../README.md#guidelines)
+[🔙](../../README.md#agents)

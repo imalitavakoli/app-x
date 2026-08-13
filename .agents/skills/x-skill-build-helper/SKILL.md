@@ -139,7 +139,7 @@ Express the **substance** instead, in terms the skill itself owns:
 | -------------------------------------------------- | -------------------------------------------------------------------------- |
 | "its own Missing-docs gate must be answered first" | "its docs must be written first — a separate decision, and a separate run" |
 | "the Functionality gate answers No for those"      | "those are never functionalities, so they have no such docs"               |
-| "carried in at hook A2 and re-tagged at A4"        | "supplied as an input; if it is missing, stop and ask"                     |
+| "carried in at hook A1 and re-tagged at A3"        | "supplied as an input; if it is missing, stop and ask"                     |
 
 The pattern: a skill states its **own** prerequisites, inputs and outputs, and reports what it cannot decide — it never describes _who_ decides or _when_. That keeps control flow outside skills, which is where it belongs.
 

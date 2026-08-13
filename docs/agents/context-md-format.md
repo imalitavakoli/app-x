@@ -1,4 +1,4 @@
-[🔙](../../README.md#guidelines)
+[🔙](../../README.md#agents)
 
 # `CONTEXT.md` format 📖
 
@@ -70,4 +70,4 @@ Its failure mode is not staleness against code but **incompleteness against voca
 
 If a completeness check is ever wanted, the mechanical one is cheap and needs no stamp: grep the codebase and docs for the words listed under `_Avoid_`. A hit is either a term to fix or an `_Avoid_` line to reconsider.
 
-[🔙](../../README.md#guidelines)
+[🔙](../../README.md#agents)
