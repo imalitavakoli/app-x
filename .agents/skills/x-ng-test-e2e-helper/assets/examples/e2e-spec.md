@@ -2,7 +2,7 @@
 
 A `feature` lib (`shared-feature-ng-x-profile-info`) composed on the **dashboard** page. The file lives at `apps/{app}-e2e/src/e2e/page/dashboard/x-profile-info.cy.ts` — **folder = composition context** (`page/dashboard/`), **file = the feature under test**. (`.cy.ts` is the current runner's extension — read your workspace's e2e setup for today's runner.)
 
-Conventions shown: **no wrapping `describe`** (the file name names the feature); `describe` = a **US** (from `apps/{app}-e2e/user-stories.md`), `it` = an **AC** (from the PRD); `Given/When/Then` in the `it` title, **AAA** in the body; assert **only what the user observes** (DOM via `data-cy`) — never internal state; selectors + helpers come from the **Page Object**; login + **hermetic** intercepts (external boundaries found **code-first** from this feature's `data-access` — not by runtime spying) keep the test independent. Intercepts are registered **before** visit.
+Conventions shown: **no wrapping `describe`** (the file name names the feature); `describe` = a **US** (from `apps/{app}-e2e/user-stories/README.md`), `it` = an **AC** (from the PRD); `Given/When/Then` in the `it` title, **AAA** in the body; assert **only what the user observes** (DOM via `data-cy`) — never internal state; selectors + helpers come from the **Page Object**; login + **hermetic** intercepts (external boundaries found **code-first** from this feature's `data-access` — not by runtime spying) keep the test independent. Intercepts are registered **before** visit.
 
 ```ts
 import { dashboardPo } from '../../../support/page/dashboard.po';

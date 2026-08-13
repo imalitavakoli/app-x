@@ -1,4 +1,4 @@
-# Grab-bag `ui` / `feature` libs — `requirements.md` + unit IDs
+# Grab-bag `ui` / `feature` libs — `requirements/` + unit IDs
 
 Read this when writing or updating unit tests for an item inside a **grab-bag** `ui` or `feature` lib.
 
@@ -18,17 +18,18 @@ A grab-bag is **not a functionality**: no `docs/x/…` PRD or TFS, no ACs, and *
 
 Beside the **inner** (version/item) README, exactly as for `util`:
 
-`{lib}/src/lib/{item-version-folder}/requirements.md`
+`{lib}/src/lib/{item-version-folder}/requirements/` — a **folder**: `README.md` (live) + `DECISIONS.md` (burned IDs)
 
-Example: `libs/shared/ui/ng-directives/src/lib/toggle-me-v1/requirements.md` next to that folder's `README.md`.
+Example: `libs/shared/ui/ng-directives/src/lib/toggle-me-v1/requirements/README.md`, in a `requirements/` folder next to that item folder’s own `README.md`.
 
-**One file per item**, never one for the whole lib — the items are unrelated, so a shared file would mix concerns and grow without bound.
+**One registry per item**, never one for the whole lib — the items are unrelated, so a shared file would mix concerns and grow without bound.
 
 ## Lifecycle
 
 - Created/updated by the **unit-test work**, not by a separate writer skill (same as `util`).
-- Missing when you write the first ID-tagged test for that item → **create** it.
-- Exists → **update** it: preserve existing IDs; never renumber; only add.
+- Missing when you write the first ID-tagged test for that item → **create** the folder and its `README.md`.
+- Exists → **update** it: preserve existing IDs and never renumber. Adding is not the only outcome — an entry can also be **amended** (rewritten under its existing ID) or **retired** (moved to `DECISIONS.md`, number burned). The four outcomes and the reporting rule are in the parent skill.
+- **A new item-version folder copies the predecessor's `DECISIONS.md`** — `{KEY}` drops the version, so `toggle-me-v1` and `toggle-me-v2` share one ID space.
 - Do **not** create `docs/x/…` PRD/TFS, and do **not** add the item to another functionality's TFS.
 
 ## IDs
@@ -42,20 +43,20 @@ Example: `libs/shared/ui/ng-directives/src/lib/toggle-me-v1/requirements.md` nex
 
 ## Spec mapping
 
-- `describe` ↔ FR from this `requirements.md`
-- `it` ↔ BR from this `requirements.md`
+- `describe` ↔ FR from this registry’s `README.md`
+- `it` ↔ BR from this registry’s `README.md`
 - AAA / Given-When-Then titles / preset / observable-effect rules: same as the parent skill.
 
 ## Doc shape
 
-Minimal: short intro + FRs with nested BRs (Given/When/Then). Imitate [../../assets/examples/requirements.md](../../assets/examples/requirements.md) (repo path when handing to a subagent: `.agents/skills/x-ng-test-unit-helper/assets/examples/requirements.md`), swapping `UTIL-` for `UI-` / `FEA-`.
+Minimal: short intro + FRs with nested BRs (Given/When/Then). Imitate the example folder [../../assets/examples/requirements/](../../assets/examples/requirements/) (repo path when handing to a subagent: `.agents/skills/x-ng-test-unit-helper/assets/examples/requirements/`), swapping `UTIL-` for `UI-` / `FEA-`.
 
 ## Common mistakes
 
-| Mistake                                                        | Fix                                                                            |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Writing a PRD/TFS because the lib type is `ui` / `feature`      | Grab-bags are not functionalities — a bucket of unrelated items is not a feature |
-| One `requirements.md` for the whole grab-bag lib               | One per item, beside its inner version README                                  |
-| Using `UTIL-` for a grab-bag `ui` item                         | `UI-{KEY}-…` (or `FEA-{KEY}-…`) — the prefix names the lib type                |
-| Treating a single-purpose `ui` lib as a grab-bag               | One product concern, one version folder for the lib → it **is** a functionality |
-| Expecting e2e for a grab-bag item                              | Never — it has no PRD and therefore no ACs to drive                            |
+| Mistake                                                    | Fix                                                                              |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Writing a PRD/TFS because the lib type is `ui` / `feature` | Grab-bags are not functionalities — a bucket of unrelated items is not a feature |
+| One `requirements/` for the whole grab-bag lib             | One per item, beside its inner version README                                    |
+| Using `UTIL-` for a grab-bag `ui` item                     | `UI-{KEY}-…` (or `FEA-{KEY}-…`) — the prefix names the lib type                  |
+| Treating a single-purpose `ui` lib as a grab-bag           | One product concern, one version folder for the lib → it **is** a functionality  |
+| Expecting e2e for a grab-bag item                          | Never — it has no PRD and therefore no ACs to drive                              |

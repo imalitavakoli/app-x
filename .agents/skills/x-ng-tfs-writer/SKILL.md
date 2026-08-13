@@ -2,7 +2,7 @@
 name: x-ng-tfs-writer
 description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '2.0.0'
+  version: '2.0.2'
 ---
 
 # TFS Writer
@@ -49,7 +49,7 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 **Gate — functionality only.** Before anything else:
 
 - If the target is (or would be) only a `util`, `api`, or `app` lib → **STOP. Write no TFS.** Say so and exit. No PRD should exist for those either; if someone asks for a TFS anyway, refuse.
-- If it is a **grab-bag** `ui` / `feature` lib → **STOP. Write no TFS.** A grab-bag holds several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`) — e.g. `shared-ui-ng-directives`. Its requirements live in a `requirements.md` beside each item's inner version README. **Adding an item to a grab-bag never creates a functionality.** Definition and the test: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
+- If it is a **grab-bag** `ui` / `feature` lib → **STOP. Write no TFS.** A grab-bag holds several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`) — e.g. `shared-ui-ng-directives`. Its requirements live in a `requirements/` beside each item's inner version README. **Adding an item to a grab-bag never creates a functionality.** Definition and the test: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - `app` is a final product under `apps/`, not a functionality.
 - Classify using `docs/getting-started/library-types-and-their-relationship.md` (Functionality types). Create a `{libtype}-v{n}.md` only for lib types this functionality **owns**, one per live version.
 
@@ -111,7 +111,7 @@ The template is a **folder** — [assets/template/](assets/template/) — mirror
 | `template/README.md`      | `README.md`           | Overview, Existing Dependencies & Reuse, the 🧭 ID Index, Open Technical Questions — functionality-level only                        |
 | `template/DECISIONS.md`   | `DECISIONS.md`        | retired FR/BRs · rejected technical approaches · reversed decisions · retired lib versions — **history only, never in the ID Index** |
 | `template/map.md`         | `map-v{n}.md`         | owned `map` only (API / external assets)                                                                                             |
-| `template/data-access.md` | `data-access-v{n}.md` | owned `data-access` (+ facade-consumer note when there is no `feature.md`)                                                           |
+| `template/data-access.md` | `data-access-v{n}.md` | owned `data-access` (+ facade-consumer note when there is no `feature-v{n}.md`)                                                      |
 | `template/ui.md`          | `ui-v{n}.md`          | owned `ui` only                                                                                                                      |
 | `template/feature.md`     | `feature-v{n}.md`     | owned `feature` + the 🧳 User Experience & Flows journey                                                                             |
 | `template/page.md`        | `page-v{n}.md`        | owned `page` only (`visual+` / `mixed+`)                                                                                             |
@@ -248,7 +248,7 @@ Then re-run the Review Checklist over whatever changed.
 
 1. Report the saved folder (`docs/x/{name}/TFS/`) and list the files written (`README.md` + each `{libtype}-v{n}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
-3. **Report the companion work.** List every `[TO-CREATE]` and `[TO-UPDATE]` entry. For each that is a **functionality**, remind the user it needs its own PRD & TFS — a separate writer run, not part of this one. For each `util` / `api` / `app`, or **grab-bag** `ui` / `feature`, remind that those never get `docs/x/` (a `util` / `app` / grab-bag item records requirements in its own `requirements.md`; an `api` has none) — they are created/updated via the plan. Flag any PRD AC of this functionality that a companion entry blocks.
+3. **Report the companion work.** List every `[TO-CREATE]` and `[TO-UPDATE]` entry. For each that is a **functionality**, remind the user it needs its own PRD & TFS — a separate writer run, not part of this one. For each `util` / `api` / `app`, or **grab-bag** `ui` / `feature`, remind that those never get `docs/x/` (a `util` / `app` / grab-bag item records requirements in its own `requirements/`; an `api` has none) — they are created/updated via the plan. Flag any PRD AC of this functionality that a companion entry blocks.
 4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD/README.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
 5. List any Open Technical Questions still unanswered after the confirmation step.
 
@@ -257,7 +257,7 @@ Then re-run the Review Checklist over whatever changed.
 | Mistake                                                       | Fix                                                                                                                                                                                       |
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Writing a TFS for a `util` / `api` / `app` lib                | STOP — not a functionality; no `docs/x/…/TFS`.                                                                                                                                            |
-| Writing a TFS for a grab-bag `ui` / `feature` lib             | STOP — its items use a local `requirements.md`, not a TFS.                                                                                                                                |
+| Writing a TFS for a grab-bag `ui` / `feature` lib             | STOP — its items use a local `requirements/`, not a TFS.                                                                                                                                  |
 | A spec file for a **reused** lib, with a disclaimer note      | Delete it. The note proves it should not exist; ownership decides the file set. See `references/reuse-boundary.md`.                                                                       |
 | A stray `map-v1.md` dragging a `data-access-v1.md` in with it | The sister-lib rule applies to an **owned** map only — never to a reused one.                                                                                                             |
 | Parking a reused lib's spec here because it has nowhere to go | Report that the reused functionality has no docs of its own and stop — writing them is a separate decision and a separate run. Never improvise a home.                                    |

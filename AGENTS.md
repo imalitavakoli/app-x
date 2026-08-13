@@ -231,7 +231,7 @@ Read `Path A phase` from the plan's Global Constraints, then:
    - **Draft** → stay in **Documentation** (continue from the appropriate A2/A3 point; do not start Execution).
 3. User may override (“execute anyway” / “keep drafting”).
 
-**Docs-in-scope set** — **Members:** **A1** · **A2's `[gated]` band** · **A3's enricher step** · **A4's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A2's Always band (mode → `writing-plans` with mode in the plan), A3's hard stop, **A4's Always band** (verifying `util` / `app` / grab-bag `requirements.md`), and `test-driven-development` when tests are in scope.
+**Docs-in-scope set** — **Members:** **A1** · **A2's `[gated]` band** · **A3's enricher step** · **A4's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A2's Always band (mode → `writing-plans` with mode in the plan), A3's hard stop, **A4's Always band** (verifying `util` / `app` / grab-bag `requirements/`), and `test-driven-development` when tests are in scope.
 
 > 🚧 **Functionality gate** [auto] — **Asks:** is the work (or does it produce) a **single-purpose** lib from `map` / `data-access` / `ui` / `feature` / `page`?
 >
@@ -258,7 +258,7 @@ When brainstorm concludes that a `util`, `api`, `app`, or **grab-bag** `ui` / `f
 
 1. **Order.** `writing-plans` must include the create/update tasks for that companion lib **before** any task of the current functionality that depends on it.
 2. **Gates re-answer per companion.** The Functionality gate and the Missing-docs gate are answered for the companion work on its own terms: a companion `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, always answers **No**; another functionality's libs answer by their own lib types and their own `docs/x/{name}/`.
-3. **Docs are per functionality.** When the gates answer **Yes** for more than one functionality this cycle, A2's `[gated]` band, A3's enricher step and **A4's `[gated]` band** each run **once per functionality**, against that functionality's own `docs/x/{name}/` — including A4's verification of a companion functionality's docs against what implementation actually did to its libs. (A companion `util` / `app` has no `docs/x/`, so A4 never applies to it: its `requirements.md` IDs are re-tagged as part of that lib's normal test edits.) **Give each functionality its own todo at A2 and A4** rather than one todo for the step — after a long A2 the second functionality is the one that gets dropped.
+3. **Docs are per functionality.** When the gates answer **Yes** for more than one functionality this cycle, A2's `[gated]` band, A3's enricher step and **A4's `[gated]` band** each run **once per functionality**, against that functionality's own `docs/x/{name}/` — including A4's verification of a companion functionality's docs against what implementation actually did to its libs. (A companion `util` / `app` has no `docs/x/`, so A4 never applies to it: its `requirements/` IDs are re-tagged as part of that lib's normal test edits.) **Give each functionality its own todo at A2 and A4** rather than one todo for the step — after a long A2 the second functionality is the one that gets dropped.
 4. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–3 apply to the companions of **this cycle's** functionality only. If a companion turns out to need work in a **further** lib (its own companion), that is **not** this cycle's work: report the chain to the user — naming the libs and the ACs it puts at risk — and let them choose to widen the cycle, do the deeper work first in its own cycle, or defer it. Do **not** re-answer the gates for it, do **not** run A2's band or A3's enricher step for it, and do **not** add its tasks to the plan. Resolving companions recursively would turn one requested feature into an unbounded number of documentation cycles, each with its own AC-approval interview, that the user never asked for.
 
 #### 🪝 A1 · Before `brainstorming` [gated]
@@ -333,7 +333,7 @@ Always runs on Path A before finishing. **This hook verifies; only its actions a
 
 **Always:**
 
-4. **Verify the local `requirements.md`** of any `util`, product `app`, or grab-bag `ui`/`feature` lib this cycle touched, on the same four outcomes above, per `x-ng-test-unit-helper`. An `api` lib has no such doc — nothing to check. Stamp `Last Verified` here too.
+4. **Verify the local `requirements/` registry** of any `util`, product `app`, or grab-bag `ui`/`feature` lib this cycle touched, on the same four outcomes above, per `x-ng-test-unit-helper`. An `api` lib has no such registry — nothing to check. Stamp `Last Verified` here too.
 
    Step 2's confirmation gate does **not** apply here: those entries were never user-approved, so there is no approval to overturn, and no writer owns the file. **But still report** an amend or retire — old text beside new — and, for a **shared** lib, name its consumers: a semantics change there reaches every consumer that was outside this cycle's test scope. Report, don't block.
 
@@ -351,12 +351,12 @@ In **auto** mode the tree has already been reviewed, so route every resulting te
 
 No execution mode here — that question belongs to path A only. For git, see _Git contract_.
 
-**Docs-in-scope set** — **Members:** **B1's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips that band** for this fix. **Regardless:** `systematic-debugging`, `test-driven-development`, `verification-before-completion`, and **B1's Always band** (verifying `util` / `app` / grab-bag `requirements.md`).
+**Docs-in-scope set** — **Members:** **B1's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips that band** for this fix. **Regardless:** `systematic-debugging`, `test-driven-development`, `verification-before-completion`, and **B1's Always band** (verifying `util` / `app` / grab-bag `requirements/`).
 
 > 🚧 **Functionality gate** [auto] — **Asks:** is the fix to a **single-purpose** lib from `map` / `data-access` / `ui` / `feature` / `page`?
 >
 > - **Yes** → B1's `[gated]` band runs.
-> - **No** (`util` / `api` / `app`, or a **grab-bag** `ui` / `feature`) → **skip that band**: those never have `docs/x/` docs to verify. B1's Always band still verifies their local `requirements.md`.
+> - **No** (`util` / `api` / `app`, or a **grab-bag** `ui` / `feature`) → **skip that band**: those never have `docs/x/` docs to verify. B1’s Always band still verifies their local `requirements/` registry.
 >
 > Grab-bag `ui` / `feature` libs are defined in `/docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Unit tests for all of these libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TFS writers.
 
@@ -387,7 +387,7 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 
 **Always:**
 
-4. **Verify the local `requirements.md`** of any `util`, product `app`, or grab-bag `ui`/`feature` lib the fix touched, on the same four outcomes, per `x-ng-test-unit-helper`. An `api` lib has none. Stamp `Last Verified` here too. As on Path A, step 2's confirmation gate does **not** apply — those entries were never approved — but **report** any amend or retire, and name a shared lib's consumers. Report, don't block.
+4. **Verify the local `requirements/` registry** of any `util`, product `app`, or grab-bag `ui`/`feature` lib the fix touched, on the same four outcomes, per `x-ng-test-unit-helper`. An `api` lib has none. Stamp `Last Verified` here too. As on Path A, step 2's confirmation gate does **not** apply — those entries were never approved — but **report** any amend or retire, and name a shared lib's consumers. Report, don't block.
 
 Docs come **after** the fix is proven, never before, so nothing documents behaviour that verification might still reject. The cycle is not done until this hook has run — make the final completion report after it, not before.
 
@@ -416,8 +416,8 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 | `x-ng-prd-writer`       | `docs/x/{name}/PRD/README.md` — the ACs                                                                                                             |
 | `x-ng-tfs-writer`       | `docs/x/{name}/TFS/` — `README.md` (ID Index) + one `{libtype}-v{n}.md` per lib version (FRs/BRs; app-domain libs are unversioned → plain `{libtype}.md`)                                                                |
 | `x-ng-lib-build-helper` | canonical lib-structure examples + guidelines                                                                                                       |
-| `x-ng-test-unit-helper` | unit-test conventions — functionalities: `describe`↔FR, `it`↔BR from the TFS; `util` / `app`: same from local `requirements.md`; `api`: no ID doc |
-| `x-ng-test-e2e-helper`  | the e2e rule — `describe`↔US from the app's `user-stories.md`, `it`↔AC from the PRD                                                               |
+| `x-ng-test-unit-helper` | unit-test conventions — functionalities: `describe`↔FR, `it`↔BR from the TFS; `util` / `app`: same from local `requirements/`; `api`: no ID doc |
+| `x-ng-test-e2e-helper`  | the e2e rule — `describe`↔US from the app's `user-stories/`, `it`↔AC from the PRD                                                                 |
 | `x-ng-sp-plan-enricher` | the Superpowers plan, enriched — Global Constraints + tagged test tasks                                                                             |
 | `x-skill-build-helper`  | the conventions and per-kind templates for building or updating a workspace skill                                                                   |
 
@@ -425,7 +425,7 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 
 ### Locations & rollout
 
-- Functionality docs live in `docs/x/{name}/` — a `PRD/` folder (`README.md` + `DECISIONS.md`) and a `TFS/` folder (`README.md` + one `{libtype}-v{n}.md` per lib type per live version; an unversioned app-domain lib uses the plain `{libtype}.md`). `util`, `api`, and `app` never get those docs (they are not functionalities). **`util`** may have `requirements.md` beside each inner/version README; product **`app`** may have `apps/{app-name}/requirements.md` — both supply unit-test FR/BR IDs (`UTIL-…` / `APP-…`). **`api`** has no `requirements.md`. Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
+- Functionality docs live in `docs/x/{name}/` — a `PRD/` folder (`README.md` + `DECISIONS.md`) and a `TFS/` folder (`README.md` + one `{libtype}-v{n}.md` per lib type per live version; an unversioned app-domain lib uses the plain `{libtype}.md`). `util`, `api`, and `app` never get those docs (they are not functionalities). **`util`** and each **grab-bag** `ui`/`feature` item may have a `requirements/` folder beside its inner/version README; product **`app`** may have `apps/{app-name}/requirements/` — each is `README.md` (live FR/BRs) + `DECISIONS.md` (burned IDs), mirroring a functionality's `PRD/`, and supplies unit-test FR/BR IDs (`UTIL-…` / `UI-…` / `FEA-…` / `APP-…`). A new version folder copies its predecessor's `DECISIONS.md`, because the ID key drops the version. **`api`** has no such registry. Each e2e app owns `apps/{app}-e2e/user-stories/` — `README.md` (live US registry) + `DECISIONS.md` (retired and merged USs), mirroring a functionality's `PRD/`; US IDs are unique per app and never reused once burned.
 - All seven skills above exist. **If a referenced skill is missing, say so and ask** — do not skip its step silently. (A later step whose required input never arrived will stop and ask per its own prerequisite guard, rather than produce wrong output.)
 
 &nbsp;

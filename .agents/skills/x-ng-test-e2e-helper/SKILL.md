@@ -2,7 +2,7 @@
 name: x-ng-test-e2e-helper
 description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that composes another functionality's `feature`, once an app page hosts it); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs, nor for grab-bag ui/feature libs."
 metadata:
-  version: '1.4.0'
+  version: '1.6.1'
 ---
 
 # Test E2e Helper
@@ -21,7 +21,7 @@ Only libs a user drives end-to-end in a real app:
 - **`feature`** libs — **only if the feature composes _another functionality's_ `feature` lib** — i.e. it renders that feature's exported entry component and drives it. That is a cross-functionality interaction worth proving end-to-end, and "renders it" **is** "initializes it": a feature is initialized by whoever uses it as a whole. A `feature` that only wires its own `ui` is covered by unit tests.
   - **And only if some app page hosts that composition — already, or by the end of this cycle.** A `feature` lib is not routable, so there is nothing to drive until an app page composes it; that page is the e2e target (see below). A cycle that wires the feature into a page **does** put e2e in scope — the page need not have pre-existed. Only when nothing hosts it and nothing will does e2e wait for a later cycle, rather than inventing a harness page.
 - **Not** `ui` / `map` / `data-access` libs, nor abstract functionalities.
-- **Never a grab-bag `ui` / `feature` lib** — a bucket of unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`), e.g. `shared-ui-ng-directives`. A grab-bag is not a functionality, so it has no PRD and therefore no ACs to drive an `it`. Its items are covered by unit tests against their own `requirements.md`. Definition: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
+- **Never a grab-bag `ui` / `feature` lib** — a bucket of unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`), e.g. `shared-ui-ng-directives`. A grab-bag is not a functionality, so it has no PRD and therefore no ACs to drive an `it`. Its items are covered by unit tests against their own `requirements/`. Definition: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - **Never** a standalone `util`, `api`, or `app` — those are not functionalities and have no PRD ACs to map (`docs/getting-started/library-types-and-their-relationship.md`).
 - **No PRD in scope:** if there is no `docs/x/{name}/PRD/README.md` for the functionality under test and this work is not producing one, **do not** require AC IDs and **do not** invent ACs or a PRD from here. Prefer not writing new e2e then; if tests are still in scope, use plain titles (no AC mapping).
 
@@ -74,8 +74,25 @@ Just as a spec/Page Object is placed by _which lib it belongs to_, a **fixture i
 Skip AC mapping when there is no PRD in scope (see [When to use](#when-to-use--which-libs-get-e2e)).
 
 - **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/{name}/PRD/README.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
-- **`describe` ↔ User Story (US)** from the e2e app's **`apps/{app}-e2e/user-stories.md`** registry. Title: `<US-id> | As a …`.
-- **Registry rules** (create/update, uniqueness, format, lifecycle) — read [references/e2e-app.md](references/e2e-app.md) before adding or reusing a US. See also [assets/examples/user-stories.md](assets/examples/user-stories.md).
+- **`describe` ↔ User Story (US)** from the e2e app's **`apps/{app}-e2e/user-stories/README.md`** registry (its `DECISIONS.md` sibling holds burned IDs). Title: `<US-id> | As a …`.
+- **Registry rules** (create/update, uniqueness, format, lifecycle) — read [references/e2e-app.md](references/e2e-app.md) before adding or reusing a US. See also [assets/examples/user-stories/](assets/examples/user-stories/).
+
+## Keeping e2e titles true
+
+An AC can change under an e2e that already exists — its expectation gets corrected, or the behaviour is dropped. An AC is added, amended or retired in the functionality's PRD; **what belongs here is the test title and the assertion**. Read the AC's current text in `docs/x/{name}/PRD/README.md` and make the spec match it. Never edit an AC from here, and never invent one to justify a test that already exists.
+
+Four outcomes, the same set a functionality's docs resolve to:
+
+| Outcome       | What to do to the e2e                                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **added**     | a new AC is in scope → add an `it` titled with it, under the US whose story it belongs to                                                                                                  |
+| **amended**   | the AC is the same outcome, now worded correctly → **keep the `it`'s AC ID** and bring its `Given/When/Then` title **and its assertion** to the shipped outcome                            |
+| **retired**   | the AC is gone from `PRD/README.md` (moved to `PRD/DECISIONS.md`) → **delete that `it`**. Re-pointing it at a different AC to keep the coverage is what turns a burned ID into a wrong one |
+| **unchanged** | nothing to write                                                                                                                                                                           |
+
+**An amended AC is the one that fails silently.** A retired AC leaves an `it` whose ID resolves to nothing — findable. An amended one leaves an `it` that still **passes** while asserting the old outcome, so nothing flags it. When an AC's text has changed, re-read that test's assertion rather than trusting a green run.
+
+**A retired AC can empty its US.** After deleting an `it`, check whether its `describe` still has any: a US whose every AC has been retired is itself retired, and its registry row moves — see [references/e2e-app.md](references/e2e-app.md). A US that loses only _some_ of its ACs stays as it is, with fewer criteria.
 
 ## e2e best-practices (and anti-patterns)
 
@@ -97,7 +114,7 @@ The conventions above are shown concretely in [assets/examples/](assets/examples
 - **Page Object** — [assets/examples/page-object.md](assets/examples/page-object.md): `data-cy` selectors + the page-owned readiness anchor.
 - **Shared command** — [assets/examples/custom-command.md](assets/examples/custom-command.md): the "…is setup based on…" JSDoc convention + cached login.
 - **Fixtures** — [assets/examples/fixtures.md](assets/examples/fixtures.md): owner-based `src/fixtures/` layout + a sample fixture referenced from a spec.
-- **US registry** — [assets/examples/user-stories.md](assets/examples/user-stories.md): the per-app `user-stories.md` format.
+- **US registry** — [assets/examples/user-stories/](assets/examples/user-stories/): the per-app `user-stories/` folder — `README.md` (live stories) + `DECISIONS.md` (retired and merged).
 
 **Handing one to a subagent?** These files live under `.agents/skills/x-ng-test-e2e-helper/assets/examples/` — give that full path. An execution agent resolves paths against the repo root and cannot read this skill, so the skill-relative paths above mean nothing to it.
 
@@ -117,8 +134,11 @@ The examples show the conventions independent of the test runner. Confirm the **
 | Fixed `wait` / sleep for timing                                | Retry on observable state (until visible / exists).                                                                                                                                 |
 | CSS or visible-text selectors                                  | Use the stable `data-cy` test-ids.                                                                                                                                                  |
 | Order-dependent tests                                          | Each test sets up its own state; independent & deterministic.                                                                                                                       |
-| `describe` / `it` without US / AC IDs                          | `describe = <US-id>` (from the app's `user-stories.md`), `it = <AC-id>` (from the PRD).                                                                                             |
+| `describe` / `it` without US / AC IDs                          | `describe = <US-id>` (from the app's `user-stories/README.md`), `it = <AC-id>` (from the PRD).                                                                                      |
 | Requiring PRD AC IDs when no PRD is in scope                   | No `docs/x/{name}/PRD/README.md` and none being written — plain titles; do not invent ACs or a PRD from here.                                                                       |
 | Duplicating selectors across specs                             | Put them in the lib's Page Object (`support/page/*.po.ts`).                                                                                                                         |
 | Dumping every fixture flat / copying for reuse                 | Place under the owning lib (`page/{page-name}/` or `feature/{feature-name}/`); flat root only when there's no owner. Other specs reference the path — never copy or move for reuse. |
 | Writing e2e for a `ui` / `data-access` / self-wiring `feature` | Only `page` libs, and a `feature` that composes another functionality's `feature` once an app page hosts that composition.                                                          |
+| Keeping an `it` whose AC was retired, re-pointed at another AC | Delete that `it`; then check whether its `describe` is now empty.                                                                                                                   |
+| Trusting a green run after an AC's text changed                | Re-read that `it`'s assertion against the AC's current text in `PRD/README.md`.                                                                                                     |
+| Editing or inventing an AC from the e2e work                   | Read the AC; the PRD is where it changes. Bring only the title and assertion into line.                                                                                             |

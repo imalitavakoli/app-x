@@ -2,11 +2,11 @@
 
 Sample files from a `util` lib — non-UI, framework-free helpers that any lib or app may import. Use them as inspiration when creating or extending one, e.g. `shared-util-formatters`.
 
-> **A `util` is never a functionality.** No `docs/x/{name}/` PRD or TFS, no ACs, no e2e — ever, whatever shape it takes. Its unit-test FR/BR IDs come from a local `requirements.md`. See `docs/getting-started/library-types-and-their-relationship.md` → 'util' type.
+> **A `util` is never a functionality.** No `docs/x/{name}/` PRD or TFS, no ACs, no e2e — ever, whatever shape it takes. Its unit-test FR/BR IDs come from a local `requirements/` registry (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → 'util' type.
 
 ## Two shapes — and why it changes nothing here
 
-A `util` may be **single-purpose** (one concern, one `src/lib/v1/`) or a **grab-bag** (several unrelated helpers, each in its own `src/lib/{item}-v1/`). Unlike `ui` / `feature`, the shape decides **nothing** for a `util`: it is not a functionality either way, and `requirements.md` always sits beside the **inner version README** — which resolves per item for a grab-bag and per lib for a single-purpose one.
+A `util` may be **single-purpose** (one concern, one `src/lib/v1/`) or a **grab-bag** (several unrelated helpers, each in its own `src/lib/{item}-v1/`). Unlike `ui` / `feature`, the shape decides **nothing** for a `util`: it is not a functionality either way, and the `requirements/` folder always sits beside the **inner version README** — which resolves per item for a grab-bag and per lib for a single-purpose one.
 
 The sample below is a **grab-bag** (the common case), so the tree shows per-item folders:
 
@@ -20,7 +20,7 @@ libs/shared/util/formatters/
 │   │   └── date-v1/                 ← the item you are adding
 │   │       ├── date-formatter.ts
 │   │       ├── date-formatter.spec.ts
-│   │       ├── requirements.md      ← FR/BR IDs for this item's unit tests
+│   │       ├── requirements/           ← FR/BR IDs for this item (README.md + DECISIONS.md)
 │   │       └── README.md (inner)
 │   └── index.ts                     ← one export line added
 ├── .eslintrc.json
@@ -32,7 +32,7 @@ libs/shared/util/formatters/
 └── tsconfig.spec.json
 ```
 
-A **single-purpose** util is identical except the tree is `src/lib/v1/` with the `requirements.md` and inner `README.md` in that one folder.
+A **single-purpose** util is identical except the tree is `src/lib/v1/` with the `requirements/` folder and inner `README.md` in that one folder.
 
 ## `README.md` (outer) file
 
@@ -89,7 +89,7 @@ export function v1DateFormatShort(
 }
 ```
 
-### `requirements.md` file
+### `requirements/README.md` file
 
 The item's own FR/BR registry — a `util` has no TFS, so this is what its unit tests map to. IDs are `UTIL-{KEY}-…`, where `{KEY}` is the folder basename minus `-v{n}`, uppercased with `-` → `_` (`date-v1` → `DATE`):
 
@@ -112,7 +112,7 @@ Locale-aware short-date formatting for display.
 
 ### `date-formatter.spec.ts` file
 
-`describe` ↔ FR, `it` ↔ BR, exact IDs from `requirements.md`. No `TestBed` — a `util` is framework-free, so tests are plain function calls:
+`describe` ↔ FR, `it` ↔ BR, exact IDs from `requirements/README.md`. No `TestBed` — a `util` is framework-free, so tests are plain function calls:
 
 ```ts
 import { v1DateFormatShort } from './date-formatter';

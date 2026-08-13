@@ -52,7 +52,7 @@ A shared lib is versioned, so its version is in the filename from v1; an app-dom
 >
 > **Mark each entry by its state for this cycle** — unmarked = exists and is used as-is; `[TO-CREATE]` = does not exist yet; `[TO-UPDATE]` = exists but must change for us (a new input/output, a new rendering rule, a new method). Use exactly these two markers so the plan and a future reader can find them; do not coin your own wording.
 >
-> What the marker implies depends on the lib type: a marked **functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) carries its requirements in its **own** PRD & TFS; a marked `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, **never** gets `docs/x/` (a `util` / `app` / grab-bag item records them in its own `requirements.md`; an `api` has none). Either way the work is a **companion task in the plan**, never an owned lib of this TFS — so no FR/BR here describes that lib's own behaviour or the surface it must gain. A **boundary** BR asserting what our lib _passes_ it is still ours, and belongs in the owning lib's `{libtype}-v{n}.md`. If a `[TO-UPDATE]` or `[TO-CREATE]` dependency blocks one of this functionality's PRD ACs, say which ones: that is a real delivery risk.
+> What the marker implies depends on the lib type: a marked **functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) carries its requirements in its **own** PRD & TFS; a marked `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, **never** gets `docs/x/` (a `util` / `app` / grab-bag item records them in its own `requirements/`; an `api` has none). Either way the work is a **companion task in the plan**, never an owned lib of this TFS — so no FR/BR here describes that lib's own behaviour or the surface it must gain. A **boundary** BR asserting what our lib _passes_ it is still ours, and belongs in the owning lib's `{libtype}-v{n}.md`. If a `[TO-UPDATE]` or `[TO-CREATE]` dependency blocks one of this functionality's PRD ACs, say which ones: that is a real delivery risk.
 >
 > **A marker states this cycle's state, and goes stale when the companion work lands.** So write each one so a reader can retire it without re-deriving the decision — a `[TO-UPDATE]` names the exact surface the lib must gain, so anyone can open that lib and see whether it is still true. And when this TFS is **updated** later, re-verify every marker already here: clear the ones whose work has landed (with their "blocks" note), narrow the ones that partly landed, and leave anything you cannot confirm as an Open Technical Question. Do **not** add a "these were accurate when written" disclaimer — **Last Updated** above already says that.
 
@@ -66,7 +66,7 @@ A shared lib is versioned, so its version is in the filename from v1; an app-dom
 
 ### Used util libs
 
-> Per lib: name → the class/function used, and why reuse is appropriate. (Functionalities never own a `util`/`api`/`app` lib — they reuse shared ones.) Mark `[TO-CREATE]` / `[TO-UPDATE]` per the state rule above — either way still not a PRD/TFS target; a `util`'s requirements live in its own `requirements.md`.
+> Per lib: name → the class/function used, and why reuse is appropriate. (Functionalities never own a `util`/`api`/`app` lib — they reuse shared ones.) Mark `[TO-CREATE]` / `[TO-UPDATE]` per the state rule above — either way still not a PRD/TFS target; a `util`'s requirements live in its own `requirements/`.
 
 ## 🧭 ID Index
 

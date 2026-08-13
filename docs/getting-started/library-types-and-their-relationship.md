@@ -47,17 +47,17 @@ Two shapes of the same library type. Only the first can be a functionality.
 | **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`       | each item versions on its own — `src/lib/toggle-me-v1/`                               |
 | **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info` | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                       |
 | **A functionality?**                | **yes** — PRD + TFS under `docs/x/{name}/`               | **no** — it is shared infrastructure                                                  |
-| **Requirements live in**            | `docs/x/{name}/PRD/README.md` + `docs/x/{name}/TFS/`     | a `requirements.md` beside **each item's** inner version README                       |
+| **Requirements live in**            | `docs/x/{name}/PRD/README.md` + `docs/x/{name}/TFS/`     | a `requirements/` folder (`README.md` + `DECISIONS.md`) beside **each item’s** inner version README |
 
 **The test:** does the lib have **one** product concern, or is it a bucket of unrelated items that merely share a mechanism? For a **shared** lib the folder shape is the tell — independently versioned items _are_ independent concerns. **App-domain** libs have no version folders ([Versioning shared libs](#versioning-shared-libs)), so apply the concern test directly.
 
 **Only three lib types can be a grab-bag: `util`, `ui`, `feature`.** A `map` and a `data-access` are bound to one functionality by construction, and a `page` is one screen — so never ask the question for those.
 
-**A `util` may be either shape, and it changes nothing:** a `util` is never a functionality either way, and its `requirements.md` already lives beside the **inner version README** — which resolves per item for a grab-bag (`formatters/src/lib/date-v1/requirements.md`) and per lib for a single-purpose one (`ng-capacitor/src/lib/v1/requirements.md`). The distinction matters only for `ui` and `feature`, where it decides whether the lib is a functionality at all.
+**A `util` may be either shape, and it changes nothing:** a `util` is never a functionality either way, and its `requirements/` folder already lives beside the **inner version README** — which resolves per item for a grab-bag (`formatters/src/lib/date-v1/requirements/`) and per lib for a single-purpose one (`ng-capacitor/src/lib/v1/requirements/`). The distinction matters only for `ui` and `feature`, where it decides whether the lib is a functionality at all.
 
-**Why a grab-bag is not a functionality:** a single PRD would have to state Acceptance Criteria spanning every unrelated item in the bucket — that documents a container, not a product feature. Its items are verified by unit tests against the local `requirements.md` (`UI-…` / `FEA-…` IDs), and a grab-bag never gets e2e.
+**Why a grab-bag is not a functionality:** a single PRD would have to state Acceptance Criteria spanning every unrelated item in the bucket — that documents a container, not a product feature. Its items are verified by unit tests against the local `requirements/` registry (`UI-…` / `FEA-…` IDs), and a grab-bag never gets e2e.
 
-**Adding an item to a grab-bag never creates a functionality.** A new directive in `shared-ui-ng-directives` is a new version folder plus its `requirements.md` — not a new `docs/x/` folder, and not a reason to split the lib.
+**Adding an item to a grab-bag never creates a functionality.** A new directive in `shared-ui-ng-directives` is a new version folder plus its `requirements/` registry — not a new `docs/x/` folder, and not a reason to split the lib.
 
 &nbsp;
 

@@ -20,18 +20,25 @@ x/
 ├── .agents/                                        // Holds AI Agents related files (holds e.g., Skills).
 ├── apps/                                           // Holds our apps.
 ├── apps/{app-name}/
-│        └── src/                                   // Holds the app's web source files (holds e.g., `index.html`, `main.ts`, and etc.)
-│            ├── {prefix}assets/                    // Holds the app's assets, such as PWA icons, in-app icons/images, and etc.
-│            │   ├── icons/                         // Holds the app's PWA icons.
-│            │   ├── images/                        // Holds the app's in-app icons/images.
-│            │   ├── DEP_config.development.json    // Holds the app's DEP config file (for development).
-│            │   ├── DEP_config.json.json           // Holds the app's DEP config file.
-│            │   └── DEP_style.css                  // Holds the app's DEP styles file (which holds the app's custom CSS variables and styles).
-│            ├── environments/                      // Holds the app's environment files.
-│            ├── environments/                      // Holds the app's environment files.
+│        ├── src/                                   // Holds the app's web source files (holds e.g., `index.html`, `main.ts`, and etc.)
+│        │   ├── {prefix}assets/                    // Holds the app's assets, such as PWA icons, in-app icons/images, and etc.
+│        │   │   ├── icons/                         // Holds the app's PWA icons.
+│        │   │   ├── images/                        // Holds the app's in-app icons/images.
+│        │   │   ├── DEP_config.development.json    // Holds the app's DEP config file (for development).
+│        │   │   ├── DEP_config.json.json           // Holds the app's DEP config file.
+│        │   │   └── DEP_style.css                  // Holds the app's DEP styles file (which holds the app's custom CSS variables and styles).
+│        │   └── environments/                      // Holds the app's environment files.
+│        └── requirements/                          // 🆔 The app's unit-test FR/BR registry (`APP-…` IDs). An app is not a functionality, so it gets no `docs/x/` specs.
+├── apps/{app-name}-e2e/                            // Holds an app's e2e project (one per app).
+│        ├── src/                                   // Holds the e2e specs, Page Objects (`support/page/`), and fixtures (`fixtures/`).
+│        └── user-stories/                          // 🆔 The app's User Story (US) registry — a `describe` in any of its specs cites a US ID from here.
 ├── dist/apps/{app-name}/
 │             ├── browser/                          // Holds the distribution files of an app.
 │             └── server/                           // Holds the build-time generated files of an app which has app-shell. Can be deleted!
+├── docs/                                           // Holds the workspace documentation (introduction, getting-started, guidelines, runbooks).
+│   └── x/{functionality-name}/                     // Holds ONE functionality's specs — the source of truth its tests are written against.
+│       ├── PRD/                                    // 🆔 Product spec: the Acceptance Criteria (AC) an e2e `it` cites.
+│       └── TFS/                                    // 🆔 Technical spec, per lib type per live version: the FRs (`describe`) and BRs (`it`) a unit test cites, plus the README's ID Index.
 ├── fin/apps/{app-name}/                            // Holds the final distribution files of an app (autmation tools may use them).
 ├── libs/                                           // Holds our libs.
 │   ├── {app-name}/                                 // Holds libs of a specific app.
@@ -57,5 +64,20 @@ x/
 ├── nx.json                                         // Defines the NX workspace default configurations.
 └── tsconfig.base.json                              // Defines the TypeScript configurations and importable libraries alias paths.
 ```
+
+&nbsp;
+
+**🆔 The ID registries — all one shape.** Every folder marked 🆔 above is an **ID registry**: it holds the requirement IDs that test titles are written against, so that a test always traces back to a documented decision. They all share the same two files, so once you know one you know all of them:
+
+| File           | Holds                                                                                                           |
+| -------------- | --------------------------------------------------------------------------------------------------------------- |
+| `README.md`    | the **live** entries — the only IDs a test may cite                                                             |
+| `DECISIONS.md` | the **burned** ones — retired entries (and, per registry, merged ones or rejected approaches), kept for history |
+
+Two rules hold across all of them: a requirement that no longer exists is **moved** to `DECISIONS.md`, never deleted; and its **number is never reused**, so an ID found in an old test title, commit or review comment always resolves to exactly one thing.
+
+**One registry the tree above is too high-level to show:** a `util` lib's version folder — and each item folder of a grab-bag `ui` / `feature` lib — carries its own `requirements/` beside that folder's inner `README.md` (e.g. `libs/shared/util/ng-formatters/src/lib/date-format-v1/requirements/`). A new version folder starts by copying its predecessor's `DECISIONS.md`, because the ID key does not carry the version.
+
+**Which lib gets which registry** is decided by lib type, not by location — that belongs to [library-types-and-their-relationship.md](../getting-started/library-types-and-their-relationship.md), which is authoritative on it. In short: a **functionality** (`map` / `data-access` / single-purpose `ui` / `feature` / `page`) gets `docs/x/{name}/`; a `util`, product `app`, or grab-bag item gets a local `requirements/`; an `api` lib gets neither.
 
 [🔙](../../README.md#introduction)

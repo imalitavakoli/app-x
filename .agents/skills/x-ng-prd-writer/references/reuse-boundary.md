@@ -6,14 +6,14 @@ A functionality almost always stands on things it does not own: shared `util` fu
 
 ## Every requirement has exactly one home
 
-| The thing whose behaviour the requirement describes                       | Where that requirement lives                            |
-| ------------------------------------------------------------------------- | ------------------------------------------------------- |
-| A lib **this** functionality owns                                         | **this** `docs/x/{name}/PRD/README.md` — as an AC              |
-| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/PRD/README.md` |
-| An item in a **grab-bag** `ui` / `feature` lib                            | that item's own `requirements.md` — a grab-bag is not a functionality, so it has no PRD |
-| A `util` lib                                                              | that util's own `requirements.md`                       |
-| An `api` lib                                                              | nowhere — `api` libs have no requirements doc           |
-| An `app`                                                                  | `apps/{app-name}/requirements.md`                       |
+| The thing whose behaviour the requirement describes                                          | Where that requirement lives                                                          |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| A lib **this** functionality owns                                                            | **this** `docs/x/{name}/PRD/README.md` — as an AC                                     |
+| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/PRD/README.md`                        |
+| An item in a **grab-bag** `ui` / `feature` lib                                               | that item's own `requirements/` — a grab-bag is not a functionality, so it has no PRD |
+| A `util` lib                                                                                 | that util's own `requirements/`                                                       |
+| An `api` lib                                                                                 | nowhere — `api` libs have no requirements doc                                         |
+| An `app`                                                                                     | `apps/{app-name}/requirements/`                                                       |
 
 This holds no matter who asked for the change. "The banner needs a `severity` input **for us**" is still a requirement about the banner, so it is still the banner's PRD that gains it. Writing it here does not make it happen; it only mints an AC that this functionality's e2e suite will then try to verify.
 
@@ -35,7 +35,7 @@ The hardest case is one sentence containing both. Split it: the part that is _ou
 | One sentence in the description                                          | Stays here (our decision)                                               | Leaves (their rendering)                                                    |
 | ------------------------------------------------------------------------ | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
 | "an alert over its threshold shows in the banner's red critical styling" | that an over-threshold alert is **presented as critical**               | that critical **looks red** → the banner functionality's PRD                |
-| "each alert's timestamp is displayed as `DD MMM YYYY`"                   | that each alert **displays its timestamp** (only if worth an AC at all) | the `DD MMM YYYY` **pattern** → the date util's `requirements.md`           |
+| "each alert's timestamp is displayed as `DD MMM YYYY`"                   | that each alert **displays its timestamp** (only if worth an AC at all) | the `DD MMM YYYY` **pattern** → the date util's `requirements/`             |
 | "the user closes a banner and it disappears from the list"               | that the alert is **removed from the list** and the rest remain         | that the banner **has a close affordance** → the banner functionality's PRD |
 
 The test for whether a sentence still belongs here: _if this functionality were deleted tomorrow, would this outcome still have to hold?_ If yes, it was never ours.
@@ -77,7 +77,7 @@ Do **not** add a "this was accurate when written" disclaimer. The PRD's **Last U
 | Mistake                                                                            | Fix                                                                                              |
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | An AC asserting a reused component's colour, styling, or animation                 | That is its owner's PRD. Keep only our decision that drove it.                                   |
-| An AC asserting a shared util's output format or rounding                          | That is the util's `requirements.md`. Keep only that the value is displayed.                     |
+| An AC asserting a shared util's output format or rounding                          | That is the util's `requirements/`. Keep only that the value is displayed.                       |
 | An AC covering a change we asked another team to make                              | Requirements follow the lib, not the requester. Record it under Dependencies & Risks.            |
 | An AC for a lib that does not exist yet                                            | It belongs to that lib's own docs. Here it is a dependency and possibly an Open Question.        |
 | Fusing our decision and their rendering into one AC                                | Split; keep the decision, shed the rendering.                                                    |

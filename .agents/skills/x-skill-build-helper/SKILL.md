@@ -2,7 +2,7 @@
 name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, or where its templates and examples live."
 metadata:
-  version: '1.1.0'
+  version: '1.1.2'
 ---
 
 # Skill Build Helper
@@ -135,13 +135,13 @@ A skill must not name the **control-flow vocabulary** of the workflow that happe
 
 Express the **substance** instead, in terms the skill itself owns:
 
-| Instead of | Write |
-| --- | --- |
+| Instead of                                         | Write                                                                      |
+| -------------------------------------------------- | -------------------------------------------------------------------------- |
 | "its own Missing-docs gate must be answered first" | "its docs must be written first — a separate decision, and a separate run" |
-| "the Functionality gate answers No for those" | "those are never functionalities, so they have no such docs" |
-| "carried in at hook A2 and re-tagged at A4" | "supplied as an input; if it is missing, stop and ask" |
+| "the Functionality gate answers No for those"      | "those are never functionalities, so they have no such docs"               |
+| "carried in at hook A2 and re-tagged at A4"        | "supplied as an input; if it is missing, stop and ask"                     |
 
-The pattern: a skill states its **own** prerequisites, inputs and outputs, and reports what it cannot decide — it never describes *who* decides or *when*. That keeps control flow outside skills, which is where it belongs.
+The pattern: a skill states its **own** prerequisites, inputs and outputs, and reports what it cannot decide — it never describes _who_ decides or _when_. That keeps control flow outside skills, which is where it belongs.
 
 **The one exception** is the `x-{tech}-{tool}-*` family (e.g. `x-ng-sp-plan-enricher`): it exists to operate on another tool's artifact inside that tool's lifecycle, so it may reference that lifecycle and the file that defines it. No other kind may.
 
@@ -151,7 +151,7 @@ A skill's **own** guard is not a violation — a rule headed "Functionality gate
 
 Refer _conceptually_ (e.g. "the base `ui` lib's root CSS variables") rather than naming a concrete file under `libs/` or `apps/`, or embedding a literal value — so the skill survives the workspace evolving. Name an exact code path or value **only when the user explicitly asks**.
 
-**Structural patterns are fine; specific files are not.** A placeholder path that describes the _shape_ every project follows — `src/lib/{version}/`, `apps/{app}-e2e/user-stories.md`, a root config file like `jest.preset.js` — names a convention, not a file, and stays true as libs come and go. `libs/shared/ui/base/src/lib/v3/root.scss` names one file that can be renamed tomorrow.
+**Structural patterns are fine; specific files are not.** A placeholder path that describes the _shape_ every project follows — `src/lib/{version}/`, `apps/{app}-e2e/user-stories/`, a root config file like `jest.preset.js` — names a convention, not a file, and stays true as libs come and go. `libs/shared/ui/base/src/lib/v3/root.scss` names one file that can be renamed tomorrow.
 
 **Exception — `docs/`:** these are the stable reference surface and exist to be cited, so refer to them by exact path freely.
 
