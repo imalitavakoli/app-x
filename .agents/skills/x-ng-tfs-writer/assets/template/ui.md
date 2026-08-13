@@ -45,7 +45,7 @@ export class V1{Name}Component extends V1BaseUiComponent implements V1BaseUi_Has
 
 ###### Rendering Rules
 
-> What renders per `state` (and `dataType`), using exact `[data-cy="{lib}-v1_{component}_{part}"]` selectors. Reference the **translation keys** used for any heading/paragraph/label text, e.g. _"All" (via `{name}.all_h3`)_ or _"Hello No.123" (via `{name}.greeting_p` with `userId`)_. Include conditional hides and popups.
+> What renders per `state` (and `dataType`), using exact `[data-cy="{lib}-v{n}_{component}_{part}"]` selectors (the lib's own version — an app-domain lib has no version segment). Reference the **translation keys** used for any heading/paragraph/label text, e.g. _"All" (via `{name}.all_h3`)_ or _"Hello No.123" (via `{name}.greeting_p` with `userId`)_. Include conditional hides and popups.
 
 ###### DEP Styles (CSS variables)
 

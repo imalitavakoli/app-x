@@ -1,4 +1,4 @@
-# PRD decisions — x-profile
+# PRD decisions — ng-x-profile
 
 - **Last Updated** (YYYY-MM-DD): 2026-08-13
 

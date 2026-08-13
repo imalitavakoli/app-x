@@ -24,7 +24,7 @@ export class V1XWalletPageComponent extends V2BasePageParentComponent {}
 export class V1XWalletOnePageComponent extends V2BasePageChildComponent {}
 ```
 
-- `_pageName = 'Wallet'`, `_urlRoot = '/x-wallet'`, `$id` from the `:id` route param (the account). Composes the detail feature; `xOnError` forwards to the parent.
+- `_pageName = 'Wallet'`, `_urlRoot = '/x-wallet'`, `$id` from the `:id` route param (the account). Composes `V1XWalletCardFeaComponent` for the single account identified by `$id`; `xOnError` forwards to the parent.
 
 #### Functional Requirements & Business Rule Breakdown
 

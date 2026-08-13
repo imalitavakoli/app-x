@@ -2,7 +2,7 @@
 name: x-ng-lib-build-helper
 description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page, util, and grab-bag ui/feature) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming. For api and app there is no example — use the fallback (ask which lib to imitate)."
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # Lib Build Helper
@@ -43,7 +43,7 @@ Read the one matching example and reproduce what it demonstrates:
 - **Base class** — extend whatever base class the matching example extends for that lib type (`ui`, `feature`, `map`, the `data-access` facade / effects / reducer helpers, and `page` parent / child). The example is kept up to date, so it is the source of truth for the base to use: always take the base from the example rather than a base-class name you already know or assume — that way you always extend the latest base available in the workspace for that lib type. (The `page` example also shows specialized `…Ext{Name}` bases — use those **only** when the TFS names one.)
 - **Versioned naming** — `v{n}/` folders, `V{n}` class prefixes, `-v{n}` selectors (e.g. `x-balance-card-fea-v1`).
 - **Both READMEs** — outer (high-level: what the lib is + the `nx test …` line) **and** inner (per component/version: a **ready-to-use copy-paste** example for the Boilerplate Test page; for `page` libs, an `app.routes.ts` snippet).
-- **`data-cy` naming** — `{lib}-v1_{component}_{part}` (these live in `ui` libs).
+- **`data-cy` naming** — `{lib}-v{n}_{component}_{part}`, carrying the lib's own version (a shared lib is versioned; an app-domain lib has no version segment). These live in `ui` libs.
 
 ## Fallback — only when the example doesn't cover it
 

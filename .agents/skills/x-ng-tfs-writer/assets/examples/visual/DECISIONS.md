@@ -1,4 +1,4 @@
-# TFS decisions — x-profile
+# TFS decisions — ng-x-profile
 
 - **Last Updated** (YYYY-MM-DD): 2026-08-13
 

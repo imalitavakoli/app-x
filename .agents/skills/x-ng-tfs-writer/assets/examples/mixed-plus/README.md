@@ -3,6 +3,7 @@
 # TFS — ng-x-wallet
 
 - **Last Updated**: 2026-07-26
+- **Last Verified**: 2026-07-26
 - **Owner**: Ali
 
 ## ℹ️ Overview
@@ -27,9 +28,9 @@ x-wallet fetches its own data (accounts, then the selected account's balance), p
 
 ### Non-Goals & Why
 
-- **Rejected — polling inside the dependency chain.** It would re-run the whole chain on every tick; the poll lives in its own `_util` service, started once all data is ready.
-- **Rejected — `entity` state structure.** The balance write sends an `extra` payload beyond the entity, so it is not pure CRUD; `multi-instance` is used instead.
-- **Not promoted to `shared` yet.** The libs stay app-scoped until a second app needs them — promoting early would fix a public contract before there is a second consumer to shape it.
+- **No cross-account aggregation.** The card presents one account at a time; a portfolio total spanning accounts would be its own functionality, not a mode of this one.
+
+> The alternatives weighed and dropped — polling inside the dependency chain, and the `entity` state structure — are decision _history_, so they live in this functionality's `DECISIONS.md` → Rejected approaches, not here. Non-Goals states **current scope** only. (This example folder does not reproduce `DECISIONS.md`; see the `visual` example for its shape.)
 
 ## 🔗 Existing Dependencies & Reuse
 

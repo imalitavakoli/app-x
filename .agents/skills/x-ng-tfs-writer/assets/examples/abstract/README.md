@@ -3,6 +3,7 @@
 # TFS — ng-user-geo
 
 - **Last Updated**: 2026-07-26
+- **Last Verified**: 2026-07-26
 - **Owner**: Ali
 
 ## ℹ️ Overview
@@ -26,8 +27,8 @@ user-geo only resolves the user's geographic context from the server and exposes
 ### Non-Goals & Why
 
 - **No `ui` / `feature` libs.** Consumers render the geo context themselves; a UI here would have no screen of its own to live on.
-- **Rejected — `entity` state structure.** It fits pure CRUD; this lib resolves one context per user and only reads it, so `single-instance` matches the lifecycle without the entity ceremony.
-- **Rejected — folding the fetch into `data-access`.** A separate `map` lib keeps the normalise step a testable unit on its own and matches every other fetching functionality here.
+
+> The alternatives weighed and dropped along the way — the `data-access` structure and the map/data-access split — are decision _history_, so they live in this functionality's `DECISIONS.md` → Rejected approaches, not here. Non-Goals states **current scope** only. (This example folder does not reproduce `DECISIONS.md`; see the `visual` example for its shape.)
 
 ## 🔗 Existing Dependencies & Reuse
 

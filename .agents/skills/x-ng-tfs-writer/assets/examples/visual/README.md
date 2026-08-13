@@ -3,6 +3,7 @@
 # TFS — ng-x-profile
 
 - **Last Updated**: 2026-08-13
+- **Last Verified**: 2026-08-13
 - **Owner**: Ali
 
 ## ℹ️ Overview
@@ -28,8 +29,9 @@ x-profile presents the user's profile in two forms — a compact card and an exp
 ### Non-Goals & Why
 
 - **No `map` / `data-access` libs.** The shared `ng-user` abstract functionality already exposes this data; our own would duplicate its fetch and its cache.
-- **Rejected — one exported component with a `dataType` switch.** The compact card and the expanded detail differ in data and lifecycle, so two exported components keep each independently testable.
-- **Rejected — a `page` lib.** Nothing routes to this functionality directly; it is always composed by a host page, so a page lib would add a route no one navigates to.
+- **No owned `page` lib.** Nothing routes to this functionality directly — it is always composed by a host page, so a page lib would add a route no one navigates to.
+
+> Both of the alternatives weighed and dropped here (one switchable component; an owned `page`) are recorded in `DECISIONS.md` → Rejected approaches, with the date and why each lost. Non-Goals states **current scope**; it is not a history of rejected options.
 
 ## 🔗 Existing Dependencies & Reuse
 
