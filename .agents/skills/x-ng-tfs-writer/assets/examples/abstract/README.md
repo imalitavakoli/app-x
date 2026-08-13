@@ -48,17 +48,17 @@ _NONE_ (abstract — no visual libs).
 
 > Every FR/BR in this TFS, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
 
-| ID            | Lib file         | Maps to PRD AC                             |
-| ------------- | ---------------- | ------------------------------------------ |
-| GEO_MAP_FR-01 | `map.md`         | GEO-AC-01                                  |
-| GEO_MAP_BR-01 | `map.md`         | GEO-AC-01                                  |
-| GEO_DA_FR-01  | `data-access.md` | GEO-AC-01, GEO-AC-02, GEO-AC-03, GEO-AC-04 |
-| GEO_DA_BR-01  | `data-access.md` | GEO-AC-02                                  |
-| GEO_DA_BR-02  | `data-access.md` | GEO-AC-01                                  |
-| GEO_DA_BR-03  | `data-access.md` | GEO-AC-03                                  |
-| GEO_DA_BR-04  | `data-access.md` | GEO-AC-04                                  |
-| GEO_DA_FR-02  | `data-access.md` | _(new — suggest a PRD AC)_                 |
-| GEO_DA_BR-05  | `data-access.md` | _(new — suggest a PRD AC)_                 |
+| ID              | Lib file         | Maps to PRD AC                             |
+| --------------- | ---------------- | ------------------------------------------ |
+| GEO_MAPV1_FR-01 | `map.md`         | GEO-AC-01                                  |
+| GEO_MAPV1_BR-01 | `map.md`         | GEO-AC-01                                  |
+| GEO_DAV1_FR-01  | `data-access.md` | GEO-AC-01, GEO-AC-02, GEO-AC-03, GEO-AC-04 |
+| GEO_DAV1_BR-01  | `data-access.md` | GEO-AC-02                                  |
+| GEO_DAV1_BR-02  | `data-access.md` | GEO-AC-01                                  |
+| GEO_DAV1_BR-03  | `data-access.md` | GEO-AC-03                                  |
+| GEO_DAV1_BR-04  | `data-access.md` | GEO-AC-04                                  |
+| GEO_DAV1_FR-02  | `data-access.md` | _(new — suggest a PRD AC)_                 |
+| GEO_DAV1_BR-05  | `data-access.md` | _(new — suggest a PRD AC)_                 |
 
 ## ❓ Open Technical Questions
 

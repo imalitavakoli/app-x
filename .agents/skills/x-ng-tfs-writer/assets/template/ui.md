@@ -62,7 +62,7 @@ export class V1{Name}Component extends V1BaseUiComponent implements V1BaseUi_Has
 
 ###### Functional Requirements & Business Rule Breakdown
 
-> `describe`↔FR, `it`↔BR. Cover this component's **presentation and interaction** behaviour (everything except data fetching, which the `feature` owns). Derive the FR/BR from the PRD's ACs and this TFS's design; write `Given/When/Then` with exact `[data-cy]`/inputs/emitters; back-link each PRD AC it implements; add NEW unique IDs for technical scenarios (loading/error/visibility) not in the PRD. IDs scoped to the component (`{NAME}_{COMPONENT}_…`) and unique across the TFS folder.
+> `describe`↔FR, `it`↔BR. Cover this component's **presentation and interaction** behaviour (everything except data fetching, which the `feature` owns). Derive the FR/BR from the PRD's ACs and this TFS's design; write `Given/When/Then` with exact `[data-cy]`/inputs/emitters; back-link each PRD AC it implements; add NEW unique IDs for technical scenarios (loading/error/visibility) not in the PRD. IDs scoped to the component (`{NAME}_{OWNER}_…`, where `{OWNER}` is its short role word plus the lib's version — `CARDV1`, not the full class name) and unique across the TFS folder.
 
 ###### Error Handling & Edge Cases
 

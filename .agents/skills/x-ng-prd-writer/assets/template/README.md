@@ -1,10 +1,13 @@
 # PRD — {name}
 
-> Product Requirements Document for the **{name}** functionality. Replace `{NAME}` with one consistent feature key derived from the functionality name (e.g. `balance-card` → `BALANCE`). Remove every `>` helper note from the final draft; keep every section heading **with its icon**.
+> Product Requirements Document for the **{name}** functionality. Replace `{NAME}` throughout with the **Feature key** recorded below. Remove every `>` helper note from the final draft; keep every section heading **with its icon**.
 
 - **Last Updated** (YYYY-MM-DD): {date}
 - **Last Verified** (YYYY-MM-DD): {date}
 - **Owner**: {owner}
+- **Feature key**: {NAME}
+
+> **Feature key** — the short uppercase key that prefixes every ID derived from this functionality: this PRD's ACs (`{NAME}-AC-01`), the TFS's FR/BRs (`{NAME}_{OWNER}_FR-01`), and the test titles that carry them. **Chosen once, here, and never re-derived.** Drop the `ng-` prefix and keep it short and unmistakable — one or more of the name's distinctive segments (`ng-balance-card` → `BALANCE`, `ng-user-geo` → `GEO`, `ng-x-profile` → `XPROFILE`). It must be **unique across all functionalities** in `docs/x/` — grep before choosing. Everything downstream copies this field verbatim; it is not re-derived from the folder name, because two independent derivations of `ng-alert-badge` (`ALERTBADGE` vs `ALERT`) split one functionality's ID space in half.
 
 > **Last Updated vs Last Verified** — `Last Updated` is when this document's text last changed. `Last Verified` is when someone last confirmed it still matches the shipped code, **including when nothing needed changing** — that is the outcome a writer can never record, so only the post-execution verification step stamps it. A `Last Verified` older than the functionality's last commit means the PRD is unverified against current behaviour.
 

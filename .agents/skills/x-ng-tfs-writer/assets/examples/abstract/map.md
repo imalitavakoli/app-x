@@ -20,8 +20,8 @@
 
 `describe`↔FR, `it`↔BR.
 
-- **GEO_MAP_FR-01** _(maps to PRD GEO-AC-01)_: Test mapping.
-  - **GEO_MAP_BR-01**: Given a `200` response `{ country_code: 'SE', currency_code: 'SEK', detected_at: '…' }` _(Arrange)_; When `getGeo` completes _(Act)_; Then it emits `{ country: 'SE', currency: 'SEK' }` (no `detected_at`) _(Assert)_.
+- **GEO_MAPV1_FR-01** _(maps to PRD GEO-AC-01)_: Test mapping.
+  - **GEO_MAPV1_BR-01**: Given a `200` response `{ country_code: 'SE', currency_code: 'SEK', detected_at: '…' }` _(Arrange)_; When `getGeo` completes _(Act)_; Then it emits `{ country: 'SE', currency: 'SEK' }` (no `detected_at`) _(Assert)_.
 
 #### Error Handling & Edge Cases
 

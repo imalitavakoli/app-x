@@ -27,7 +27,7 @@
 
 `describe`↔FR, `it`↔BR.
 
-- **XWALLET_DA_FR-01** _(maps to PRD XWALLET-AC-01, XWALLET-AC-05)_: Test per-instance state transitions.
-  - **XWALLET_DA_BR-01** _(maps to PRD XWALLET-AC-05)_: Given `getBalance` fails with `'BLOCKED'` _(Arrange)_; Then `entityHasError$(id)` treats it as non-emitting (exception) _(Assert)_.
-- **XWALLET_DA_FR-02**: Test mutation cache-invalidation. _(New technical scenario — suggest a PRD AC for renaming an account.)_
-  - **XWALLET_DA_BR-02**: Given instance `id`'s `accounts` is cached _(Arrange)_; When `patchAccountLabel(...)` succeeds _(Act)_; Then that instance's `accounts` key is invalidated (per `CACHE_INVALIDATION_MAP = { patchAccountLabel: ['accounts'] }`, via `v1BaseReducerInvalidate` inside the adapter's `updateOne`) and the next `getAccounts` for that instance refetches _(Assert)_.
+- **XWALLET_DAV2_FR-01** _(maps to PRD XWALLET-AC-01, XWALLET-AC-05)_: Test per-instance state transitions.
+  - **XWALLET_DAV2_BR-01** _(maps to PRD XWALLET-AC-05)_: Given `getBalance` fails with `'BLOCKED'` _(Arrange)_; Then `entityHasError$(id)` treats it as non-emitting (exception) _(Assert)_.
+- **XWALLET_DAV2_FR-02**: Test mutation cache-invalidation. _(New technical scenario — suggest a PRD AC for renaming an account.)_
+  - **XWALLET_DAV2_BR-02**: Given instance `id`'s `accounts` is cached _(Arrange)_; When `patchAccountLabel(...)` succeeds _(Act)_; Then that instance's `accounts` key is invalidated (per `CACHE_INVALIDATION_MAP = { patchAccountLabel: ['accounts'] }`, via `v1BaseReducerInvalidate` inside the adapter's `updateOne`) and the next `getAccounts` for that instance refetches _(Assert)_.

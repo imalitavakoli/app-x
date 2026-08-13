@@ -21,8 +21,8 @@
 
 `describe`↔FR, `it`↔BR.
 
-- **XWALLET_MAP_FR-01** _(maps to PRD XWALLET-AC-01)_: Test mapping.
-  - **XWALLET_MAP_BR-01**: Given a balance response whose raw status is "processing" _(Arrange)_; When `getBalance` completes _(Act)_; Then it maps to `{ status: 'processing', … }` _(Assert)_.
+- **XWALLET_MAPV1_FR-01** _(maps to PRD XWALLET-AC-01)_: Test mapping.
+  - **XWALLET_MAPV1_BR-01**: Given a balance response whose raw status is "processing" _(Arrange)_; When `getBalance` completes _(Act)_; Then it maps to `{ status: 'processing', … }` _(Assert)_.
 
 #### Error Handling & Edge Cases
 

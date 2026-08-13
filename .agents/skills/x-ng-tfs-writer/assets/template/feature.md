@@ -55,7 +55,7 @@ export class V1{Name}FeaComponent extends V2BaseFeatureExtComponent implements V
 
 #### Helper Services
 
-> Optional — internal helpers as Angular services in `_util/{name}.service.ts`. A polling / interval / recurring process is a service here, started from `_xInitOrUpdateAfterAllDataReady` (NOT the dependency chain). Give Responsibility, Public API (e.g. `init()`/`destroy()`), lifecycle, and its own FR/BR IDs (`{NAME}_{HELPER-NAME}_FR-01` / `{NAME}_{HELPER-NAME}_BR-01` — same format as components).
+> Optional — internal helpers as Angular services in `_util/{name}.service.ts`. A polling / interval / recurring process is a service here, started from `_xInitOrUpdateAfterAllDataReady` (NOT the dependency chain). Give Responsibility, Public API (e.g. `init()`/`destroy()`), lifecycle, and its own FR/BR IDs (`{NAME}_{OWNER}_FR-01` / `{NAME}_{OWNER}_BR-01` — same format and same derivation as components, so a `V1{Name}PollService` is `POLLV1`).
 
 #### 🧳 User Experience & Flows (Technical & Frontend Perspective)
 

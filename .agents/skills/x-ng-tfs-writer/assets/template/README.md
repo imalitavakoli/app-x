@@ -51,7 +51,7 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 >
 > **Mark each entry by its state for this cycle** — unmarked = exists and is used as-is; `[TO-CREATE]` = does not exist yet; `[TO-UPDATE]` = exists but must change for us (a new input/output, a new rendering rule, a new method). Use exactly these two markers so the plan and a future reader can find them; do not coin your own wording.
 >
-> What the marker implies depends on the lib type: a marked **functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) carries its requirements in its **own** PRD & TFS; a marked `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, **never** gets `docs/x/` (a `util` / `app` / grab-bag item records them in its own `requirements.md`; an `api` has none). Either way the work is a **companion task in the plan**, never an owned lib of this TFS — so no FR/BR here describes it. If a `[TO-UPDATE]` or `[TO-CREATE]` dependency blocks one of this functionality's PRD ACs, say which ones: that is a real delivery risk.
+> What the marker implies depends on the lib type: a marked **functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) carries its requirements in its **own** PRD & TFS; a marked `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, **never** gets `docs/x/` (a `util` / `app` / grab-bag item records them in its own `requirements.md`; an `api` has none). Either way the work is a **companion task in the plan**, never an owned lib of this TFS — so no FR/BR here describes that lib's own behaviour or the surface it must gain. A **boundary** BR asserting what our lib _passes_ it is still ours, and belongs in the owning lib's `{libtype}.md`. If a `[TO-UPDATE]` or `[TO-CREATE]` dependency blocks one of this functionality's PRD ACs, say which ones: that is a real delivery risk.
 >
 > **A marker states this cycle's state, and goes stale when the companion work lands.** So write each one so a reader can retire it without re-deriving the decision — a `[TO-UPDATE]` names the exact surface the lib must gain, so anyone can open that lib and see whether it is still true. And when this TFS is **updated** later, re-verify every marker already here: clear the ones whose work has landed (with their "blocks" note), narrow the ones that partly landed, and leave anything you cannot confirm as an Open Technical Question. Do **not** add a "these were accurate when written" disclaimer — **Last Updated** above already says that.
 
@@ -71,10 +71,10 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 
 > Every FR/BR ID in this TFS in one table — the single place that keeps IDs unique across all lib files and preserves PRD ↔ TFS ↔ test traceability. One row per ID; fill it as you write each lib file.
 
-| ID                         | Lib file   | Maps to PRD AC |
-| -------------------------- | ---------- | -------------- |
-| {NAME}\_{COMPONENT}\_FR-01 | feature.md | {NAME}-AC-01   |
-| {NAME}\_{COMPONENT}\_BR-01 | ui.md      | {NAME}-AC-01   |
+| ID                     | Lib file   | Maps to PRD AC |
+| ---------------------- | ---------- | -------------- |
+| {NAME}\_{OWNER}\_FR-01 | feature.md | {NAME}-AC-01   |
+| {NAME}\_{OWNER}\_BR-01 | ui.md      | {NAME}-AC-01   |
 
 ## ❓ Open Technical Questions
 

@@ -2,7 +2,7 @@
 
 # TFS — ng-x-profile
 
-- **Last Updated**: 2026-07-26
+- **Last Updated**: 2026-08-13
 - **Owner**: Ali
 
 ## ℹ️ Overview
@@ -40,8 +40,8 @@ x-profile presents the user's profile in two forms — a compact card and an exp
 
 - **`[TO-UPDATE]`** `shared-ui-ng-popup` — the detail's "expand" popup.
   - **Surface it must gain for us:** a `size` input (`'sm' | 'lg'`), so the expanded detail can open at the large size.
-  - **Owner:** `ng-popup` (a separate visual functionality). Its requirements live in its own PRD & TFS; a companion task in the plan. No FR/BR here describes it.
-  - **Blocks:** `XPROFILE-AC-02`.
+  - **Owner:** `ng-popup` (a separate visual functionality). Its requirements live in its own PRD & TFS; a companion task in the plan. No FR/BR here describes the popup's own behaviour or the surface it must gain — our only entry is the boundary BR `XPROFILE_DETAILV1_BR-05`, which asserts what we pass it.
+  - **Blocks:** `XPROFILE-AC-05`.
 
 ### Used util libs
 
@@ -51,26 +51,28 @@ x-profile presents the user's profile in two forms — a compact card and an exp
 
 > Every FR/BR in this TFS, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
 
-| ID                       | Lib file     | Maps to PRD AC |
-| ------------------------ | ------------ | -------------- |
-| XPROFILE_CARD_FR-01      | `ui.md`      | XPROFILE-AC-01 |
-| XPROFILE_CARD_BR-01      | `ui.md`      | —              |
-| XPROFILE_CARD_BR-02      | `ui.md`      | XPROFILE-AC-01 |
-| XPROFILE_CARD_BR-03      | `ui.md`      | —              |
-| XPROFILE_CARD_BR-04      | `ui.md`      | —              |
-| XPROFILE_CARD_FR-02      | `ui.md`      | XPROFILE-AC-02 |
-| XPROFILE_CARD_BR-05      | `ui.md`      | XPROFILE-AC-02 |
-| XPROFILE_DETAIL_FR-01    | `ui.md`      | XPROFILE-AC-03 |
-| XPROFILE_DETAIL_BR-01    | `ui.md`      | XPROFILE-AC-03 |
-| XPROFILE_DETAIL_BR-02    | `ui.md`      | —              |
-| XPROFILE_DETAIL_FR-02    | `ui.md`      | XPROFILE-AC-04 |
-| XPROFILE_DETAIL_BR-03    | `ui.md`      | XPROFILE-AC-04 |
-| XPROFILE_CARDFEA_FR-01   | `feature.md` | XPROFILE-AC-01 |
-| XPROFILE_CARDFEA_BR-01   | `feature.md` | XPROFILE-AC-01 |
-| XPROFILE_CARDFEA_BR-02   | `feature.md` | XPROFILE-AC-01 |
-| XPROFILE_CARDFEA_BR-03   | `feature.md` | XPROFILE-AC-02 |
-| XPROFILE_DETAILFEA_FR-01 | `feature.md` | XPROFILE-AC-03 |
-| XPROFILE_DETAILFEA_BR-01 | `feature.md` | XPROFILE-AC-03 |
+| ID                         | Lib file     | Maps to PRD AC |
+| -------------------------- | ------------ | -------------- |
+| XPROFILE_CARDV1_FR-01      | `ui.md`      | XPROFILE-AC-01 |
+| XPROFILE_CARDV1_BR-01      | `ui.md`      | —              |
+| XPROFILE_CARDV1_BR-02      | `ui.md`      | XPROFILE-AC-01 |
+| XPROFILE_CARDV1_BR-03      | `ui.md`      | —              |
+| XPROFILE_CARDV1_BR-04      | `ui.md`      | —              |
+| XPROFILE_CARDV1_BR-08      | `ui.md`      | XPROFILE-AC-07 |
+| XPROFILE_CARDV1_FR-02      | `ui.md`      | XPROFILE-AC-05 |
+| XPROFILE_CARDV1_BR-05      | `ui.md`      | XPROFILE-AC-05 |
+| XPROFILE_DETAILV1_FR-01    | `ui.md`      | XPROFILE-AC-03 |
+| XPROFILE_DETAILV1_BR-01    | `ui.md`      | XPROFILE-AC-03 |
+| XPROFILE_DETAILV1_BR-02    | `ui.md`      | —              |
+| XPROFILE_DETAILV1_BR-05    | `ui.md`      | XPROFILE-AC-05 |
+| XPROFILE_DETAILV1_FR-02    | `ui.md`      | XPROFILE-AC-06 |
+| XPROFILE_DETAILV1_BR-03    | `ui.md`      | XPROFILE-AC-06 |
+| XPROFILE_CARDFEAV1_FR-01   | `feature.md` | XPROFILE-AC-01 |
+| XPROFILE_CARDFEAV1_BR-01   | `feature.md` | XPROFILE-AC-01 |
+| XPROFILE_CARDFEAV1_BR-02   | `feature.md` | XPROFILE-AC-01 |
+| XPROFILE_CARDFEAV1_BR-03   | `feature.md` | XPROFILE-AC-05 |
+| XPROFILE_DETAILFEAV1_FR-01 | `feature.md` | XPROFILE-AC-03 |
+| XPROFILE_DETAILFEAV1_BR-01 | `feature.md` | XPROFILE-AC-03 |
 
 ## ❓ Open Technical Questions
 

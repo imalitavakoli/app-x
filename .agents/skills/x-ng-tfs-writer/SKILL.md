@@ -2,7 +2,7 @@
 name: x-ng-tfs-writer
 description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '1.3.0'
+  version: '1.4.0'
 ---
 
 # TFS Writer
@@ -133,7 +133,7 @@ Read the example matching the functionality's classification before filling the 
 
 **Lib versions live inside the lib's file, not in extra files.** A **shared** lib is versioned (`src/lib/v1/`, `src/lib/v2/` — `docs/getting-started/library-types-and-their-relationship.md` → Versioning shared libs), and when two versions ship at once **both stay documented**: consumers on v1 still need their spec. Keep **one `{libtype}.md` per owned lib type** and give each live version its own sub-section inside it — never `ui-v1.md` / `ui-v2.md`. The file set answers "which lib **types** does this functionality own?"; a version is sub-structure within one lib's spec. App-domain libs are unversioned, so they have exactly one section.
 
-**The version goes in `{OWNER}`.** Since a lib's exported symbols already carry it (`V1PopupComponent`, selector `x-popup-v1`), so does the ID's owner segment: `POPUP_POPUPV1_FR-01` for v1, `POPUP_POPUPV2_FR-01` for v2. Numbering therefore **restarts per version** — the owner differs, so nothing collides and nothing is renumbered. Without this, a v2 would reuse v1's IDs and the ID Index would lie about which version a test covers. Two exceptions: an **existing** bare owner (`POPUP_POPUP_…`) is never renamed — leave it and version only from the next one; and an **unversioned** app-domain lib keeps a bare owner.
+**The version goes in `{OWNER}`.** Since a lib's exported symbols already carry it (`V1PopupComponent`, selector `x-popup-v1`), so does the ID's owner segment: `POPUP_UIV1_FR-01` for v1, `POPUP_UIV2_FR-01` for v2. Numbering therefore **restarts per version** — the owner differs, so nothing collides and nothing is renumbered. Without this, a v2 would reuse v1's IDs and the ID Index would lie about which version a test covers. Two exceptions: an **existing** bare owner (`POPUP_UI_…`) is never renamed — leave it and version only from the next one; and an **unversioned** app-domain lib keeps a bare owner.
 
 **Retiring a version.** When a shared version folder is finally deleted (all dependents migrated off), move its FR/BRs to `DECISIONS.md` per [references/amend-and-retire.md](references/amend-and-retire.md), drop their ID Index rows, delete the version's sub-section, and record the version removal under `DECISIONS.md` → Retired lib versions. Its numbers stay burned like any other retirement.
 
@@ -143,7 +143,7 @@ Read the example matching the functionality's classification before filling the 
 
 **Natural entry lib.** Record it in the README (per the library-types doc): `abstract` → `data-access`; `visual` → `feature` or `ui`; `mixed` → `feature`; `visual+` → `page`; `mixed+` → `page`.
 
-**Reuse markers.** Every entry under **Existing Dependencies & Reuse** carries its state for this cycle: **unmarked** = exists, used as-is; **`[TO-CREATE]`** = does not exist yet; **`[TO-UPDATE]`** = exists but must gain something for us. Use exactly these two markers, never wording of your own — one search must find them across every TFS. Either marker means the work is a **companion task in the plan**, its requirements live in that lib's own docs, and **no FR/BR here describes it**. A `[TO-UPDATE]` also names the exact surface it must gain, its owning functionality, and the ACs it blocks — that surface is what lets a future reader retire the marker.
+**Reuse markers.** Every entry under **Existing Dependencies & Reuse** carries its state for this cycle: **unmarked** = exists, used as-is; **`[TO-CREATE]`** = does not exist yet; **`[TO-UPDATE]`** = exists but must gain something for us. Use exactly these two markers, never wording of your own — one search must find them across every TFS. Either marker means the work is a **companion task in the plan**, its requirements live in that lib's own docs, and **no FR/BR here describes it** — "it" being the reused lib's own behaviour and the surface it must gain. A **boundary** BR asserting what our lib _passes_ that lib is still ours (see _FR/BR describe libs this functionality owns_ below): the marker rule and the boundary rule cover different sides of the same wire, so a `[TO-UPDATE]` entry and a boundary BR can — and often should — coexist. A `[TO-UPDATE]` also names the exact surface it must gain, its owning functionality, and the ACs it blocks — that surface is what lets a future reader retire the marker.
 
 **Keep markers true on update.** A marker is cycle state in a durable doc. When updating an existing TFS, re-verify every marker **before** writing anything else and clear the ones whose work has landed; if you cannot tell, leave it and raise an Open Technical Question rather than clearing on assumption.
 
@@ -159,7 +159,29 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 - **One observable behaviour per BR** (one `it`); if it needs an "and", split it. Give edge cases (loading / empty / error / boundary) their own BRs, with complete, realistic data.
 - **The `Then` asserts an observable effect, never an internal call.** State what the unit observably produces — a rendered `[data-cy]`, an emitted output, or a resulting state/signal — **not** "a facade/collaborator method was called" (asserting a collaborator call is a unit-test anti-pattern). For data-fetching, prove the request is correct by its **result**: prime the collaborator to return data for the expected params, then assert the data the component exposes — e.g. _Given the user facade returns `U` for `userId = 123`; When data is ready; Then the value bound to the card is `U`_ (this proves it fetched user 123 without asserting the call).
 - **Back-link the PRD:** annotate each FR/BR that implements a PRD scenario with the AC it decomposes, e.g. `(maps to PRD BALANCE-AC-01)`.
-- **IDs:** scope IDs to the exported component (or helper service) that owns them, same format for both — `{NAME}_{OWNER}_FR-01` / `{NAME}_{OWNER}_BR-01`, where `{OWNER}` is the component (e.g. `XPROFILE_CARD_BR-01`) or the helper service (e.g. `XWALLET_POLL_FR-01`). IDs are unique **across the whole TFS folder** — all lib files share one ID space (never reset per file, never renumber). Record every ID in the README **ID Index** (ID → lib file → PRD AC). New technical scenarios (loading/error/interaction) get **new** unique IDs.
+- **IDs:** scope IDs to the exported component (or helper service) that owns them, same format for both — `{NAME}_{OWNER}_FR-01` / `{NAME}_{OWNER}_BR-01`, where `{OWNER}` is the component (e.g. `XPROFILE_CARDV1_BR-01`) or the helper service (e.g. `XWALLET_POLLV1_FR-01`). IDs are unique **across the whole TFS folder** — all lib files share one ID space (never reset per file, never renumber). Record every ID in the README **ID Index** (ID → lib file → PRD AC). New technical scenarios (loading/error/interaction) get **new** unique IDs.
+
+- **`{NAME}` is the PRD's feature key, copied verbatim** — take it from the **Feature key** field of `docs/x/{name}/PRD/README.md`. Never re-derive it from the functionality name: `ng-alert-badge` yields `ALERTBADGE` or `ALERT` depending on who derives it, and two derivations split one functionality's ID space in half.
+
+- **`{OWNER}` is the owner's short role word — never its full class name.** Derive it the same way every time: take the exported class name, drop the `V{n}` prefix, the functionality's own name, and the `Component` / `Service` / `Facade` suffix; uppercase what remains; append the lib's version.
+
+  | Exported class                                     | What remains | `{OWNER}`   |
+  | -------------------------------------------------- | ------------ | ----------- |
+  | `V1XProfileCardComponent` (`ui` of `ng-x-profile`) | `Card`       | `CARDV1`    |
+  | `V1XProfileCardFeaComponent` (`feature`)           | `CardFea`    | `CARDFEAV1` |
+  | `V1XWalletPollService` (helper service)            | `Poll`       | `POLLV1`    |
+  | `V1XWalletOnePageComponent` (child `page`)         | `OnePage`    | `ONEPAGEV1` |
+
+  When **nothing remains** — the class is named after the functionality itself, so it has no role to name — use the **lib-type shorthand**: `MAP`, `DA`, `UI`, `FEA`, `PAGE`. That covers `map` / `data-access` / `page` classes, which never carry a role word, and the single-component `ui` / `feature` case alike.
+
+  | Exported class                                   | Lib type      | `{OWNER}` |
+  | ------------------------------------------------ | ------------- | --------- |
+  | `V1UserGeo` (of `ng-user-geo`)                   | `map`         | `MAPV1`   |
+  | `V2XWalletFacade` (of `ng-x-wallet`)             | `data-access` | `DAV2`    |
+  | `V1PopupComponent` (of `ng-popup`)               | `ui`          | `UIV1`    |
+  | `V1AlertBadgeFeaComponent` (of `ng-alert-badge`) | `feature`     | `FEAV1`   |
+
+  **Never repeat the key as the owner** (`POPUP_POPUPV1_…`) and never fall back to the full class name (`POPUP_XPOPUPCOMPONENTV1_…`): the key is already the ID's first segment, so both only add length. One rule, no special cases — the same class in the same position always yields the same `{OWNER}`, which is what keeps two runs from splitting one lib's ID space.
 
 **Inputs / Outputs:**
 
@@ -199,7 +221,8 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 - [ ] Every component names its base class correctly — the base its lib type uses in the matching example (not a name hardcoded in this skill).
 - [ ] Every BR is `Given/When/Then` with concrete `[data-cy]` / signals / emitters; every FR/BR that implements the PRD back-links its AC.
 - [ ] FR/BR IDs unique across the TFS; helper-service IDs scoped (`{NAME}_{HELPER}_…`); no PRD IDs repurposed; nothing renumbered.
-- [ ] For a **versioned shared lib**: one `{libtype}.md` with a sub-section per **live** version (never `ui-v1.md` / `ui-v2.md`); the version is in `{OWNER}` (`POPUPV2`), so numbering restarts per version and nothing collides; an existing bare owner was left unrenamed; a version whose folder is gone was retired to `DECISIONS.md`.
+- [ ] `{NAME}` matches the PRD's **Feature key** verbatim; every `{OWNER}` is the short role word — or the lib-type shorthand / repeated key where the class carries none — with the lib's version appended, and no `{OWNER}` is a full class name.
+- [ ] For a **versioned shared lib**: one `{libtype}.md` with a sub-section per **live** version (never `ui-v1.md` / `ui-v2.md`); the version is in `{OWNER}` (`UIV2`), so numbering restarts per version and nothing collides; an existing bare owner was left unrenamed; a version whose folder is gone was retired to `DECISIONS.md`.
 - [ ] **No FR/BR describes behaviour the code no longer has**, and none states an expectation the code now contradicts — every pre-existing entry was checked against what shipped, not just the new ones.
 - [ ] **On amend / retire only:** the ID was kept (amend) or burned and never recycled (retire); a retired entry's **ID Index row and AC back-link** went with it; the old text was shown beside the new and explicitly confirmed; the functionalities reusing the affected lib were named.
 - [ ] No FR/BR takes a reused lib as its `{OWNER}` or asserts a reused lib's own behaviour; boundary BRs assert our side (what we pass in / what we do with what comes back).
@@ -259,8 +282,10 @@ Then re-run the Review Checklist over whatever changed.
 | Amending or retiring without showing old vs new               | Both reverse an approved decision — show both texts, get confirmation, and name the functionalities reusing that lib.                                                                     |
 | Writing the TFS as one file, or a lib spec into `README.md`   | One `{libtype}.md` per present lib type; `README.md` holds only functionality-level sections + the ID Index.                                                                              |
 | Restarting FR/BR numbering in each lib file                   | All lib files share one ID space; keep IDs globally unique and listed in the README ID Index.                                                                                             |
+| `{OWNER}` written as the full class name (`XPROFILECARDV1`)   | Use the short role word — `CARDV1`. The derivation table sits in the IDs rule.                                                                                                            |
+| Re-deriving `{NAME}` from the functionality name              | Copy the PRD's **Feature key** verbatim; two independent derivations split the ID space.                                                                                                  |
 | A `ui-v2.md` (or any per-version lib file)                    | One file per owned lib **type**; each live version is a sub-section inside it.                                                                                                            |
-| A v2 reusing v1's FR/BR numbers                               | Put the version in `{OWNER}` (`POPUP_POPUPV2_BR-01`) — then numbering restarts safely.                                                                                                    |
+| A v2 reusing v1's FR/BR numbers                               | Put the version in `{OWNER}` (`POPUP_UIV2_BR-01`) — then numbering restarts safely.                                                                                                       |
 | Deleting v1's spec because v2 shipped                         | Both stay documented while both ship — consumers still on v1 need theirs.                                                                                                                 |
 | Renaming an existing bare owner to add `V1`                   | Never — that renames live IDs. Leave it bare; version from the next one.                                                                                                                  |
 | Finishing with Open Technical Questions unasked               | Put them to the user first. An unanswered question must never reach the plan looking settled.                                                                                             |

@@ -53,11 +53,11 @@ Common: `state`, `dataType` (default `'one'`).
 
 ###### Functional Requirements & Business Rule Breakdown
 
-- **XWALLET_CARD_FR-01** _(maps to PRD XWALLET-AC-02)_: Test badge + refresh visuals.
-  - **XWALLET_CARD_BR-01** _(maps to PRD XWALLET-AC-02)_: Given `badgeState = 'processing'` _(Arrange)_; When `state = data` _(Act)_; Then `[data-cy="x-wallet-card-v1_card_data-badge"]` shows the "requesting" badge (`x_wallet.badge_requesting`) _(Assert)_.
-  - **XWALLET_CARD_BR-02**: Given `refreshState = 'loading'` _(Arrange)_; Then the refresh button is disabled with the animating icon class _(Assert)_.
-- **XWALLET_CARD_FR-02** _(maps to PRD XWALLET-AC-03)_: Test output emits.
-  - **XWALLET_CARD_BR-03** _(maps to PRD XWALLET-AC-03)_: Given `refreshState = 'idle'` _(Arrange)_; When `button[data-cy="x-wallet-card-v1_card_data-btn-refresh"]` is clicked _(Act)_; Then `clickedRefresh` is emitted (via `onClickedRefresh()`) _(Assert)_.
+- **XWALLET_CARDV1_FR-01** _(maps to PRD XWALLET-AC-02)_: Test badge + refresh visuals.
+  - **XWALLET_CARDV1_BR-01** _(maps to PRD XWALLET-AC-02)_: Given `badgeState = 'processing'` _(Arrange)_; When `state = data` _(Act)_; Then `[data-cy="x-wallet-card-v1_card_data-badge"]` shows the "requesting" badge (`x_wallet.badge_requesting`) _(Assert)_.
+  - **XWALLET_CARDV1_BR-02**: Given `refreshState = 'loading'` _(Arrange)_; Then the refresh button is disabled with the animating icon class _(Assert)_.
+- **XWALLET_CARDV1_FR-02** _(maps to PRD XWALLET-AC-03)_: Test output emits.
+  - **XWALLET_CARDV1_BR-03** _(maps to PRD XWALLET-AC-03)_: Given `refreshState = 'idle'` _(Arrange)_; When `button[data-cy="x-wallet-card-v1_card_data-btn-refresh"]` is clicked _(Act)_; Then `clickedRefresh` is emitted (via `onClickedRefresh()`) _(Assert)_.
 
 ###### Error Handling & Edge Cases
 

@@ -28,5 +28,5 @@ export class V1XWalletOnePageComponent extends V2BasePageChildComponent {}
 
 #### Functional Requirements & Business Rule Breakdown
 
-- **XWALLET_PAGE_FR-01** _(maps to PRD XWALLET-AC-07)_: Test navigation.
-  - **XWALLET_PAGE_BR-01** _(maps to PRD XWALLET-AC-07)_: Given the card feature emits `clickedTopUp(accountId)` _(Arrange)_; When the parent handles it _(Act)_; Then it navigates to the top-up route for that account _(Assert)_.
+- **XWALLET_PAGEV1_FR-01** _(maps to PRD XWALLET-AC-07)_: Test navigation.
+  - **XWALLET_PAGEV1_BR-01** _(maps to PRD XWALLET-AC-07)_: Given the card feature emits `clickedTopUp(accountId)` _(Arrange)_; When the parent handles it _(Act)_; Then it navigates to the top-up route for that account _(Assert)_.

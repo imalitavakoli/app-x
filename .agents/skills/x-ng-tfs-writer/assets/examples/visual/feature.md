@@ -38,10 +38,10 @@ Common: `ready`, `allDataIsReady`, `hasError`.
 
 ###### Functional Requirements & Business Rule Breakdown
 
-- **XPROFILE_CARDFEA_FR-01** _(maps to PRD XPROFILE-AC-01)_: Test fetch + wiring.
-  - **XPROFILE_CARDFEA_BR-01** _(maps to PRD XPROFILE-AC-01)_: Given the user facade returns user `U` only for `userId = 123` _(Arrange)_; When the component initializes with `userId = 123` and data becomes ready _(Act)_; Then the data it exposes to the card is `U` — proving it fetched the correct user _(Assert)_.
-  - **XPROFILE_CARDFEA_BR-02** _(maps to PRD XPROFILE-AC-01)_: Given `userData$` resolves _(Arrange)_; When ready _(Act)_; Then `V1XProfileCardComponent.data` is set from `userData$`, `showCountry`/`icoPlaceholder` from DEP config, and its `state = data` _(Assert)_.
-  - **XPROFILE_CARDFEA_BR-03** _(maps to PRD XPROFILE-AC-02)_: Given the card emits `clickedDetails` _(Arrange)_; When `onClickedDetails()` runs _(Act)_; Then the feature emits `clickedDetails` with the `userId` _(Assert)_.
+- **XPROFILE_CARDFEAV1_FR-01** _(maps to PRD XPROFILE-AC-01)_: Test fetch + wiring.
+  - **XPROFILE_CARDFEAV1_BR-01** _(maps to PRD XPROFILE-AC-01)_: Given the user facade returns user `U` only for `userId = 123` _(Arrange)_; When the component initializes with `userId = 123` and data becomes ready _(Act)_; Then the data it exposes to the card is `U` — proving it fetched the correct user _(Assert)_.
+  - **XPROFILE_CARDFEAV1_BR-02** _(maps to PRD XPROFILE-AC-01)_: Given `userData$` resolves _(Arrange)_; When ready _(Act)_; Then `V1XProfileCardComponent.data` is set from `userData$`, `showCountry`/`icoPlaceholder` from DEP config, and its `state = data` _(Assert)_.
+  - **XPROFILE_CARDFEAV1_BR-03** _(maps to PRD XPROFILE-AC-05)_: Given the card emits `clickedDetails` _(Arrange)_; When `onClickedDetails()` runs _(Act)_; Then the feature emits `clickedDetails` with the `userId` _(Assert)_.
 
 ###### Error Handling & Edge Cases
 
@@ -76,8 +76,8 @@ _None._
 
 ###### Functional Requirements & Business Rule Breakdown
 
-- **XPROFILE_DETAILFEA_FR-01** _(maps to PRD XPROFILE-AC-03)_: Test fetch + wiring.
-  - **XPROFILE_DETAILFEA_BR-01** _(maps to PRD XPROFILE-AC-03)_: Given `userData$` resolves _(Arrange)_; When ready _(Act)_; Then `V1XProfileDetailComponent.data` is set and its `state = data` (or `empty` if no detail) _(Assert)_.
+- **XPROFILE_DETAILFEAV1_FR-01** _(maps to PRD XPROFILE-AC-03)_: Test fetch + wiring.
+  - **XPROFILE_DETAILFEAV1_BR-01** _(maps to PRD XPROFILE-AC-03)_: Given `userData$` resolves _(Arrange)_; When ready _(Act)_; Then `V1XProfileDetailComponent.data` is set and its `state = data` (or `empty` if no detail) _(Assert)_.
 
 ###### Error Handling & Edge Cases
 

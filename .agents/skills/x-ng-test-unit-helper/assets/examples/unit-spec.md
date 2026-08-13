@@ -58,11 +58,11 @@ describe('V1XProfileCardFeaComponent', () => {
   });
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* XPROFILE_CARDFEA_FR-01: Fetch and expose the user                        */
+  /* XPROFILE_CARDFEAV1_FR-01: Fetch and expose the user                      */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  describe('XPROFILE_CARDFEA_FR-01: Fetch and expose the user', () => {
-    it('XPROFILE_CARDFEA_BR-01 | Given the facade returns user U for userId 123; When data is ready; Then the card data the component exposes is U', () => {
+  describe('XPROFILE_CARDFEAV1_FR-01: Fetch and expose the user', () => {
+    it('XPROFILE_CARDFEAV1_BR-01 | Given the facade returns user U for userId 123; When data is ready; Then the card data the component exposes is U', () => {
       // Arrange — prime the collaborator's result (proves the fetch by its effect)
       fixture.componentRef.setInput('userId', 123);
       // Act
@@ -74,11 +74,11 @@ describe('V1XProfileCardFeaComponent', () => {
   });
 
   /* //////////////////////////////////////////////////////////////////////// */
-  /* XPROFILE_CARDFEA_FR-02: Re-emit card outputs                             */
+  /* XPROFILE_CARDFEAV1_FR-02: Re-emit card outputs                           */
   /* //////////////////////////////////////////////////////////////////////// */
 
-  describe('XPROFILE_CARDFEA_FR-02: Re-emit card outputs', () => {
-    it('XPROFILE_CARDFEA_BR-03 | Given the card emits clickedDetails; When onClickedDetails runs; Then the feature emits clickedDetails with the userId', () => {
+  describe('XPROFILE_CARDFEAV1_FR-02: Re-emit card outputs', () => {
+    it('XPROFILE_CARDFEAV1_BR-03 | Given the card emits clickedDetails; When onClickedDetails runs; Then the feature emits clickedDetails with the userId', () => {
       // Arrange
       fixture.componentRef.setInput('userId', 123);
       const emitted = jest.fn();

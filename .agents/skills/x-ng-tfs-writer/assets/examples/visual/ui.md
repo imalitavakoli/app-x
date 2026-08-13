@@ -17,7 +17,7 @@ export class V1XProfileCardComponent extends V1BaseUiComponent implements V1Base
 
 ###### Responsibility
 
-Renders a compact profile card (avatar, full name, country) and emits a "view details" intent. Single-view component: `dataType` fixed at `'one'`.
+Renders a compact profile card (avatar, display name, country) and emits a "view details" intent. Single-view component: `dataType` fixed at `'one'`.
 
 ###### Inputs
 
@@ -36,7 +36,7 @@ Common: `state`, `dataType` (default `'one'`, never changes).
 - `state = loading`: `section[data-cy="x-profile-card-v1_card_loading"]` — skeleton only.
 - `state = data`: `section[data-cy="x-profile-card-v1_card_data"]` with:
   - `img[data-cy="x-profile-card-v1_card_data-avatar"]` — bound to `data.avatarUrl`, falling back to `icoPlaceholder`.
-  - `h3[data-cy="x-profile-card-v1_card_data-name"]` — the full name (via `x_profile.name_h3` translation key, with `data.fullName`).
+  - `h3[data-cy="x-profile-card-v1_card_data-name"]` — the display name: first name plus initial, derived from `data.fullName` (via `x_profile.name_h3` translation key). Never the full name — see `DECISIONS.md`.
   - `span[data-cy="x-profile-card-v1_card_data-country"]` — the country (via `x_profile.country_label`); rendered only when `showCountry`.
   - `button[data-cy="x-profile-card-v1_card_data-btn-details"]` — label via `x_profile.details_btn`.
 
@@ -51,13 +51,14 @@ Common: `state`, `dataType` (default `'one'`, never changes).
 
 ###### Functional Requirements & Business Rule Breakdown
 
-- **XPROFILE_CARD_FR-01** _(maps to PRD XPROFILE-AC-01)_: Test rendered elements; based on `state`.
-  - **XPROFILE_CARD_BR-01**: Given no `data` _(Arrange)_; Then `state = loading` and `[data-cy="x-profile-card-v1_card_loading"]` is displayed _(Assert)_.
-  - **XPROFILE_CARD_BR-02** _(maps to PRD XPROFILE-AC-01)_: Given `data` is defined _(Arrange)_; When `state = data` _(Act)_; Then the avatar, name (`x_profile.name_h3`), and country are rendered _(Assert)_.
-  - **XPROFILE_CARD_BR-03**: Given `showCountry = false` _(Arrange)_; When `state = data` _(Act)_; Then `[data-cy="x-profile-card-v1_card_data-country"]` is NOT rendered _(Assert)_.
-  - **XPROFILE_CARD_BR-04**: Given `data.avatarUrl` is empty _(Arrange)_; When `state = data` _(Act)_; Then the avatar `src` falls back to `icoPlaceholder` _(Assert)_.
-- **XPROFILE_CARD_FR-02** _(maps to PRD XPROFILE-AC-02)_: Test output emits.
-  - **XPROFILE_CARD_BR-05** _(maps to PRD XPROFILE-AC-02)_: Given `state = data` _(Arrange)_; When `button[data-cy="x-profile-card-v1_card_data-btn-details"]` is clicked _(Act)_; Then `clickedDetails` is emitted (via `onClickedDetails()`) _(Assert)_.
+- **XPROFILE_CARDV1_FR-01** _(maps to PRD XPROFILE-AC-01)_: Test rendered elements; based on `state`.
+  - **XPROFILE_CARDV1_BR-01**: Given no `data` _(Arrange)_; Then `state = loading` and `[data-cy="x-profile-card-v1_card_loading"]` is displayed _(Assert)_.
+  - **XPROFILE_CARDV1_BR-02** _(maps to PRD XPROFILE-AC-01)_: Given `data` is defined _(Arrange)_; When `state = data` _(Act)_; Then the avatar, name (`x_profile.name_h3`), and country are rendered _(Assert)_.
+  - **XPROFILE_CARDV1_BR-03**: Given `showCountry = false` _(Arrange)_; When `state = data` _(Act)_; Then `[data-cy="x-profile-card-v1_card_data-country"]` is NOT rendered _(Assert)_.
+  - **XPROFILE_CARDV1_BR-04**: Given `data.avatarUrl` is empty _(Arrange)_; When `state = data` _(Act)_; Then the avatar `src` falls back to `icoPlaceholder` _(Assert)_.
+  - **XPROFILE_CARDV1_BR-08** _(maps to PRD XPROFILE-AC-07)_: Given `data.fullName = 'Ada Lovelace'` _(Arrange)_; When `state = data` _(Act)_; Then `[data-cy="x-profile-card-v1_card_data-name"]` renders `'Ada L.'` — first name plus initial, never the full name _(Assert)_.
+- **XPROFILE_CARDV1_FR-02** _(maps to PRD XPROFILE-AC-05)_: Test output emits.
+  - **XPROFILE_CARDV1_BR-05** _(maps to PRD XPROFILE-AC-05)_: Given `state = data` _(Arrange)_; When `button[data-cy="x-profile-card-v1_card_data-btn-details"]` is clicked _(Act)_; Then `clickedDetails` is emitted (via `onClickedDetails()`) _(Assert)_.
 
 ###### Error Handling & Edge Cases
 
@@ -100,11 +101,12 @@ Common: `state`, `dataType` (default `'one'`).
 
 ###### Functional Requirements & Business Rule Breakdown
 
-- **XPROFILE_DETAIL_FR-01** _(maps to PRD XPROFILE-AC-03)_: Test rendered elements; based on `state`.
-  - **XPROFILE_DETAIL_BR-01** _(maps to PRD XPROFILE-AC-03)_: Given `data` with a bio _(Arrange)_; When `state = data` _(Act)_; Then `[data-cy="x-profile-detail-v1_detail_data-bio"]` shows the bio (`x_profile.bio_p`) _(Assert)_.
-  - **XPROFILE_DETAIL_BR-02**: Given `data` is empty/undefined after load _(Arrange)_; Then `state = empty` and `[data-cy="x-profile-detail-v1_detail_empty"]` is displayed _(Assert)_.
-- **XPROFILE_DETAIL_FR-02** _(maps to PRD XPROFILE-AC-04)_: Test output emits.
-  - **XPROFILE_DETAIL_BR-03** _(maps to PRD XPROFILE-AC-04)_: Given `state = data` _(Arrange)_; When `button[data-cy="x-profile-detail-v1_detail_data-btn-contact"]` is clicked _(Act)_; Then `clickedContact` is emitted (via `onClickedContact()`) _(Assert)_.
+- **XPROFILE_DETAILV1_FR-01** _(maps to PRD XPROFILE-AC-03)_: Test rendered elements; based on `state`.
+  - **XPROFILE_DETAILV1_BR-01** _(maps to PRD XPROFILE-AC-03)_: Given `data` with a bio _(Arrange)_; When `state = data` _(Act)_; Then `[data-cy="x-profile-detail-v1_detail_data-bio"]` shows the bio (`x_profile.bio_p`) _(Assert)_.
+  - **XPROFILE_DETAILV1_BR-02**: Given `data` is empty/undefined after load _(Arrange)_; Then `state = empty` and `[data-cy="x-profile-detail-v1_detail_empty"]` is displayed _(Assert)_.
+  - **XPROFILE_DETAILV1_BR-05** _(maps to PRD XPROFILE-AC-05)_: Given `state = data` _(Arrange)_; When `showExpand` is set to `true` _(Act)_; Then the reused popup instance receives `size = 'lg'` _(Assert)_. Boundary BR — it asserts what we pass the reused `shared-ui-ng-popup`, never how that popup renders the size (its owner's BR).
+- **XPROFILE_DETAILV1_FR-02** _(maps to PRD XPROFILE-AC-06)_: Test output emits.
+  - **XPROFILE_DETAILV1_BR-03** _(maps to PRD XPROFILE-AC-06)_: Given `state = data` _(Arrange)_; When `button[data-cy="x-profile-detail-v1_detail_data-btn-contact"]` is clicked _(Act)_; Then `clickedContact` is emitted (via `onClickedContact()`) _(Assert)_.
 
 ###### Error Handling & Edge Cases
 

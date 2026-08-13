@@ -4,13 +4,13 @@
 
 ## 🗄️ Retired FR/BRs
 
-| ID                    | Lib file (was) | What it required                                                              | Retired    | Why                                                                                   | Replaced by           |
-| --------------------- | -------------- | ----------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------- | --------------------- |
-| `XPROFILE_CARD_BR-06` | `ui.md`        | A `[data-cy="x-profile-v1_card_refresh"]` control rendered on the detail view | 2026-06-18 | `XPROFILE-AC-04` retired — the manual refresh control was removed from the product    | —                     |
-| `XPROFILE_CARD_BR-02` | `ui.md`        | The card rendered the user's full name in `…_card_name`                       | 2026-07-02 | `XPROFILE-AC-02` retired on PII grounds; the card now renders first name plus initial | `XPROFILE_CARD_BR-09` |
-| `XPROFILE_CARD_BR-07` | `ui.md`        | A name longer than 20 chars was truncated with an ellipsis                    | 2026-07-02 | Truncation reversed with the name change — nothing is long enough to truncate         | —                     |
+| ID                        | Lib file (was) | What it required                                                                           | Retired    | Why                                                                                   | Replaced by             |
+| ------------------------- | -------------- | ------------------------------------------------------------------------------------------ | ---------- | ------------------------------------------------------------------------------------- | ----------------------- |
+| `XPROFILE_DETAILV1_BR-04` | `ui.md`        | A `[data-cy="x-profile-detail-v1_detail_refresh"]` control rendered on the expanded detail | 2026-06-18 | `XPROFILE-AC-04` retired — the manual refresh control was removed from the product    | —                       |
+| `XPROFILE_CARDV1_BR-06`   | `ui.md`        | The card rendered the user's full name in `[data-cy="x-profile-card-v1_card_data-name"]`   | 2026-07-02 | `XPROFILE-AC-02` retired on PII grounds; the card now renders first name plus initial | `XPROFILE_CARDV1_BR-08` |
+| `XPROFILE_CARDV1_BR-07`   | `ui.md`        | A name longer than 20 chars was truncated with an ellipsis                                 | 2026-07-02 | Truncation reversed with the name change — nothing is long enough to truncate         | —                       |
 
-> All three numbers are **burned**. None appears in the 🧭 ID Index any more, and their PRD AC back-links went with them. `BR-09` is the replacement for the second only.
+> All three numbers are **burned**, each within its own owner's range: `DETAILV1_BR-04` for the detail, `CARDV1_BR-06` and `CARDV1_BR-07` for the card. None appears in the 🧭 ID Index any more, and their PRD AC back-links went with them: `XPROFILE-AC-02` and `XPROFILE-AC-04` are burned in the PRD too, so no live entry here maps to either. `CARDV1_BR-08` is the replacement for the second only — it is live in `ui.md`, mapped to `XPROFILE-AC-07` (the AC that replaced `AC-02`). Nothing is left unaccounted for: the card's numbers run `01`–`05` live, `06`–`07` burned, `08` live; the detail's run `01`–`03` live, `04` burned, `05` live.
 
 ## 🚫 Rejected approaches — technical
 
