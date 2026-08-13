@@ -2,7 +2,7 @@
 name: x-ng-prd-writer
 description: "WHAT? A functionality's PRD at docs/x/{name}/PRD/README.md — its product-level spec, whose Acceptance Criteria (ACs) later map to e2e tests. WHEN? Asked to create or update a PRD, product / scope / feature document, acceptance criteria, or product spec for a functionality; or when a brainstorm concludes and the feature needs its product spec. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '1.4.1'
+  version: '1.4.2'
 ---
 
 # PRD Writer
@@ -28,7 +28,7 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 **Gate — functionality only.** Before anything else, decide: is the target a **functionality**, or just a lib?
 
 - If it is (or would be) only a `util`, `api`, or `app` lib → **STOP. Write no PRD.** Say so and exit. Example: brainstorm concludes "shared date-formatting util" → that is a `util` lib, not a functionality — no `docs/x/…/PRD/`.
-- If it is a **grab-bag** `ui` or `feature` lib → **STOP. Write no PRD.** A grab-bag holds several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`) — e.g. `shared-ui-ng-directives`. Its requirements live in a `requirements/` beside each item's inner version README, never in a PRD. **Adding an item to a grab-bag never creates a functionality**, so "add a directive to the shared directives lib" is not a PRD job. Definition and the test: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
+- If it is a **grab-bag** `ui` or `feature` lib (`CONTEXT.md`) → **STOP. Write no PRD.** Its requirements live in a `requirements/` beside each item's inner version README, never in a PRD. **Adding an item to a grab-bag never creates a functionality**, so "add a directive to the shared directives lib" is not a PRD job. The test for telling one from a single-purpose lib: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - `app` is a final product under `apps/`, not a functionality and not a reusable lib.
 - A single **single-purpose** `data-access`, `ui`, `feature`, or `page` lib **can** be a functionality; a `map` lib alone cannot (it always pairs with `data-access` under `abstract` / `mixed` / `mixed+`).
 
@@ -151,7 +151,7 @@ Incorporate whatever they change, re-run the Review Checklist, and ask again. On
 | Mistake                                              | Fix                                                                                                      |
 | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Writing a PRD for a `util` / `api` / `app` lib       | STOP — not a functionality; no `docs/x/…` PRD.                                                           |
-| Writing a PRD for a grab-bag `ui` / `feature` lib    | STOP — a bucket of unrelated items is not a product feature; its items use a local `requirements/`.      |
+| Writing a PRD for a grab-bag `ui` / `feature` lib    | STOP — no PRD; its items use a local `requirements/`.                                                   |
 | Treating "used on page X/Y" as owning a `page`       | Consumers import this functionality; only own a `page` if _this_ name is the page.                       |
 | Forcing `map`+`ui` on every mixed                    | Mixed requires `data-access`+`feature`; `map`/`ui` are optional.                                         |
 | Adding Functional Requirements / Business Rules      | Remove them — they live in the TFS. Keep only ACs here.                                                  |

@@ -2,7 +2,7 @@
 name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, or where its templates and examples live."
 metadata:
-  version: '1.1.2'
+  version: '1.2.0'
 ---
 
 # Skill Build Helper
@@ -28,7 +28,7 @@ A new skill is not always the answer. Before minting one:
 
 1. **Does a skill already do this?** If an existing skill owns the same job, the same output, or the same artifact, **extend it** — add the rule or section there and bump its version — rather than creating a sibling. Two skills that overlap cannot coordinate: a skill may not name another to divide work with it, and control flow lives outside skills entirely.
 2. **Would its triggers collide?** Read the `description` of every skill in the same area. If yours would fire on the same words as a sibling, either bind yours narrowly enough to separate them, or extend the sibling instead. The same check applies when _widening_ an existing description — a new trigger phrase can start capturing a neighbour's requests.
-3. **Is the content workspace-wide rather than skill-owned?** Then it belongs in `docs/` — cited by a skill, not wrapped in a new one. That is a separate change, not part of building the skill.
+3. **Is the content workspace-wide rather than skill-owned?** Then it does not belong in a skill at all — `docs/agents/where-content-lives.md` decides its home (a term goes to `CONTEXT.md`, a subsystem rule to its `docs/` page), and the skill cites it. That is a separate change, not part of building the skill.
 
 If an existing skill nearly fits but not quite, say so and ask — do not create a near-duplicate silently.
 
@@ -203,6 +203,7 @@ Where the same rule commonly repeats — check each that exists:
 | `references/*`                                                                             | the long-form version                                                                                                                                                                                                                                      |
 | **another skill**                                                                          | one that must inject the rule somewhere it cannot otherwise reach (e.g. into a plan read by execution subagents)                                                                                                                                           |
 | `AGENTS.md`                                                                                | when the workflow states the rule as control flow                                                                                                                                                                                                          |
+| `CONTEXT.md`                                                                               | when the change coins, renames or retires a **term**, or changes which spelling is correct — the glossary is updated at that moment, not on a review cadence (`docs/agents/context-md-format.md`)                                                          |
 | the `.claude/` stub                                                                        | only when the `description` carries it                                                                                                                                                                                                                     |
 
 **Remove drift sites while you are there.** Two habits cut the number of copies:

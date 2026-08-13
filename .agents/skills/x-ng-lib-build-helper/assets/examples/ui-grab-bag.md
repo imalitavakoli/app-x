@@ -1,6 +1,6 @@
 # Grab-bag 'ui' lib samples (pipes / directives)
 
-Sample files from a **grab-bag** `ui` lib — a bucket of unrelated presentational items that share only a technical kind (pipes, directives, animations). Use them as inspiration when adding an item to a lib like `shared-ui-ng-pipes` or `shared-ui-ng-directives`.
+Sample files from a **grab-bag** `ui` lib (`CONTEXT.md`) — here, presentational items such as pipes, directives and animations. Use them as inspiration when adding an item to a lib like `shared-ui-ng-pipes` or `shared-ui-ng-directives`.
 
 > **A grab-bag is not a functionality.** It gets **no** `docs/x/{name}/` PRD or TFS, no ACs, and never e2e. Each item carries its own `requirements/` registry for unit-test IDs (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Compare with [ui.md](ui.md), which is a **single-purpose** `ui` lib and _is_ a functionality.
 

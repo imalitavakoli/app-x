@@ -220,6 +220,18 @@ In the workspace, I've added specific comments as keywords. These make it easier
 
 &nbsp;
 
+# Agents
+
+- ## `1` [Agent instructions](./AGENTS.md)
+
+- ## `2` [Workspace domain language (glossary)](./CONTEXT.md)
+
+- ## `3` [Where content lives](./docs/agents/where-content-lives.md)
+
+- ## `4` [`CONTEXT.md` format](./docs/agents/context-md-format.md)
+
+&nbsp;
+
 # Runbooks
 
 - ## `1` [Functionality: Create](./docs/runbooks/functionality-create.md)

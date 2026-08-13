@@ -44,6 +44,7 @@
 
 # Project-Specific Conventions
 
+- **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. Read it when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. Adding or changing a term: `/docs/agents/context-md-format.md`.
 - Naming, folder, and code style conventions are in `/docs/guidelines/naming-conventions.md`.
 - Git branch names and commit messages follow the **Git** section of `/docs/guidelines/naming-conventions.md#git` (commits are `type(scope): summary`).
 - Best practices: `/docs/guidelines/best-practices.md`.
@@ -199,7 +200,7 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 - **Reserved verbs — keep them distinct.** Gates **ask** and **answer** (Yes / No); hooks and step bands **run** or are **skipped**; constraints **span**; entries **route**; mode blocks **select**. Never write "the gate applies" — it reads both as _the gate is in force_ and as _the gate let us through_. Say which way it answered.
 - **Constraints never collide and never gate.** A constraint adds a rule to steps that already run — it can never skip a hook or band (that is a 🚧 gate's job). If a new constraint would contradict an existing one on the same step, **amend the existing constraint** rather than adding a second: one step's rule lives in one constraint. Constraints are **path-scoped**, so the same name may appear on two paths carrying different rules; the no-collision rule applies within a path.
 - **Icons are landmarks, and these eight are reserved:** 🛣️ path · 🪝 hook · 🚪 entry · ⚪ hooks with no step yet · 🎛️ mode · ▶️ resume · 🚧 gate · 📌 constraint. Never use those eight for anything else; any other section may take its own distinct icon.
-- **Where new content goes:** a rule an agent must follow → this file; the reasoning behind it → `/docs/guidelines/superpowers-workflow.md`; how to perform a step → inside the named skill. Keep each fact in exactly one of the three.
+- **Where new content goes:** `/docs/agents/where-content-lives.md` decides the home of every fact an agent reads — term, rule, rationale, procedure — and is the only place that decision is recorded. Keep each fact in exactly one home.
 
 &nbsp;
 

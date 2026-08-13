@@ -37,7 +37,7 @@
 
 ## 🗄️ Data Requirements
 
-> What data does the **natural entry lib** need, and where does it come from? (Natural entry = the lib other functionalities initialize to use this one as a whole — see `docs/getting-started/library-types-and-their-relationship.md`.)
+> What data does the **natural entry lib** (`CONTEXT.md`) need, and where does it come from? Which lib that is per functionality type: `docs/getting-started/library-types-and-their-relationship.md`.
 >
 > - **Abstract** (entry = `data-access`; optional own `map`): list API endpoints and/or local sources — SQLite, Local Storage, Cookies. e.g. `GET /users/{id}/something` (auth), or `read 'blahblah' from Local Storage`.
 > - **Visual** (entry = `feature` when present, else `ui`; data usually from another functionality's `data-access`): list the entry component's **inputs**, and name any shared data-access it reads from.

@@ -2,7 +2,7 @@
 name: x-ng-sp-plan-enricher
 description: "WHAT? A just-written Superpowers plan, edited so the workspace's PRD/TFS traceability and test, lib and CODEOWNERS conventions reach context-isolated execution subagents — the plan being their only carrier. WHEN? At Path A Documentation close-out after writing-plans, before the plan-review hard stop / execution; whenever a Superpowers plan for a functionality must make execution follow our workspace conventions."
 metadata:
-  version: '1.8.1'
+  version: '1.8.2'
 ---
 
 # SP Plan Enricher
@@ -26,7 +26,7 @@ Do not use to build libs or write tests; do not use for the bug-fix path (that r
 
 ## Prerequisites
 
-**Prerequisite — functionality only.** Before anything else: if the plan's target is (or would be) only a `util`, `api`, or `app` lib — or a **grab-bag** `ui` / `feature` lib (unrelated items sharing only a technical kind, each versioned on its own, e.g. `shared-ui-ng-directives`) → **STOP. Do not enrich.** None of those ever have PRD/TFS (`docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag). Say so and exit — do **not** ask for a missing PRD.
+**Prerequisite — functionality only.** Before anything else: if the plan's target is (or would be) only a `util`, `api`, or `app` lib — or a **grab-bag** `ui` / `feature` lib (`CONTEXT.md`) → **STOP. Do not enrich.** None of those ever have PRD/TFS (`docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag). Say so and exit — do **not** ask for a missing PRD.
 
 **Prerequisite — docs out of scope.** If there is no `docs/x/{name}/` PRD/TFS and this cycle is not producing them (the user chose not to document) → **STOP. Do not enrich.** Exit without asking for a PRD (same as util/api/app: no functionality-doc carrier this cycle).
 
@@ -146,7 +146,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 | Mistake                                                          | Fix                                                                                                                                                                             |
 | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Enriching a plan for a `util` / `api` / `app` lib                | STOP — not a functionality; no PRD/TFS to fold in. Path A's Functionality gate answers **No** for those.                                                                        |
-| Enriching a plan for a grab-bag `ui` / `feature` lib             | STOP — same reason: a bucket of unrelated items is not a functionality, so there is no PRD/TFS to carry.                                                                        |
+| Enriching a plan for a grab-bag `ui` / `feature` lib             | STOP — same reason: no PRD/TFS exists to carry.                                                                        |
 | Asking for a missing PRD when the target is util/api/app         | Exit — do not ask; those never get functionality docs.                                                                                                                          |
 | Asking for a PRD when docs are out of scope                      | Exit — no PRD/TFS and none being written; do not enrich and do not ask for docs.                                                                                                |
 | Missing PRD when docs were supposed to be in scope               | STOP and ask — earlier steps were likely skipped by mistake.                                                                                                                    |

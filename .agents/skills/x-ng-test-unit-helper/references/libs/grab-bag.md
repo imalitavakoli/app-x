@@ -55,7 +55,7 @@ Minimal: short intro + FRs with nested BRs (Given/When/Then). Imitate the exampl
 
 | Mistake                                                    | Fix                                                                              |
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Writing a PRD/TFS because the lib type is `ui` / `feature` | Grab-bags are not functionalities — a bucket of unrelated items is not a feature |
+| Writing a PRD/TFS because the lib type is `ui` / `feature` | Grab-bags are not functionalities — use this file for its IDs                    |
 | One `requirements/` for the whole grab-bag lib             | One per item, beside its inner version README                                    |
 | Using `UTIL-` for a grab-bag `ui` item                     | `UI-{KEY}-…` (or `FEA-{KEY}-…`) — the prefix names the lib type                  |
 | Treating a single-purpose `ui` lib as a grab-bag           | One product concern, one version folder for the lib → it **is** a functionality  |

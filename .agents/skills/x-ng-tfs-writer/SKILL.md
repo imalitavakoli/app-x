@@ -2,7 +2,7 @@
 name: x-ng-tfs-writer
 description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '2.0.2'
+  version: '2.0.3'
 ---
 
 # TFS Writer
@@ -49,7 +49,7 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 **Gate — functionality only.** Before anything else:
 
 - If the target is (or would be) only a `util`, `api`, or `app` lib → **STOP. Write no TFS.** Say so and exit. No PRD should exist for those either; if someone asks for a TFS anyway, refuse.
-- If it is a **grab-bag** `ui` / `feature` lib → **STOP. Write no TFS.** A grab-bag holds several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`) — e.g. `shared-ui-ng-directives`. Its requirements live in a `requirements/` beside each item's inner version README. **Adding an item to a grab-bag never creates a functionality.** Definition and the test: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
+- If it is a **grab-bag** `ui` / `feature` lib (`CONTEXT.md`) → **STOP. Write no TFS.** Its requirements live in a `requirements/` beside each item's inner version README. **Adding an item to a grab-bag never creates a functionality.** The test for telling one from a single-purpose lib: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - `app` is a final product under `apps/`, not a functionality.
 - Classify using `docs/getting-started/library-types-and-their-relationship.md` (Functionality types). Create a `{libtype}-v{n}.md` only for lib types this functionality **owns**, one per live version.
 

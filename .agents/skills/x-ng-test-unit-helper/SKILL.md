@@ -2,7 +2,7 @@
 name: x-ng-test-unit-helper
 description: "WHAT? The workspace conventions for a lib's Jest unit tests — FR/BR ID mapping from TFS (single-purpose functionalities) or a local requirements/ registry (util / app / grab-bag ui-feature), what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for map / data-access / ui / feature / page, or for util / app / a grab-bag lib when tests are in scope; when deciding a spec's IDs, structure, mocking, or readability. Api libs have no such registry. Read references/libs/util.md, app.md or grab-bag.md when testing those lib types."
 metadata:
-  version: '1.6.0'
+  version: '1.6.1'
 ---
 
 # Test Unit Helper
@@ -13,7 +13,7 @@ This skill is a **helper**: it puts the workspace's unit-test conventions into y
 
 For a **functionality** lib, unit tests trace to that functionality's **TFS**: **FR → `describe`, BR → `it`**. For a **`util`**, a product **`app`**, or an item in a **grab-bag** `ui`/`feature` lib, there is still **no** `docs/x/` PRD/TFS — FR/BR IDs come from a local **`requirements/`** registry instead (see [Lib-type extras](#lib-type-extras-read-on-demand)). **`api`** libs have no code and no such registry; if somehow tested, use ID-less titles.
 
-**A `ui` or `feature` lib is only a functionality when it is single-purpose.** A **grab-bag** — several unrelated items sharing only a technical kind, each versioned on its own (`src/lib/toggle-me-v1/`), e.g. `shared-ui-ng-directives` — is not, and takes the local `requirements/` route. The tell and the authoritative definition are in `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
+**A `ui` or `feature` lib is only a functionality when it is single-purpose.** A **grab-bag** (`CONTEXT.md`) is not, and takes the local `requirements/` route. The tell that separates the two is in `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 
 It only adds **workspace specifics** (FR/BR IDs from the right source, test config, formatting) on top of good unit-testing practice. For _how_ to write the tests themselves, follow standard **TDD**: test real, observable behavior — **never assert on a mock** — and mock only what is unavoidable, at the lowest level, keeping mocks complete. Superpowers' `test-driven-development` (and the rest of execution) still owns the RED-GREEN cycle for these libs the same as for functionalities.
 
