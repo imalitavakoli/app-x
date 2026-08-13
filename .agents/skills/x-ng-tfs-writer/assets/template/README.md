@@ -1,8 +1,9 @@
 <!--
 Template for `docs/x/{name}/TFS/README.md` — the functionality-level sections only.
-Replace `{NAME}` with the same feature key used in the PRD (e.g. `ng-balance-card` → `BALANCE`).
+Replace `{NAME}` with the PRD's **Feature key**, copied verbatim from its field in `docs/x/{name}/PRD/README.md` — never re-derived from the functionality name.
 Remove every `>` helper note from the final draft; keep every heading you use.
-The per-lib specs live in sibling files (map.md / data-access.md / ui.md / feature.md / page.md) — NOT here.
+The per-lib specs live in sibling files, one per LIVE VERSION of each owned lib (map-v1.md / data-access-v2.md / ui-v1.md / ui-v2.md / feature-v1.md / page-v1.md) — NOT here.
+A shared lib is versioned, so its version is in the filename from v1; an app-domain lib is unversioned and keeps the plain name (ui.md).
 -->
 
 # TFS — {name}
@@ -29,7 +30,7 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 > - **mixed** — `data-access` + `feature` · optional `map` / `ui` (no owned `page`)
 > - **mixed+** — `page` + `data-access` · optional `map` / `ui` / `feature`
 >
-> Emit only the sibling `{libtype}.md` files for libs this functionality **owns**. Also state the **natural entry lib** (same doc).
+> Emit only the sibling `{libtype}-v{n}.md` files (one per live version — a shared lib is versioned, so `ui-v1.md`; an app-domain lib is not, so `ui.md`) for libs this functionality **owns**. Also state the **natural entry lib** (same doc).
 
 ### Domain
 
@@ -51,7 +52,7 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 >
 > **Mark each entry by its state for this cycle** — unmarked = exists and is used as-is; `[TO-CREATE]` = does not exist yet; `[TO-UPDATE]` = exists but must change for us (a new input/output, a new rendering rule, a new method). Use exactly these two markers so the plan and a future reader can find them; do not coin your own wording.
 >
-> What the marker implies depends on the lib type: a marked **functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) carries its requirements in its **own** PRD & TFS; a marked `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, **never** gets `docs/x/` (a `util` / `app` / grab-bag item records them in its own `requirements.md`; an `api` has none). Either way the work is a **companion task in the plan**, never an owned lib of this TFS — so no FR/BR here describes that lib's own behaviour or the surface it must gain. A **boundary** BR asserting what our lib _passes_ it is still ours, and belongs in the owning lib's `{libtype}.md`. If a `[TO-UPDATE]` or `[TO-CREATE]` dependency blocks one of this functionality's PRD ACs, say which ones: that is a real delivery risk.
+> What the marker implies depends on the lib type: a marked **functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) carries its requirements in its **own** PRD & TFS; a marked `util` / `api` / `app`, or a **grab-bag** `ui` / `feature`, **never** gets `docs/x/` (a `util` / `app` / grab-bag item records them in its own `requirements.md`; an `api` has none). Either way the work is a **companion task in the plan**, never an owned lib of this TFS — so no FR/BR here describes that lib's own behaviour or the surface it must gain. A **boundary** BR asserting what our lib _passes_ it is still ours, and belongs in the owning lib's `{libtype}-v{n}.md`. If a `[TO-UPDATE]` or `[TO-CREATE]` dependency blocks one of this functionality's PRD ACs, say which ones: that is a real delivery risk.
 >
 > **A marker states this cycle's state, and goes stale when the companion work lands.** So write each one so a reader can retire it without re-deriving the decision — a `[TO-UPDATE]` names the exact surface the lib must gain, so anyone can open that lib and see whether it is still true. And when this TFS is **updated** later, re-verify every marker already here: clear the ones whose work has landed (with their "blocks" note), narrow the ones that partly landed, and leave anything you cannot confirm as an Open Technical Question. Do **not** add a "these were accurate when written" disclaimer — **Last Updated** above already says that.
 
@@ -71,10 +72,10 @@ The per-lib specs live in sibling files (map.md / data-access.md / ui.md / featu
 
 > Every FR/BR ID in this TFS in one table — the single place that keeps IDs unique across all lib files and preserves PRD ↔ TFS ↔ test traceability. One row per ID; fill it as you write each lib file.
 
-| ID                     | Lib file   | Maps to PRD AC |
-| ---------------------- | ---------- | -------------- |
-| {NAME}\_{OWNER}\_FR-01 | feature.md | {NAME}-AC-01   |
-| {NAME}\_{OWNER}\_BR-01 | ui.md      | {NAME}-AC-01   |
+| ID                     | Lib file      | Maps to PRD AC |
+| ---------------------- | ------------- | -------------- |
+| {NAME}\_{OWNER}\_FR-01 | feature-v1.md | {NAME}-AC-01   |
+| {NAME}\_{OWNER}\_BR-01 | ui-v1.md      | {NAME}-AC-01   |
 
 ## ❓ Open Technical Questions
 

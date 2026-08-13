@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TFS/feature.md` — the `feature` lib spec + its FR/BR,
+Template for `docs/x/{name}/TFS/feature-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `feature` lib spec + its FR/BR,
 followed by the 🧳 User Experience & Flows journey (one sub-section per exported feature component).
 Include this file only when this functionality **owns** a `feature` lib (required for mixed; optional for visual / visual+ / mixed+). Lib name: `{domain}-feature-{name}` (same `{name}` as the functionality).
 Remove `>` helpers from the final draft. Register every FR/BR ID in the README's 🧭 ID Index.
@@ -61,7 +61,7 @@ export class V1{Name}FeaComponent extends V2BaseFeatureExtComponent implements V
 
 > The generic base pipeline (init → fetch → await → render, via the base classes) is assumed — do NOT re-document it. Document only THIS functionality's specifics, with **one `#####` sub-heading per exported `feature` component** (mirroring the component headings above). Under each component, cover its Data flow, Interaction flows, Background flows, and Decision logic — omit any that don't apply.
 >
-> (For an **abstract** functionality there is no `feature.md`; the facade-consumer note goes in `data-access.md` instead.)
+> (For an **abstract** functionality there is no `feature-v{n}.md`; the facade-consumer note goes in `data-access-v{n}.md` instead.)
 
 ##### `V1{Name}FeaComponent`
 

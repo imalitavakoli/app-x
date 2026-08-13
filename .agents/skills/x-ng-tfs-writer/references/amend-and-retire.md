@@ -23,7 +23,7 @@ The test for amend vs retire+add: _is this the same rule with a corrected descri
 
 ## Retire
 
-1. **Move the entry to `DECISIONS.md`** — cut it out of its `{libtype}.md` and add a row to that file's **Retired FR/BRs** table with the ID, the lib file it was in, what it required, the date, **why**, and what replaced it (`—` if nothing). Moving rather than deleting is what keeps the burned number traceable: a reader who finds `BR-08` in an old commit or review comment can still learn what it was and why it went.
+1. **Move the entry to `DECISIONS.md`** — cut it out of its `{libtype}-v{n}.md` and add a row to that file's **Retired FR/BRs** table with the ID, the lib file it was in, what it required, the date, **why**, and what replaced it (`—` if nothing). Moving rather than deleting is what keeps the burned number traceable: a reader who finds `BR-08` in an old commit or review comment can still learn what it was and why it went.
 2. **Remove its ID Index row** from `README.md`. An ID Index row for a retired entry is the most misleading state possible — it advertises coverage that does not exist. The Index lists **live IDs only**; the retired one now lives in `DECISIONS.md` and must never appear in both.
 3. **Drop its AC back-link**, and check whether that PRD AC still has any FR/BR at all. An AC with no FR/BR is either a documentation gap or an AC that should itself retire — report it; do not decide it here.
 4. **Never recycle the number.** `{NAME}_{OWNER}_BR-08` stays burned forever, so a future reader of an old commit, test title or review comment never resolves it to a different rule.

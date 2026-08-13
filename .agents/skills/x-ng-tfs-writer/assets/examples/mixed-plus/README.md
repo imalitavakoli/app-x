@@ -1,4 +1,4 @@
-<!-- Example TFS folder for a MIXED+ functionality with the full optional set (map + data-access + ui + feature + page). mixed+ requires page + data-access; map/ui/feature are optional. A plain mixed requires data-access + feature and omits page.md. Mirrors docs/x/ng-x-wallet/TFS/. -->
+<!-- Example TFS folder for a MIXED+ functionality with the full optional set (map + data-access + ui + feature + page). mixed+ requires page + data-access; map/ui/feature are optional. A plain mixed requires data-access + feature and omits page-v1.md. Mirrors docs/x/ng-x-wallet/TFS/. -->
 
 # TFS — ng-x-wallet
 
@@ -22,6 +22,8 @@
 ### Rationale
 
 x-wallet fetches its own data (accounts, then the selected account's balance), presents an interactive balance card, refreshes the balance live, polls while the balance is processing, and is itself an app page with an order-of-one child route — so it needs all five lib types.
+
+**Live lib versions.** Four libs are at v1 (`map-v1.md`, `ui-v1.md`, `feature-v1.md`, `page-v1.md`); the `data-access` lib is at **v2** only (`data-access-v2.md`) — its v1 was retired in an earlier cycle once every consumer had migrated, so no `data-access-v1.md` exists. Versions are per **lib**, not per functionality, which is why one functionality's files can sit at different versions. That retirement is recorded in this functionality's `DECISIONS.md` → Retired lib versions (this example folder does not reproduce that file — see the `visual` example for its shape).
 
 ### Non-Goals & Why
 
@@ -52,29 +54,29 @@ _NONE_ — x-wallet's own `map`/`data-access` do not depend on other functionali
 
 > Every FR/BR in this TFS, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
 
-| ID                      | Lib file         | Maps to PRD AC               |
-| ----------------------- | ---------------- | ---------------------------- |
-| XWALLET_MAPV1_FR-01     | `map.md`         | XWALLET-AC-01                |
-| XWALLET_MAPV1_BR-01     | `map.md`         | XWALLET-AC-01                |
-| XWALLET_DAV2_FR-01      | `data-access.md` | XWALLET-AC-01, XWALLET-AC-05 |
-| XWALLET_DAV2_BR-01      | `data-access.md` | XWALLET-AC-05                |
-| XWALLET_DAV2_FR-02      | `data-access.md` | _(new — suggest a PRD AC)_   |
-| XWALLET_DAV2_BR-02      | `data-access.md` | _(new — suggest a PRD AC)_   |
-| XWALLET_CARDV1_FR-01    | `ui.md`          | XWALLET-AC-02                |
-| XWALLET_CARDV1_BR-01    | `ui.md`          | XWALLET-AC-02                |
-| XWALLET_CARDV1_BR-02    | `ui.md`          | —                            |
-| XWALLET_CARDV1_FR-02    | `ui.md`          | XWALLET-AC-03                |
-| XWALLET_CARDV1_BR-03    | `ui.md`          | XWALLET-AC-03                |
-| XWALLET_CARDFEAV1_FR-01 | `feature.md`     | XWALLET-AC-01                |
-| XWALLET_CARDFEAV1_BR-01 | `feature.md`     | XWALLET-AC-01                |
-| XWALLET_CARDFEAV1_BR-02 | `feature.md`     | XWALLET-AC-03                |
-| XWALLET_POLLV1_FR-01    | `feature.md`     | XWALLET-AC-04                |
-| XWALLET_POLLV1_BR-01    | `feature.md`     | XWALLET-AC-04                |
-| XWALLET_POLLV1_BR-02    | `feature.md`     | —                            |
-| XWALLET_SYNCV1_FR-01    | `feature.md`     | XWALLET-AC-06                |
-| XWALLET_SYNCV1_BR-01    | `feature.md`     | XWALLET-AC-06                |
-| XWALLET_PAGEV1_FR-01    | `page.md`        | XWALLET-AC-07                |
-| XWALLET_PAGEV1_BR-01    | `page.md`        | XWALLET-AC-07                |
+| ID                      | Lib file            | Maps to PRD AC               |
+| ----------------------- | ------------------- | ---------------------------- |
+| XWALLET_MAPV1_FR-01     | `map-v1.md`         | XWALLET-AC-01                |
+| XWALLET_MAPV1_BR-01     | `map-v1.md`         | XWALLET-AC-01                |
+| XWALLET_DAV2_FR-01      | `data-access-v2.md` | XWALLET-AC-01, XWALLET-AC-05 |
+| XWALLET_DAV2_BR-01      | `data-access-v2.md` | XWALLET-AC-05                |
+| XWALLET_DAV2_FR-02      | `data-access-v2.md` | _(new — suggest a PRD AC)_   |
+| XWALLET_DAV2_BR-02      | `data-access-v2.md` | _(new — suggest a PRD AC)_   |
+| XWALLET_CARDV1_FR-01    | `ui-v1.md`          | XWALLET-AC-02                |
+| XWALLET_CARDV1_BR-01    | `ui-v1.md`          | XWALLET-AC-02                |
+| XWALLET_CARDV1_BR-02    | `ui-v1.md`          | —                            |
+| XWALLET_CARDV1_FR-02    | `ui-v1.md`          | XWALLET-AC-03                |
+| XWALLET_CARDV1_BR-03    | `ui-v1.md`          | XWALLET-AC-03                |
+| XWALLET_CARDFEAV1_FR-01 | `feature-v1.md`     | XWALLET-AC-01                |
+| XWALLET_CARDFEAV1_BR-01 | `feature-v1.md`     | XWALLET-AC-01                |
+| XWALLET_CARDFEAV1_BR-02 | `feature-v1.md`     | XWALLET-AC-03                |
+| XWALLET_POLLV1_FR-01    | `feature-v1.md`     | XWALLET-AC-04                |
+| XWALLET_POLLV1_BR-01    | `feature-v1.md`     | XWALLET-AC-04                |
+| XWALLET_POLLV1_BR-02    | `feature-v1.md`     | —                            |
+| XWALLET_SYNCV1_FR-01    | `feature-v1.md`     | XWALLET-AC-06                |
+| XWALLET_SYNCV1_BR-01    | `feature-v1.md`     | XWALLET-AC-06                |
+| XWALLET_PAGEV1_FR-01    | `page-v1.md`        | XWALLET-AC-07                |
+| XWALLET_PAGEV1_BR-01    | `page-v1.md`        | XWALLET-AC-07                |
 
 ## ❓ Open Technical Questions
 

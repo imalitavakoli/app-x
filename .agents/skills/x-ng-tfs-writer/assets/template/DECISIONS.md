@@ -1,6 +1,6 @@
 <!--
 Template for `docs/x/{name}/TFS/DECISIONS.md` — this functionality's **technical** decision history.
-Its sibling `README.md` + `{libtype}.md` files state what is true NOW; this file records what stopped being true and what was ruled out.
+Its sibling `README.md` + `{libtype}-v{n}.md` files state what is true NOW; this file records what stopped being true and what was ruled out.
 Remove every `>` helper note from the final draft; keep every heading you use.
 -->
 
@@ -18,10 +18,10 @@ Remove every `>` helper note from the final draft; keep every heading you use.
 >
 > **The number is burned.** `{NAME}_{OWNER}_BR-08` never returns, so an old commit, test title or review comment always resolves to the right rule.
 
-| ID                     | Lib file (was) | What it required                              | Retired | Why                                 | Replaced by            |
-| ---------------------- | -------------- | --------------------------------------------- | ------- | ----------------------------------- | ---------------------- |
-| `{NAME}_{OWNER}_BR-08` | `feature.md`   | A retry control rendered in the failure state | {date}  | Product dropped manual retry        | —                      |
-| `{NAME}_{OWNER}_FR-03` | `ui.md`        | Rendering rules keyed by a `variant` input    | {date}  | `variant` collapsed into `dataType` | `{NAME}_{OWNER}_FR-07` |
+| ID                     | Lib file (was)  | What it required                              | Retired | Why                                 | Replaced by            |
+| ---------------------- | --------------- | --------------------------------------------- | ------- | ----------------------------------- | ---------------------- |
+| `{NAME}_{OWNER}_BR-08` | `feature-v1.md` | A retry control rendered in the failure state | {date}  | Product dropped manual retry        | —                      |
+| `{NAME}_{OWNER}_FR-03` | `ui-v1.md`      | Rendering rules keyed by a `variant` input    | {date}  | `variant` collapsed into `dataType` | `{NAME}_{OWNER}_FR-07` |
 
 > Record the **reason**, not just the fact. And when a retired entry had a PRD AC, say whether that AC retired too — an AC left with no FR/BR is either a gap or a retirement nobody completed.
 

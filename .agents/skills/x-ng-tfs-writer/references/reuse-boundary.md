@@ -6,7 +6,7 @@ Read this whenever this functionality reuses a lib it does not own — existing,
 
 | The thing whose behaviour the requirement describes                       | Where that requirement lives                          |
 | ------------------------------------------------------------------------- | ----------------------------------------------------- |
-| A lib **this** functionality owns                                         | this `docs/x/{name}/TFS/{libtype}.md` — as an FR/BR   |
+| A lib **this** functionality owns                                         | this `docs/x/{name}/TFS/{libtype}-v{n}.md` — as an FR/BR   |
 | Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/TFS/` |
 | An item in a **grab-bag** `ui` / `feature` lib                            | that item's own `requirements.md`, beside its inner version README |
 | A `util` lib                                                              | that util's own `requirements.md`                     |
@@ -17,7 +17,7 @@ This holds no matter who asked for the change. A reused lib that must gain somet
 
 ## A reused lib's spec — where it goes, and what you must not do
 
-Recording the dependency correctly in the README does **not** also license a `{libtype}.md` for that lib. Emitting a spec file is a **separate decision**, governed by ownership alone:
+Recording the dependency correctly in the README does **not** also license a `{libtype}-v{n}.md` for that lib. Emitting a spec file is a **separate decision**, governed by ownership alone:
 
 | The reused lib belongs to… | Where its spec goes | In **this** TFS folder |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ Recording the dependency correctly in the README does **not** also license a `{l
 | a functionality **without** docs | its docs must be written first — **a separate decision, and a separate run of the writers for that functionality**, not this one. **Report that they are missing and stop.** | nothing; do **not** write its docs from this run and do **not** park them here |
 | that gate answered **No** — or it is a `util` / `app` / grab-bag / `api` | the `[TO-UPDATE]` surface list is the whole record; the plan carries the work | nothing but the reuse entry |
 
-**Never create a `{libtype}.md` for a lib this functionality does not own, and a disclaimer does not make it acceptable.** A note reading "this file documents a lib this functionality does not own" is proof the file should not exist. The usual symptom is a **pair**: a stray `map.md` that drags a `data-access.md` in with it.
+**Never create a `{libtype}-v{n}.md` for a lib this functionality does not own, and a disclaimer does not make it acceptable.** A note reading "this file documents a lib this functionality does not own" is proof the file should not exist. The usual symptom is a **pair**: a stray `map-v1.md` that drags a `data-access-v1.md` in with it.
 
 If the required change feels too large for a surface list, that is not a reason to add a file here — it is a reason to **report that the reused functionality needs docs of its own**, and let whoever decides scope decide whether that happens now.
 

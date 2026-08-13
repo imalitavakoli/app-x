@@ -1,4 +1,4 @@
-<!-- Example TFS folder for a VISUAL functionality with ui + feature (either alone is also valid visual). Mirrors docs/x/ng-x-profile/TFS/. A visual+ owns a page — add page.md (see mixed-plus example for page.md shape). -->
+<!-- Example TFS folder for a VISUAL functionality with ui + feature (either alone is also valid visual). Mirrors docs/x/ng-x-profile/TFS/. A visual+ owns a page — add page-v{n}.md (see mixed-plus example for its shape). This folder also demonstrates TWO LIVE VERSIONS of one lib: ui-v1.md + ui-v2.md. -->
 
 # TFS — ng-x-profile
 
@@ -22,6 +22,8 @@
 ### Rationale
 
 x-profile presents the user's profile in two forms — a compact card and an expanded detail. It has no `map`/`data-access` of its own: it reuses the shared `ng-user` **abstract** functionality's `data-access` lib for the data. So it needs `ui` + `feature` only.
+
+**Live lib versions.** `shared-ui-ng-x-profile` ships **v1 and v2 at once** — `ui-v1.md` and `ui-v2.md`, one file per live version — because v2 broke the card's `showCountry` input and existing consumers stay on v1. `shared-feature-ng-x-profile` is at v1 only (`feature-v1.md`) — it still drives the **v1** card, so migrating it to the v2 card is a later cycle and no `feature-v2.md` exists yet. Lib versions migrate independently; a v2 `ui` does not oblige its `feature` to follow in the same cycle. Each version's FR/BR numbering restarts under its own owner (`CARDV1` vs `CARDV2`), so nothing collided and nothing was renumbered.
 
 ### Non-Goals & Why
 
@@ -51,28 +53,35 @@ x-profile presents the user's profile in two forms — a compact card and an exp
 
 > Every FR/BR in this TFS, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
 
-| ID                         | Lib file     | Maps to PRD AC |
-| -------------------------- | ------------ | -------------- |
-| XPROFILE_CARDV1_FR-01      | `ui.md`      | XPROFILE-AC-01 |
-| XPROFILE_CARDV1_BR-01      | `ui.md`      | —              |
-| XPROFILE_CARDV1_BR-02      | `ui.md`      | XPROFILE-AC-01 |
-| XPROFILE_CARDV1_BR-03      | `ui.md`      | —              |
-| XPROFILE_CARDV1_BR-04      | `ui.md`      | —              |
-| XPROFILE_CARDV1_BR-08      | `ui.md`      | XPROFILE-AC-07 |
-| XPROFILE_CARDV1_FR-02      | `ui.md`      | XPROFILE-AC-05 |
-| XPROFILE_CARDV1_BR-05      | `ui.md`      | XPROFILE-AC-05 |
-| XPROFILE_DETAILV1_FR-01    | `ui.md`      | XPROFILE-AC-03 |
-| XPROFILE_DETAILV1_BR-01    | `ui.md`      | XPROFILE-AC-03 |
-| XPROFILE_DETAILV1_BR-02    | `ui.md`      | —              |
-| XPROFILE_DETAILV1_BR-05    | `ui.md`      | XPROFILE-AC-05 |
-| XPROFILE_DETAILV1_FR-02    | `ui.md`      | XPROFILE-AC-06 |
-| XPROFILE_DETAILV1_BR-03    | `ui.md`      | XPROFILE-AC-06 |
-| XPROFILE_CARDFEAV1_FR-01   | `feature.md` | XPROFILE-AC-01 |
-| XPROFILE_CARDFEAV1_BR-01   | `feature.md` | XPROFILE-AC-01 |
-| XPROFILE_CARDFEAV1_BR-02   | `feature.md` | XPROFILE-AC-01 |
-| XPROFILE_CARDFEAV1_BR-03   | `feature.md` | XPROFILE-AC-05 |
-| XPROFILE_DETAILFEAV1_FR-01 | `feature.md` | XPROFILE-AC-03 |
-| XPROFILE_DETAILFEAV1_BR-01 | `feature.md` | XPROFILE-AC-03 |
+| ID                         | Lib file        | Maps to PRD AC |
+| -------------------------- | --------------- | -------------- |
+| XPROFILE_CARDV1_FR-01      | `ui-v1.md`      | XPROFILE-AC-01 |
+| XPROFILE_CARDV1_BR-01      | `ui-v1.md`      | —              |
+| XPROFILE_CARDV1_BR-02      | `ui-v1.md`      | XPROFILE-AC-01 |
+| XPROFILE_CARDV1_BR-03      | `ui-v1.md`      | —              |
+| XPROFILE_CARDV1_BR-04      | `ui-v1.md`      | —              |
+| XPROFILE_CARDV1_BR-08      | `ui-v1.md`      | XPROFILE-AC-07 |
+| XPROFILE_CARDV1_FR-02      | `ui-v1.md`      | XPROFILE-AC-05 |
+| XPROFILE_CARDV1_BR-05      | `ui-v1.md`      | XPROFILE-AC-05 |
+| XPROFILE_DETAILV1_FR-01    | `ui-v1.md`      | XPROFILE-AC-03 |
+| XPROFILE_DETAILV1_BR-01    | `ui-v1.md`      | XPROFILE-AC-03 |
+| XPROFILE_DETAILV1_BR-02    | `ui-v1.md`      | —              |
+| XPROFILE_DETAILV1_BR-05    | `ui-v1.md`      | XPROFILE-AC-05 |
+| XPROFILE_DETAILV1_FR-02    | `ui-v1.md`      | XPROFILE-AC-06 |
+| XPROFILE_DETAILV1_BR-03    | `ui-v1.md`      | XPROFILE-AC-06 |
+| XPROFILE_CARDFEAV1_FR-01   | `feature-v1.md` | XPROFILE-AC-01 |
+| XPROFILE_CARDFEAV1_BR-01   | `feature-v1.md` | XPROFILE-AC-01 |
+| XPROFILE_CARDFEAV1_BR-02   | `feature-v1.md` | XPROFILE-AC-01 |
+| XPROFILE_CARDFEAV1_BR-03   | `feature-v1.md` | XPROFILE-AC-05 |
+| XPROFILE_DETAILFEAV1_FR-01 | `feature-v1.md` | XPROFILE-AC-03 |
+| XPROFILE_DETAILFEAV1_BR-01 | `feature-v1.md` | XPROFILE-AC-03 |
+| XPROFILE_CARDV2_FR-01      | `ui-v2.md`      | XPROFILE-AC-01 |
+| XPROFILE_CARDV2_BR-01      | `ui-v2.md`      | —              |
+| XPROFILE_CARDV2_BR-02      | `ui-v2.md`      | XPROFILE-AC-01 |
+| XPROFILE_CARDV2_BR-03      | `ui-v2.md`      | —              |
+| XPROFILE_CARDV2_BR-04      | `ui-v2.md`      | XPROFILE-AC-07 |
+| XPROFILE_CARDV2_FR-02      | `ui-v2.md`      | XPROFILE-AC-05 |
+| XPROFILE_CARDV2_BR-05      | `ui-v2.md`      | XPROFILE-AC-05 |
 
 ## ❓ Open Technical Questions
 

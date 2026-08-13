@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TFS/map.md` — the `map` lib spec + its FR/BR.
+Template for `docs/x/{name}/TFS/map-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `map` lib spec + its FR/BR.
 Include this file only when this functionality **owns** a `map` lib (API endpoint or external asset load — not Local Storage / SQLite alone).
 Lib name uses the domain: `{domain}-map-ng-{name}`. Remove `>` helpers from the final draft.
 Register every FR/BR ID in the README's 🧭 ID Index.

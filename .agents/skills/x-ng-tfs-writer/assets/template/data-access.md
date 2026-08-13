@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TFS/data-access.md` — the `data-access` lib spec + its FR/BR.
+Template for `docs/x/{name}/TFS/data-access-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `data-access` lib spec + its FR/BR.
 A `map` lib ALWAYS has a sister `data-access` lib, so include this whenever this functionality OWNS a map lib.
 Ownership decides the file set — never include this because a REUSED lib has a map/data-access pair.
 For an ABSTRACT functionality (no feature/ui), also add the short facade-consumer note at the end.
@@ -37,4 +37,4 @@ Register every FR/BR ID in the README's 🧭 ID Index.
 
 #### Consumer usage (abstract functionalities only)
 
-> **Include this heading only for an abstract functionality** (no `feature.md`). A short note on how a consumer (a page or `feature` component) uses the facade — which methods to call, in what order, and which observables to subscribe to (typically: reset → `getX()` in `_xDataFetch` → await `…Loaded$` → read `…Data$`). Omit this heading entirely when the functionality has a `feature.md`.
+> **Include this heading only for an abstract functionality** (no `feature-v{n}.md`). A short note on how a consumer (a page or `feature` component) uses the facade — which methods to call, in what order, and which observables to subscribe to (typically: reset → `getX()` in `_xDataFetch` → await `…Loaded$` → read `…Data$`). Omit this heading entirely when the functionality has a `feature-v{n}.md`.

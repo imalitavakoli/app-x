@@ -1,8 +1,10 @@
+<!-- The FIRST of two live versions of `shared-ui-ng-x-profile`. v2 is specified in its sibling ui-v2.md; both ship at once, so both stay documented until v1's folder is deleted. -->
+
 ### 🖼️ 'ui' Library Specification
 
 #### Lib Name
 
-`shared-ui-ng-x-profile`
+`shared-ui-ng-x-profile` — `src/lib/v1/`
 
 #### Exported Components
 

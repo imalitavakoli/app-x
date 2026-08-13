@@ -14,12 +14,12 @@ Prerequisite still holds: the **PRD** must exist (or be provided). If it is miss
 
 - **Do not invent** FRs/BRs or technical journeys that the PRD does not support. Code is evidence for contracts; the PRD is the product source of truth.
 - **Do not add owned lib types** that are not in the classification / PRD just because similarly named folders exist elsewhere.
-- **Do not absorb consumer pages** as this functionality's `page.md`.
+- **Do not absorb consumer pages** as this functionality's `page-v{n}.md`.
 - **Do not skip** putting Open Technical Questions to the user.
 
 ## How to proceed
 
 1. Confirm `{name}` and owned lib types from the PRD + libs that share that name.
-2. Write one `{libtype}.md` per owned type; ground public contracts in what exists where it matches the PRD.
+2. Write one `{libtype}-v{n}.md` per owned type per live version; ground public contracts in what exists where it matches the PRD.
 3. Build the README ID Index with AC back-links; mark product-observable gaps as `(new — suggest a PRD AC)` per the main skill.
 4. Validate, then Confirm Open Technical Questions as in the main skill.

@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TFS/ui.md` — the `ui` lib spec + its FR/BR.
+Template for `docs/x/{name}/TFS/ui-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `ui` lib spec + its FR/BR.
 Include this file only when this functionality **owns** a `ui` lib (optional for visual / visual+ / mixed / mixed+).
 Lib name: `{domain}-ui-ng-{name}`. Remove `>` helpers from the final draft.
 Repeat the `##### Component: …` block per exported component. Register every FR/BR ID in the README's 🧭 ID Index.
@@ -62,7 +62,7 @@ export class V1{Name}Component extends V1BaseUiComponent implements V1BaseUi_Has
 
 ###### Functional Requirements & Business Rule Breakdown
 
-> `describe`↔FR, `it`↔BR. Cover this component's **presentation and interaction** behaviour (everything except data fetching, which the `feature` owns). Derive the FR/BR from the PRD's ACs and this TFS's design; write `Given/When/Then` with exact `[data-cy]`/inputs/emitters; back-link each PRD AC it implements; add NEW unique IDs for technical scenarios (loading/error/visibility) not in the PRD. IDs scoped to the component (`{NAME}_{OWNER}_…`, where `{OWNER}` is its short role word plus the lib's version — `CARDV1`, not the full class name) and unique across the TFS folder.
+> `describe`↔FR, `it`↔BR. Cover this component's **presentation and interaction** behaviour (everything except data fetching, which the `feature` owns). Derive the FR/BR from the PRD's ACs and this TFS's design; write `Given/When/Then` with exact `[data-cy]`/inputs/emitters; back-link each PRD AC it implements; add NEW unique IDs for technical scenarios (loading/error/visibility) not in the PRD. IDs scoped to the component (`{NAME}_{OWNER}_…`, where `{OWNER}` is its short role word plus the lib's version — `CARDV1`, not the full class name; an unversioned app-domain lib's owner stays bare) and unique across the TFS folder.
 
 ###### Error Handling & Edge Cases
 
@@ -70,4 +70,4 @@ export class V1{Name}Component extends V1BaseUiComponent implements V1BaseUi_Has
 
 #### Helper Services
 
-> Optional — only if this lib needs internal helpers. Each is an **Angular service** in `_util/{name}.service.ts` (prefer a service over a plain util class). Give Responsibility, Public API, and its own FR/BR IDs (`{NAME}_{HELPER-NAME}_FR-01` / `{NAME}_{HELPER-NAME}_BR-01` — same format as components).
+> Optional — only if this lib needs internal helpers. Each is an **Angular service** in `_util/{name}.service.ts` (prefer a service over a plain util class). Give Responsibility, Public API, and its own FR/BR IDs (`{NAME}_{OWNER}_FR-01` / `{NAME}_{OWNER}_BR-01` — same format and same derivation as components, so a `V1{Name}FormatService` is `FORMATV1`).

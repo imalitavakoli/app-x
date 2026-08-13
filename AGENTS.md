@@ -414,7 +414,7 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 | Skill                   | Produces / supplies                                                                                                                                 |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `x-ng-prd-writer`       | `docs/x/{name}/PRD/README.md` — the ACs                                                                                                             |
-| `x-ng-tfs-writer`       | `docs/x/{name}/TFS/` — `README.md` (ID Index) + one `{libtype}.md` per lib (FRs/BRs)                                                                |
+| `x-ng-tfs-writer`       | `docs/x/{name}/TFS/` — `README.md` (ID Index) + one `{libtype}-v{n}.md` per lib version (FRs/BRs; app-domain libs are unversioned → plain `{libtype}.md`)                                                                |
 | `x-ng-lib-build-helper` | canonical lib-structure examples + guidelines                                                                                                       |
 | `x-ng-test-unit-helper` | unit-test conventions — functionalities: `describe`↔FR, `it`↔BR from the TFS; `util` / `app`: same from local `requirements.md`; `api`: no ID doc |
 | `x-ng-test-e2e-helper`  | the e2e rule — `describe`↔US from the app's `user-stories.md`, `it`↔AC from the PRD                                                               |
@@ -425,7 +425,7 @@ Two are **writers** (they produce docs), four are **helpers** (their examples/gu
 
 ### Locations & rollout
 
-- Functionality docs live in `docs/x/{name}/` — a `PRD/` folder (`README.md` + `DECISIONS.md`) and a `TFS/` folder (`README.md` + one `{libtype}.md` per lib type). `util`, `api`, and `app` never get those docs (they are not functionalities). **`util`** may have `requirements.md` beside each inner/version README; product **`app`** may have `apps/{app-name}/requirements.md` — both supply unit-test FR/BR IDs (`UTIL-…` / `APP-…`). **`api`** has no `requirements.md`. Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
+- Functionality docs live in `docs/x/{name}/` — a `PRD/` folder (`README.md` + `DECISIONS.md`) and a `TFS/` folder (`README.md` + one `{libtype}-v{n}.md` per lib type per live version; an unversioned app-domain lib uses the plain `{libtype}.md`). `util`, `api`, and `app` never get those docs (they are not functionalities). **`util`** may have `requirements.md` beside each inner/version README; product **`app`** may have `apps/{app-name}/requirements.md` — both supply unit-test FR/BR IDs (`UTIL-…` / `APP-…`). **`api`** has no `requirements.md`. Each e2e app owns `apps/{app}-e2e/user-stories.md`, with US IDs unique per app.
 - All seven skills above exist. **If a referenced skill is missing, say so and ask** — do not skip its step silently. (A later step whose required input never arrived will stop and ask per its own prerequisite guard, rather than produce wrong output.)
 
 &nbsp;

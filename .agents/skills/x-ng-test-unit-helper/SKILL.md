@@ -52,7 +52,7 @@ When you touch a lib that already has one, its existing entries can go stale the
 
 **No TFS in scope:** if there is no `docs/x/{name}/TFS/` for the functionality under test and this work is not producing one, **do not** require FR/BR IDs — use plain titles. Do not invent IDs and do not create a TFS from here.
 
-For a **functionality** lib, the TFS — the `docs/x/{name}/TFS/` folder, specifically the `{libtype}.md` file for the lib you're testing (its FR/BR live in that file; the README's ID Index lists every ID and where it lives) — is the source of the IDs. Each exported component and helper service owns its own. Use the **exact IDs written in the TFS** (the TFS defines their format; don't invent your own).
+For a **functionality** lib, the TFS — the `docs/x/{name}/TFS/` folder, specifically the `{libtype}-v{n}.md` file for the lib version you're testing (an unversioned app-domain lib uses the plain `{libtype}.md`) (its FR/BR live in that file; the README's ID Index lists every ID and where it lives) — is the source of the IDs. Each exported component and helper service owns its own. Use the **exact IDs written in the TFS** (the TFS defines their format; don't invent your own).
 
 - **`describe`** ↔ a **Functional Requirement (FR)** — titled `<FR-ID>: <what it tests>`.
 - **`it`** ↔ a **Business Rule (BR)** — titled `<BR-ID>: Given <…>; When <…>; Then <…>`, and use **AAA** (Arrange / Act / Assert) in the body.
