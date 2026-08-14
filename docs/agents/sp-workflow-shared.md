@@ -10,15 +10,20 @@ The rules **every path assumes**. Read this at the start of any cycle, before th
 
 &nbsp;
 
-## When a Superpowers skill a hook names is missing
+## When a Superpowers skill we name is missing
 
-A hook names a Superpowers skill as the **marker** for a lifecycle moment — not as the reason the hook exists. "Before we finish the branch" is still a real moment even if `finishing-a-development-branch` is renamed, split, or dropped in a later Superpowers release.
+Wherever our workflow names a Superpowers skill, the name is a **marker for something more durable — never the thing itself.** Two places do it, and each marks something that outlives the name:
+
+| Where                            | The name marks…                             | Which survives a rename because…                                                  |
+| -------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------- |
+| a 🪝 hook's attach-point         | a **lifecycle moment**                      | "before we finish the branch" is still a real moment whatever the skill is called |
+| the path selector in `AGENTS.md` | a **kind of work** (design work · a defect) | the work is still that kind, and the replacing skill's own `description` says so  |
 
 So if a named skill is **not present** in the installed Superpowers:
 
-- **The moment still governs.** Run the hook where that moment occurs, and **say that you did and why**.
-- **Never silently skip it**, and **never silently substitute a similar-looking skill** — a hook run at the wrong moment looks like it worked, which is worse than one that did not run.
-- **Check, do not guess.** Which skills exist is observable: the available-skills listing, and the plugin cache on disk.
+- **The thing it marked still governs.** Run the hook at that moment, or route to that path, and **say that you did and why**.
+- **Never silently skip it**, and **never silently substitute a similar-looking skill** — work done at the wrong moment, or on the wrong path, looks like it worked. That is worse than not running at all.
+- **Check, do not guess.** Which skills exist is observable: the available-skills listing, and the plugin cache on disk. So is what each one is for: its own `description`.
 
 This has already bitten us once — a hook anchored to `verification-before-completion` turned out to be invoked only by `systematic-debugging`, so it never fired on the build path at all.
 

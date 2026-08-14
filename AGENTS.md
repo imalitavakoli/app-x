@@ -49,6 +49,7 @@
 - Before writing, changing or reviewing any code: `/docs/guidelines/best-practices.md` **in full** — Mindset, Documenting and Organizing. You will not know which of the three binds until you are into the work, so read it whole rather than picking a section.
 - Shared libraries are versioned and reused across apps (see `/docs/getting-started/library-types-and-their-relationship.md#versioning-shared-libs`).
 - For Angular, see `/docs/guidelines/available-commands.md#angular-related` for generation and build patterns.
+- **Before editing this file** — `/docs/agents/agents-md-format.md`: what qualifies to live here at all, how to write a pointer, and the sweep to run before calling the edit done. Where any other fact belongs: `/docs/agents/where-content-lives.md`.
 
 &nbsp;
 
@@ -118,11 +119,13 @@ Read it once at the start of a cycle, together with the path file. The path file
 
 Do **not** pre-classify the request. Route it through `superpowers:using-superpowers` as normal and let it match on the skills' own descriptions — then **the skill it picks names your path**:
 
-| The skill that fires                                       | You are on | Read in full before continuing                                             |
-| ---------------------------------------------------------- | ---------- | -------------------------------------------------------------------------- |
-| `brainstorming`                                            | **Path A** | [`/docs/agents/sp-workflow-path-a.md`](/docs/agents/sp-workflow-path-a.md) |
-| `systematic-debugging`                                     | **Path B** | [`/docs/agents/sp-workflow-path-b.md`](/docs/agents/sp-workflow-path-b.md) |
-| `writing-skills`, `dispatching-parallel-agents`, any other | **Path C** | [`/docs/agents/sp-workflow-path-c.md`](/docs/agents/sp-workflow-path-c.md) |
+| What the skill that fired says it opens, in its own `description`                                            | You are on | Read in full before continuing                                             |
+| ------------------------------------------------------------------------------------------------------------ | ---------- | -------------------------------------------------------------------------- |
+| **design work** — creating, building, adding functionality, or _modifying behavior_ · today `brainstorming`   | **Path A** | [`/docs/agents/sp-workflow-path-a.md`](/docs/agents/sp-workflow-path-a.md) |
+| **a defect** — a bug, test failure, _unexpected_ behavior, or a broken build/perf/integration · today `systematic-debugging` | **Path B** | [`/docs/agents/sp-workflow-path-b.md`](/docs/agents/sp-workflow-path-b.md) |
+| **neither** · today `writing-skills`, `dispatching-parallel-agents`, …                                        | **Path C** | [`/docs/agents/sp-workflow-path-c.md`](/docs/agents/sp-workflow-path-c.md) |
+
+**The names are markers, not the definition.** If a release renames, splits or replaces one of these, read the **`description` of the skill that actually fired** — the same text `using-superpowers` matched on — and route by what it says it opens: design work → A · a defect → B · neither → C. Which skills exist is checkable, not guessable. This is the marker-vs-moment rule the hooks already use, applied to routing (`/docs/agents/sp-workflow-shared.md`).
 
 Read the shared rules and that path file **once, at the start of the cycle**, and hold them through it: the todos you create (Operating rule 3) and the plan the enricher writes (Operating rule 4) are what carry them past a compaction. Re-read if either is lost.
 
@@ -130,7 +133,7 @@ Read the shared rules and that path file **once, at the start of the cycle**, an
 
 **If the request is genuinely ambiguous** — "this feature is wrong" can mean _we changed our mind_ (design work → `brainstorming`) or _it never matched its spec_ (a defect → `systematic-debugging`) — **ask the user rather than letting the match fall either way.** The tell: do you already know what the new behavior should be, or must you first find out **why** the current behavior happens?
 
-> **Editing the workflow?** How to edit this file: `/docs/agents/agents-md-format.md`. The path files' notation: `/docs/agents/sp-workflow-format.md`. Why any of it is shaped this way: `/docs/agents/sp-workflow-rationale.md`.
+> **Editing a path file?** Its notation: `/docs/agents/sp-workflow-format.md`. Why any of it is shaped this way: `/docs/agents/sp-workflow-rationale.md` — rationale only, never needed to execute a cycle.
 
 &nbsp;
 
