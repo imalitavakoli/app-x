@@ -4,7 +4,7 @@
 
 Why the workflow in [`AGENTS.md`](../../AGENTS.md) → _Superpowers-First Workflow_ and its [path files](sp-workflow-path-a.md) is shaped the way it is.
 
-> **This document is rationale only — it contains no rules.** Every rule an agent must follow lives in `AGENTS.md` or its `sp-workflow-path-*.md` files. Nothing here needs to be read to execute a cycle correctly; it exists so a human (or an agent auditing the setup) can see why each decision was made, and what to reconsider if Superpowers changes.
+> **Rationale only — no rules.** Every rule lives in `AGENTS.md` or `sp-workflow-path-*.md`. Do **not** read this to execute a cycle. Read it when **editing** the workflow or **questioning** a decision — and when Superpowers changes, to see what to revisit.
 
 &nbsp;
 
@@ -12,7 +12,19 @@ Why the workflow in [`AGENTS.md`](../../AGENTS.md) → _Superpowers-First Workfl
 
 ## Why we layer instead of fork
 
-Superpowers ships as a plugin that updates independently, so any edit to its own files is lost on the next update. It also states its own precedence rule — user instructions (`CLAUDE.md`, `AGENTS.md`) outrank skills, which outrank default behavior — and its `writing-skills` skill explicitly routes project-specific conventions to the instructions file rather than into skill forks. So `AGENTS.md` plus our own `.agents/skills/x-*` skills is not a workaround; it is the channel Superpowers designed for exactly this.
+Superpowers updates independently, so edits to its files are lost. It already ranks user instructions above skills, and routes project conventions to `AGENTS.md` rather than skill forks. So `AGENTS.md` plus our `x-*` skills is the sanctioned channel, not a workaround.
+
+**Revisit if** Superpowers stops honouring that precedence, or stops routing project conventions to the instructions file.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why pre-flight is a checklist
+
+The first Superpowers skill starts talking before any path file is loaded, so reads and loads that must shape it live in `AGENTS.md` as an agent-answered list. A check belongs only if that skill would act wrongly without it. The list stays inline because it already runs on every request; it is not a skill (control flow is not).
+
+**Revisit if** Superpowers exposes a hook before the first skill speaks, or the list itself becomes the bulk of the workflow section (then extract).
 
 &nbsp;
 
@@ -20,15 +32,9 @@ Superpowers ships as a plugin that updates independently, so any edit to its own
 
 ## Why work in place, with no worktree
 
-A worktree exists to keep your trunk safe while an agent works, and a feature branch already does that. Here a worktree would only add cost, for two reasons that hold no matter which agent or tool creates it:
+A feature branch already isolates the work. A worktree is a cold checkout: no `node_modules` or Nx cache, and none of our git-ignored local files (`AGENTS.local.md`, `.superpowers/`).
 
-**(a) A worktree is a fresh checkout — no `node_modules`, no Nx cache.** Every cycle would open with a full `pnpm install` and a cold cache before the first line of code, and pay it again on the next cycle.
-
-**(b) A fresh checkout has none of our git-ignored local files.** `AGENTS.local.md` (when present — mandatory to read per _Developer Workflows_) and `.claude/settings.local.json` would simply not be there, and `.superpowers/` — the cycle's spec, plan and SDD ledger — would be deleted along with the worktree when finishing cleans it up.
-
-A worktree's one real benefit is running two feature cycles at the same time, or letting an agent build while you keep using your own checkout — **not** parallel implementers, which `subagent-driven-development` forbids regardless ("Never dispatch multiple implementation subagents in parallel").
-
-**If we ever want that:** drop the "do not create a worktree" preference in `AGENTS.md` and `using-git-worktrees` returns to its own default (it asks for consent and creates one), then give the ignored files above a home outside the worktree. Nothing else moves — the paths and their hooks, their order, and both execution modes stay exactly as they are.
+**Revisit if** we need two feature cycles in parallel on one machine — drop the preference and house those ignored files outside the worktree.
 
 &nbsp;
 
@@ -36,9 +42,9 @@ A worktree's one real benefit is running two feature cycles at the same time, or
 
 ## Why hooks are gated or close-out (not a new landmark)
 
-🚧 **gate** stays a landmark. **`[gated]`** and **`[close-out]`** are only kinds of 🪝 **hook** (optional heading tags), so a gate rule can stay path-agnostic: a gate's answer may skip **gated** hooks or **`[gated]` step bands**; it must **not** skip a **close-out** hook. Label kinds on paths that use gates / close-out (Path A; B1 on Path B); omit them on paths that don't (Path C today). Prefer **one hook per Superpowers before/after attach-point**; put gate-skippable work in a **`[gated]`** step band inside a `[close-out]` hook rather than inventing a second hook at the same point (e.g. do not add an `A1b`).
+`[gated]` and `[close-out]` are kinds of hook, so a gate can skip gated work without skipping close-out. One hook per Superpowers attach-point; skippable work goes in a `[gated]` band inside the close-out hook.
 
-Hierarchy inside a path: **hook → step bands (`[gated]` / Always) → steps**. A **▶️ resume block** is not a step band — it is a post-hard-stop contract (blockquote + icon), used today on A2 after the plan-review wait; any future hard-stop hook can add one the same way. A close-out hook may contain a `[gated]` band (Path A's PRD/TFS work inside A1; enricher inside A2): the hook always runs; that band is what the gate skips.
+**Revisit if** we need a third kind that is neither skippable-by-gate nor always-run.
 
 &nbsp;
 
@@ -46,17 +52,9 @@ Hierarchy inside a path: **hook → step bands (`[gated]` / Always) → steps**.
 
 ## Why gates share a set and constraints never will
 
-Both 🚧 **gates** on Path A used to restate the same two lists: the hooks they control (_A1's gated band, A2's enricher step, A3_) and the complement that runs anyway (_brainstorming, A1's Always band, A2's hard stop, TDD_). Three copies of the first list, two of the second — five edits every time a hook moves. Hoisting both into a **set** declared above the gates removed that: Path A's **Docs-in-scope set** names the members once, and each gate only answers.
+Gates on one path share a target, so one **set** names the members once. Constraints do not share a target, so `Spans:` is the search key — not a set. Past ~4 constraints on one path, move the `Spans:` lines into an index rather than copying them.
 
-That hoist worked because **every gate on a path controls the same target**. Two gates, one set of members, one complement — which is exactly why _set_ is a named shape in the landmark catalog rather than a one-off: any future path whose gates share a target can declare its own.
-
-It is worth being explicit that this does **not** generalize to 📌 **constraints**, now or at any future count:
-
-- **Constraints have no common target.** 📌 _PRD/TFS over cycle spec_ governs which requirements source wins; 📌 _Companion work_ governs task ordering and per-functionality repetition. They both touch `writing-plans` and A2, and say entirely unrelated things about them. A set above them would have nothing to hold — an empty header that future editors would feel obliged to fill.
-- **Their scaling problem is lookup, not duplication.** Constraints are _declared_ on the path but _consumed_ at hooks. The question that gets hard at six constraints is "standing at A2, which ones bind me?" — the inverse direction. An index answers it, but an index is a second copy of every `Spans:` line and drifts from the first.
-- **So the fix is a search key, not a set.** `Spans:` naming hooks by their `{ID}` makes "what governs A2?" one search of `AGENTS.md`, complete and always current, because the span is declared exactly once — next to the rule it belongs to. Only past ~4 constraints on one path does an index earn its keep, and then the `Spans:` lines **move** into it rather than being copied.
-
-The parallel that _does_ hold is combination. Gates needed a combination rule (**any gate answering No skips the whole set**) because two gates can both bear on one set. Constraints need a non-collision rule (**amend the existing constraint rather than adding a second**) because two constraints can both bear on one step. Each is one line, and both live in `AGENTS.md` → _Cross-cutting_.
+**Revisit if** a path's gates stop sharing one target, or one path grows past ~4 constraints.
 
 &nbsp;
 
@@ -64,11 +62,9 @@ The parallel that _does_ hold is combination. Gates needed a combination rule (*
 
 ## Why the two gates never reference each other
 
-The Missing-docs gate used to open with "when the Functionality gate applies" — a phrase that reads two opposite ways (_the gate is in force_, which is always true, or _the gate let us through_). Worse, "applies" was simultaneously the verb for hooks (_A1 … apply only when …_), so the same word had two subjects with inverted meanings.
+They ask different questions (documentable vs document-now). Each states its trigger from the work; the set's **Combine:** rule resolves two answers. A cross-reference ("when the other gate applies") reads two opposite ways.
 
-The two gates ask genuinely different questions — _is this documentable at all?_ (lib type) versus _should this undocumented lib start being documented?_ (a user decision) — so each can state its own trigger from the work itself. The Missing-docs gate names the functionality lib types directly; that is the same **fact** the Functionality gate reads, not a dependency on its **answer**. Strict logical independence was never the goal (Missing-docs can only ever arise for a functionality lib); independent _phrasing_ was, and the set's **Combine:** rule is what makes two independently-answered gates resolve predictably.
-
-Hence the reserved verbs in `AGENTS.md` → _Cross-cutting_: gates **ask** and **answer**, hooks **run** or are **skipped**, constraints **span**. One verb per landmark, no overlap.
+**Revisit if** a new gate must actually depend on another's answer — then change **Combine:**, do not cross-link the asks.
 
 &nbsp;
 
@@ -76,13 +72,9 @@ Hence the reserved verbs in `AGENTS.md` → _Cross-cutting_: gates **ask** and *
 
 ## Why Path A/B skip PRD/TFS for `util` / `api` / `app` and grab-bag libs
 
-PRD and TFS under `docs/x/{name}/` exist only for **functionalities** (product features built from `map` / `data-access` / **single-purpose** `ui` / `feature` / `page`). That distinction already lived in `docs/getting-started/library-types-and-their-relationship.md` and in the writers' own STOP gates — but Path A's typical flow ("PRD + TFS + e2e verdict") had no skip, so an agent following the path after a util-only brainstorm still invoked A1 and expected functionality docs. The writers would refuse; the enricher would then "stop and ask" for a missing PRD — friction that looked like a gap rather than a correct exclusion.
+Those are not functionalities. Without a gate, a util-only cycle still invoked A1 and treated the writers' STOP as a gap. The Functionality gate skips the docs-in-scope set; unit tests still run via local `requirements/`.
 
-A second case joined later, for the same reason: a **grab-bag** `ui` / `feature` lib (`CONTEXT.md`). Its type says "functionality-capable", but its items are unrelated. One PRD for it would have to state ACs spanning every unrelated item — documenting a container rather than a product feature. Worse, before the gate covered it the rules left **no correct answer**: either document a container as a feature, or split the lib to invent a functionality name. So a grab-bag answers the gate **No** and its items take the same local `requirements/` route as a `util` (`UI-…` / `FEA-…` IDs).
-
-The **Functionality gate** — carried on both Path A and Path B — moves that decision into control flow: when the cycle is only `util` / `api` / `app`, or a grab-bag `ui` / `feature`, skip Path A's docs-in-scope set (A1's `[gated]` band, A2's enricher step, A3) and skip B1. The skills stay the second line of defense if they are invoked anyway. Close-out still runs: A1 always (mode → `writing-plans` with mode in Global Constraints) → A2 hard-stops. Execution starts only after the user proceeds. Only the functionality-doc work is omitted — not the plan-review boundary.
-
-Skipping `docs/x/` PRD/TFS does **not** skip unit tests. When the plan or brainstorm includes specs, **`util`**, product **`app`** and **grab-bag** items still get unit tests — their FR/BR IDs live in a local **`requirements/`** registry (beside the util or grab-bag item's version README, or at `apps/{app-name}/requirements/`), owned by the `x-ng-test-unit-helper` convention, not under `docs/x/`. **`api`** stays without that doc (proxy-only). E2e apps keep a `user-stories/` folder for US IDs — `README.md` for live stories, `DECISIONS.md` for burned ones, mirroring a functionality's `PRD/`.
+**Revisit if** we start treating a grab-bag or `util` as a product feature with ACs.
 
 &nbsp;
 
@@ -90,20 +82,9 @@ Skipping `docs/x/` PRD/TFS does **not** skip unit tests. When the plan or brains
 
 ## Why the Missing-docs gate exists
 
-A functionality's durable identity in this workspace is `docs/x/{name}/` (PRD + TFS). Family-named libs (`…-feature-ng-users`, `…-ui-ng-users`, …) are a strong hint, not proof — without those docs there is no reliable record of which libs the functionality owns. Humans often still "know" the grouping; agents do not.
+An existing undocumented functionality-type lib should not force a first-time PRD interview. Path A asks (it is already a design conversation). Path B auto-skips: B1 has nothing to verify without docs, and a bug fix is the wrong moment to start one.
 
-Path A used to treat every functionality-type cycle as **write/refresh PRD & TFS**. For a small update to an **existing** lib with no docs yet, that forced a first-time product/technical interview the user never asked for — or left the writers stuck on "STOP and ask" for a full description, then the enricher stuck on missing PRD/TFS.
-
-The **Missing-docs gate** (document now / skip) fixes the control flow:
-
-- **Document now** — first-time PRD/TFS (writers may bootstrap from existing libs + Q&A; still no inventing, still AC approval), then the rest of the docs-in-scope set as usual.
-- **Skip** — intentional limited cycle: Superpowers brainstorm → A1 always (mode → `writing-plans` with mode in the plan) → A2 hard stop → implement after the user proceeds (and TDD if tests are in scope), **without** A1's gated steps / enricher / A3. No our FR/BR/AC ID conventions for that cycle. Same shape as the Functionality gate's util/api/app skip, but chosen by the user for an undocumented functionality lib.
-
-**New** functionalities (libs not yet in the workspace) do not get the skip offer — creating them is creating the functionality; docs stay on the path.
-
-**Why Path B's Missing-docs gate is `[auto]`, not `[ask]`.** Path B carries the same gate by name, but it never asks: an undocumented functionality simply skips B1. Two reasons. B1's `[gated]` band is an **update-only** step — it verifies an existing PRD/TFS against the proven fix — but IDs and those docs only exist together. A functionality with no `docs/x/{name}/` has no ID namespace at all, so there is nothing to verify, amend, retire or re-tag. And a bug fix is the worst moment to open a first-time product interview; the user came to fix something, not to document a functionality. When they do want it documented, that is a Path A cycle. Path A keeps `[ask]` because it is already a design conversation, and the docs it would produce are the input to a plan.
-
-The writers stay atomic (HOW to bootstrap). The ask/skip decision stays in `AGENTS.md` (WHEN). This rationale doc holds only the WHY.
+**Revisit if** Path B grows a first-time-document step, or every functionality-type lib must have `docs/x/{name}/`.
 
 &nbsp;
 
@@ -111,15 +92,9 @@ The writers stay atomic (HOW to bootstrap). The ask/skip decision stays in `AGEN
 
 ## Why the PRD/TFS steps precede `writing-plans`
 
-`brainstorming` declares an exclusive exit: _"The terminal state is invoking writing-plans. Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans."_ Our _Before `writing-plans`_ hook inserts steps into exactly that gap, so it is worth being precise about why that is legitimate:
+`brainstorming`'s exclusive exit guards against *implementation* skills, not document writers. A1 inserts in that gap (user-instruction precedence). The e2e verdict must precede planning — Superpowers has no e2e concept, and a task added later cannot carry the paths `writing-plans` requires.
 
-- **What the exclusivity guards against** is an _implementation_ skill hijacking the design→plan handoff and starting to write code before there is a plan. Both named examples (`frontend-design`, `mcp-builder`) are implementation skills, and the surrounding `HARD-GATE` is about implementation actions.
-- **Our inserts build nothing.** `x-ng-prd-writer` and `x-ng-tfs-writer` write documents; the three helpers only load context. No code, no scaffolding, and `writing-plans` is still the next Superpowers skill to run.
-- **The precedence rule authorizes it**, and the human is the only authority Superpowers recognizes for waiving a skill workflow. `AGENTS.md` is that instruction.
-
-The override is named inline in A1 itself on purpose. An agent that has just read `brainstorming`'s forceful wording is about to act on it, so the resolution has to be in front of it at that moment — not here.
-
-**Why the e2e verdict is decided here rather than later.** Superpowers has no concept of e2e tests, so nothing downstream will mint that task. And a task added after planning cannot carry the complete code and exact file paths that every `writing-plans` task is required to carry. Deciding the verdict before planning is what lets `writing-plans` author a fully-specified e2e task in the first place.
+**Revisit if** Superpowers grows native e2e, or that exclusive exit starts forbidding document skills too.
 
 &nbsp;
 
@@ -127,14 +102,9 @@ The override is named inline in A1 itself on purpose. An agent that has just rea
 
 ## Why PRD/TFS outrank the brainstorm spec for planning
 
-Superpowers `writing-plans` is built to plan from the brainstorm **spec** and to self-check coverage against that file. In this workspace, A1 sits between brainstorm and planning so the user can approve durable PRD/TFS decisions — and those decisions often **change** what the spec said. If the agent then plans from the stale spec, the plan fights the docs we just wrote (and the enricher's ID coverage check against PRD/TFS cannot fully repair architecture or product choices baked into a stale design).
+A1 often changes what the spec said; planning from the stale spec fights the docs. When the docs-in-scope set ran: PRD/TFS win on conflicts, spec fills gaps, A1 syncs the spec. When it skipped: spec alone (vanilla Superpowers).
 
-We do **not** move PRD/TFS before brainstorm: the writers need brainstorm conclusions as input. We also do **not** fork `writing-plans`. Instead, when the docs-in-scope set ran:
-
-1. **Layered source of truth** (📌 _PRD/TFS over cycle spec_) — PRD/TFS are primary; on conflicts they win; for plan needs they do not cover (companion-lib tasks, narrative detail), use the brainstorm spec; invent nothing that appears in neither.
-2. **Spec sync at A1** — update `.superpowers/specs/…` so overlapping decisions match the approved PRD/TFS, while leaving legitimate gap material in the spec — so Superpowers' native "read the spec" path stays aligned (the spec stays git-ignored and uncommitted).
-
-When A1's gated steps were skipped, there is no PRD/TFS carrier — the brainstorm spec alone remains the plan's requirements source, same as vanilla Superpowers; A1's always band still asks mode, `writing-plans` still records it, and A2 still hard-stops.
+**Revisit if** `writing-plans` can plan from PRD/TFS natively.
 
 &nbsp;
 
@@ -142,19 +112,9 @@ When A1's gated steps were skipped, there is no PRD/TFS carrier — the brainsto
 
 ## Why the execution-mode question is ours to ask
 
-Vanilla `writing-plans` already ends by offering two execution paths — "Subagent-Driven (recommended)" or "Inline Execution" (`executing-plans`) — and only falls back to inline on its own when the harness has no subagents. The choice is Superpowers'; we are not bolting on a foreign concept. We change exactly three things:
+Superpowers already has the two modes. We ask before `writing-plans` so the plan is born with the answer. Interactive uses `executing-plans` because muting git inside `subagent-driven-development` would empty the commit-range reviews.
 
-1. **We always ask on Path A, and ask before `writing-plans`.** Vanilla asks at the end of `writing-plans`; we ask in A1's always band, then `writing-plans` writes the chosen mode (🎛️ Plan line) into the plan's Global Constraints so the plan is born handoff-ready — **whether or not** the enricher runs later. We never let mode be decided silently by harness capability, and we do not let vanilla re-ask at the end as a substitute.
-2. **We keep Superpowers' recommended default** — auto / subagent-driven.
-3. **Interactive adds a no-commit contract** on top of `executing-plans`. `executing-plans` itself is otherwise untouched.
-
-Mode is just another line `writing-plans` puts in the plan; the post-plan close-out is enricher-or-skip + hard stop.
-
-Everything else runs as Superpowers defines it: TDD, the plan's task order and steps, `systematic-debugging` if something breaks mid-task, and `verification-before-completion` are identical in both modes.
-
-**Why interactive switches skills rather than muting git in the subagent path.** `subagent-driven-development`'s quality gates are built on commit ranges — the task reviewer reads a package produced by `review-package BASE HEAD`, and the progress ledger records commit SHAs as its post-compaction recovery map. Suppressing commits there would hand every reviewer an empty diff while still reporting "reviewed". `executing-plans` has no commit contract at all, so it is the honest home for a no-commit flow.
-
-**The known trade-off:** the per-task reviewer and the final whole-branch review belong to `subagent-driven-development`, so interactive mode does not get them — the user is the reviewer at each stop. That trade-off is Superpowers' own, inherent to its inline path; our customization did not introduce it.
+**Revisit if** Superpowers lets that skill run without commits, or `writing-plans` asks mode up front itself.
 
 &nbsp;
 
@@ -162,19 +122,9 @@ Everything else runs as Superpowers defines it: TDD, the plan's task order and s
 
 ## Why Path A stops after the plan is ready (close-out always)
 
-Path A is two parts: **Documentation** (through A2's plan-review stop) and **Execution** (after the user proceeds). The stop is the boundary.
+The stop is human plan review plus a handoff-ready artifact (mode and phase line in Global Constraints). Close-out cannot be gate-skipped. The ready line is dated because the plan is git-ignored.
 
-Documentation uses the shared gated / close-out kinds: the **docs-in-scope set** (A1's `[gated]` band, A2's enricher step, A3) is what the gates' answers control; **A1** and **A2** are **`[close-out]`** (A1: gated docs band + Always mode/`writing-plans`; A2: enricher when the set runs → hard stop). A future gate can only skip members of that set — the vocabulary already forbids skipping a close-out hook.
-
-We stop for three reasons:
-
-1. **Human plan review** — one deliberate look at the plan before any implementation.
-2. **Stable handoff when context is full** — by the end of Documentation the session context may be large; a hard stop lets the user switch agents or sessions without losing a complete, mode-bearing plan.
-3. **Handoff-ready artifact** — mode is in Global Constraints from `writing-plans` (asked in A1's always band); another session can continue from the plan path alone whether or not the enricher ran.
-
-**Plan phase line.** A mid-cycle stop can leave a draft plan; a finished Documentation stop must be unmistakable. So Global Constraints carry `Path A phase: Documentation (draft).` right after `writing-plans`, then **replace** it with `Path A phase: ready for Execution (YYYY-MM-DD).` at the A2 hard stop. Same key, two values — no ambiguity. The **date** is on the ready line because the plan lives at a git-ignored path, so nothing else can date it: Entry compares it against commits under the functionality's `docs/x/{name}/` and the libs the tasks touch, and re-verifies rather than executing a plan written against a state that has since moved. A plan with no date predates the rule and is treated as unknown. Those lines nest under Path A's 🚪 **Entry** as its payload (not a separate landmark): Entry reads the line — ready → ▶️ Resume; draft or missing → ask (execute vs keep drafting). That hybrid avoids wrong Execution on a draft without nagging when the plan is clearly ready.
-
-The plan-review hard stop is **control flow in `AGENTS.md`** (Path A Documentation close-out), not inside `x-ng-sp-plan-enricher` (that skill only runs when functionality docs are in scope). Branch creation and execution skills run only after the user proceeds.
+**Revisit if** we no longer want a hard stop between Documentation and Execution.
 
 &nbsp;
 
@@ -182,9 +132,9 @@ The plan-review hard stop is **control flow in `AGENTS.md`** (Path A Documentati
 
 ## Why the plan is the only carrier into execution
 
-In the auto path, implementation and test-writing happen in subagents that never read `AGENTS.md` or any skill. `subagent-driven-development` is explicit about what they do get: _"A fresh subagent needs its task, the interfaces it touches, and the global constraints. Nothing else."_ Those global constraints come from the plan's `## Global Constraints` section. So the plan is not merely _a_ channel into execution — it is the only one, which is why `x-ng-sp-plan-enricher` exists and why anything an implementer must obey has to be written there.
+Auto implementer subagents never read `AGENTS.md`. They get the plan's Global Constraints and nothing else — hence the enricher, and why a pointer they receive must be a repo-relative path.
 
-This also explains why a pointer handed to an execution subagent must be a **resolvable repo-relative path**. Those agents read files but can never invoke a skill, so "the canonical lib examples" is not a location to them; `.agents/skills/x-ng-lib-build-helper/assets/examples/ui.md` is.
+**Revisit if** Superpowers lets those subagents read workspace instructions.
 
 &nbsp;
 
@@ -192,9 +142,9 @@ This also explains why a pointer handed to an execution subagent must be a **res
 
 ## Why A3 is anchored to finishing, not to the guard
 
-`verification-before-completion` is a **guard**, not a routed step: it self-triggers whenever the agent is about to claim work is complete, so it has no fixed position in a workflow to hang a hook on. The only skill that _invokes_ it by name is `systematic-debugging` — which is why **B1** can anchor to it and A3 cannot.
+`verification-before-completion` is a guard with no fixed slot; only `systematic-debugging` invokes it (so B1 can hang there). A3 needs a point both execution modes reach: `finishing-a-development-branch`.
 
-Path A runs execution → (auto only) final whole-branch review → finishing, so a late doc/ID update belongs at the end of that chain, anchored to a point **both** execution modes reach: `executing-plans` names `finishing-a-development-branch` a required sub-skill, and `subagent-driven-development` hands off to it after the final review.
+**Revisit if** Path A execution no longer ends at finishing, or that guard becomes a routed step.
 
 &nbsp;
 
@@ -202,21 +152,9 @@ Path A runs execution → (auto only) final whole-branch review → finishing, s
 
 ## Why A3 and B1 verify, instead of firing only on new IDs
 
-Both hooks used to run **only if implementation introduced new FR/BR/AC IDs**, and both bodies were shaped for that one case ("re-tag … with the newly minted IDs — rename only"). That trigger tested the wrong thing. Three outcomes fell straight through it:
+"New IDs only" missed amended, retired, and stale index rows. The plan is the only carrier *into* execution; these hooks are the carrier *out*. They always verify; only the actions are conditional. The Always band covers `util` / `app` / grab-bag `requirements/`.
 
-- an existing AC/FR/BR whose asserted behaviour **changed** — the docs now describe the code wrongly;
-- an existing one **retired** — the docs describe behaviour that no longer exists, and its ID Index row still advertises coverage;
-- the **stale ID Index row and AC back-link** either of those leaves behind.
-
-The workflow's own invariants made this worse rather than catching it. An execution subagent may not invent an ID, so a semantic change necessarily lands **under a pre-existing ID**. The writers forbid renumbering — correct, but it guarantees the ID looks untouched. So nothing downstream had a reason to look.
-
-Worse, the error gained authority. 📌 _PRD/TFS over cycle spec_ makes those docs the **primary** requirements source for the next cycle, so an uncorrected doc outranks a correct fresh brainstorm; and Path B's Missing-docs gate answers **Yes** on it, carrying the error forward again. Drift compounded instead of being corrected.
-
-The deeper cause is an asymmetry: the plan is the only carrier **into** execution (above), and there was no carrier **out** of it. The reviews all passed because they check code against the plan — never the plan and PRD against what actually shipped.
-
-So the trigger became **verification**: both hooks always run, and only their _actions_ are conditional — **added** (mint + re-tag), **amended** (correct the text under the existing ID), **retired** (remove the entry, its Index row and its back-link; never recycle the number), **unchanged** (record it and move on). There is no longer a predicate to answer wrongly. `Last Verified` records the unchanged case, which is the one a writer structurally cannot report, and the enricher now tells implementers to report an **inaccurate or obsolete** requirement — not only a missing one — so the outbound signal exists at all.
-
-Both hooks also gained an **Always** band for `util` / `app` / grab-bag `requirements/`. Those libs answer the Functionality gate **No**, so the whole `[gated]` set skipped them and no hook had ever verified their docs. The two-band shape is A1's, reused rather than inventing a landmark.
+**Revisit if** execution subagents may mint IDs, or reviews start checking shipped code against the PRD.
 
 &nbsp;
 
@@ -224,12 +162,9 @@ Both hooks also gained an **Always** band for `util` / `app` / grab-bag `require
 
 ## Why Path B needs no plan step — and when to revisit that
 
-Whenever Superpowers updates, ask one question: **does the bug-fix path still run in the current session, without subagents?**
+The bug-fix path still runs in-session, so that agent reads `AGENTS.md`. Superpowers' bug path has no git workflow, so the user decides commits (this is not a workspace-wide "never commit").
 
-- **Yes** (the case today) → nothing to do. The same agent that reads `AGENTS.md` writes the fix and its tests, so it follows Path B directly.
-- **No** (a future version runs the bug-fix path inside subagents) → subagents cannot read `AGENTS.md`, so Path B's rules must then travel via a plan, exactly as the auto path handles Path A.
-
-**Why Path B commits nothing on its own.** Superpowers' bug-fix path (`systematic-debugging` → `test-driven-development` → `verification-before-completion`) prescribes no git workflow at all: it does not create a branch, and it does not commit or push. It finds the root cause, fixes it, and proves the fix. So the git decision stays with the user. This is scoped to Path B — it is **not** a workspace-wide "never commit"; Path A's auto mode commits once per task by design, because `subagent-driven-development`'s review gates are built on those commits.
+**Revisit if** Superpowers runs bug-fix inside subagents — then Path B needs a plan, like Path A auto.
 
 &nbsp;
 
@@ -237,9 +172,9 @@ Whenever Superpowers updates, ask one question: **does the bug-fix path still ru
 
 ## Why git branch/commit naming isn't a hook step
 
-The rule lives in _Project-Specific Conventions_ near the top of `AGENTS.md`, and the `SessionStart` hook (`.claude/hooks/inject-agents-file.mjs`) re-injects the directive to read that file at session start and again after every `/clear` or compaction — so whenever the agent creates a branch or writes a commit **itself**, the rule is in context.
+`AGENTS.md` plus SessionStart keep the rule in context for the agent that commits. Auto implementers get it via the enricher into the plan.
 
-The one exception is Path A's auto mode, where the coding and committing are done by execution subagents that never read `AGENTS.md`. For them, `x-ng-sp-plan-enricher` copies the same rule into the plan they _do_ read. Hence no path needs a git-naming hook.
+**Revisit if** SessionStart stops re-injecting `AGENTS.md`, or auto implementers stop reading Global Constraints.
 
 &nbsp;
 
@@ -247,9 +182,9 @@ The one exception is Path A's auto mode, where the coding and committing are don
 
 ## Why some lifecycle points have no workspace step
 
-Each path ends with a ⚪ **Hooks with no workspace step yet** line. Those Superpowers skills run in the workflow but carry no workspace step **yet** — naming them keeps the whole lifecycle visible, and one gains a `#### 🪝` subsection the moment it gains a step, with no restructuring needed.
+The ⚪ line keeps the Superpowers lifecycle visible. A point gains a `#### 🪝` subsection when it gains a workspace step. TDD and execution still receive our test rules through the plan.
 
-For `test-driven-development` and execution specifically, being on that line does not mean "nothing happens here": our unit- and e2e-test rules reach those steps through the enriched plan rather than through a direct hook.
+**Revisit if** we start attaching workspace steps to those points.
 
 &nbsp;
 
@@ -257,6 +192,8 @@ For `test-driven-development` and execution specifically, being on that line doe
 
 ## Why `x-ng-sp-plan-enricher` is named differently
 
-It is the one workspace skill built **specifically for Superpowers** — it edits a Superpowers artifact (the plan), so unlike our other `x-*` skills (which are general and usable on their own) it only makes sense inside this workflow. That is what the `sp` tool segment in its name marks, and why it is the declared exception to the rule that our skills never name another skill.
+It edits a Superpowers artifact (the plan), so it is the exception to "our skills never name another skill." The `sp` segment marks that.
+
+**Revisit if** we add a second Superpowers-artifact skill (same naming) or drop that exception.
 
 [🔙](../../README.md#agents)

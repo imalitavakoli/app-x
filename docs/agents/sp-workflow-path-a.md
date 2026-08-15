@@ -2,7 +2,7 @@
 
 # 🛣️ Path A — Build a feature, or change an existing feature's behavior
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. Without it you will miss that the plan is the only carrier into execution subagents (Operating rule 4). The notation used below (🪝 hook · 🚧 gate · 📌 constraint · 🚪 entry · 🎛️ mode · ▶️ resume) is defined in [sp-workflow-format.md](sp-workflow-format.md); why it is shaped this way is in [sp-workflow-rationale.md](sp-workflow-rationale.md) — rationale only, never needed to execute a cycle.
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. Without it you will miss that the plan is the only carrier into execution subagents (Operating rule 4). The notation used below (🪝 hook · 🚧 gate · 📌 constraint · 🚪 entry · 🎛️ mode · ▶️ resume) is defined in [sp-workflow-format.md](sp-workflow-format.md).
 
 &nbsp;
 

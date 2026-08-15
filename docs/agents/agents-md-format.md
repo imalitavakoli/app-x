@@ -38,10 +38,27 @@ It does **not** hold the paths themselves, the rules they share, their notation,
 
 1. **Does every path need it?** → `AGENTS.md`, in the cross-path section it belongs to.
 2. **Does one path need it?** → that path's `sp-workflow-path-{a,b,c}.md`.
-3. **Is it the reason behind a rule rather than the rule?** → [sp-workflow-rationale.md](sp-workflow-rationale.md).
+3. **Is it the reason behind a rule rather than the rule?** → [sp-workflow-rationale.md](sp-workflow-rationale.md). Read that file when **editing** the workflow or **questioning** a decision — not when executing a cycle.
 4. **Is it how to perform a step?** → the skill that owns the step. `AGENTS.md` says _when_ and _which_; the skill says _how_.
 
 A rule that lands in two of these is a rule that will drift. Pick one and point from the others.
+
+&nbsp;
+
+## Adding a pre-flight check
+
+A check belongs in `AGENTS.md` → Pre-flight only if Superpowers' first skill would act wrongly without it. If it can wait until a path file is loaded, it is a path step, not pre-flight.
+
+Each check is **agent-answered** — never interview the user. Shape:
+
+    N. {plain-English question, or a CONTEXT.md term used as-is}
+
+       **Yes** → read {docs} and/or load {skill} (load means read that skill's `SKILL.md` now)
+       **No** → skip this check.
+
+**Unsure → Yes** is list-wide in Pre-flight. Do not repeat it per check unless a Yes is unusually cheap (as check 1 is).
+
+Do not use the path files' notation here. Do not add a second pointer from Pre-flight to this file — `AGENTS.md` already points here under "Before editing this file."
 
 &nbsp;
 

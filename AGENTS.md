@@ -43,7 +43,7 @@
 
 # Project-Specific Conventions
 
-- **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. **Search it for the term in bold** (it is a lookup surface, not a read-through doc) when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. Adding or changing a term: `/docs/agents/context-md-format.md`.
+- **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. **Search it for the term in bold** (it is a lookup surface, not a read-through doc) when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. A miss means it is not a term — continue; do not invent or offer an entry. Edit `CONTEXT.md` only when the user explicitly asks to add or change a term: `/docs/agents/context-md-format.md`.
 - Before naming a lib, folder, class, selector or CSS class: `/docs/guidelines/naming-conventions.md`.
 - Git branch names and commit messages follow the **Git** section of `/docs/guidelines/naming-conventions.md#git` (commits are `type(scope): summary`).
 - Before writing, changing or reviewing any code: `/docs/guidelines/best-practices.md` **in full** — Mindset, Documenting and Organizing. You will not know which of the three binds until you are into the work, so read it whole rather than picking a section.
@@ -78,32 +78,33 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 
 - Discover skills under the **repo-root** `.agents/skills/` only.
 - **Never modify Superpowers' own files** — they update independently. All of our customization lives in this file, in `/docs/agents/`, and in our `.agents/skills/x-*` skills.
-- **Why it is shaped this way:** `/docs/agents/sp-workflow-rationale.md` — rationale only, no rules. Every rule you must follow is in this file or its path files; read that one when you need the reasoning behind a decision or want to know what to revisit if Superpowers changes.
 
 &nbsp;
 
 ### Pre-flight — before the first Superpowers skill
 
-**Do this before invoking any Superpowers skill.** Once `brainstorming` starts asking its questions, these reads are too late to shape them — that is the whole reason this is here and not on a path.
+Run these checks **before invoking any Superpowers skill.** Once that skill starts talking, these reads and loads are too late to shape it — that is why this is here and not on a path.
 
-One question, about the **lib type** being worked on — not about what kind of work it is:
+**Who answers:** you. Never interview the user here.
 
-> **Does this request touch or produce a _single-purpose_ `map` / `data-access` / `ui` / `feature` / `page` lib?**
+Run each check in order. **Unsure → Yes** for that check. A wrong Yes costs a read you would have skipped. A wrong No silently skips a convention, and nothing downstream catches it.
 
-**Yes** → read these before letting any skill start:
+Do not pull path files, shared rules, or hooked workspace skills into this list — those wait for a skill to fire.
 
-- `/docs/getting-started/library-types-and-their-relationship.md` and `/docs/guidelines/naming-conventions.md`
-- that functionality's existing `docs/x/{name}/`, if it has one
+1. Does this request touch or produce a **single-purpose** `map` / `data-access` / `ui` / `feature` / `page` lib? (Not: what *kind of work* it is.)
 
-**No** → nothing to pre-load. The types that answer No are `util`, `api`, `app`, and a **grab-bag** `ui` / `feature`.
+   **Yes** → read these before letting any skill start:
+   - `/docs/getting-started/library-types-and-their-relationship.md` and `/docs/guidelines/naming-conventions.md`
+   - that functionality's existing `docs/x/{name}/`, if it has one
 
-**How to tell, without asking the user.** They think in features, not lib types, so the question is ours to answer:
+   **No** → skip this check. The types that answer No are `util`, `api`, `app`, and a **grab-bag** `ui` / `feature`.
 
-- An Nx project name states its own type — `shared-feature-ng-chart`, `shared-util-formatters`.
-- **Single-purpose vs grab-bag** is defined in `/CONTEXT.md`; the test that separates them is in the library-types doc above.
-- **Unsure → answer Yes.** A wrong Yes costs one doc read you would have skipped. A wrong No silently skips every documentation convention we have, and nothing downstream catches it. Reading the library-types doc is both how you resolve the doubt and what a Yes asks for anyway, so there is no wasted step.
+   **How to tell.** They think in features, not lib types, so the question is ours:
+   - An Nx project name states its own type — `shared-feature-ng-chart`, `shared-util-formatters`.
+   - **Single-purpose vs grab-bag** is defined in `/CONTEXT.md`; the test that separates them is in the library-types doc above.
+   - A Yes here is cheap: reading the library-types doc is both how you resolve the doubt and what a Yes asks for anyway.
 
-This is the **only** thing decided before Superpowers starts; everything else waits for a skill to fire. The path files ask this same question again under a name you will meet there — you do not need that name here.
+The path files ask check 1 again under a name you will meet there — you do not need that name here.
 
 &nbsp;
 
@@ -133,7 +134,7 @@ Read the shared rules and that path file **once, at the start of the cycle**, an
 
 **If the request is genuinely ambiguous** — "this feature is wrong" can mean _we changed our mind_ (design work → `brainstorming`) or _it never matched its spec_ (a defect → `systematic-debugging`) — **ask the user rather than letting the match fall either way.** The tell: do you already know what the new behavior should be, or must you first find out **why** the current behavior happens?
 
-> **Editing a path file?** Its notation: `/docs/agents/sp-workflow-format.md`. Why any of it is shaped this way: `/docs/agents/sp-workflow-rationale.md` — rationale only, never needed to execute a cycle.
+> **Editing a path file?** Its notation: `/docs/agents/sp-workflow-format.md`.
 
 &nbsp;
 

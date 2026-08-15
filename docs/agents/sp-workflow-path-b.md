@@ -2,7 +2,7 @@
 
 # 🛣️ Path B — Fix a bug, a test failure, or anything else technically broken
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md); why it is shaped this way is in [sp-workflow-rationale.md](sp-workflow-rationale.md) — rationale only, never needed to execute a cycle.
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md).
 
 &nbsp;
 

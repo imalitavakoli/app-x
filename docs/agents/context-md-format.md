@@ -6,6 +6,10 @@ How to write and maintain the workspace glossary at `CONTEXT.md` (repo root).
 
 **What belongs in it at all** is decided by [where-content-lives.md](where-content-lives.md) → _a term's meaning vs its consequences_. Read that first; this doc only covers the shape of an entry once the fact belongs here.
 
+**When to edit.** Edit this glossary only when the user has explicitly asked to add or change a term. A miss in `CONTEXT.md` is not that ask, and is not a reason to add an entry.
+
+`CONTEXT.md` is a lookup, not a completeness check — looking a term up is reading a file; changing the glossary is a different act. A miss means the phrase is not a term, not that the glossary is broken. Do not invent an entry or offer to add one. The write lock is an explicit user ask, not a role the agent infers: nothing in the workspace identifies who is speaking, and **Workspace Specialist** is a human accountability rule, not a session identity.
+
 &nbsp;
 
 ## Entry shape

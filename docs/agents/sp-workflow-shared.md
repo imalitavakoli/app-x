@@ -4,7 +4,7 @@
 
 The rules **every path assumes**. Read this at the start of any cycle, before the path file — `sp-workflow-path-{a,b,c}.md` cite these by name and do not repeat them.
 
-`AGENTS.md` routes you here; it holds no copy. Why any of it is shaped this way: [sp-workflow-rationale.md](sp-workflow-rationale.md) — rationale only, never needed to execute a cycle.
+`AGENTS.md` routes you here; it holds no copy.
 
 **If a landmark in a path file is unclear** — 🪝 hook · 🚧 gate · 📌 constraint · set · 🚪 entry · 🎛️ mode · ▶️ resume · a `[gated]` or `[close-out]` tag — read [sp-workflow-format.md](sp-workflow-format.md) for what it means. Most landmarks state their own semantics inline (a gate spells out its Yes/No, a set its Members/Combine/Regardless), so you will usually not need it; the hook **kind tags** are the exception, since `[close-out]` vs `[gated]` decides whether a gate can skip that hook at all.
 
