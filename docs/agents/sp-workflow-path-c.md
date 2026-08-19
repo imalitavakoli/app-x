@@ -2,7 +2,7 @@
 
 # 🛣️ Path C — Other Superpowers scenarios
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first.** It owns the Operating rules this path assumes. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md).
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first.** It owns the Operating rules this path assumes. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md). Procedures this path would share with another live in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one only when a hook below cites it, never up front; no hook here cites one today.
 
 &nbsp;
 

@@ -6,7 +6,7 @@ The landmark vocabulary the `sp-workflow-path-*.md` files are written in.
 
 **Read it whenever a landmark is unclear** — and always **before editing** a path file, where the `Shape` lines and the authoring rules become the point. Following a path usually needs only the `Meaning` lines, and often not even those: most landmarks state their semantics inline. The exception is a hook's **kind tag** (`[gated]` / `[close-out]`), which decides whether a gate can skip that hook and is not self-evident from the heading.
 
-Rules live in `AGENTS.md` and the path files · which surface owns a given fact in [where-content-lives.md](where-content-lives.md). When **editing** a path file, why a decision was made: [sp-workflow-rationale.md](sp-workflow-rationale.md) — do not load it to follow a path.
+Rules live in `AGENTS.md`, the path files, and [sp-workflow-shared.md](sp-workflow-shared.md) for what every path assumes; a **procedure** more than one path performs lives in [sp-workflow-procedures.md](sp-workflow-procedures.md) · which surface owns a given fact in [where-content-lives.md](where-content-lives.md). When **editing** a path file, why a decision was made: [sp-workflow-rationale.md](sp-workflow-rationale.md) — do not load it to follow a path.
 
 &nbsp;
 
@@ -51,8 +51,8 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
   - **Example:** Path A `**Docs-in-scope set** — … **A1's `[gated]` band** · **A2's enricher step** · …`
 
 - **🚪 entry** — join/handoff contract for the path.
-  - **Meaning:** Route here when the user is joining or rejoining this path using **existing path state** — e.g. they provide a plan path (or equivalent pointer), or ask to continue/execute work that already has the Global Constraints lines (or other payload) this Entry declares. **Do not** route here when starting the path from the beginning with no such state — follow the path from its first Superpowers skill. May declare the verbatim Global Constraints lines it reads (hooks write those lines; do **not** promote that payload to its own landmark). May route into a ▶️ resume block. Distinct from ▶️ resume (join/rejoin the path vs continue after a hard stop). Not a hook.
-  - **Shape:** `🚪 **Entry — {when}.**` — optional nested payload (the GC lines this Entry reads), then numbered rules. No `####`, no `{ID}`.
+  - **Meaning:** Route here when the user is joining or rejoining this path using **existing path state** — e.g. they provide a plan path (or equivalent pointer), or ask to continue/execute work that already has the Global Constraints lines (or other payload) this Entry declares. **Do not** route here when starting the path from the beginning with no such state — follow the path from its first Superpowers skill. May declare the verbatim **durable marker** it reads — the Global Constraints lines a hook writes into the plan, or a field a committed doc carries — but do **not** promote that payload to its own landmark. May route into a ▶️ resume block. Distinct from ▶️ resume (join/rejoin the path vs continue after a hard stop). Not a hook. **A path may carry more than one Entry**, each keyed on a different marker; name each by its trigger, and make every cross-reference say which one it means (`the plan-path 🚪 Entry`) — an unqualified "🚪 Entry" stops being an address the moment a second one exists.
+  - **Shape:** `🚪 **Entry — {when}.**` — optional nested payload (the marker this Entry reads), then numbered rules. No `####`, no `{ID}`.
   - **Example:** Path A `🚪 **Entry — user provides a plan path.**` (with nested Plan phase lines)
 
 - **🚧 gate** — a yes/no question whose answer decides whether the path's gated set runs.
@@ -79,8 +79,8 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
   - **Example:** Path A A1 `🎛️ **Execution mode — auto or interactive.** …`
 
 - **▶️ resume block** — post-hard-stop contract: what to do after the user proceeds.
-  - **Meaning:** Not a step band. Any hook that hard-stops and waits may add one. Distinct from 🚪 entry (continue after a hard stop vs join the path).
-  - **Shape:** blockquote under the hook (after the Always band's hard-stop): `> ▶️ **Resume** (after the user proceeds). …`
+  - **Meaning:** Not a step band. Any hook that hard-stops and waits may add one — **a path may therefore carry more than one**, and one hook may stop in more than one place. Name each by the stop it follows, and make every cross-reference say which one it means (`A2's ▶️ Resume`); an unqualified "▶️ Resume" stops being an address the moment a second one exists. Distinct from 🚪 entry (continue after a hard stop vs join the path).
+  - **Shape:** blockquote under the hook, after the band holding the stop it follows: `> ▶️ **Resume** (after {what the user did}). …`
   - **Example:** Path A A2 `> ▶️ **Resume** (after the user proceeds). …`
 
 **Outside the spine (no landmark icon)**
@@ -96,6 +96,7 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 - **Reserved verbs — keep them distinct.** Gates **ask** and **answer** (Yes / No); hooks and step bands **run** or are **skipped**; constraints **span**; entries **route**; mode blocks **select**. Never write "the gate applies" — it reads both as _the gate is in force_ and as _the gate let us through_. Say which way it answered.
 - **Constraints never collide and never gate.** A constraint adds a rule to steps that already run — it can never skip a hook or band (that is a 🚧 gate's job). If a new constraint would contradict an existing one on the same step, **amend the existing constraint** rather than adding a second: one step's rule lives in one constraint. Constraints are **path-scoped**, so the same name may appear on two paths carrying different rules; the no-collision rule applies within a path.
 - **Icons are landmarks, and these eight are reserved:** 🛣️ path · 🪝 hook · 🚪 entry · ⚪ hooks with no step yet · 🎛️ mode · ▶️ resume · 🚧 gate · 📌 constraint. Never use those eight for anything else; any other section may take its own distinct icon.
+- **A path never cites another path.** A step that leans on another path's step cannot be edited without reading that path, and renaming the step there breaks it silently — so when two paths need the same thing, **extract it rather than cross-reference it**: a **rule** every path assumes goes to [sp-workflow-shared.md](sp-workflow-shared.md), a **procedure** more than one path performs goes to [sp-workflow-procedures.md](sp-workflow-procedures.md), parameterised on whatever genuinely differs (the citing hook supplies that — usually just what counts as its changed set). Needed by one path only? Leave it in that path file. Neither file is a landmark: a hook names it in prose, and the citation is part of the step, not an optional aside.
 - **Where new content goes:** `/docs/agents/where-content-lives.md` decides the home of every fact an agent reads — term, rule, rationale, procedure — and is the only place that decision is recorded. Keep each fact in exactly one home.
 
 [🔙](../../README.md#agents)

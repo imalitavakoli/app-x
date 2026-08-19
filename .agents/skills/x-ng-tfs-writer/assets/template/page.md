@@ -6,6 +6,11 @@ Remove `>` helpers from the final draft. Register every FR/BR ID in the README's
 
 ### 📄 'page' Library Specification
 
+- **Last Updated** (YYYY-MM-DD): {date}
+- **Last Verified** (YYYY-MM-DD): {date}
+
+> **`Last Verified` is per file, deliberately.** Whoever checks these specs against the shipped code walks only the lib files a change actually touched, and stamps only those — so a file still showing an older date is honestly reporting that nobody has re-checked it since. Never stamp a file you did not read, and never bulk-update these across the folder.
+
 > A `page` composes `feature` libs and owns routing. Inputs arrive as **URL query params**. For naming and folder structure, follow the workspace's canonical `page`-lib reference (parent + child route components, a `lib.routes.ts`, versioned selectors).
 
 #### Lib Name

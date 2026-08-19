@@ -31,7 +31,9 @@ The test for amend vs retire+add: *is this the same observable outcome, describe
 
 ## Both cases overturn an approved decision — so neither is silent
 
-Every AC in this PRD was **explicitly approved** by the user when it was written; that is this skill's own gate. Amending or retiring one reverses that approval, often on behalf of someone not in this session.
+**First check that there is an approval to overturn.** Read the PRD's **ACs Approved** field. If it reads **`NOT YET`**, none of this applies: those ACs were drafted but never approved, so changing them is ordinary draft revision — rewrite them, mint and drop IDs freely, write no `DECISIONS.md` row, and burn nothing. Report every back-link your changes break in an existing `TFS/` — dangling or mis-pointed — and which numbers you dropped, per this skill's Prerequisites: a draft edit and a silent retirement look identical from outside unless you say which one it was. A burned number is permanent, so burning one for an AC nobody ever approved scars the functionality's ID space over a draft. Everything below assumes the field carries a **date**.
+
+Where it does, every AC in this PRD was **explicitly approved** by the user when it was written; that is this skill's own gate. Amending or retiring one reverses that approval, often on behalf of someone not in this session.
 
 1. **Show the old text beside the new**, per ID — the actual before and after, not a summary.
 2. **Get explicit confirmation.** This is the same bar as the original AC approval, for the same reason: an AC drives e2e tests and the TFS's FR/BRs.

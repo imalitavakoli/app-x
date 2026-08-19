@@ -2,7 +2,7 @@
 name: x-ng-prd-writer
 description: "WHAT? A functionality's PRD at docs/x/{name}/PRD/README.md — its product-level spec, whose Acceptance Criteria (ACs) later map to e2e tests. WHEN? Asked to create or update a PRD, product / scope / feature document, acceptance criteria, or product spec for a functionality; or when a brainstorm concludes and the feature needs its product spec. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '1.4.2'
+  version: '1.5.0'
 ---
 
 # PRD Writer
@@ -36,14 +36,19 @@ Classify using `docs/getting-started/library-types-and-their-relationship.md` (F
 
 **Required input:** a feature description (or brainstorm conclusions) for one functionality. If it is missing or unclear, STOP and ask — do not research or invent it.
 
-If the functionality already has a `docs/x/{name}/PRD/README.md`, read it first and **update** it rather than starting over: preserve existing AC IDs and add new ones — never renumber. **If an AC already in it is no longer true** — its outcome changed, or that behaviour no longer exists — that is an **amend** or a **retire**, not an add: read [references/amend-and-retire.md](references/amend-and-retire.md) first, because both reverse an AC the user explicitly approved and neither may be done silently. If its **Dependencies & Risks** says a reused lib "does not exist yet" or "must change for us", re-verify each such note and bring it to the present — see [references/reuse-boundary.md](references/reuse-boundary.md).
+If the functionality already has a `docs/x/{name}/PRD/README.md`, read it first and **update** it rather than starting over — and **read its `ACs Approved` field before touching any AC**, because it decides which of two procedures you are in:
+
+- **`NOT YET`** → these ACs were drafted but never approved. Revising them is ordinary draft work: rewrite freely, mint and drop IDs as needed, burn nothing, and write no `DECISIONS.md` row. Two things that does **not** license:
+  - **Check what already points at these ACs — and if anything does, never renumber.** A `TFS/` folder may exist and back-link them; its ID Index maps every FR/BR to an AC. Never assume nothing downstream consumed an unapproved set — look. Where something does: **leave gaps rather than renumbering.** Dropping an AC leaves a back-link **dangling**, which someone eventually notices. Renumbering instead makes every later back-link resolve to the **wrong** AC: nothing dangles, nothing looks broken, and the two specs silently describe different requirements. Closing a gap is only safe when nothing points at these IDs at all. Fixing the TFS is not yours, but **list in the Summary every back-link your changes break — dangling or mis-pointed**, because nothing else will notice.
+  - **An ID gap you leave is not a retirement**, and it does not look like one to anybody else. A later reader finding no `AC-04` and no `DECISIONS.md` row cannot tell a draft edit from a silent retirement, so say in the Summary which numbers you dropped and that they were never approved.
+- **A date** → preserve existing AC IDs and add new ones, never renumber. **If an AC already in it is no longer true** — its outcome changed, or that behaviour no longer exists — that is an **amend** or a **retire**, not an add: read [references/amend-and-retire.md](references/amend-and-retire.md) first, because both reverse an AC the user explicitly approved and neither may be done silently. If its **Dependencies & Risks** says a reused lib "does not exist yet" or "must change for us", re-verify each such note and bring it to the present — see [references/reuse-boundary.md](references/reuse-boundary.md).
 
 **First-time for existing libs** — when there is no `docs/x/{name}/PRD/README.md` yet but owned libs already exist in the workspace: read [references/bootstrap-existing.md](references/bootstrap-existing.md) before drafting. Still require a clear description / brainstorm conclusions and user AC approval; never invent product facts from code alone.
 
 ## Inputs & output
 
 - **Reads:** the feature description / brainstorm conclusions (and the existing PRD, if any).
-- **Writes:** the `docs/x/{functionality-name}/PRD/` folder — `README.md`, and `DECISIONS.md` whenever an AC is retired or an approach is rejected.
+- **Writes:** the `docs/x/{functionality-name}/PRD/` folder — `README.md`, and `DECISIONS.md` **always**, with `NONE.` under any heading that has no entries yet. An empty heading records that the category was considered; a missing file is indistinguishable from an oversight.
 
 ## Workflow
 
@@ -51,15 +56,15 @@ Copy this checklist and track it. Keep the `[prd]` prefix so, if this runs insid
 
 ```
 - [ ] [prd] 1. Gate & analyse — confirm it is a functionality; read the template, library-types doc, description, any existing PRD; if the description names reused libs, read references/reuse-boundary.md
-- [ ] [prd] 2. Draft — create PRD/README.md mirroring the template headings
-- [ ] [prd] 3. Fill — map the description into each section; classify the functionality and read the matching example
+- [ ] [prd] 2. Draft — create PRD/README.md and PRD/DECISIONS.md mirroring the template headings (DECISIONS.md always, NONE. under empty headings)
+- [ ] [prd] 3. Fill — map the description into each section; classify the functionality and read the matching example; send every undecided outcome to Open Questions, never to a provisional AC
 - [ ] [prd] 4. Validate — run the Review Checklist until all items pass
-- [ ] [prd] 5. Confirm — put the Open Questions to the user, then present every AC and get explicit approval
-- [ ] [prd] 6. Summary — report the saved paths, the AC IDs, any AC amended/retired, and anything still open
+- [ ] [prd] 5. Confirm — put the Open Questions to the user, then present every AC and get explicit approval; stamp ACs Approved with that date, or leave it NOT YET
+- [ ] [prd] 6. Summary — report the saved paths, the AC IDs, the ACs Approved state, any AC amended/retired, any AC number dropped, any TFS back-link broken, and anything still open
 ```
 
 1. **Gate & analyse** — apply the Prerequisites gate. If it passes, read the templates in [assets/template/](assets/template/) (the `README.md` template + the `DECISIONS.md` template), the feature description, and `docs/getting-started/library-types-and-their-relationship.md` (Functionality types — authoritative shapes and natural entry libs). If a PRD already exists, read it too. **If the description names any lib or functionality this one reuses** — existing, to be created, or needing a change for us — also read [references/reuse-boundary.md](references/reuse-boundary.md) before writing any AC.
-2. **Draft** — create `docs/x/{name}/PRD/README.md` (create the `docs/x/{name}/` folder if absent) mirroring the template's headings (content can be incomplete at first). The folder/`{name}` **is** the functionality name (e.g. `ng-chart`). Choose the **Feature key** and record it in the template's field, then use it for every `{NAME}` placeholder (e.g. `ng-profile-info` → `PROFILE`) — see the key's rule below.
+2. **Draft** — create `docs/x/{name}/PRD/README.md` (create the `docs/x/{name}/` folder if absent) mirroring the template's headings (content can be incomplete at first). Create `DECISIONS.md` from its template in the same step, with `NONE.` under every heading until something qualifies. The folder/`{name}` **is** the functionality name (e.g. `ng-chart`). Choose the **Feature key** and record it in the template's field, then use it for every `{NAME}` placeholder (e.g. `ng-profile-info` → `PROFILE`) — see the key's rule below.
 3. **Fill** — map the description into the correct sections. Classify the functionality (shapes below — details in the library-types doc), then read the matching example before writing the flows and ACs:
    - **abstract** — `data-access` required; `map` only if API/external assets → [assets/examples/abstract.md](assets/examples/abstract.md)
    - **visual** / **visual+** — `ui` and/or `feature`; `visual+` **owns** a `page` → [assets/examples/visual.md](assets/examples/visual.md)
@@ -99,6 +104,7 @@ Read the example matching the functionality's type before filling the User Exper
 - **Respect provided granularity.** If the user gave exact details (API endpoints, URL query params, field names), use them verbatim; do not generalise or override them.
 - **Minimise re-asking.** Reuse everything already in the brainstorm conclusions / description; only ask about genuine gaps.
 - **Do not invent facts.** Unknowns go to Open Questions and are raised with the user.
+- **A gap you noticed is not a requirement you may create.** Drafting surfaces outcomes the description never settled — a state with no chosen behaviour, a failure mode nobody ruled on. **The test is whether someone actually decided it**, not whether the outcome is real: undecided goes to Open Questions, and gains an AC only once answered. Never do both — a provisional AC beside an open question on the same gap is the worst case of all, because that AC is already an e2e case and a set of TFS FR/BRs by the time anyone reads the question. Write the Open Question so its answer can become an AC directly ("the goal endpoint reports no goal set — what should the card show?"), leave the state described as unspecified in the flow text, and if you believe the gap is product-critical say so in the Summary instead of closing it yourself. Covering alternate and error outcomes means covering the ones that were **decided**; it is never licence to decide them.
 
 ## Validate
 
@@ -110,8 +116,11 @@ Read the example matching the functionality's type before filling the User Exper
 - [ ] No Functional Requirements and no Business Rules sections exist.
 - [ ] The user journey begins at initialization, not outside the app.
 - [ ] Non-Goals & Why in `README.md` records **current** excluded scope with a reason each — not a bare list, and not a history of rejected approaches (those belong in `DECISIONS.md`).
-- [ ] `DECISIONS.md` exists whenever an AC was retired or an approach was rejected this cycle, with the date and reason per entry; no retired AC remains in the Acceptance Criteria section, and no retired number was recycled.
+- [ ] `DECISIONS.md` exists, with `NONE.` under every heading that has no entries. Where an AC was retired or an approach rejected this cycle, that entry carries its date and reason; no retired AC remains in the Acceptance Criteria section, and no retired number was recycled.
+- [ ] Every **Rejected approaches** entry names a direction the **user** weighed and dropped — none is an alternative you considered while drafting and did not pick.
+- [ ] **On a `NOT YET` revision only:** an existing `TFS/` was checked for back-links, no existing AC ID was renumbered while something pointed at it, every back-link this revision breaks (dangling or mis-pointed) is listed in the Summary, and any AC number dropped is named there as a draft edit rather than left to read as a retirement.
 - [ ] The **Feature key** field is filled in, unique across `docs/x/` (grepped, not assumed), and used for every `{NAME}` in the document.
+- [ ] The **ACs Approved** field is filled in — a date **only** if the user actually approved the set during this run, otherwise `NOT YET`. No date was stamped that was not witnessed.
 - [ ] Every Acceptance Criterion has a unique `{NAME}-AC-01`-style ID.
 - [ ] No AC ID carries a version segment — unless a new lib version changed **product-observable** behaviour _and_ both versions stay user-reachable, in which case only the **new** ACs are suffixed (`{NAME}-V2-AC-01`) and every existing AC was left untouched.
 - [ ] Each AC is one observable outcome (no "and"), independent, and not a component-contract/technical detail (those are BRs).
@@ -119,7 +128,7 @@ Read the example matching the functionality's type before filling the User Exper
 - [ ] Reused libs/functionalities appear under Dependencies & Risks / Non-Goals & Why / Data Requirements, never as an AC.
 - [ ] **On update only:** every "does not exist yet" / "must change for us" note in Dependencies & Risks was re-verified — cleared where the work landed, narrowed where it partly landed, or left with an Open Question where it could not be determined.
 - [ ] **No AC describes an outcome the product no longer has**, and none states an outcome the shipped behaviour contradicts — every pre-existing AC was checked, not just the new ones.
-- [ ] **On amend / retire only:** the ID was kept (amend) or burned and never recycled (retire); the old text was shown beside the new and explicitly confirmed; the orphaned TFS FR/BRs and any e2e `it` were reported; the flow text and Non-Goals were reconciled.
+- [ ] **On amend / retire only** — and only where **ACs Approved** carries a date, never on a `NOT YET` draft: the ID was kept (amend) or burned and never recycled (retire); the old text was shown beside the new and explicitly confirmed; the orphaned TFS FR/BRs and any e2e `it` were reported; the flow text and Non-Goals were reconciled.
 - [ ] Provided granularity (endpoints, params, field names) is preserved verbatim.
 - [ ] No invented facts; unknowns are in Open Questions.
 
@@ -139,6 +148,8 @@ Read the example matching the functionality's type before filling the User Exper
 Why this one is a gate and not a report: each AC becomes an e2e test case, and the TFS decomposes each into FRs and BRs that become unit tests. An AC that is wrong, missing or mis-scoped propagates into the technical spec and the test suite before anyone looks at it again.
 
 Incorporate whatever they change, re-run the Review Checklist, and ask again. Only once the user has approved the ACs is the PRD done.
+
+3. **Record the outcome in the document, not only in your report.** Stamp the PRD's **ACs Approved** field with the date the user approved the set. If you could not reach them — no channel, or they never answered — leave it reading **`NOT YET`** and say so in the Summary. **Never stamp a date you did not witness.** Your report is read once and then gone; that field is all a later reader, a plan, or the next writer has to go on, and it is what tells a future revision whether it is editing a draft or overturning an approval.
 
 ## Summary
 
@@ -171,3 +182,11 @@ Incorporate whatever they change, re-run the Review Checklist, and ask again. On
 | Fusing our decision with their rendering in one AC   | Split: keep the decision, shed the rendering.                                                            |
 | Finishing without the user approving the ACs         | Present the full set and wait. They become e2e tests and the TFS's FRs/BRs.                              |
 | Guessing an answer to close an Open Question         | Ask the user. Unanswered questions stay listed, not silently resolved.                                   |
+| Provisional AC for an undecided gap                  | Open Question only; the AC waits for the answer.                                                         |
+| Stamping ACs Approved with a date you did not witness | Leave it NOT YET and say so in the Summary.                                                             |
+| Amend/retire ceremony on a NOT YET draft             | Draft revision: rewrite freely, burn no ID, no DECISIONS.md row.                                         |
+| Own unchosen alternative recorded as rejected        | Only directions the user weighed and dropped belong there.                                               |
+| DECISIONS.md skipped because nothing qualified       | Always create it; NONE. under every empty heading.                                                       |
+| Draft rewrite that breaks TFS back-links silently    | Check the ID Index first; list every one, dangling or mis-pointed.                                       |
+| Dropped AC number left unexplained                   | Say in the Summary which numbers went and that none was approved.                                        |
+| Renumbering an AC a TFS back-links                   | Leave the gap; renumbering re-points back-links at the wrong AC.                                         |

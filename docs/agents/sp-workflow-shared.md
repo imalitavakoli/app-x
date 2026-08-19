@@ -2,7 +2,9 @@
 
 # Superpowers workflow — shared rules 🔗
 
-The rules **every path assumes**. Read this at the start of any cycle, before the path file — `sp-workflow-path-{a,b,c}.md` cite these by name and do not repeat them.
+The rules **every path assumes**. Read this at the start of any cycle, before the path file.
+
+`sp-workflow-path-{a,b,c}.md` cite what is here **by name** and never repeat it — and never cite **each other**. A path that leans on another path's step cannot be edited without reading that other path, and renaming a step there silently breaks it. When two paths need the same **procedure**, it goes in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one of those when a hook cites it, never up front: they shape nothing about routing or planning, and the hooks needing them fire late.
 
 `AGENTS.md` routes you here; it holds no copy.
 
@@ -34,7 +36,13 @@ This has already bitten us once — a hook anchored to `verification-before-comp
 1. **Control flow lives in `AGENTS.md` and the path files, not in skills.** They decide which skill runs when and in what order. Our `x-*` skills are **atomic**: each does one job with its own inputs/outputs and must NOT call or name another skill — the one exception is the `x-{tech}-sp-*` family (e.g. `x-ng-sp-plan-enricher`), which by definition operates on a Superpowers artifact; see the `x-skill-build-helper` skill. A skill may declare a _prerequisite_ ("input: the PRD; if missing, stop and ask") — that guards its own contract; it is not orchestration.
 2. **The hook says WHEN and WHICH; the skill says HOW.** Keep hook steps terse here; the full procedure lives inside the named skill.
 3. **Track progress with todos.** When you enter a path, add one todo per step (prefix each `[x]`), **merge** them into the existing todo list (never replace it), and check them off as you go — this is how you remember the next step after a skill finishes.
-4. **Reaching execution / subagents.** Implementation and test-writing happen inside execution — in the `subagent-driven-development` path (auto mode), in isolated subagents that do NOT read `AGENTS.md` or these files. The ONLY carrier into them is the Superpowers **plan**. Path A asks execution mode **before** `writing-plans`, and `writing-plans` writes that mode into the plan's Global Constraints. When functionality docs are in scope, `x-ng-sp-plan-enricher` folds PRD/TFS and test/lib conventions into the same plan. Anything implementers must obey has to be in the plan before Execution starts. (In interactive mode execution runs in-session via `executing-plans`, so the agent reads these rules directly — but the rules still go into the plan, so the two modes stay identical on content and the plan survives a compaction.)
+4. **Reaching execution / subagents.** Implementation and test-writing happen inside execution — in the `subagent-driven-development` path (auto mode), in isolated subagents that do NOT read `AGENTS.md` or these files. The ONLY carrier into them is the Superpowers **plan**. Where a path has execution modes, it asks **before** `writing-plans`, so `writing-plans` writes that mode into the plan's Global Constraints. When functionality docs are in scope, `x-ng-sp-plan-enricher` folds PRD/TFS and test/lib conventions into the same plan. Anything implementers must obey has to be in the plan before Execution starts. (In interactive mode execution runs in-session via `executing-plans`, so the agent reads these rules directly — but the rules still go into the plan, so the two modes stay identical on content and the plan survives a compaction.)
+5. **Prefer a durable path over held context.** A file read at the moment it is needed is unaffected by how long the session has run. Anything merely _held_ in context decays as the window fills — and the artifacts a path stakes the most on are the ones it writes last. So a controller loads what it must **reason with**, and passes a **resolvable repo-relative path** for whatever someone else will **imitate**. What that means depends on what the thing is for:
+   - A **helper** skill splits cleanly: its `SKILL.md` holds rules a planner reasons with, its `assets/` hold examples a builder imitates. Load the first; pass the second onward as a path.
+   - A **writer** skill cannot be split that way — it needs its own templates and examples to produce its document. So dispatch it to a subagent that loads them there, and take back its Summary and the file it wrote. The hook that dispatches it says what else that involves.
+   - A step that runs **late** on a path re-reads what it needs rather than testing whether an earlier step's context survived. A stale recollection does not announce itself; a re-read costs one file.
+
+   Operating rule 4 is this rule's hardest case, not an exception to it: execution subagents hold nothing at all, so the plan must carry everything.
 
 &nbsp;
 
@@ -50,13 +58,17 @@ Standing preferences the Superpowers skills read from our instructions. This is 
 
 ## Git contract
 
-Who commits and when — the whole answer, for every path:
+Who commits and when — the whole answer. Keyed on the **kind of work**, which outlives any path's name (see _When a Superpowers skill we name is missing_):
 
-| Path                     | Feature branch                    | Commits during execution                          | Who decides git        |
-| ------------------------ | --------------------------------- | ------------------------------------------------- | ---------------------- |
-| Path A — **auto**        | yes                               | one per task — the review gates read those ranges | the skill              |
-| Path A — **interactive** | yes                               | none: no commit, push, merge, or PR               | the user, at each stop |
-| Path B — bug fix         | only if the user already made one | none, unless the user asks                        | the user               |
+| Kind of work                          | Feature branch                    | Commits during execution                          | Who decides git        |
+| ------------------------------------- | --------------------------------- | ------------------------------------------------- | ---------------------- |
+| design work — **auto** mode           | yes                               | one per task — the review gates read those ranges | the skill              |
+| design work — **interactive** mode    | yes                               | none: no commit, push, merge, or PR               | the user, at each stop |
+| a defect fix                          | only if the user already made one | none, unless the user asks                        | the user               |
+
+**A functionality's docs are the user's commit, on request.** `docs/x/{name}/PRD/` and `TFS/` are written before any feature branch exists, so no row above covers them and no hook commits them. The close-out that ends documentation **asks** the user to commit them once both writers are done; if they decline, the docs stay uncommitted and that is reported plainly, never worked around by committing them anyway.
+
+**Docs whose approval was never recorded are never committed.** An unapproved draft on a shared branch becomes the primary source of truth for the next cycle, which is the whole reason approval is recorded in the document rather than only in a report. Today that state is the PRD's **ACs Approved** field reading `NOT YET`; if the writers ever record it differently, this rule is unchanged and only that name moves.
 
 Branch and commit names follow `/docs/guidelines/naming-conventions.md#git`. No hook carries this rule: the agent reads it here, and `x-ng-sp-plan-enricher` copies it into the plan for the execution subagents (Operating rule 4).
 

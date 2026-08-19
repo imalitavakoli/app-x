@@ -1,5 +1,8 @@
 ### 🖼️ 'ui' Library Specification
 
+- **Last Updated** (YYYY-MM-DD): 2026-07-26
+- **Last Verified** (YYYY-MM-DD): 2026-07-26
+
 #### Lib Name
 
 `shared-ui-ng-x-wallet`

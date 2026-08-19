@@ -1,7 +1,10 @@
 # PRD — ng-avatar-badge
 
-- **Last Updated**: 2026-07-26
+- **Last Updated** (YYYY-MM-DD): 2026-07-26
+- **Last Verified** (YYYY-MM-DD): 2026-07-26
+- **ACs Approved** (YYYY-MM-DD): 2026-07-26
 - **Owner**: Ali
+- **Feature key**: AVATAR
 
 ## 📖 Introduction
 

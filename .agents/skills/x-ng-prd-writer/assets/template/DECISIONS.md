@@ -29,6 +29,8 @@ Remove every `>` helper note from the final draft; keep every heading you use.
 
 > A product direction that was considered and **not** taken, with why it lost. This is the only durable record; the brainstorm that discussed it does not survive the cycle.
 >
+> **Considered by the user, not by you.** An entry here means a direction the user actually weighed and dropped — in the brainstorm, or when approving the ACs. An alternative *you* thought of while drafting and did not pick is **not** a rejected approach; recording it invents a decision nobody made, and it is indistinguishable from a real one a year later. If you believe an unconsidered alternative deserves a look, raise it under Open Questions in `README.md` instead. When in doubt: could you name when the user rejected it? If not, it does not go here.
+>
 > Keep **current** scope exclusions in `README.md` → Non-Goals & Why ("we do not build X — the Y functionality owns it"). Those describe what is true now. This section is for **decisions**: paths weighed and dropped.
 
 - **{Approach}** — _{date}_. Considered because {reason}. Rejected because {reason it lost}. {What we did instead.}

@@ -100,6 +100,46 @@ An existing undocumented functionality-type lib should not force a first-time PR
 
 [🔝](#superpowers-first-workflow--rationale-🦸)
 
+## Why the writers run in subagents, with their interview relayed
+
+A writer needs its templates and examples to produce its document; the session that plans afterwards needs only the document — so inline, the biggest load on this path sat in context through `writing-plans`. Only **topology** moved: a skill cannot relocate itself, but what it must achieve before calling its document done stays its own. A five-rep baseline found 5/5 refusing to self-approve, so the dispatch says nothing about the gate.
+
+**Revisit if** a writer needs the user mid-draft rather than at its confirmation gate, or a later baseline shows the gate failing under a pressure this one did not apply.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why A1 has its own resume block and an unapproved-PRD entry
+
+Relaying the AC approval gave A1 a second stopping point, and a hook that stops and waits needs a ▶️ resume contract — without one an interrupted approval has no way back, and the cycle stalls later at the TFS writer's guard. The 🚪 entry needed no new payload: the PRD's approval field already records where it stopped.
+
+**Revisit if** the relay stops being how approval reaches the writers, or the PRD stops recording its approval state.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why shared procedures have their own file
+
+A3 and B1 both verify the docs against what shipped, so that procedure had to leave the path files — otherwise one path cites another and neither can be edited alone. It did not belong with the shared **rules** either: that file is a mandatory cycle-start read, while these procedures fire late, so putting them there charged every path (Path C by 86%) for something two paths perform once.
+
+**Revisit if** a procedure ends up cited by one path only — move it back into that path file.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why helper examples are not loaded when planning
+
+The enricher already writes each canonical example's resolvable path into the plan, and an implementer opens files but can never invoke a skill — so the examples reach the builder by path either way, and loading them while planning changes nothing that session emits. A helper's `SKILL.md` is what a planner reasons with; its `assets/` are what a builder imitates.
+
+**Revisit if** `writing-plans` starts needing an example's contents to name a task's files, or the enricher stops writing those paths into the plan.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
 ## Why PRD/TFS outrank the brainstorm spec for planning
 
 A1 often changes what the spec said; planning from the stale spec fights the docs. When the docs-in-scope set ran: PRD/TFS win on conflicts, spec fills gaps, A1 syncs the spec. When it skipped: spec alone (vanilla Superpowers).
@@ -125,6 +165,16 @@ Superpowers already has the two modes. We ask before `writing-plans` so the plan
 The stop is human plan review plus a handoff-ready artifact (mode and phase line in Global Constraints). Close-out cannot be gate-skipped. The ready line is dated because the plan is git-ignored.
 
 **Revisit if** we no longer want a hard stop between Documentation and Execution.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why execution prefers a fresh session
+
+The hard stop already produces a handoff-ready artifact: the plan carries the mode, the dated ready marker and the enriched conventions, and the freshness check is what makes handing it over safe. The session that reaches the stop has just written the PRD, the TFS and the plan, so continuing there starts execution at the cycle's deepest point for no gain.
+
+**Revisit if** the plan stops being sufficient on its own, or the freshness check can no longer tell a stale plan from a current one.
 
 &nbsp;
 
@@ -175,6 +225,16 @@ The bug-fix path still runs in-session, so that agent reads `AGENTS.md`. Superpo
 `AGENTS.md` plus SessionStart keep the rule in context for the agent that commits. Auto implementers get it via the enricher into the plan.
 
 **Revisit if** SessionStart stops re-injecting `AGENTS.md`, or auto implementers stop reading Global Constraints.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-🦸)
+
+## Why the user commits the functionality's docs, on request
+
+Nobody owned that commit: the contract assigns commits during **execution**, the docs are written before a branch exists, and interactive mode commits nothing during execution either. Making the user the committer continues the pattern the contract already sets elsewhere, and it is an **ask** because that is all a workflow can guarantee. Creating the feature branch at A1 instead would couple the handoff to a branch as well as a plan path.
+
+**Revisit if** the docs must reach a shared branch without the user acting, or Documentation starts creating the feature branch.
 
 &nbsp;
 

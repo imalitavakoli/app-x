@@ -15,6 +15,7 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 | what a term **means**                | `CONTEXT.md` (repo root)                  | you meet an unfamiliar term |
 | a rule **every** request needs       | `AGENTS.md`                               | every turn (SessionStart)   |
 | a rule only **one path** needs       | `docs/agents/sp-workflow-path-{a,b,c}.md` | on that path                |
+| a **procedure** more than one path performs | `docs/agents/sp-workflow-procedures.md` | when a hook cites it |
 | **why** a workflow decision was made | `docs/agents/sp-workflow-rationale.md`    | questioning a decision      |
 | the **notation** of the path files   | `docs/agents/sp-workflow-format.md`       | editing a path file         |
 | how to edit **`AGENTS.md`** itself   | `docs/agents/agents-md-format.md`         | editing `AGENTS.md`         |

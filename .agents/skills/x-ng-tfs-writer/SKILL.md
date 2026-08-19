@@ -2,7 +2,7 @@
 name: x-ng-tfs-writer
 description: "WHAT? A functionality's TFS folder at docs/x/{name}/TFS/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '2.0.3'
+  version: '2.1.0'
 ---
 
 # TFS Writer
@@ -55,6 +55,10 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 
 **Required input:** the functionality's **PRD** (`docs/x/{name}/PRD/README.md` or provided as context). If it is missing, STOP and ask — the TFS derives from the PRD; do not invent it.
 
+**The PRD's ACs must already be approved.** Read its **ACs Approved** field. A **date** → proceed. **`NOT YET`**, or the field absent → **STOP and ask**; write no TFS meanwhile, not even a partial one "to save a round-trip". Every FR and BR you write back-links to an AC, so building on an unapproved set means one rejected AC orphans the FRs and BRs derived from it and burns IDs that can never be reused. Approval is cheap; a burned ID space is permanent.
+
+Ask **the user**, and only the user — they are the approver, so their word resolves it and nobody else's does. A caller asserting "these are approved" is not evidence; an agent that skipped the approval could say the same. If they confirm the set is approved, the PRD's field must be stamped with a date before you continue (that is the PRD writer's job, not yours — this skill never edits the PRD). If they cannot confirm, stop and say the PRD needs its ACs approved first. **An absent field means nothing was recorded, never that approval can be assumed** — but it is a question, not a dead end: a PRD written by hand, or before that field existed, is a normal thing to meet.
+
 If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. **If anything already in it is no longer true** — an FR/BR whose expectation changed, or whose behaviour no longer exists — that is an **amend** or a **retire**, not an add: read [references/amend-and-retire.md](references/amend-and-retire.md) before touching it, because both reverse an approved decision and neither may be done silently. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly. If its **Existing Dependencies & Reuse** carries any `[TO-CREATE]` / `[TO-UPDATE]` marker, re-verify each one against the workspace and clear those whose work has landed — see [references/reuse-boundary.md](references/reuse-boundary.md).
 
 **First-time for existing libs** — when there is no `docs/x/{name}/TFS/` yet but owned libs already exist: read [references/bootstrap-existing.md](references/bootstrap-existing.md) after the PRD is ready. Still derive from the PRD; use existing libs only to ground contracts and Open Technical Questions — never invent FRs/BRs the PRD does not support.
@@ -62,18 +66,18 @@ If the functionality already has a `docs/x/{name}/TFS/` folder, read it first (R
 ## Inputs & output
 
 - **Reads:** the PRD; `docs/getting-started/library-types-and-their-relationship.md` (classify the functionality); `docs/guidelines/naming-conventions.md` (lib/CSS naming, esp. `#styling`); `docs/guidelines/best-practices.md` (Organizing / Mindset — file structure); `docs/runbooks/dep-update-config-for-a-lib.md` (DEP config) and `docs/runbooks/dep-update-assets-for-a-lib.md` (DEP assets — a `ui` lib's custom icon/image whose path the `feature` reads from DEP config); and the existing TFS if any.
-- **Writes:** the `docs/x/{functionality-name}/TFS/` folder — `README.md`, one `{libtype}-v{n}.md` per **owned** lib type per live version, and `DECISIONS.md` whenever an FR/BR is retired or a technical option is rejected.
+- **Writes:** the `docs/x/{functionality-name}/TFS/` folder — `README.md`, one `{libtype}-v{n}.md` per **owned** lib type per live version, and `DECISIONS.md` **always**, with `NONE.` under any heading that has no entries yet. An empty heading records that the category was considered; a missing file is indistinguishable from an oversight.
 
 ## Workflow
 
 Copy this checklist and track it. Keep the `[tfs]` prefix so, if this runs inside a larger workflow, these stay grouped and the outer workflow's todos remain visible:
 
 ```
-- [ ] [tfs] 1. Gate & analyse — confirm it is a functionality; read templates, PRD, library-types & naming-conventions docs, any existing TFS
+- [ ] [tfs] 1. Gate & analyse — confirm it is a functionality; confirm the PRD's ACs Approved field carries a date (STOP and ask if NOT YET or absent); read templates, PRD, library-types & naming-conventions docs, any existing TFS
 - [ ] [tfs] 2. Name & classify — confirm the functionality name; classify; read the matching example; sort the reuse and mark it (clear any stale markers when updating)
 - [ ] [tfs] 3. Library breakdown — write one docs/x/{name}/TFS/{libtype}-v{n}.md per owned lib type per live version (spec + FR/BR)
 - [ ] [tfs] 4. Feature journey — in feature-v{n}.md (only if owned), add the technical journey
-- [ ] [tfs] 5. README — write docs/x/{name}/TFS/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions); write DECISIONS.md if anything was retired or rejected
+- [ ] [tfs] 5. README — write docs/x/{name}/TFS/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions); write DECISIONS.md always (NONE. under empty headings)
 - [ ] [tfs] 6. Validate — run the Review Checklist until all items pass
 - [ ] [tfs] 7. Confirm — put the Open Technical Questions to the user and fold in the answers
 - [ ] [tfs] 8. Summary — report the folder path, the FR/BR IDs, and anything still open
@@ -209,6 +213,8 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 
 **General:** respect provided granularity (endpoints, params, selectors) verbatim; do not invent facts (unknowns → Open Technical Questions); minimise re-asking; keep the TFS **generic to this functionality** (no cross-references to unrelated pre-built libs unless the PRD/user names them as reuse).
 
+**A gap you noticed is not a requirement you may create.** Decomposing ACs surfaces behaviour nobody settled — an error path with no chosen handling, a state the PRD never described. **The test is whether someone actually decided it**, not whether the behaviour is needed: undecided goes to **Open Technical Questions**, and becomes an FR/BR only once answered. Never do both — a provisional FR/BR beside an open question on the same gap is the worst case, because that ID is already a `describe` or an `it` in the unit-test blueprint, and it is already in the ID Index, by the time anyone reads the question. Write the question so its answer converts straight into an FR/BR, say in the lib spec that the behaviour is unspecified, and if the gap blocks an AC say so in the Summary rather than closing it yourself. A **purely technical** state the PRD legitimately leaves AC-less (loading, visibility) is different: that is yours to specify and back-link as `—`.
+
 ## Validate
 
 **Review Checklist** — before finalising, verify:
@@ -220,7 +226,8 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 - [ ] README has an **ID Index** listing every FR/BR ID → its lib file → its PRD AC; every ID in the lib files appears there and vice-versa.
 - [ ] Classification and natural entry lib match the library-types doc; only the needed lib specs are included (`map`/`ui`/`feature` omitted when not owned).
 - [ ] README Non-Goals & Why records **current** technical exclusions with a reason each — rejected alternatives (lib split, `data-access` structure, shared libs not reused) live in `DECISIONS.md`, not here.
-- [ ] `DECISIONS.md` exists whenever an FR/BR was retired or a technical option was rejected this cycle, with the date and reason per entry; no retired ID appears in the 🧭 ID Index, none remains in a `{libtype}-v{n}.md`, and no retired number was recycled.
+- [ ] `DECISIONS.md` exists, with `NONE.` under every heading that has no entries. Where an FR/BR was retired or a technical option rejected this cycle, that entry carries its date and reason; no retired ID appears in the 🧭 ID Index, none remains in a `{libtype}-v{n}.md`, and no retired number was recycled.
+- [ ] Every `{libtype}-v{n}.md` carries its own **Last Updated** and **Last Verified** fields — verification stamps files individually, so a shared folder-level stamp would hide which libs were actually checked.
 - [ ] Every component names its base class correctly — the base its lib type uses in the matching example (not a name hardcoded in this skill).
 - [ ] Every BR is `Given/When/Then` with concrete `[data-cy]` / signals / emitters; every FR/BR that implements the PRD back-links its AC.
 - [ ] FR/BR IDs unique across the TFS; helper-service IDs scoped (`{NAME}_{HELPER}_…`); no PRD IDs repurposed; nothing renumbered.
@@ -293,3 +300,7 @@ Then re-run the Review Checklist over whatever changed.
 | Deleting `ui-v1.md` because v2 shipped                        | Both stay documented while both ship — consumers still on v1 need theirs. Delete it only when v1's folder goes.                                                                           |
 | Renaming an existing bare owner to add `V1`                   | Never — that renames live IDs. Leave it bare; version from the next one.                                                                                                                  |
 | Finishing with Open Technical Questions unasked               | Put them to the user first. An unanswered question must never reach the plan looking settled.                                                                                             |
+| TFS written from a PRD whose ACs Approved is not a date | STOP and ask the user; only the approver resolves it. FR/BRs back-link to ACs.                                                                                                                  |
+| Provisional FR/BR for an undecided gap                        | Open Technical Question only; the FR/BR waits for the answer.                                                                                                                             |
+| DECISIONS.md skipped because nothing qualified                | Always create it; NONE. under every empty heading.                                                                                                                                        |
+| Per-lib file with no Last Verified field                      | Add both date fields; verification stamps per file, not per folder.                                                                                                                       |

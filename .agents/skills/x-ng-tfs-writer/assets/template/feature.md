@@ -7,6 +7,11 @@ Remove `>` helpers from the final draft. Register every FR/BR ID in the README's
 
 ### 🧩 'feature' Library Specification
 
+- **Last Updated** (YYYY-MM-DD): {date}
+- **Last Verified** (YYYY-MM-DD): {date}
+
+> **`Last Verified` is per file, deliberately.** Whoever checks these specs against the shipped code walks only the lib files a change actually touched, and stamps only those — so a file still showing an older date is honestly reporting that nobody has re-checked it since. Never stamp a file you did not read, and never bulk-update these across the folder.
+
 > Often the natural entry lib for visual / mixed. `feature` components fetch data (via owned or reused `data-access`) and drive `ui` inputs (owned or reused). They extend `V2BaseFeatureExtComponent`.
 
 #### Lib Name

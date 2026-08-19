@@ -2,7 +2,7 @@
 
 # 🛣️ Path B — Fix a bug, a test failure, or anything else technically broken
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md).
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, and the **Git contract**. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md). Procedures this path shares with another live in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one only when a hook below cites it, never up front.
 
 &nbsp;
 
@@ -24,7 +24,7 @@ No execution mode here — that question belongs to path A only. For git, see _G
 > - **Yes** → B1's `[gated]` band runs.
 > - **No** → **skip that band**: with no `docs/x/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TFS FR/BRs — so there is nothing to verify, amend, retire or re-tag.
 >
-> `[auto]` here, not `[ask]` as on Path A: a bug fix is not the place for a first-time PRD/TFS interview. If the user wants that functionality documented, that is a Path A cycle.
+> `[auto]`, not `[ask]`: a bug fix is not the place for a first-time PRD/TFS interview. If the user wants that functionality documented, that is a design-work cycle of its own.
 
 **When no lib is under test at all.** `systematic-debugging` covers more than feature defects — build failures, performance problems, integration issues. A broken CI pipeline, a slow tooling script or a misconfigured executor has no lib under test, so **both gates answer No**, the whole docs-in-scope set is skipped, and this path is exactly `systematic-debugging` → `test-driven-development` → `verification-before-completion`, with B1's Always band finding nothing to verify. That is the correct outcome, not a gap — do not go hunting for docs to update.
 
@@ -42,18 +42,13 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 
 **[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
-1. **Verify the PRD & TFS against the proven fix**, once per functionality (📌 _Companion work_), on the same four outcomes as Path A's A3 — **added** (mint + re-tag, rename only) · **amended** (correct the text under its existing ID) · **retired** (remove the entry, its ID Index row and its AC back-link; never recycle the number) · **unchanged** (record it, no edit). Use `x-ng-prd-writer`, then `x-ng-tfs-writer`.
+1. **Verify the PRD & TFS against the proven fix**, once per functionality (📌 _Companion work_), following [sp-workflow-procedures.md](sp-workflow-procedures.md) → _Verifying a functionality's docs against what shipped_. That procedure carries the scoped read, the two carve-outs, the four outcomes, the never-silent amend/retire and the `Last Verified` stamps — all of it part of this step, none of it optional.
 
-   **Same read order and scoping as A3, from a different source.** Path B has no plan and often no branch and no commits (_Git contract_), so the changed set is **the files the fix touched** — which `systematic-debugging` already established. Open the TFS README's **ID Index** first, intersect it with those files, walk in full only the entries they own plus the ACs those back-link, and open a `{libtype}-v{n}.md` only when the Index says an in-scope ID lives in it. Everything else is **unchanged** by construction. The shared-lib carve-out holds here too, and `Last Verified` is stamped only on the files you actually walked.
-
-   A one-line fix is where this matters most: without scoping, proving one behaviour would re-read every AC and every ID the functionality has.
-
-2. **Amending or retiring is never silent** — the writers show old beside new, get explicit confirmation, and name the other functionalities that reuse the affected lib.
-3. **Stamp `Last Verified`** on every doc checked, including those needing no edit.
+   **The changed set here is the files the fix touched**, which `systematic-debugging` already established: this path has no plan, and often no branch and no commits (_Git contract_). A one-line fix is where the scoping earns the most — without it, proving one behaviour would re-read every AC and every ID the functionality has. And a debugging cycle reaches this hook deep with no plan to fall back on, so relay the amend/retire confirmation rather than settling it.
 
 **Always:**
 
-4. **Verify the local `requirements/` registry** of any `util`, product `app`, or grab-bag `ui`/`feature` lib the fix touched, on the same four outcomes, per `x-ng-test-unit-helper`. An `api` lib has none. Stamp `Last Verified` here too. As on Path A, step 2's confirmation gate does **not** apply — those entries were never approved — but **report** any amend or retire, and name a shared lib's consumers. Report, don't block.
+2. **Verify the local `requirements/` registry** of any `util`, product `app`, or grab-bag `ui`/`feature` lib the fix touched — the same shared procedure's closing rule, report-don't-block carve-out included. Changed set as above.
 
 Docs come **after** the fix is proven, never before, so nothing documents behaviour that verification might still reject. The cycle is not done until this hook has run — make the final completion report after it, not before.
 

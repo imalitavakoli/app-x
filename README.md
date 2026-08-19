@@ -228,18 +228,20 @@ In the workspace, I've added specific comments as keywords. These make it easier
 
 - ## `4` [Superpowers workflow — shared rules](./docs/agents/sp-workflow-shared.md)
 
-- ## `5` Superpowers workflow — the paths
+- ## `5` [Superpowers workflow — shared procedures](./docs/agents/sp-workflow-procedures.md)
+
+- ## `6` Superpowers workflow — the paths
   - ### `— a` [Path A — build a feature](./docs/agents/sp-workflow-path-a.md)
   - ### `— b` [Path B — fix a bug](./docs/agents/sp-workflow-path-b.md)
   - ### `— c` [Path C — other scenarios](./docs/agents/sp-workflow-path-c.md)
 
-- ## `6` [Superpowers workflow — rationale](./docs/agents/sp-workflow-rationale.md)
+- ## `7` [Superpowers workflow — rationale](./docs/agents/sp-workflow-rationale.md)
 
-- ## `7` [Superpowers workflow — path notation](./docs/agents/sp-workflow-format.md)
+- ## `8` [Superpowers workflow — path notation](./docs/agents/sp-workflow-format.md)
 
-- ## `8` [`AGENTS.md` format](./docs/agents/agents-md-format.md)
+- ## `9` [`AGENTS.md` format](./docs/agents/agents-md-format.md)
 
-- ## `9` [`CONTEXT.md` format](./docs/agents/context-md-format.md)
+- ## `10` [`CONTEXT.md` format](./docs/agents/context-md-format.md)
 
 &nbsp;
 

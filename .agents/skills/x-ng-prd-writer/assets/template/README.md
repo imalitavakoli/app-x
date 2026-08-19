@@ -4,12 +4,15 @@
 
 - **Last Updated** (YYYY-MM-DD): {date}
 - **Last Verified** (YYYY-MM-DD): {date}
+- **ACs Approved** (YYYY-MM-DD): {date | NOT YET}
 - **Owner**: {owner}
 - **Feature key**: {NAME}
 
 > **Feature key** — the short uppercase key that prefixes every ID derived from this functionality: this PRD's ACs (`{NAME}-AC-01`), the TFS's FR/BRs (`{NAME}_{OWNER}_FR-01`), and the test titles that carry them. **Chosen once, here, and never re-derived.** Drop the `ng-` prefix and keep it short and unmistakable — one or more of the name's distinctive segments (`ng-balance-card` → `BALANCE`, `ng-user-geo` → `GEO`, `ng-x-profile` → `XPROFILE`). It must be **unique across all functionalities** in `docs/x/` — grep before choosing. Everything downstream copies this field verbatim; it is not re-derived from the folder name, because two independent derivations of `ng-alert-badge` (`ALERTBADGE` vs `ALERT`) split one functionality's ID space in half.
 
 > **Last Updated vs Last Verified** — `Last Updated` is when this document's text last changed. `Last Verified` is when someone last confirmed it still matches the shipped code, **including when nothing needed changing** — that is the outcome a writer can never record, so only the post-execution verification step stamps it. A `Last Verified` older than the functionality's last commit means the PRD is unverified against current behaviour.
+
+> **ACs Approved** — the date the user explicitly approved the Acceptance Criteria set, and **`NOT YET`** until they have. Never stamp a date you did not witness: a writer that could not reach the approver — running with a caller relaying on its behalf, for instance — writes `NOT YET` and reports that upward. The field is not bookkeeping; it decides how the next revision behaves. While it reads `NOT YET` the ACs are a **draft**: rewrite them freely, mint and drop IDs at will, and write no `DECISIONS.md` row. Check whether a `TFS/` already back-links them, though, and if so leave gaps rather than renumbering: a dropped AC leaves a dangling back-link, but a renumbered one makes back-links resolve to the wrong AC. Report every back-link your changes break — an unapproved set is not the same as an unconsumed one. Once it carries a date, changing an existing AC is an **amend** or a **retire** instead — ID preserved or burned for good, confirmation required. A PRD whose ACs a plan or TFS is about to be built on must not still read `NOT YET`.
 
 ## 📖 Introduction
 

@@ -7,6 +7,11 @@ Repeat the `##### Component: …` block per exported component. Register every F
 
 ### 🖼️ 'ui' Library Specification
 
+- **Last Updated** (YYYY-MM-DD): {date}
+- **Last Verified** (YYYY-MM-DD): {date}
+
+> **`Last Verified` is per file, deliberately.** Whoever checks these specs against the shipped code walks only the lib files a change actually touched, and stamps only those — so a file still showing an older date is honestly reporting that nobody has re-checked it since. Never stamp a file you did not read, and never bulk-update these across the folder.
+
 > `ui` components are presentational, extend `V1BaseUiComponent`, and are driven by their parent `feature` via `state`/`dataType`.
 
 #### Lib Name
