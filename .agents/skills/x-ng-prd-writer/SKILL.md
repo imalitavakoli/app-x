@@ -159,34 +159,34 @@ Incorporate whatever they change, re-run the Review Checklist, and ask again. On
 
 ## Common mistakes
 
-| Mistake                                              | Fix                                                                                                      |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Writing a PRD for a `util` / `api` / `app` lib       | STOP — not a functionality; no `docs/x/…` PRD.                                                           |
-| Writing a PRD for a grab-bag `ui` / `feature` lib    | STOP — no PRD; its items use a local `requirements/`.                                                   |
-| Treating "used on page X/Y" as owning a `page`       | Consumers import this functionality; only own a `page` if _this_ name is the page.                       |
-| Forcing `map`+`ui` on every mixed                    | Mixed requires `data-access`+`feature`; `map`/`ui` are optional.                                         |
-| Adding Functional Requirements / Business Rules      | Remove them — they live in the TFS. Keep only ACs here.                                                  |
-| Journey starts with "user opens the app / logs in"   | Start at initialization (loading state until inputs arrive).                                             |
-| Acceptance Criteria without IDs                      | Give each a unique `{NAME}-AC-01` ID.                                                                    |
-| Renumbering ACs when updating                        | Never renumber; add new IDs only.                                                                        |
-| Minting a new AC because an outcome changed          | Same outcome, corrected wording → **amend** under the existing ID. See `references/amend-and-retire.md`. |
-| Recycling a retired AC number                        | A burned number stays burned, so old test titles never resolve to a different outcome.                   |
-| Retiring an AC and leaving its FR/BRs pointing at it | Report every orphaned FR/BR and e2e `it`; they are fixed in their own runs.                              |
-| Amending or retiring an AC silently                  | It reverses a user approval — show old beside new, get confirmation, name the reusers.                   |
-| Generalising a provided endpoint / param             | Use the exact value the user gave.                                                                       |
-| AC bundling several outcomes ("and")                 | Split into one AC per observable outcome.                                                                |
-| AC that only asserts an emitted output/event         | A feature's output is a component contract → a BR in the TFS, not an AC.                                 |
-| AC asserting a reused component's colour/styling     | Its owner's PRD. Keep only the decision that drove it (_presented as critical_).                         |
-| AC asserting a reused util's format or rounding      | The util's own `requirements/`. Keep only that the value is displayed.                                   |
-| AC covering a change we asked another team to make   | Requirements follow the lib, not the requester → Dependencies & Risks.                                   |
-| Fusing our decision with their rendering in one AC   | Split: keep the decision, shed the rendering.                                                            |
-| Finishing without the user approving the ACs         | Present the full set and wait. They become e2e tests and the TFS's FRs/BRs.                              |
-| Guessing an answer to close an Open Question         | Ask the user. Unanswered questions stay listed, not silently resolved.                                   |
-| Provisional AC for an undecided gap                  | Open Question only; the AC waits for the answer.                                                         |
-| Stamping ACs Approved with a date you did not witness | Leave it NOT YET and say so in the Summary.                                                             |
-| Amend/retire ceremony on a NOT YET draft             | Draft revision: rewrite freely, burn no ID, no DECISIONS.md row.                                         |
-| Own unchosen alternative recorded as rejected        | Only directions the user weighed and dropped belong there.                                               |
-| DECISIONS.md skipped because nothing qualified       | Always create it; NONE. under every empty heading.                                                       |
-| Draft rewrite that breaks TFS back-links silently    | Check the ID Index first; list every one, dangling or mis-pointed.                                       |
-| Dropped AC number left unexplained                   | Say in the Summary which numbers went and that none was approved.                                        |
-| Renumbering an AC a TFS back-links                   | Leave the gap; renumbering re-points back-links at the wrong AC.                                         |
+| Mistake                                               | Fix                                                                                                      |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Writing a PRD for a `util` / `api` / `app` lib        | STOP — not a functionality; no `docs/x/…` PRD.                                                           |
+| Writing a PRD for a grab-bag `ui` / `feature` lib     | STOP — no PRD; its items use a local `requirements/`.                                                    |
+| Treating "used on page X/Y" as owning a `page`        | Consumers import this functionality; only own a `page` if _this_ name is the page.                       |
+| Forcing `map`+`ui` on every mixed                     | Mixed requires `data-access`+`feature`; `map`/`ui` are optional.                                         |
+| Adding Functional Requirements / Business Rules       | Remove them — they live in the TFS. Keep only ACs here.                                                  |
+| Journey starts with "user opens the app / logs in"    | Start at initialization (loading state until inputs arrive).                                             |
+| Acceptance Criteria without IDs                       | Give each a unique `{NAME}-AC-01` ID.                                                                    |
+| Renumbering ACs when updating                         | Never renumber; add new IDs only.                                                                        |
+| Minting a new AC because an outcome changed           | Same outcome, corrected wording → **amend** under the existing ID. See `references/amend-and-retire.md`. |
+| Recycling a retired AC number                         | A burned number stays burned, so old test titles never resolve to a different outcome.                   |
+| Retiring an AC and leaving its FR/BRs pointing at it  | Report every orphaned FR/BR and e2e `it`; they are fixed in their own runs.                              |
+| Amending or retiring an AC silently                   | It reverses a user approval — show old beside new, get confirmation, name the reusers.                   |
+| Generalising a provided endpoint / param              | Use the exact value the user gave.                                                                       |
+| AC bundling several outcomes ("and")                  | Split into one AC per observable outcome.                                                                |
+| AC that only asserts an emitted output/event          | A feature's output is a component contract → a BR in the TFS, not an AC.                                 |
+| AC asserting a reused component's colour/styling      | Its owner's PRD. Keep only the decision that drove it (_presented as critical_).                         |
+| AC asserting a reused util's format or rounding       | The util's own `requirements/`. Keep only that the value is displayed.                                   |
+| AC covering a change we asked another team to make    | Requirements follow the lib, not the requester → Dependencies & Risks.                                   |
+| Fusing our decision with their rendering in one AC    | Split: keep the decision, shed the rendering.                                                            |
+| Finishing without the user approving the ACs          | Present the full set and wait. They become e2e tests and the TFS's FRs/BRs.                              |
+| Guessing an answer to close an Open Question          | Ask the user. Unanswered questions stay listed, not silently resolved.                                   |
+| Provisional AC for an undecided gap                   | Open Question only; the AC waits for the answer.                                                         |
+| Stamping ACs Approved with a date you did not witness | Leave it NOT YET and say so in the Summary.                                                              |
+| Amend/retire ceremony on a NOT YET draft              | Draft revision: rewrite freely, burn no ID, no DECISIONS.md row.                                         |
+| Own unchosen alternative recorded as rejected         | Only directions the user weighed and dropped belong there.                                               |
+| DECISIONS.md skipped because nothing qualified        | Always create it; NONE. under every empty heading.                                                       |
+| Draft rewrite that breaks TFS back-links silently     | Check the ID Index first; list every one, dangling or mis-pointed.                                       |
+| Dropped AC number left unexplained                    | Say in the Summary which numbers went and that none was approved.                                        |
+| Renumbering an AC a TFS back-links                    | Leave the gap; renumbering re-points back-links at the wrong AC.                                         |

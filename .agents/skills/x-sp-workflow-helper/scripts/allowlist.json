@@ -1,0 +1,4 @@
+{
+  "$comment": "Deliberate, justified suppressions for check-workflow.mjs. Each entry needs a `why`. The allowlist-hygiene rule FAILS when an entry stops matching, so a suppression cannot outlive the text it was written for. Keep this file short: a growing allowlist means the rule is wrong, not that the repo is. Empty is the target state — the first entry written here was retired by fixing the text instead, which is the pattern to follow.",
+  "allow": []
+}

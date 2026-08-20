@@ -67,7 +67,7 @@
 
 - **Always use Nx CLI** (`nx run`, `nx build`, `nx test`, etc.) for builds, tests, linting, and generation.
 - Use `pnpm` as the package manager.
-- Before editing codes, **remember that this workspace follows the [Superpowers-First Workflow](#superpowers-first-workflow)**.
+- Before editing codes, **remember that this workspace follows the [Superpowers-First Workflow](#-superpowers-first-workflow)**.
 - For project graph or dependency issues, use Nx MCP tools (`nx_workspace`, `nx_project_details`).
 
 &nbsp;
@@ -78,6 +78,7 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 
 - Discover skills under the **repo-root** `.agents/skills/` only.
 - **Never modify Superpowers' own files** — they update independently. All of our customization lives in this file, in `/docs/agents/`, and in our `.agents/skills/x-*` skills.
+- **Editing the workflow itself** — this section, any `/docs/agents/sp-workflow-*.md`, or an `x-*` skill — invoke **`x-sp-workflow-helper`** first, and after any such edit run its checker (`pnpm run check:workflow`) to zero failures. These surfaces are held together by references that break **silently**: the text still reads correctly, so review does not catch it. A `PreToolUse` hook reminds you at the edit and a `PostToolUse` hook runs the checker, but neither replaces reading the skill — it owns the sweep for a rule's other homes, which no script can find.
 
 &nbsp;
 

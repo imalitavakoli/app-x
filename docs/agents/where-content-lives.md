@@ -18,6 +18,7 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 | a **procedure** more than one path performs | `docs/agents/sp-workflow-procedures.md` | when a hook cites it |
 | **why** a workflow decision was made | `docs/agents/sp-workflow-rationale.md`    | questioning a decision      |
 | the **notation** of the path files   | `docs/agents/sp-workflow-format.md`       | editing a path file         |
+| how to **change** the workflow safely | the `x-sp-workflow-helper` skill         | before editing `AGENTS.md`'s workflow section or any `sp-workflow-*.md` |
 | how to edit **`AGENTS.md`** itself   | `docs/agents/agents-md-format.md`         | editing `AGENTS.md`         |
 | how to edit **`CONTEXT.md`** itself  | `docs/agents/context-md-format.md`        | adding or changing a term   |
 | **how to perform** a step            | the skill that owns it                    | that skill is invoked       |

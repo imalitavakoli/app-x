@@ -2,7 +2,7 @@
 name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, or where its templates and examples live."
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # Skill Build Helper
@@ -135,15 +135,20 @@ A skill must not name the **control-flow vocabulary** of the workflow that happe
 
 Express the **substance** instead, in terms the skill itself owns:
 
-| Instead of                                         | Write                                                                      |
-| -------------------------------------------------- | -------------------------------------------------------------------------- |
-| "its own Missing-docs gate must be answered first" | "its docs must be written first — a separate decision, and a separate run" |
-| "the Functionality gate answers No for those"      | "those are never functionalities, so they have no such docs"               |
-| "carried in at hook A1 and re-tagged at A3"        | "supplied as an input; if it is missing, stop and ask"                     |
+| Instead of                                            | Write                                                                      |
+| ----------------------------------------------------- | -------------------------------------------------------------------------- |
+| "its own Missing-docs gate must be answered first"    | "its docs must be written first — a separate decision, and a separate run" |
+| "the Functionality gate answers No for those"         | "those are never functionalities, so they have no such docs"               |
+| "carried in at hook {ID} and re-tagged at {later ID}" | "supplied as an input; if it is missing, stop and ask"                     |
 
 The pattern: a skill states its **own** prerequisites, inputs and outputs, and reports what it cannot decide — it never describes _who_ decides or _when_. That keeps control flow outside skills, which is where it belongs.
 
-**The one exception** is the `x-{tech}-{tool}-*` family (e.g. `x-ng-sp-plan-enricher`): it exists to operate on another tool's artifact inside that tool's lifecycle, so it may reference that lifecycle and the file that defines it. No other kind may.
+**Two exceptions, both narrow:**
+
+1. The `x-{tech}-{tool}-*` family (e.g. `x-ng-sp-plan-enricher`): it exists to operate on another tool's artifact inside that tool's lifecycle, so it may reference that lifecycle and the file that defines it.
+2. A skill whose **subject is the workflow itself** (e.g. `x-sp-workflow-helper`, which exists to change it): the rule's cost — "the skill can no longer be used outside that workflow" — is not a cost for a skill that has no meaning outside it.
+
+The line between them and everything else: a skill **invoked by** the workflow may not name its landmarks; a skill whose **subject is** the workflow must. No other kind may.
 
 A skill's **own** guard is not a violation — a rule headed "Functionality gate" that stops the skill working on the wrong lib type is the skill guarding its own contract, even if the workflow happens to ask a similarly-named question.
 
@@ -217,26 +222,26 @@ Write every skill so it stands on its own and triggers from its own `description
 
 ## Common mistakes
 
-| Mistake                                                  | Fix                                                                                                                                  |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Canonical skill updated, stub left behind                | Same commit, every stub — the `description` is the one duplicated field.                                                             |
-| Rule changed in one file, its copies left stale          | Grep a distinctive phrase from the replaced text across `.agents/skills/`, `.claude/skills/` and `AGENTS.md` before calling it done. |
-| Mistakes row restating a rule instead of naming the fix  | The row carries the fix action; the body owns the rule. A restatement is a second copy that will drift.                              |
-| Step gains an obligation the todo checklist doesn't name | Update the checklist too — agents follow todos under context pressure, so an unnamed obligation is skipped.                          |
-| Copying the skill's content into the stub                | The stub is a pointer: frontmatter + one line. Content stays single-sourced.                                                         |
-| Adding `metadata`/`version` to a stub                    | Stubs carry `name` + `description` only.                                                                                             |
-| Inline `metadata: { version: '1.0.0' }`                  | Use block form under `metadata:`.                                                                                                    |
-| Tech segment on a tech-agnostic skill                    | Omit it — `ng` only when the skill is genuinely Angular-tied.                                                                        |
-| Inventing a kind suffix                                  | Use the suffix for the kind; if no kind fits, ask rather than coining one.                                                           |
-| Description that summarises the skill's workflow         | WHAT names the output in one clause; the mechanics stay in the body.                                                                 |
-| Changing a description without bumping the version       | Trigger changes are minor bumps.                                                                                                     |
-| Naming another skill                                     | Name the artifact it produces. Reading another skill's internals is the only exception.                                              |
-| Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                                                      |
-| Naming a gate, hook ID, constraint or path letter        | State the substance the skill owns; only the `x-{tech}-{tool}-*` family may reference a tool's lifecycle.                            |
-| Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                                             |
-| Wiring the new skill into a path's hook or skills table  | Don't — skills stand alone unless the user explicitly asks for wiring.                                                               |
-| Creating a skill that duplicates one that already exists | Extend the existing skill and bump it; overlapping skills cannot coordinate.                                                         |
-| Widening a description without reading the neighbours'   | A new trigger phrase can capture a sibling's requests. Check, then bind it narrowly or extend the sibling.                           |
-| Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                                                 |
-| Relocating content so an agent can reach it              | Leave it where it is and give the path.                                                                                              |
-| Skill-relative path handed to an execution agent         | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.                                  |
+| Mistake                                                  | Fix                                                                                                                                      |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Canonical skill updated, stub left behind                | Same commit, every stub — the `description` is the one duplicated field.                                                                 |
+| Rule changed in one file, its copies left stale          | Grep a distinctive phrase from the replaced text across `.agents/skills/`, `.claude/skills/` and `AGENTS.md` before calling it done.     |
+| Mistakes row restating a rule instead of naming the fix  | The row carries the fix action; the body owns the rule. A restatement is a second copy that will drift.                                  |
+| Step gains an obligation the todo checklist doesn't name | Update the checklist too — agents follow todos under context pressure, so an unnamed obligation is skipped.                              |
+| Copying the skill's content into the stub                | The stub is a pointer: frontmatter + one line. Content stays single-sourced.                                                             |
+| Adding `metadata`/`version` to a stub                    | Stubs carry `name` + `description` only.                                                                                                 |
+| Inline `metadata: { version: '1.0.0' }`                  | Use block form under `metadata:`.                                                                                                        |
+| Tech segment on a tech-agnostic skill                    | Omit it — `ng` only when the skill is genuinely Angular-tied.                                                                            |
+| Inventing a kind suffix                                  | Use the suffix for the kind; if no kind fits, ask rather than coining one.                                                               |
+| Description that summarises the skill's workflow         | WHAT names the output in one clause; the mechanics stay in the body.                                                                     |
+| Changing a description without bumping the version       | Trigger changes are minor bumps.                                                                                                         |
+| Naming another skill                                     | Name the artifact it produces. Reading another skill's internals is the only exception.                                                  |
+| Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                                                          |
+| Naming a gate, hook ID, constraint or path letter        | State the substance the skill owns. Only two kinds may not: the `x-{tech}-{tool}-*` family, and a skill whose subject _is_ the workflow. |
+| Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                                                 |
+| Wiring the new skill into a path's hook or skills table  | Don't — skills stand alone unless the user explicitly asks for wiring.                                                                   |
+| Creating a skill that duplicates one that already exists | Extend the existing skill and bump it; overlapping skills cannot coordinate.                                                             |
+| Widening a description without reading the neighbours'   | A new trigger phrase can capture a sibling's requests. Check, then bind it narrowly or extend the sibling.                               |
+| Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                                                     |
+| Relocating content so an agent can reach it              | Leave it where it is and give the path.                                                                                                  |
+| Skill-relative path handed to an execution agent         | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.                                      |

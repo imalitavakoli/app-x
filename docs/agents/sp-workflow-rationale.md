@@ -8,7 +8,7 @@ Why the workflow in [`AGENTS.md`](../../AGENTS.md) → _Superpowers-First Workfl
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why we layer instead of fork
 
@@ -18,7 +18,7 @@ Superpowers updates independently, so edits to its files are lost. It already ra
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why pre-flight is a checklist
 
@@ -28,7 +28,7 @@ The first Superpowers skill starts talking before any path file is loaded, so re
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why work in place, with no worktree
 
@@ -38,7 +38,7 @@ A feature branch already isolates the work. A worktree is a cold checkout: no `n
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why hooks are gated or close-out (not a new landmark)
 
@@ -48,7 +48,7 @@ A feature branch already isolates the work. A worktree is a cold checkout: no `n
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why gates share a set and constraints never will
 
@@ -58,7 +58,7 @@ Gates on one path share a target, so one **set** names the members once. Constra
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why the two gates never reference each other
 
@@ -68,7 +68,7 @@ They ask different questions (documentable vs document-now). Each states its tri
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why Path A/B skip PRD/TFS for `util` / `api` / `app` and grab-bag libs
 
@@ -78,7 +78,7 @@ Those are not functionalities. Without a gate, a util-only cycle still invoked A
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why the Missing-docs gate exists
 
@@ -88,7 +88,7 @@ An existing undocumented functionality-type lib should not force a first-time PR
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why the PRD/TFS steps precede `writing-plans`
 
@@ -98,7 +98,7 @@ An existing undocumented functionality-type lib should not force a first-time PR
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why the writers run in subagents, with their interview relayed
 
@@ -108,7 +108,7 @@ A writer needs its templates and examples to produce its document; the session t
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why A1 has its own resume block and an unapproved-PRD entry
 
@@ -118,7 +118,7 @@ Relaying the AC approval gave A1 a second stopping point, and a hook that stops 
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why shared procedures have their own file
 
@@ -128,7 +128,7 @@ A3 and B1 both verify the docs against what shipped, so that procedure had to le
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why helper examples are not loaded when planning
 
@@ -138,7 +138,7 @@ The enricher already writes each canonical example's resolvable path into the pl
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why PRD/TFS outrank the brainstorm spec for planning
 
@@ -148,7 +148,7 @@ A1 often changes what the spec said; planning from the stale spec fights the doc
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why the execution-mode question is ours to ask
 
@@ -158,7 +158,7 @@ Superpowers already has the two modes. We ask before `writing-plans` so the plan
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why Path A stops after the plan is ready (close-out always)
 
@@ -168,7 +168,7 @@ The stop is human plan review plus a handoff-ready artifact (mode and phase line
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why execution prefers a fresh session
 
@@ -178,17 +178,19 @@ The hard stop already produces a handoff-ready artifact: the plan carries the mo
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why the plan is the only carrier into execution
 
-Auto implementer subagents never read `AGENTS.md`. They get the plan's Global Constraints and nothing else — hence the enricher, and why a pointer they receive must be a repo-relative path.
+Auto implementer subagents never read `AGENTS.md` — they get only what the plan carries, hence the enricher, and why a pointer they receive must be a repo-relative path.
 
-**Revisit if** Superpowers lets those subagents read workspace instructions.
+But the plan has **two** channels into them, and they differ in reliability. A **task's own text** is extracted by the execution skill's task-brief script — deterministic. **Global Constraints** reach an implementer only because that skill's prose tells the controller to carry them; the reviewer prompt has a slot for them, the implementer prompt does not. So the enricher puts each task's operative contract in the **task**, and keeps Global Constraints for the cross-task set plus one-line restatements. A 2026-08-20 baseline confirmed the cost of getting this wrong: given IDs with no contract, an implementer used them as code comments, made an FR ID a sibling `it`, added untraced tests, and silently reinterpreted an ambiguous BR.
+
+**Revisit if** Superpowers lets those subagents read workspace instructions, or the implementer dispatch gains a structural Global-Constraints slot of its own — then the two channels become equally reliable and the split stops earning its cost.
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why A3 is anchored to finishing, not to the guard
 
@@ -198,7 +200,7 @@ Auto implementer subagents never read `AGENTS.md`. They get the plan's Global Co
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why A3 and B1 verify, instead of firing only on new IDs
 
@@ -208,7 +210,7 @@ Auto implementer subagents never read `AGENTS.md`. They get the plan's Global Co
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why Path B needs no plan step — and when to revisit that
 
@@ -218,7 +220,7 @@ The bug-fix path still runs in-session, so that agent reads `AGENTS.md`. Superpo
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why git branch/commit naming isn't a hook step
 
@@ -228,7 +230,7 @@ The bug-fix path still runs in-session, so that agent reads `AGENTS.md`. Superpo
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why the user commits the functionality's docs, on request
 
@@ -238,7 +240,7 @@ Nobody owned that commit: the contract assigns commits during **execution**, the
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why some lifecycle points have no workspace step
 
@@ -248,7 +250,7 @@ The ⚪ line keeps the Superpowers lifecycle visible. A point gains a `#### 🪝
 
 &nbsp;
 
-[🔝](#superpowers-first-workflow--rationale-🦸)
+[🔝](#superpowers-first-workflow--rationale-)
 
 ## Why `x-ng-sp-plan-enricher` is named differently
 

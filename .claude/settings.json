@@ -8,7 +8,39 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/inject-agents-file.mjs"
+            "command": "node .claude/hooks/agents-file-inject.mjs"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/sp-version-check.mjs",
+            "statusMessage": "Checking Superpowers version...",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/workflow-edit-guard.mjs pre",
+            "statusMessage": "Checking workflow-surface edit...",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/workflow-edit-guard.mjs post",
+            "statusMessage": "Verifying workflow integrity...",
+            "timeout": 90
           }
         ]
       }
