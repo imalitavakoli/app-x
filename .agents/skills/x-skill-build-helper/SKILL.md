@@ -80,7 +80,7 @@ This skill's full instructions live at `.agents/skills/{name}/SKILL.md`.
 
 | Kind     | Suffix      | Example                 |
 | -------- | ----------- | ----------------------- |
-| writer   | `-writer`   | `x-ng-prd-writer`       |
+| writer   | `-writer`   | `x-ng-doc-prd-writer`       |
 | helper   | `-helper`   | `x-ng-test-unit-helper` |
 | injector | `-injector` | `x-ng-log-injector`     |
 | enricher | `-enricher` | `x-ng-sp-plan-enricher` |

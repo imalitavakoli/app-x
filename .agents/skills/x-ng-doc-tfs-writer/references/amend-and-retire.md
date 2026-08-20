@@ -18,7 +18,7 @@ The test for amend vs retire+add: _is this the same rule with a corrected descri
 
 1. **Keep the ID.** Never renumber, and never mint a second ID for the same behaviour — two IDs for one rule makes the ID Index lie about coverage.
 2. **Rewrite the `Given/When/Then` in full** so it matches the shipped behaviour, with concrete `[data-cy]` / signals / emitters as always. Do not leave the old wording alongside the new.
-3. **Re-check the AC back-link.** If the AC itself worded the old expectation, the PRD is wrong too — that is a `x-ng-prd-writer` run, not something to patch here.
+3. **Re-check the AC back-link.** If the AC itself worded the old expectation, the PRD is wrong too — that is a `x-ng-doc-prd-writer` run, not something to patch here.
 4. **The ID Index row stays**, but re-read it: the `Maps to PRD AC` column may need to change if the back-link moved.
 
 ## Retire

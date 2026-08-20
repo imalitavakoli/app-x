@@ -97,12 +97,24 @@ function frontmatterOf(p) {
   return m ? m[1] : '';
 }
 
-/** Frontmatter `description:` as a raw single line (quotes and all). */
+/**
+ * Frontmatter `description:` as the STRING A TOOL WOULD MATCH ON — outer YAML
+ * quotes stripped, whitespace collapsed.
+ *
+ * Not the raw line: YAML 'x' and "x" denote the same string, so comparing raw
+ * lines flags a formatter that normalised quote style in one file and not the
+ * other. That is a false positive, and a checker that cries wolf about cosmetics
+ * gets ignored along with its true findings. A genuine difference in the text
+ * still shows, which is the thing worth catching.
+ */
 function descriptionOf(p) {
   const m = /^description:[ \t]*([\s\S]*?)(?=\n[a-zA-Z_-]+:|$)/m.exec(
     frontmatterOf(p),
   );
-  return m ? m[1].trim().replace(/\s+/g, ' ') : null;
+  if (!m) return null;
+  const raw = m[1].trim().replace(/\s+/g, ' ');
+  const quoted = /^(['"])([\s\S]*)\1$/.exec(raw);
+  return quoted ? quoted[2] : raw;
 }
 
 /* ---------------------------------------------------------------- constants */
@@ -706,7 +718,7 @@ rule(
     // Gate names are NOT checked, and that is a decision, not an omission.
     // x-skill-build-helper explicitly permits a skill to head its own prerequisite
     // guard with the same words the workflow uses for a gate ("A skill's own guard
-    // is not a violation"). x-ng-prd-writer and x-ng-tfs-writer both do exactly
+    // is not a violation"). x-ng-doc-prd-writer and x-ng-doc-tfs-writer both do exactly
     // that, legitimately. No regex separates "my contract refuses this input" from
     // "the workflow decided this upstream", so flagging gate names produces mostly
     // false positives — and a check that cries wolf gets ignored, taking the true

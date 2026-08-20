@@ -18,7 +18,7 @@ The test for amend vs retire+add: *is this the same observable outcome, describe
 
 1. **Keep the ID.** Never renumber, and never mint a second AC for the same outcome.
 2. **Rewrite the AC in full** so it states the shipped outcome — still one observable outcome, still no "and".
-3. **Its TFS FR/BRs are now suspect.** Every FR/BR that back-links this AC was written against the old wording. Say so; correcting them is an `x-ng-tfs-writer` run, not something to patch from here.
+3. **Its TFS FR/BRs are now suspect.** Every FR/BR that back-links this AC was written against the old wording. Say so; correcting them is an `x-ng-doc-tfs-writer` run, not something to patch from here.
 4. **If e2e is in scope**, an `it` titled with this AC asserts the old outcome. Flag it — the test needs the same correction.
 
 ## Retire

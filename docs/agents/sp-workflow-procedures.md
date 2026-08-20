@@ -36,7 +36,7 @@ The user is the only party who can resolve an approval. A caller asserting "thes
 
 **The four outcomes** — act on what you find:
 
-- **Added** — implementation needed a requirement that has no ID → mint it (`x-ng-prd-writer`, then `x-ng-tfs-writer`) and re-tag the affected test titles. **Rename only**: the coverage already exists, because an execution subagent may not invent an ID — it flags a gap instead.
+- **Added** — implementation needed a requirement that has no ID → mint it (`x-ng-doc-prd-writer`, then `x-ng-doc-tfs-writer`) and re-tag the affected test titles. **Rename only**: the coverage already exists, because an execution subagent may not invent an ID — it flags a gap instead.
 - **Amended** — an existing AC/FR/BR is described wrongly (its expectation changed) → correct its text **under its existing ID**. Never renumber, and never mint a second ID for the same behaviour.
 - **Retired** — an existing AC/FR/BR describes behaviour that no longer exists → remove the entry, its **ID Index row** and its **AC back-link**, and confirm its test was deleted too. **Never recycle the number.**
 - **Unchanged** — the docs already match. Record it and move on; no edit.

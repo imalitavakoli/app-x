@@ -34,7 +34,7 @@ Read `Path A phase` from the plan's Global Constraints, then:
 
 🚪 **Entry — a functionality's PRD exists but its ACs were never approved.** (a cycle that stopped during Documentation, in this or another session; no plan yet, or a plan that predates approval).
 
-**ACs Approved (PRD header)** — payload this Entry reads (not a landmark). `x-ng-prd-writer` writes exactly one of these into `docs/x/{name}/PRD/README.md`:
+**ACs Approved (PRD header)** — payload this Entry reads (not a landmark). `x-ng-doc-prd-writer` writes exactly one of these into `docs/x/{name}/PRD/README.md`:
 
 | When written                                       | Verbatim value                                   |
 | -------------------------------------------------- | ------------------------------------------------ |
@@ -84,13 +84,13 @@ Always runs on Path A before invoking `writing-plans`. One hook at this attach-p
 
 **[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
-1. **Write/refresh the PRD & TFS** — `x-ng-prd-writer`, then `x-ng-tfs-writer`, **once per functionality in scope this cycle** (📌 _Companion work_). **Dispatch each writer to its own subagent**, and keep that subagent alive for the length of its run (_Operating rule 5_). A writer carries a large body of templates and worked examples that this session never emits; what this session needs back is the document it wrote and its Summary.
+1. **Write/refresh the PRD & TFS** — `x-ng-doc-prd-writer`, then `x-ng-doc-tfs-writer`, **once per functionality in scope this cycle** (📌 _Companion work_). **Dispatch each writer to its own subagent**, and keep that subagent alive for the length of its run (_Operating rule 5_). A writer carries a large body of templates and worked examples that this session never emits; what this session needs back is the document it wrote and its Summary.
 
    Dispatch each with the functionality name, the brainstorm spec path, and — for the TFS — the PRD path, then follow [sp-workflow-procedures.md](sp-workflow-procedures.md) → _Relaying a writer's confirmation_ — part of this step, not an optional aside. This session is the channel, because a subagent cannot reach the user: the PRD's ACs must come back explicitly approved, and both writers' open questions answered rather than guessed.
 
-   **AC approval gates the TFS, not just the PRD — run the two writers in series, never together.** Take the PRD relay all the way to the end first: the user approves the AC set, and the PRD's **ACs Approved** field carries that date. Only then dispatch `x-ng-tfs-writer`. The TFS decomposes every AC into FR/BRs and back-links them, so a TFS built on unapproved ACs turns one rejected AC into orphaned FR/BRs and burned IDs across **two** documents — and burned numbers never come back. Dispatching both writers at once to save a round-trip is the one shortcut this step forbids.
+   **AC approval gates the TFS, not just the PRD — run the two writers in series, never together.** Take the PRD relay all the way to the end first: the user approves the AC set, and the PRD's **ACs Approved** field carries that date. Only then dispatch `x-ng-doc-tfs-writer`. The TFS decomposes every AC into FR/BRs and back-links them, so a TFS built on unapproved ACs turns one rejected AC into orphaned FR/BRs and burned IDs across **two** documents — and burned numbers never come back. Dispatching both writers at once to save a round-trip is the one shortcut this step forbids.
 
-   **The product-observable gap loop.** If `x-ng-tfs-writer` flags a `(new — suggest a PRD AC)` entry, put it to the user; if approved, dispatch `x-ng-prd-writer` to add the AC, then send the new AC ID back to the TFS subagent to back-link it — that skill never edits the PRD itself.
+   **The product-observable gap loop.** If `x-ng-doc-tfs-writer` flags a `(new — suggest a PRD AC)` entry, put it to the user; if approved, dispatch `x-ng-doc-prd-writer` to add the AC, then send the new AC ID back to the TFS subagent to back-link it — that skill never edits the PRD itself.
 
    **What returns to this session** is each writer's Summary — saved paths, the AC and FR/BR IDs with one-line descriptions, the companion `[TO-CREATE]` / `[TO-UPDATE]` entries, and anything still unanswered. That plus the written docs is what `writing-plans` reads (📌 _PRD/TFS over cycle spec_); the writers' templates stay in the subagents that used them.
 2. **Sync the Superpowers spec** — update this cycle's brainstorm spec under `.superpowers/specs/` so it matches the approved PRD/TFS on overlapping decisions (step 1 wins on conflicts). Fix conflicting sections in the spec body; at minimum put a short note at the top that `docs/x/{name}/` PRD and TFS are primary and win on conflicts, and link those paths. Keep spec-only material that PRD/TFS never cover (gap filler for planning). Do **not** commit the spec (see _Workspace preferences_).
@@ -123,7 +123,7 @@ Interactive trades away `subagent-driven-development`'s per-task and final whole
 > ▶️ **Resume** (after the user answers step 1's relay). Not a step band — this is where step 1's wait for AC approval comes back, so this hook has two stopping points, not one: this, and A2's plan review. The relay itself is [sp-workflow-procedures.md](sp-workflow-procedures.md) → _Relaying a writer's confirmation_; what follows is only what this hook adds.
 >
 > - **The writer subagent is gone** (its session ended, or it was killed mid-run) → dispatch a fresh one. It reads the PRD, finds `ACs Approved: NOT YET`, and treats the set as a draft; hand it the user's answers and let it re-present. Nothing is lost — the PRD is on disk and the field says where the cycle stopped.
-> - **The user declined to approve at all** → stop here. Leave `ACs Approved: NOT YET`, do **not** dispatch `x-ng-tfs-writer`, and do **not** continue to step 2. An unapproved PRD is a safe resting state; a TFS or a plan built on one is not.
+> - **The user declined to approve at all** → stop here. Leave `ACs Approved: NOT YET`, do **not** dispatch `x-ng-doc-tfs-writer`, and do **not** continue to step 2. An unapproved PRD is a safe resting state; a TFS or a plan built on one is not.
 
 #### 🪝 A2 · After `writing-plans`, before execution [close-out]
 

@@ -145,8 +145,8 @@ Which of our skills the workflow invokes, and where. _For orientation_ — each 
 
 | Skill                   | Kind     | Invoked at       |
 | ----------------------- | -------- | ---------------- |
-| `x-ng-prd-writer`       | writer   | A1 · A3 · B1     |
-| `x-ng-tfs-writer`       | writer   | A1 · A3 · B1     |
+| `x-ng-doc-prd-writer`       | writer   | A1 · A3 · B1     |
+| `x-ng-doc-tfs-writer`       | writer   | A1 · A3 · B1     |
 | `x-ng-lib-build-helper` | helper   | A1               |
 | `x-ng-test-unit-helper` | helper   | A1 · A3 · B1     |
 | `x-ng-test-e2e-helper`  | helper   | A1 (if e2e) · A3 |

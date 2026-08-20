@@ -2,7 +2,7 @@
 
 A **writer** produces a document at a known path. It owns the shape of that document (its template), validates its own output, and reports what it wrote.
 
-Examples: `x-ng-prd-writer`, `x-ng-tfs-writer`.
+Examples: `x-ng-doc-prd-writer`, `x-ng-doc-tfs-writer`.
 
 ```markdown
 ---
