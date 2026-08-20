@@ -4,8 +4,8 @@
 //
 // Why SessionStart and not the edit-time hook: Claude Code resolves plugins at
 // startup, so a version change is already in effect before anyone is looking —
-// whether it came from our pin being moved or from a machine resolving something
-// other than the pin (.claude/settings.json -> "superpowers-pinned"). The
+// so the new version is already in effect by then, and it can arrive without any
+// diff to review. The
 // edit-time PostToolUse guard does run the same check, but only when someone
 // edits a workflow doc, which is the RAREST activity in the repo. Between an
 // upgrade and the next workflow edit, every cycle would run against an
@@ -68,11 +68,11 @@ process.stdout.write(JSON.stringify({
       + 'upgrade therefore cannot fail loudly; it can only start behaving differently while every '
       + 'one of our files still reads correctly.\n\n'
       + 'WHAT TO DO — this is an escalation, not your task to absorb. Reviewing and updating the '
-      + 'workflow is the Workspace Specialist\'s job (docs/runbooks/workspace-update-ai-instructions.md). '
+      + 'workflow is the Workspace Specialist\'s job. '
       + 'So: tell the user at the START of your reply, before doing anything else, and ask whether '
       + 'they are that person.\n'
       + '  - If YES and they want it done now: work through '
-      + '`.agents/skills/x-sp-workflow-helper/references/superpowers-upgrade.md`.\n'
+      + 'the `x-sp-workflow-helper` skill and follow its upgrade playbook.\n'
       + '  - If NO, or they want to get on with their actual request: proceed with it, but say '
       + 'plainly that the workflow is running against an unreviewed Superpowers version, so a '
       + 'hook may attach to a lifecycle moment that has moved. Do not attempt the review yourself '

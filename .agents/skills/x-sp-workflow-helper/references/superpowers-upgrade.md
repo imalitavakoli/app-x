@@ -1,8 +1,8 @@
 # Superpowers upgrade playbook
 
-**Read this when the installed Superpowers version changes** — the pin was moved, a rollback, a fresh machine, or a machine that resolved something other than the pin. Not needed for an ordinary workflow edit.
+**Read this whenever the installed Superpowers version stops matching the one this workflow was reviewed against** — however that came about: an upgrade, a rollback, a fresh machine, or a deliberate change to how this workspace selects plugin versions. Not needed for an ordinary workflow edit.
 
-**You do not have to notice the change yourself.** Claude Code picks up plugin updates at startup, so a change lands before anyone is looking. Since we pin the version ourselves (Step 1), a change now means somebody moved _our_ pin — which is exactly the moment this review is owed.
+**You do not have to notice the change yourself.** Claude Code resolves plugins at startup, so by the time anyone is looking the new version is already in effect. What makes that _noticeable_ is the record below — not whatever mechanism chose the version.
 
 `scripts/superpowers-baseline.json` records the version this workflow was last reviewed against, and the checker's **`sp-version`** rule compares it to what is installed. **How loud that is depends on which semver segment moved** — the policy lives in `scripts/workflow-config.mjs` → `VERSION_DRIFT_POLICY`:
 
@@ -14,12 +14,12 @@
 
 Exact-matching every segment was rejected deliberately: a gate that fires on every upstream patch is one people learn to silence. **The accepted risk is stated plainly** — a patch that rewords one of the prose dependencies below slips past with only a note. Raise `VERSION_DRIFT_POLICY.patch` to `'fail'` if you would rather pay the noise.
 
-Two things run the rule, at deliberately different cadences:
+Two things run the rule, at deliberately different cadences. Both are hooks registered in `.claude/settings.json` — **that file is the registry, and this doc deliberately does not name the scripts.** A hook can be renamed; the event it fires on and the job it does cannot. Look the current filenames up there rather than expecting them here.
 
-| Trigger                                         | When                         | Why it exists                                                                                                                                                                                                                    |
-| ----------------------------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.claude/hooks/check-superpowers-version.mjs`   | **every session start**      | The primary signal. An upgrade lands at startup, so this is the first moment anyone is present to be told. Silent when the versions match.                                                                                       |
-| `.claude/hooks/guard-workflow-edits.mjs` (post) | on any workflow-surface edit | A backstop. Necessary but **not sufficient on its own**: a workflow edit is the rarest activity in the repo, so between an upgrade and the next one, every cycle would run against an unreviewed version with nothing saying so. |
+| Trigger                                 | When                         | Why it exists                                                                                                                                                                                                                    |
+| --------------------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A **SessionStart** hook                 | **every session start**      | The primary signal. An upgrade lands at startup, so this is the first moment anyone is present to be told. Silent when the versions match.                                                                                       |
+| The **PostToolUse** workflow-edit guard | on any workflow-surface edit | A backstop. Necessary but **not sufficient on its own**: a workflow edit is the rarest activity in the repo, so between an upgrade and the next one, every cycle would run against an unreviewed version with nothing saying so. |
 
 Clearing the failure is Step 6 below, not an edit to the baseline: bumping the version without doing the review only silences the one thing that noticed.
 
@@ -39,17 +39,11 @@ Each subdirectory is an installed version. More than one means a scope skew is _
 grep -A4 enabledPlugins ~/.claude/settings.json .claude/settings.json
 ```
 
-Then read the pin — the version **we** ask for:
+Now compare that against `scripts/superpowers-baseline.json` — the version this workflow was **reviewed against**. That comparison is the whole trigger, and it is deliberately indifferent to _why_ the two differ.
 
-```bash
-node -e "const s=require('./.claude/settings.json');console.log(JSON.stringify(s.extraKnownMarketplaces['superpowers-pinned'],null,2),s.enabledPlugins)"
-```
+**Do not spend time establishing the cause before reviewing.** Whether the version moved on its own, was selected deliberately, or simply resolved differently on this machine, the work is identical: the behaviours in Step 3 either still hold or they do not. Cause matters only afterwards, when you decide whether to record the new version or roll back to the reviewed one.
 
-The installed version and the pin should agree. If they do not, this machine resolved something other than the pin — investigate that before reviewing anything, because the review would be against the wrong code.
-
-We pin the version ourselves, so **upstream cannot move it**. The pin is an inline marketplace in `.claude/settings.json` → `extraKnownMarketplaces["superpowers-pinned"]`, naming the plugin repo and an exact 40-char `sha`; `enabledPlugins` disables `superpowers@superpowers-marketplace` (upstream's moving catalog) and enables `superpowers@superpowers-pinned`. Because project settings outrank user settings, a teammate's own install does not win either.
-
-So the version changes only when somebody edits that pin — a committed, reviewable act, and one the workflow guard fires on because `.claude/settings.json` is a guarded surface. **Moving the pin is what obliges this playbook.**
+If you do want to know how this workspace currently selects versions, `.claude/settings.json` is where plugin enablement and any marketplace declarations live. That is a lookup, not a prerequisite.
 
 Record the version and the git ref, because "6.1.1" is not precise enough to reason about later:
 
@@ -136,13 +130,14 @@ S5 (_pointers resolve for an isolated implementer_) is the one to run first afte
 
 Read `RELEASE-NOTES.md` in the new version — it is large, so search it for the skill names in the table above rather than reading it through.
 
-| The change is…                               | Do                                                                                                                                                                               |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A skill renamed or split                     | Re-anchor the affected hook. The name is a marker for a **lifecycle moment**, not the thing itself — keep the moment, change the name. Then `pnpm run check:workflow`.           |
-| A skill removed                              | The moment it marked still governs. Decide where that work now attaches, run the hook there, and say so. Never silently skip it, and never substitute a similar-looking skill.   |
-| A prose assumption reworded                  | Re-read the new wording and decide whether our reliance still holds. If it does not, the fix is usually a `AGENTS.md` _Workspace preferences_ entry, not a workflow restructure. |
-| A new skill that could win the routing match | Read its `description`, assign it a path, update `AGENTS.md`'s path table if the marker changed.                                                                                 |
-| Cosmetic / unrelated                         | Record the version and move on.                                                                                                                                                  |
+| The change is…                                                                                                         | Do                                                                                                                                                                                                                                                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A skill renamed or split                                                                                               | Re-anchor the affected hook. The name is a marker for a **lifecycle moment**, not the thing itself — keep the moment, change the name. Then `pnpm run check:workflow`.                                                                                                                                                           |
+| A skill removed                                                                                                        | The moment it marked still governs. Decide where that work now attaches, run the hook there, and say so. Never silently skip it, and never substitute a similar-looking skill.                                                                                                                                                   |
+| A prose assumption reworded                                                                                            | Re-read the new wording and decide whether our reliance still holds. If it does not, the fix is usually a `AGENTS.md` _Workspace preferences_ entry, not a workflow restructure.                                                                                                                                                 |
+| A new skill that could win the routing match                                                                           | Read its `description`, assign it a path, update `AGENTS.md`'s path table if the marker changed.                                                                                                                                                                                                                                 |
+| **How Superpowers is obtained** changed — a pinned catalog, a repo-local marketplace, a plugin of ours that bundles it | A different **marketplace** needs no change: the checker discovers it. A different **plugin name** needs exactly one — see the boxed note on `SP_PLUGIN_NAME` in `scripts/workflow-config.mjs`, which also covers the nested-path case. Skip that and `sp-version` reports "NOT INSTALLED" while Superpowers is loaded and fine. |
+| Cosmetic / unrelated                                                                                                   | Record the version and move on.                                                                                                                                                                                                                                                                                                  |
 
 ## Step 6 — record it, which is also what clears the gate
 

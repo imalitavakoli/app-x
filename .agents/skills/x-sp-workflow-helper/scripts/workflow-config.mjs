@@ -100,17 +100,59 @@ export const COUPLING_PATTERN =
  *  - a skill whose SUBJECT is the workflow must name its landmarks. */
 export const COUPLING_EXEMPT = /^x-([a-z]+-)?sp-/;
 
+/* ------------------------------------------------------- hook references */
+
+/**
+ * Surfaces that must NOT name a hook script by filename, and the pattern that
+ * counts as naming one.
+ *
+ * Why a prohibition rather than an existence check: a hook can be renamed, and
+ * then every doc that named it is wrong — which happened here (one rename left
+ * five stale references across three files). What cannot go stale is the EVENT
+ * it fires on (`SessionStart`, `PreToolUse`, `PostToolUse` — Claude Code's own
+ * vocabulary) and the job it does. So docs name those, and point at
+ * `.claude/settings.json`, which is the registry of what is actually wired.
+ *
+ * `.claude/settings.json` and `.claude/skills/…` stub paths stay allowed: the
+ * first IS the registry, and the second is a convention this workspace owns.
+ */
+export const HOOK_REF_SURFACES = ['.agents/skills', 'docs', 'AGENTS.md'];
+export const HOOK_REF_PATTERN = /\.claude\/hooks\/[A-Za-z0-9._-]+/g;
+
 /* -------------------------------------------------- installed Superpowers */
 
 /** Path segments from the user's home to the Superpowers version directories.
  *  Re-verify after any Claude Code plugin-layout change. */
-export const SP_CACHE_SEGMENTS = [
-  '.claude',
-  'plugins',
-  'cache',
-  'superpowers-marketplace',
-  'superpowers',
-];
+export const SP_CACHE_ROOT_SEGMENTS = ['.claude', 'plugins', 'cache'];
+
+/**
+ * The plugin's name as Claude Code knows it. It appears in two shapes, and this
+ * constant is the single source for both:
+ *   - the cache path:      ~/.claude/plugins/cache/{marketplace}/{THIS}/{version}/
+ *   - the settings key:    enabledPlugins["{THIS}@{marketplace}"]
+ *
+ * The MARKETPLACE is deliberately NOT a constant — it is discovered by scanning
+ * the cache root. Superpowers can legitimately arrive from a marketplace with any
+ * name (upstream's, or one this workspace declares in order to select a version),
+ * and hardcoding one means the check cries "NOT INSTALLED" the day that changes.
+ * A false alarm from the guard is worse than no guard. Scanning also surfaces
+ * what a fixed path cannot: the same plugin cached under two marketplaces, which
+ * loads every skill twice with no warning from anything else.
+ *
+ * ┌─ IF YOU EVER OBTAIN SUPERPOWERS DIFFERENTLY — READ THIS ────────────────┐
+ * │ Changing the MARKETPLACE (a pinned catalog, a repo-local one, a plugin  │
+ * │ that selects a version) needs NO change here — that is the whole point  │
+ * │ of discovering it.                                                      │
+ * │                                                                         │
+ * │ Changing the PLUGIN NAME does. If Superpowers ever ships bundled inside │
+ * │ a differently-named plugin of ours, this constant is the one edit that  │
+ * │ keeps `sp-version` and `sp-skills` working — and without it they report │
+ * │ "NOT INSTALLED" while Superpowers is loaded and fine. If the bundle     │
+ * │ carries Superpowers under a nested path rather than at the plugin root, │
+ * │ `findSuperpowersSkills` in check-workflow.mjs needs the deeper path too.│
+ * └─────────────────────────────────────────────────────────────────────────┘
+ */
+export const SP_PLUGIN_NAME = 'superpowers';
 
 /** Subdirectory of a version holding the skills. */
 export const SP_SKILLS_SUBDIR = 'skills';
@@ -125,8 +167,8 @@ export const SP_BASELINE_FILE = 'superpowers-baseline.json';
  * semver segment: 'fail' (loud, and the session-start hook escalates), 'note'
  * (recorded in the checker output, no escalation), or 'ignore'.
  *
- * Why not exact-match everything: a gate that fires on every upstream patch is
- * a gate people learn to silence, and then it is worth nothing when it matters.
+ * Why not exact-match everything: a gate that fires on every patch-level change
+ * is a gate people learn to silence, and then it is worth nothing when it matters.
  *
  * Why not major-only either — the tempting simplification: semver promises
  * something about an API, and we do not depend on an API. Our dependencies are

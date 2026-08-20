@@ -124,25 +124,48 @@ const PATH_FILES = CFG.PATH_LETTERS.map(CFG.pathFile);
 const WORKFLOW_DOCS = [AGENTS, ...walk(CFG.WORKFLOW_DOC_DIR)];
 const RESERVED_ICONS = CFG.RESERVED_ICONS;
 
-/** Locate the installed Superpowers skills dir, or null when unavailable. */
+/**
+ * Locate the installed Superpowers skills dir, or null when unavailable.
+ *
+ * Discovers the MARKETPLACE rather than assuming it: Superpowers may arrive from
+ * upstream's marketplace or from one this workspace declares in order to select a
+ * version, and a hardcoded marketplace name would make this report "NOT
+ * INSTALLED" the day that changes — a false alarm, which is worse than no check.
+ *
+ * Returns the highest version found, plus every marketplace it was found under,
+ * so the caller can report a duplicate install (the same plugin from two
+ * marketplaces loads every skill twice, with no warning from anything else).
+ */
 function findSuperpowersSkills() {
   const home = process.env.USERPROFILE || process.env.HOME;
   if (!home) return null;
-  const base = join(home, ...CFG.SP_CACHE_SEGMENTS);
-  if (!existsSync(base)) return null;
-  const versions = readdirSync(base)
-    .filter((d) => /^\d+\.\d+\.\d+$/.test(d))
-    .sort((a, b) =>
-      a
-        .split('.')
-        .map(Number)
-        .reduce((x, y, i) => x || y - Number(b.split('.')[i]), 0),
-    );
-  for (const v of versions.reverse()) {
-    const s = join(base, v, CFG.SP_SKILLS_SUBDIR);
-    if (existsSync(s)) return { dir: s, version: v };
+  const cacheRoot = join(home, ...CFG.SP_CACHE_ROOT_SEGMENTS);
+  if (!existsSync(cacheRoot)) return null;
+
+  const cmp = (a, b) => {
+    const x = a.split('.').map(Number);
+    const y = b.split('.').map(Number);
+    return x[0] - y[0] || x[1] - y[1] || x[2] - y[2];
+  };
+
+  const found = []; // { version, dir, marketplace }
+  for (const market of readdirSync(cacheRoot)) {
+    const pluginDir = join(cacheRoot, market, CFG.SP_PLUGIN_NAME);
+    if (!existsSync(pluginDir)) continue;
+    for (const v of readdirSync(pluginDir)) {
+      if (!/^\d+\.\d+\.\d+$/.test(v)) continue;
+      const skills = join(pluginDir, v, CFG.SP_SKILLS_SUBDIR);
+      if (existsSync(skills))
+        found.push({ version: v, dir: skills, marketplace: market });
+    }
   }
-  return null;
+  if (!found.length) return null;
+
+  found.sort((a, b) => cmp(b.version, a.version));
+  return {
+    ...found[0],
+    marketplaces: [...new Set(found.map((f) => f.marketplace))],
+  };
 }
 
 /* ---------------------------------------------------------------- allowlist */
@@ -241,10 +264,11 @@ rule('links', 'Every cited file path exists', (r) => {
   }
 
   // Skill-internal navigation links (SKILL.md -> references/, assets/, …).
-  // ONLY markdown links here, never backticked paths: a skill legitimately
-  // shows illustrative paths as sample content (`docs/x/{name}/PRD/README.md`,
-  // and concrete example names that no functionality has yet), and checking
-  // those would fail on documentation doing its job.
+  // ONLY markdown links here, never backticked paths: a skill legitimately shows
+  // illustrative sample content (`docs/x/{name}/PRD/README.md`, example names no
+  // functionality has yet), and failing those would fail documentation for doing
+  // its job. Hook script paths are handled by the hook-refs rule, which forbids
+  // them rather than resolving them.
   let internal = 0;
   for (const d of existsSync(abs(CFG.CANONICAL_SKILL_DIR))
     ? readdirSync(abs(CFG.CANONICAL_SKILL_DIR))
@@ -377,7 +401,7 @@ rule(
   (r) => {
     // ENABLEMENT FIRST — files on disk prove nothing about whether the plugin is
     // actually loaded. A real incident: the working entry was set to false while a
-    // pinned entry was added that never installed. Superpowers went dark for a
+    // second entry was added that never installed. Superpowers went dark for a
     // whole session, and this rule reported green, because the old version was
     // still sitting in the cache. Checking the cache alone is checking the wrong
     // thing.
@@ -390,7 +414,7 @@ rule(
         cfg = null;
       }
       const entries = Object.entries(cfg?.enabledPlugins ?? {}).filter(([k]) =>
-        k.startsWith('superpowers@'),
+        k.startsWith(`${CFG.SP_PLUGIN_NAME}@`),
       );
 
       if (entries.length && entries.every(([, v]) => v === false)) {
@@ -410,9 +434,7 @@ rule(
       // marketplace is not installing from it.
       const cacheRoot = join(
         process.env.USERPROFILE || process.env.HOME || '',
-        '.claude',
-        'plugins',
-        'cache',
+        ...CFG.SP_CACHE_ROOT_SEGMENTS,
       );
       for (const [key, val] of entries) {
         // Enabled means `true` OR a non-empty version-constraint array — both resolve a
@@ -446,16 +468,16 @@ rule(
           'every hook anchors to one of its skills.',
       );
       r.detail(
-        '  It is declared in .claude/settings.json (enabledPlugins + extraKnownMarketplaces),',
+        '  This workspace declares Superpowers so Claude Code installs it — see',
       );
       r.detail(
-        '  so Claude Code installs it at startup — this means that install did not happen.',
+        '  .claude/settings.json for how — so reaching here means that install did not happen.',
       );
       r.detail(
         '  Do NOT hand-install it or work around it: find out why (offline, network policy,',
       );
       r.detail(
-        '  marketplace unreachable, plugins disabled) and tell the user. Running a cycle',
+        '  source unreachable, plugins disabled) and tell the user. Running a cycle',
       );
       r.detail(
         '  without it produces work that only looks like it followed the workflow.',
@@ -480,9 +502,25 @@ rule(
       );
     }
 
+    // The same plugin cached under two marketplaces loads every skill twice, and
+    // nothing else in the toolchain warns about it. Only visible because the
+    // lookup above scans marketplaces rather than assuming one.
+    if (sp.marketplaces?.length > 1) {
+      r.fail(
+        'Superpowers is installed from MORE THAN ONE marketplace ' +
+          `(${sp.marketplaces.join(', ')}). Both load, so every Superpowers skill is ` +
+          'registered twice and nothing else reports it. Leave exactly one enabled in ' +
+          '`.claude/settings.json` — project settings outrank user settings, so a `false` ' +
+          "there disables a teammate's own copy for this repo without touching their machine.",
+      );
+    }
+
     const reviewed = baseline.reviewed ?? 'an unrecorded date';
     if (baseline.version === sp.version) {
-      return r.note(`reviewed against ${baseline.version} on ${reviewed}`);
+      return r.note(
+        `reviewed against ${baseline.version} on ${reviewed}` +
+          (sp.marketplace ? ` (installed from ${sp.marketplace})` : ''),
+      );
     }
 
     // Which semver segment moved decides how loud this is (CFG.VERSION_DRIFT_POLICY).
@@ -745,8 +783,85 @@ rule(
   },
 );
 
-/* --- 11. stale suppressions --------------------------------------------- */
+/* --- 11. paths named inside hook scripts -------------------------------- */
+rule('hook-paths', 'Every repo path a hook names resolves', (r) => {
+  // The reverse direction of hook-refs: that rule keeps hook FILENAMES out of
+  // docs; this one keeps hook scripts from naming files that do not exist.
+  //
+  // Most such pointers have been removed — agent-facing text names the SKILL
+  // (guarded by x-skills) or `pnpm run check:workflow`, so the reference sits in
+  // an already-checked namespace. What legitimately remains is human-facing:
+  // a person reading a systemMessage cannot invoke a skill, so they get a path.
+  // That path is the one thing here worth guarding, plus any that creep back.
+  const dir = '.claude/hooks';
+  if (!exists(dir)) return r.skip('no .claude/hooks');
+
+  let checked = 0;
+  for (const f of walk(dir, '.mjs')) {
+    for (const { n, text } of lines(f)) {
+      if (/^\s*\/\//.test(text)) continue; // comments explain, they do not point
+      for (const m of text.matchAll(
+        /['"`]([.a-z]*(?:\.agents|docs)\/[A-Za-z0-9._/-]+\.(?:md|json|mjs))['"`]/g,
+      )) {
+        const p = m[1].replace(/^\.\//, '');
+        if (p.includes('{')) continue; // a shape, not a file
+        checked++;
+        if (exists(p)) continue;
+        if (suppressed('hook-paths', f, p)) continue;
+        r.fail(
+          `${f}:${n} names \`${p}\`, which does not exist — a hook that points at a ` +
+            'moved file says nothing useful, and nothing else would notice.',
+        );
+      }
+    }
+  }
+  r.note(`${checked} repo paths named by hooks checked`);
+});
+
+/* --- 12. no hook filenames in docs -------------------------------------- */
+rule(
+  'hook-refs',
+  'Docs and skills name hook EVENTS, never hook filenames',
+  (r) => {
+    let scanned = 0;
+    const targets = CFG.HOOK_REF_SURFACES.flatMap((s) =>
+      s.endsWith('.md') ? [s] : walk(s),
+    );
+
+    for (const p of targets) {
+      if (!exists(p)) continue;
+      scanned++;
+      for (const { n, text } of lines(p)) {
+        for (const m of text.matchAll(CFG.HOOK_REF_PATTERN)) {
+          if (suppressed('hook-refs', p, m[0])) continue;
+          r.fail(
+            `${p}:${n} names the hook script \`${m[0]}\` — a rename would make this ` +
+              'text wrong, silently. Name the EVENT and the job instead ' +
+              '("a SessionStart hook reports…", "the PostToolUse edit guard runs…") ' +
+              'and point at `.claude/settings.json`, which is the registry of what ' +
+              'is actually wired.',
+          );
+        }
+      }
+    }
+    r.note(`${scanned} files scanned for hook-filename references`);
+  },
+);
+
+/* --- 13. stale suppressions --------------------------------------------- */
 rule('allowlist-hygiene', 'No stale allowlist entries', (r) => {
+  // Staleness is only decidable when every rule ran: an entry proves it is still
+  // needed by being CONSULTED, and a rule that did not run consults nothing. On a
+  // filtered run (`--rule=`) this would report every entry as stale — a false
+  // positive, and the loudest possible kind, since the advice is "delete it".
+  if (onlyRule) {
+    return r.skip(
+      `cannot judge staleness on a filtered run (--rule=${onlyRule}) — ` +
+        'an entry proves itself by being consulted, and the rules it guards did not run. ' +
+        'Run the whole checker.',
+    );
+  }
+
   if (!allowlist.length) return r.note('allowlist is empty');
   allowlist.forEach((e, i) => {
     if (allowlistHits.has(i)) return;

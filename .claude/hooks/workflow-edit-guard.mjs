@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Guards the Superpowers-First Workflow surfaces against silent breakage.
 //
-//   guard-workflow-edits.mjs pre    (PreToolUse)  — remind, before the edit
-//   guard-workflow-edits.mjs post   (PostToolUse) — run the checker, after it
+//   workflow-edit-guard.mjs pre    (PreToolUse)  — remind, before the edit
+//   workflow-edit-guard.mjs post   (PostToolUse) — run the checker, after it
 //
 // Fires ONLY when the edited path is one of the guarded surfaces. Every other
 // Edit/Write in the session exits at the path test, having done nothing.
@@ -104,7 +104,7 @@ if (mode === 'pre') {
         'an anchor in a pointer, a Superpowers skill name a hook hangs off, a `description` ' +
         'duplicated into each tool stub — and every one of them breaks SILENTLY: the text still ' +
         'reads correctly afterwards, so review does not catch it.\n\n' +
-        'Read `.agents/skills/x-sp-workflow-helper/SKILL.md` before continuing, unless it is ' +
+        'Invoke the `x-sp-workflow-helper` skill before continuing, unless it is ' +
         'already in your context. It carries the change procedure, the sweep for a rule\'s other ' +
         'homes (which no script can find), and the Superpowers upgrade playbook. ' +
         'The integrity checker runs automatically after this edit.',
@@ -153,10 +153,10 @@ emit({
       `The workflow integrity checker failed after your edit to \`${relPath}\`. ` +
       'These are silent-breakage classes — the files still read correctly, so nothing else ' +
       'will catch them. Fix them before moving on, then re-run ' +
-      '`node .agents/skills/x-sp-workflow-helper/scripts/check-workflow.mjs`.\n\n' +
+      '`pnpm run check:workflow`.\n\n' +
       `${failingLines || out}\n\n` +
       'If a finding is a genuine false positive, fix the RULE or add a justified entry to ' +
-      '`.agents/skills/x-sp-workflow-helper/scripts/allowlist.json` — never widen the ' +
+      "that skill's `scripts/allowlist.json` — never widen the " +
       'allowlist just to reach green.',
   },
 });
