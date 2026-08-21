@@ -70,7 +70,13 @@ try {
 }
 
 const rule = result?.results?.find((r) => r.id === 'sp-version');
-if (!rule || rule.skipped || rule.failures?.length === 0) process.exit(0);
+// `!rule.failures?.length` and not `=== 0`: a rule object arriving with NO
+// `failures` field at all makes `=== 0` false, so it would fall through and fire
+// the full escalation below with an EMPTY detail line — a loud alarm carrying no
+// evidence, which is exactly how a once-a-session hook teaches people to ignore
+// it. "No list" and "empty list" both mean nothing to report. Today's checker
+// always sends the field, so this guards a shape change, not current behaviour.
+if (!rule || rule.skipped || !rule.failures?.length) process.exit(0);
 
 const detail = [...(rule.failures ?? []), ...(rule.details ?? [])]
   .join(' ')

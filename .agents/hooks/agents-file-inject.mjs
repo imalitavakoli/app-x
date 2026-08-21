@@ -33,7 +33,18 @@ const ROOT = join(scriptDir, '..', '..');
 const agentsPath = join(ROOT, 'AGENTS.md');
 if (!existsSync(agentsPath)) process.exit(0); // nothing to enforce
 
-const lineCount = (p) => readFileSync(p, 'utf8').split('\n').length;
+// Splitting on '\n' yields a trailing empty string for the newline that ends a
+// well-formed text file, so drop it — otherwise every such file is reported one
+// line too long. Counting this way is deliberately line-ending-agnostic: a CRLF
+// line still ENDS with '\n' (the '\r' just rides along on the preceding piece),
+// so the count is identical on a Windows checkout and a mac/linux one. That
+// matters here: this repo sets core.autocrlf=true with no .gitattributes, so the
+// same file really is CRLF on Windows and LF elsewhere.
+const lineCount = (p) => {
+  const text = readFileSync(p, 'utf8');
+  if (text === '') return 0;
+  return text.split('\n').length - (text.endsWith('\n') ? 1 : 0);
+};
 
 let directive =
   `MANDATORY — before acting on ANY request, read AGENTS.md IN FULL using the Read tool ` +
