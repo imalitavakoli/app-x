@@ -240,8 +240,8 @@ export const hookFilenameInDoc = ({ file, line, name }) => ({
   fail:
     `${file}:${line} names the hook script \`${name}\` — a rename would make this text ` +
     'wrong, silently. Name the EVENT and the job instead ("a SessionStart hook reports…", ' +
-    '"the PostToolUse edit guard runs…") and point at `.claude/settings.json`, which is the ' +
-    'registry of what is actually wired.',
+    '"the PostToolUse edit guard runs…") and point at the registry of the harness in ' +
+    'question — `.claude/settings.json` for Claude Code — which is what actually wires it.',
 });
 
 /**
@@ -358,6 +358,25 @@ export const staleAllowlistEntry = ({ index, rule, file }) => ({
   fail:
     `allowlist entry ${index} (${rule} / ${file}) matched nothing — the text it ` +
     'suppressed is gone, so delete it.',
+});
+
+/**
+ * An `OPTIONAL_HOOK_PATHS` entry no longer matches any path a hook names.
+ *
+ * - **Used by** the `hook-paths` rule, which applies to its own exemptions the
+ *   same hygiene `allowlist-hygiene` applies to suppressions.
+ * - **Why** an exemption must not outlive the path it was written for. Once no
+ *   hook names that path — it was renamed, or the hook that built it is gone —
+ *   the entry does nothing except stand ready to exempt some FUTURE hook that
+ *   names a genuinely REQUIRED file of the same name, pre-emptively and
+ *   silently. The instruction is to delete it.
+ * - **Seen when** a hook stops building the path, or the path is renamed.
+ */
+export const staleOptionalHookPath = ({ path }) => ({
+  fail:
+    `OPTIONAL_HOOK_PATHS lists \`${path}\`, which no hook named in this run — the ` +
+    'exemption has outlived the path it was written for, and would pre-emptively excuse a ' +
+    'future hook that names a REQUIRED file of that name. Delete the entry.',
 });
 
 /**

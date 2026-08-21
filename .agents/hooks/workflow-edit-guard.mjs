@@ -16,10 +16,12 @@
 // Pure Node (no jq / bash / PowerShell syntax) so it behaves identically on
 // macOS, Linux and Windows. Paths resolve relative to this script.
 
-import { readFileSync, existsSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, isAbsolute } from 'node:path';
+
+import { readInput, eventName, editedPath, emit, quiet } from './harness.mjs';
 
 const mode = process.argv[2] === 'post' ? 'post' : 'pre';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -40,41 +42,55 @@ const CHECKER = join(
 // the checker does not govern. Guarding the whole directory would fire on every
 // plugin-skill touch and teach people to ignore the reminder.
 
-/** Matched exactly. */
-const GUARDED_FILES = ['AGENTS.md', 'AGENTS.local.md', '.claude/settings.json'];
+/**
+ * Matched exactly. Hook registries belong here because editing one changes what
+ * fires — the same reason `AGENTS.md` is guarded.
+ *
+ * A registry is listed only once we have verified our scripts would actually
+ * FUNCTION on that harness: same event names AND same stdin/stdout contract.
+ * Codex qualifies and is listed before it is adopted, which costs nothing — a
+ * path that does not exist simply never matches, so no reminder ever fires.
+ * Contrast GUARDED_PREFIXES, where an over-broad entry fires constantly.
+ *
+ * Which harnesses are deliberately NOT listed here, and the order for promoting
+ * one, is documented in the `x-sp-workflow-helper` skill under "Hook scripts" —
+ * as prose, because that list drives no behaviour.
+ */
+const GUARDED_FILES = [
+  'AGENTS.md',
+  'AGENTS.local.md',
+  '.claude/settings.json',
+  '.codex/config.toml',
+];
 
 /** Matched as a path prefix. */
 const GUARDED_PREFIXES = [
   'docs/agents/',
   '.agents/skills/x-',
   '.claude/skills/x-',
-  '.claude/hooks/',
+  '.agents/hooks/',
 ];
-
-const emit = (obj) => {
-  process.stdout.write(JSON.stringify(obj));
-  process.exit(0);
-};
-const quiet = () => process.exit(0);
 
 /* ------------------------------------------------- read the hook's stdin */
 
-let raw = '';
-try {
-  raw = readFileSync(0, 'utf8');
-} catch {
-  quiet(); // no stdin — nothing to judge
+// stdin is a stream: readInput() is called ONCE, here, and the parsed payload is
+// passed on. A second call in this process would read an exhausted stream and
+// silently yield {}.
+const payload = readInput();
+const fallbackEvent = mode === 'post' ? 'PostToolUse' : 'PreToolUse';
+const { path: filePath, unknownShape } = editedPath(payload);
+
+// A tool payload we could not read a path out of is NOT the same as no edit.
+// Say so — a guard that goes quiet because it did not understand its input is
+// the exact failure this guard exists to prevent.
+if (unknownShape) {
+  emit({
+    systemMessage:
+      `Workflow guard: unrecognised ${eventName(payload, fallbackEvent)} payload — ` +
+      'the edited path could not be determined, so this edit was NOT checked.',
+  });
 }
 
-let payload;
-try {
-  payload = JSON.parse(raw || '{}');
-} catch {
-  quiet(); // malformed payload is not our problem to report
-}
-
-const filePath =
-  payload?.tool_input?.file_path ?? payload?.tool_response?.filePath ?? '';
 if (!filePath) quiet();
 
 // Normalise to a repo-relative, forward-slash path so the prefix test works on
@@ -107,7 +123,7 @@ if (!strictHit && !looseHit) quiet();
 if (mode === 'pre') {
   emit({
     hookSpecificOutput: {
-      hookEventName: 'PreToolUse',
+      hookEventName: eventName(payload, 'PreToolUse'),
       additionalContext:
         `You are about to edit \`${relPath}\`, a Superpowers-First Workflow surface. ` +
         'These files are held together by references — a hook ID cited from a `Spans:` line, ' +
@@ -160,7 +176,7 @@ const failingLines = out
 emit({
   systemMessage: `Workflow guard: integrity FAILURES after editing ${relPath}.`,
   hookSpecificOutput: {
-    hookEventName: 'PostToolUse',
+    hookEventName: eventName(payload, 'PostToolUse'),
     additionalContext:
       `The workflow integrity checker failed after your edit to \`${relPath}\`. ` +
       'These are silent-breakage classes — the files still read correctly, so nothing else ' +

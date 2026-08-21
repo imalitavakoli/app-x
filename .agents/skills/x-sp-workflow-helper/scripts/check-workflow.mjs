@@ -1000,10 +1000,17 @@ rule('hook-paths', (r) => {
   // an already-checked namespace. What legitimately remains is human-facing:
   // a person reading a systemMessage cannot invoke a skill, so they get a path.
   // That path is the one thing here worth guarding, plus any that creep back.
-  const dir = '.claude/hooks';
+  const dir = '.agents/hooks';
   if (!exists(dir)) return r.skip(MSG.skips.noDir(dir));
 
   let checked = 0;
+
+  // Which exemptions actually earned their keep this run. The same hygiene
+  // `allowlist-hygiene` applies to suppressions: an exemption that matches
+  // nothing is indistinguishable from a correct one, right up until the day it
+  // silently excuses a path whose absence IS breakage.
+  const optionalHit = new Set();
+
   for (const f of walk(dir, '.mjs')) {
     // Paths assembled from SEGMENTS — join(ROOT, '.agents', 'skills', …) — are
     // scanned over the WHOLE FILE, not line by line, because the call spans
@@ -1023,6 +1030,10 @@ rule('hook-paths', (r) => {
       if (!p || p.includes('{')) continue;
       const ln = whole.slice(0, m.index).split(/\r?\n/).length;
       checked++;
+      if (CFG.OPTIONAL_HOOK_PATHS.includes(p)) {
+        optionalHit.add(p); // absence is by design
+        continue;
+      }
       if (exists(p)) continue;
       if (suppressed('hook-paths', f, p)) continue;
       emitMsg(r, MSG.hookSegmentPathBroken({ file: f, line: ln, path: p }));
@@ -1035,12 +1046,24 @@ rule('hook-paths', (r) => {
         const p = m[1].replace(/^\.\//, '');
         if (p.includes('{')) continue; // a shape, not a file
         checked++;
+        if (CFG.OPTIONAL_HOOK_PATHS.includes(p)) {
+          optionalHit.add(p); // absence is by design
+          continue;
+        }
         if (exists(p)) continue;
         if (suppressed('hook-paths', f, p)) continue;
         emitMsg(r, MSG.hookPathBroken({ file: f, line: n, path: p }));
       }
     }
   }
+
+  // An entry that exempted nothing is stale — see `staleOptionalHookPath`.
+  for (const p of CFG.OPTIONAL_HOOK_PATHS) {
+    if (optionalHit.has(p)) continue;
+    if (suppressed('hook-paths', 'config.mjs', p)) continue;
+    emitMsg(r, MSG.staleOptionalHookPath({ path: p }));
+  }
+
   r.note(MSG.notes.hookPathsChecked(checked));
 });
 

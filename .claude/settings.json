@@ -8,11 +8,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/agents-file-inject.mjs"
+            "command": "node .agents/hooks/agents-file-inject.mjs"
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/sp-version-check.mjs",
+            "command": "node .agents/hooks/sp-version-check.mjs",
             "statusMessage": "Checking Superpowers version...",
             "timeout": 30
           }
@@ -25,7 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/workflow-edit-guard.mjs pre",
+            "command": "node .agents/hooks/workflow-edit-guard.mjs pre",
             "statusMessage": "Checking workflow-surface edit...",
             "timeout": 20
           }
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/workflow-edit-guard.mjs post",
+            "command": "node .agents/hooks/workflow-edit-guard.mjs post",
             "statusMessage": "Verifying workflow integrity...",
             "timeout": 90
           }

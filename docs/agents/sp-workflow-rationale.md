@@ -258,4 +258,16 @@ It edits a Superpowers artifact (the plan), so it is the exception to "our skill
 
 **Revisit if** we add a second Superpowers-artifact skill (same naming) or drop that exception.
 
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why hook scripts live in `.agents/` (not a new skill)
+
+Hook scripts live in `.agents/hooks/` because the script is the portable content and each harness registers it in its own registry — the same split skills already use. There is no new skill for them: Superpowers has no hook-authoring skill to layer on, hooks are already an `x-sp-workflow-helper` surface, and a sibling would collide on the word "hook".
+
+The shared harness module was first rejected because Claude Code and Codex share a contract, making it look like a no-op. It was adopted once Gemini CLI's divergent event vocabulary plus the hardcoded event literals showed otherwise, and it derives from the payload rather than mapping per-agent names. The guarded-registry list is two-tier: only a verified contract (today Claude Code and Codex) is listed; the rest is prose in the skill, so nothing can act on an unverified path.
+
+**Revisit if** a harness sends no event name on stdin (the one assumption `eventName()` rests on), or a harness needs a hook the others must **not** run (which one shared directory cannot express).
+
 [🔙](../../README.md#agents)

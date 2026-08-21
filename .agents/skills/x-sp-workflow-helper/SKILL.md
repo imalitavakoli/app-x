@@ -2,7 +2,7 @@
 name: x-sp-workflow-helper
 description: 'WHAT? The procedure and integrity checker for changing the Superpowers-First Workflow surfaces — `AGENTS.md`, `docs/agents/sp-workflow-*.md` and the `x-*` skills they name. WHEN? Before adding, renaming, renumbering or deleting a hook, gate, constraint, entry, path or landmark; before moving a rule between those files; after any such edit, to prove nothing dangled; and whenever the installed Superpowers version changes.'
 metadata:
-  version: '1.1.0'
+  version: '1.2.0'
 ---
 
 # SP Workflow Helper
@@ -107,6 +107,56 @@ Fourteen rules, each one a failure class that has actually happened here. `--lis
 
 **A growing allowlist means the rule is wrong, not that the repo is.** Past two or three entries for one rule, fix the rule.
 
+## Hook scripts
+
+Hooks are the one part of this system a harness runs _for_ you. That is also why they are the part most able to move, be rewired, or stop firing without any document noticing — so the rules below are all about keeping that from happening quietly.
+
+**They live in `.agents/hooks/`, and that is canonical for every harness.** Same split as a skill: the script is the content, and each harness registers it in its **own** registry — `.claude/settings.json` for Claude Code, project-scoped `config.toml` for Codex. A registry entry is a **pointer**, exactly as a `.claude/skills/` stub is for a skill. Wiring a second harness therefore adds an entry; it never copies a script, and there is no per-harness hooks directory to copy one into.
+
+**What a hook script may rely on** — three constraints, each closing a failure that is invisible on the machine you wrote it on:
+
+| Constraint                                                                                                      | Why                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pure Node, no dependencies** — no `jq`, no shell or PowerShell syntax                                          | it runs identically on macOS, Linux and Windows, and it cannot be broken by an install step nobody ran                                                                                                                                                    |
+| **Resolve every path from the script's own location**, `dirname(fileURLToPath(import.meta.url))` — never the cwd | harnesses disagree on the working directory they invoke a hook in. Claude Code happens to use the project root; Codex uses the _request_ cwd, so a cwd-relative path there works from the root and fails from a subdirectory — intermittently, and silently |
+| **Claude Code's registry `command` is cwd-relative** (`node .agents/hooks/…`) | Claude Code starts hooks at the project root on Windows, macOS and Linux, so one relative string works on all three — no bash `$VAR` / cmd `%VAR%` split. A later Codex registry can still anchor on that harness's project-root variable; that file is not this one. |
+
+**Everything that varies by harness comes from `.agents/hooks/harness.mjs`** — `readInput`, `eventName`, `editedPath`, `emit`, `quiet`. Each answers a question whose answer differs between harnesses, and answers it by **reading what the harness actually sent**. Every export is total: it returns a value rather than throwing, so a hook fails closed instead of taking the harness down with it.
+
+**Never add a per-agent lookup table** (`{claude: 'PreToolUse', gemini: 'BeforeTool'}`). It encodes guessed knowledge of contracts nobody verified, every new harness needs an entry, and a wrong entry fails silently — the same trap `SP_PROBES_UNVERIFIED` exists to warn about. Derive from the payload instead, which is why the module can be written while a harness's contract is still unknown.
+
+`editedPath` returns **`{ path, unknownShape }`**, and `unknownShape` is the whole reason it is a helper rather than a `??` chain. "Nothing was edited" (stay quiet) and "a tool payload arrived and no path could be found in it" used to look identical, so the second went unnoticed. **`unknownShape` must be reported, never swallowed** — a guard that goes silent because it did not understand its input is the exact failure a guard exists to prevent.
+
+**`harness.mjs` is the one hook file our docs may name.** Every _registered_ script is off-limits by filename, because a rename would leave the doc reading perfectly while pointing at nothing — name the **event** and the job instead. The shared module has the opposite failure mode: nothing registers it, and its siblings import it by relative path, so renaming it breaks a Node import **loudly**. It is exempted in `HOOK_REF_PATTERN` by a negative lookahead deliberately, not by oversight — remove the exemption to tidy it up and this section stops being writable.
+
+**Deriving the event name is for the edit guard, not for SessionStart.** `readFileSync(0)` is a **blocking** read, and a session-start hook that blocks hangs startup before anything else runs — observed here as an exit-124 timeout, which is a far worse outcome than a wrong event name. So the split is by event, and it is a rule rather than a compromise:
+
+- **The edit guard derives.** It already reads stdin to find the edited path, and the tool-use event names genuinely do differ between harnesses — Gemini CLI calls those moments `BeforeTool` and `AfterModel`. A literal there is wrong the moment the registration differs, and at least one harness validates the name it gets back.
+- **The SessionStart hooks read no stdin and pass a literal.** `SessionStart` is spelled identically in all three harnesses verified so far, and a harness that named it differently _while offering no readable stdin_ would land on that same literal through `eventName`'s `fallback` anyway. There is nothing to gain and a hung session to lose. Do not unify these into a single derive.
+
+**Registering the guard requires a file-editing matcher.** Its unrecognised-payload report is **unconditional on purpose** — it is the only thing standing between a payload shape we failed to anticipate and a silent no-op. The consequence is that a registration with no per-tool matcher would fire it on _every_ tool call in the session. So a file-editing matcher (Claude Code uses `Edit|Write`) is a **precondition** of wiring the guard on any harness, not a tuning preference. Narrowing the report instead would reopen the silent path it was built to close.
+
+**Which registries are guarded, and how one gets promoted.** `GUARDED_FILES` in the guard lists a registry only once that harness's contract is **verified** — same event names _and_ same stdin/stdout shape. Today that is Claude Code and Codex. Everything else is recorded **here, as prose**: this list drives no behaviour, and making it a constant would invite something to act on it.
+
+| Not guarded                                                                                       | Where it stands                                                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Gemini CLI** (`.gemini/settings.json`)                                                          | hooks confirmed, and a real project-scoped registry — but a divergent event vocabulary and an **unverified** payload contract, so we cannot claim these scripts would function there |
+| **Antigravity · Cursor · Factory Droid · GitHub Copilot CLI · Kimi Code · OpenCode · Pi**          | harnesses Superpowers ships for whose hook support has not been checked at all                                                                                                      |
+
+**Promotion order**, in this order and no other: confirm the harness has hooks → confirm its project-scoped registry path → confirm its payload contract against one of these scripts → add the path to `GUARDED_FILES`. **Never add a guessed path.** An invented path matches nothing, can never be caught doing nothing, and converts a known gap into a false claim of coverage — the same discipline as `SP_PROBES_UNVERIFIED`.
+
+**Declaring a path whose absence is by design — `OPTIONAL_HOOK_PATHS`** (`scripts/config.mjs`). `hook-paths` is there to catch a hook pointing at a file that was renamed or moved; a path the hook guards with `existsSync` and handles correctly either way is not breakage and must not be reported as such. Three properties of the knob matter:
+
+- It is an **explicit list, deliberately not inferred** from a nearby `existsSync`. Inference would exempt every future guarded path, including the ones where absence _is_ the breakage — which is this rule's entire job.
+- It is **self-cleaning**: `hook-paths` fails on an entry that no hook named during the run. A stale exemption does nothing except sit ready to pre-emptively excuse some future hook that names a genuinely **required** file of the same name.
+- Deleting an entry restores the check, so making a path required again is one line.
+
+Today's only entry is `AGENTS.local.md` — per-developer overrides, gitignored on purpose.
+
+**Adding a hook.** `hook-paths` covers it with no edit at all: the rule walks the directory. The registry entry is a **separate edit in a separate file**, and every registry in `GUARDED_FILES` is itself a guarded surface — so the guard fires on that edit and the checker runs behind it.
+
+**The governance boundary: prose inside `.agents/hooks/` is not checked.** `dead-messages` covers this skill's own `scripts/` folder only, so a hook's comments and the sentences it emits are held to review and nothing else. That is a known limit rather than an oversight — but it means the sweep in _Before calling a workflow change done_ is the only thing that will notice a hook still explaining a rule you just changed.
+
 ## Prove behaviour changed the way you intended
 
 The checker proves references resolve. It cannot prove an agent will _do_ the right thing. For that, run the change as a scenario — this is the RED/GREEN method from Superpowers' **skill-authoring skill** (today `writing-skills`), and it applies to these docs directly: that skill's own worked example tests `CLAUDE.md` variants, not a skill.
@@ -140,7 +190,7 @@ Reach for this when the change alters **what an agent decides** — a new gate, 
 | Reading a green checker as "the change is correct" | It proves references resolve, nothing more. Behaviour changes need a scenario run.                                                          |
 | Widening the allowlist to get to green             | A false positive means fix the rule; a true positive means fix the repo.                                                                    |
 | Editing a path file without the notation           | `sp-workflow-format.md` in full first — the `Shape` lines are the point when editing.                                                       |
-| Naming a hook script by filename in a doc          | Name the **event** and the job ("a SessionStart hook reports…"); point at `.claude/settings.json` for what is wired. Run `hook-refs`.       |
+| Naming a hook script by filename in a doc          | Name the **event** and the job ("a SessionStart hook reports…"); point at the harness's own hook registry for what is wired. Run `hook-refs`.       |
 
 ## Confirm the current tooling before relying on this
 

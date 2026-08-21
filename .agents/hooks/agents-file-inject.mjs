@@ -16,10 +16,21 @@ import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const scriptDir = dirname(fileURLToPath(import.meta.url));
-const root = join(scriptDir, '..', '..');
+// `emit` only — this hook deliberately does NOT read stdin. `readFileSync(0)` is
+// a BLOCKING read, and blocking at session start (this hook has no configured
+// timeout) hangs the session before anything else runs, which is a far worse
+// outcome than a wrong event name. Nor is there anything to gain: `SessionStart`
+// is spelled identically in every harness verified so far (Claude Code, Codex,
+// Gemini), and a harness that named it differently while offering no readable
+// stdin would land on this same literal through the fallback anyway. Deriving
+// the event from the payload belongs in the edit guard, whose event names
+// genuinely do differ between harnesses.
+import { emit } from './harness.mjs';
 
-const agentsPath = join(root, 'AGENTS.md');
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(scriptDir, '..', '..');
+
+const agentsPath = join(ROOT, 'AGENTS.md');
 if (!existsSync(agentsPath)) process.exit(0); // nothing to enforce
 
 const lineCount = (p) => readFileSync(p, 'utf8').split('\n').length;
@@ -29,18 +40,16 @@ let directive =
   `(NOT cat/Bash: cat truncates large output mid-file). It is ${lineCount(agentsPath)} lines at ` +
   `${agentsPath}. Verify you reached the last line before proceeding.`;
 
-const localPath = join(root, 'AGENTS.local.md');
+const localPath = join(ROOT, 'AGENTS.local.md');
 if (existsSync(localPath)) {
   directive +=
     ` Then read AGENTS.local.md IN FULL (${lineCount(localPath)} lines at ${localPath}) — ` +
     `it overrides AGENTS.md.`;
 }
 
-process.stdout.write(
-  JSON.stringify({
-    hookSpecificOutput: {
-      hookEventName: 'SessionStart',
-      additionalContext: directive,
-    },
-  }),
-);
+emit({
+  hookSpecificOutput: {
+    hookEventName: 'SessionStart',
+    additionalContext: directive,
+  },
+});

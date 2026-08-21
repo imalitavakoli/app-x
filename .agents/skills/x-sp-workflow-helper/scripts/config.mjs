@@ -120,15 +120,49 @@ export const COUPLING_EXEMPT = /^x-([a-z]+-)?sp-/;
  * Why a prohibition rather than an existence check: a hook can be renamed, and
  * then every doc that named it is wrong — which happened here (one rename left
  * five stale references across three files). What cannot go stale is the EVENT
- * it fires on (`SessionStart`, `PreToolUse`, `PostToolUse` — Claude Code's own
- * vocabulary) and the job it does. So docs name those, and point at
- * `.claude/settings.json`, which is the registry of what is actually wired.
+ * it fires on (`SessionStart`, `PreToolUse`, `PostToolUse`) and the job it
+ * does. So docs name those, and point at the
+ * registry of the harness in question — `.claude/settings.json` for Claude Code,
+ * `config.toml` for Codex — rather than at a script filename.
  *
- * `.claude/settings.json` and `.claude/skills/…` stub paths stay allowed: the
- * first IS the registry, and the second is a convention this workspace owns.
+ * A harness's own registry path and `.claude/skills/…` stub paths stay allowed:
+ * a registry IS the thing to point at, and the stubs are a convention this
+ * workspace owns.
  */
 export const HOOK_REF_SURFACES = ['.agents/skills', 'docs', 'AGENTS.md'];
-export const HOOK_REF_PATTERN = /\.claude\/hooks\/[A-Za-z0-9._-]+/g;
+
+/**
+ * Matches a REGISTERED hook script named by path. Both directories are matched:
+ * `.agents/hooks/` is where they live now, and `.claude/hooks/` is retained so a
+ * stale reference to the old location still FAILS instead of passing as ordinary
+ * prose.
+ *
+ * `harness.mjs` is excluded because it is not a registered hook. No registry
+ * names it; it is imported by relative path from its siblings, so a rename
+ * breaks a Node import LOUDLY rather than silently falsifying a doc — which is
+ * the entire reason this prohibition exists. It therefore has to be nameable in
+ * prose, or the skill could not document it.
+ */
+export const HOOK_REF_PATTERN =
+  /(?:\.agents|\.claude)\/hooks\/(?!harness\.mjs)[A-Za-z0-9._-]+/g;
+
+/**
+ * Paths a hook may legitimately build that are NOT expected to exist.
+ *
+ * `hook-paths` exists to catch a hook pointing at a file that was renamed or
+ * moved. A path whose ABSENCE IS DESIGNED FOR is a different thing: the hook
+ * guards it with `existsSync` and behaves correctly either way, so a missing
+ * file is not breakage and must not be reported as such.
+ *
+ * An explicit list, deliberately NOT inferred from a nearby `existsSync`:
+ * inference would silently exempt every future guarded path, including ones
+ * where absence IS breakage — and catching silent breakage is this rule's whole
+ * job. If a path here ever becomes REQUIRED, deleting its entry restores the
+ * check.
+ *
+ * - `AGENTS.local.md` — optional per-developer overrides, gitignored on purpose.
+ */
+export const OPTIONAL_HOOK_PATHS = ['AGENTS.local.md'];
 
 /* -------------------------------------------------- installed Superpowers */
 

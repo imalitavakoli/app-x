@@ -203,6 +203,14 @@ _Avoid_: Versioned class (`e-popup-v2`), BEM block
 
 &nbsp;
 
+## Hooks
+
+**Hook**:
+Two senses, both in active use. A **🪝 workflow hook** is a point in the Superpowers lifecycle where this workspace attaches steps, carrying an ID like `A1` or `B1`. A **hook script** is an executable this workspace registers with an agent harness to run on a harness lifecycle event.
+_Avoid_: lifecycle hook, Claude hook, agent hook
+
+&nbsp;
+
 ## Flagged ambiguities
 
 Terms **in use but not settled** — recorded so a contested one is not silently coined twice. Unlike a PRD's or TFS's Open Questions, nothing here blocks: resolve one when the work makes the answer obvious, then move it into the body above. Format rules: [docs/agents/context-md-format.md](docs/agents/context-md-format.md).

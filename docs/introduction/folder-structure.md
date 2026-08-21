@@ -17,7 +17,9 @@ This helps us identify where apps and libs are located, what types of libraries 
 x/
 ├── _OBS/                                           // Unused/legacy personal files. 🚫 AI agents MUST ignore this dir entirely (even SKILL.md/AGENTS.md inside it).
 │   └── {developer-name}/                           // Holds the individuals or teams' OBS files.
-├── .agents/                                        // Holds AI Agents related files (holds e.g., Skills).
+├── .agents/                                        // Holds AI Agents related files (holds e.g., Skills, Hooks).
+│   ├── hooks/                                      // Holds our hook scripts — canonical for every agent; each agent's own settings file registers them.
+│   └── skills/                                     // Holds our skills — canonical; some agents need a pointer stub in their own dir.
 ├── apps/                                           // Holds our apps.
 ├── apps/{app-name}/
 │        ├── src/                                   // Holds the app's web source files (holds e.g., `index.html`, `main.ts`, and etc.)
