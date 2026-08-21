@@ -10,6 +10,11 @@
 // POSITION instead (see ATTACH_POINTS below): whatever sits in a hook heading,
 // an ⚪ line, or a `today \`…\`` marker is an anchor, whatever it is called.
 
+// Imports messages.mjs for the three ATTACH_POINTS labels: their line tests are
+// knobs and belong here, but their NAMES are printed in the count line, and every
+// string this tool prints lives in messages.mjs.
+import * as MSG from './messages.mjs';
+
 /* ------------------------------------------------------- surfaces we govern */
 
 /** Read every turn; holds the workflow's routing section. */
@@ -72,9 +77,15 @@ export const SPAN_LINE = /\*\*(Spans|Members):\*\*\s*(.+)$/;
  * token-shape pattern can distinguish from ordinary prose.
  */
 export const ATTACH_POINTS = [
-  { name: 'hook heading', test: (line) => /^####\s+🪝/.test(line) },
-  { name: '⚪ line', test: (line) => /^⚪/.test(line) },
-  { name: 'routing marker', test: (line) => /\btoday\s+`/.test(line) },
+  {
+    name: MSG.labels.attachHookHeading,
+    test: (line) => /^####\s+🪝/.test(line),
+  },
+  { name: MSG.labels.attachWhiteCircleLine, test: (line) => /^⚪/.test(line) },
+  {
+    name: MSG.labels.attachRoutingMarker,
+    test: (line) => /\btoday\s+`/.test(line),
+  },
 ];
 
 /** Extracts candidate skill names from an attach-point line. */

@@ -1,23 +1,23 @@
 // The prose this tool says to people, in one place.
 //
-// WHAT LIVES HERE, and what deliberately does not:
+// THE RULE, and it has no exceptions:
 //
-//   THE AXIS — is this text a VERDICT the tool renders about the repo, or
-//   TELEMETRY about the run?
+//   EVERY STRING THE TOOL PRINTS LIVES HERE. Rule titles, failures, skips,
+//   counts, the run summary, and even single words interpolated into another
+//   line (`labels`). If a person can read it, it is in this file.
 //
-//     VERDICT (here): the rule TITLE (what was judged), a FAILURE (what is
-//     wrong) and a SKIP (why no judgement was possible). These are what a
-//     person reads to understand an outcome.
+//   Three narrower boundaries were tried first — "wording is the deliverable",
+//   "contains an imperative", "verdict vs telemetry" — and each one was applied
+//   inconsistently within days, because each needed a judgement call at every
+//   new call site. Three rounds of review kept finding stray English. A rule
+//   that needs no judgement is the only kind that holds.
 //
-//     TELEMETRY (stays with the code): counts and tallies (`N files scanned`),
-//     and the runner summary (`N failure(s) across M rule(s)`). Not findings
-//     about the repo — the harness describing its own output.
+//   The dead-messages rule enforces it in BOTH directions: nothing exported
+//   here goes unused, and no prose string literal survives in ANY sibling
+//   script — scanned in all three quote styles by a character scanner, because
+//   every regex version of that scan produced a false clean.
 //
-//   Two earlier boundaries were tried and both got applied inconsistently:
-//   "wording is the deliverable" was too vague, and "contains an imperative"
-//   split findings from each other for no reason. The dead-messages rule now
-//   enforces this one in BOTH directions — no unused export, no inline verdict.
-//// Every export is a function so the caller supplies the specifics and the wording
+// Every export is a function so the caller supplies the specifics and the wording
 // stays whole here rather than being assembled at the call site.
 
 /* ------------------------------------------------------- sp-version: presence */
@@ -65,7 +65,7 @@ export const versionUnreadable = ({ source, where }) => ({
     'manifest alongside it. Nothing can tell whether this is the version the workflow was ' +
     'reviewed against, so the reviewed-version guarantee is simply absent here.',
   details: [
-    "  Either install it through a plugin manager (which records a version), or copy the " +
+    '  Either install it through a plugin manager (which records a version), or copy the ' +
       "plugin's manifest next to the skills so a version can be read.",
   ],
 });
@@ -107,7 +107,9 @@ export const allEntriesDisabled = ({ settingsPath, keys }) => ({
     `${settingsPath} sets every Superpowers plugin entry to false (${keys}). ` +
     'Project settings outrank user settings, so Superpowers is DISABLED for everyone on ' +
     'this repo — and the whole workflow with it.',
-  details: ['  Enable exactly one entry whose marketplace is actually installed.'],
+  details: [
+    '  Enable exactly one entry whose marketplace is actually installed.',
+  ],
 });
 
 /**
@@ -129,6 +131,22 @@ export const enabledButNotInstalled = ({ settingsPath, key, market }) => ({
 });
 
 /* -------------------------------------------------------- sp-version: drift */
+
+/**
+ * The drift sentence itself: what is installed vs what was reviewed.
+ *
+ * - **Used by** the `sp-version` rule, which splices it into the fail, the
+ *   note and the ignore path alike — and by the session-start hook, which
+ *   passes the rule output through.
+ * - **Why** it was assembled inline for a while, which is how a backtick
+ *   template kept three flavours of the same sentence out of this file: the
+ *   first scan for stray prose only looked at quotes, never at backticks.
+ * - **Seen when** the installed version differs from the baseline at all,
+ *   whatever the tier.
+ */
+export const driftSummary = ({ installed, reviewed, reviewedDate, tier }) =>
+  `Superpowers is at ${installed}; this workflow was reviewed against ` +
+  `${reviewed} (${reviewedDate}) — a ${tier.toUpperCase()} difference.`;
 
 /**
  * The installed version differs from the reviewed one, loudly.
@@ -268,7 +286,13 @@ export const hookSegmentPathBroken = ({ file, line, path }) => ({
  *   name, so the fix is to re-anchor — never to substitute something similar.
  * - **Seen when** upstream renames, splits or removes a skill we anchor to.
  */
-export const attachPointNotInstalled = ({ file, line, kind, name, version }) => ({
+export const attachPointNotInstalled = ({
+  file,
+  line,
+  kind,
+  name,
+  version,
+}) => ({
   fail:
     `${file}:${line} — the ${kind} names \`${name}\`, which is NOT an installed ` +
     `Superpowers skill (${version}). The lifecycle moment it marks still governs: ` +
@@ -497,17 +521,133 @@ export const locators = {
 };
 
 /**
- * A verdict written inline in the checker instead of here.
+ * Prose left in the checker instead of here.
  *
- * - **Used by** the `dead-messages` rule, scanning its own sibling.
- * - **Why** the split between verdicts (here) and telemetry (with the code that
- *   formats it) survived only on discipline, and discipline failed: the boundary
- *   was re-drawn three times before it held. This makes the rule enforceable.
- * - **Seen when** someone adds an `r.fail` or `r.skip` with the words inline.
+ * - **Used by** the `dead-messages` rule, scanning its own sibling for string
+ *   literals that read as English — outside comments, which are meant to.
+ * - **Why** it makes the one rule enforceable rather than aspirational. Every
+ *   narrower boundary was re-drawn within days; this one asks no judgement of
+ *   whoever adds the next call site.
+ * - **Seen when** a new `r.fail`/`r.skip`/`r.note`, a `console.log`, or a
+ *   fragment interpolated into another line is written with the words inline.
  */
-export const inlineVerdictText = ({ file, line }) => ({
+export const inlineString = ({ file, line, text }) => ({
   fail:
-    `${file}:${line} writes a verdict inline — a failure or skip is what a person reads ` +
-    'to understand the outcome, so its wording belongs in messages.mjs. Telemetry ' +
-    '(counts, the run summary) stays with the code that formats it.',
+    `${file}:${line} has prose in the code: "${text}". Every string this tool prints ` +
+    'lives in messages.mjs — titles, failures, skips, counts, the summary, and ' +
+    'single-word fragments alike. Move it there and interpolate the specifics.',
 });
+
+/* =========================================================== NOTES & CHROME */
+
+/**
+ * Everything else the tool prints: the per-rule notes and the run summary.
+ *
+ * - **Used by** the rules (notes) and the runner (summary).
+ * - **Why** the file holds EVERY string the tool prints, with no exception to
+ *   argue about. Three attempts at a partial boundary — "wording is the
+ *   deliverable", "contains an imperative", "verdict vs telemetry" — each got
+ *   applied inconsistently, and each time a stray string was found by reading
+ *   rather than by the checker. An absolute rule needs no judgement and is
+ *   mechanically enforceable, which is why it replaced all three.
+ * - **Seen when** every run: notes print under a passing rule, the summary last.
+ *
+ * Two of these are genuine verdicts that had been miscategorised as counts:
+ * `spVersionOk` is what a PASS actually concludes, and `driftIgnored` records a
+ * policy decision. The rest are tallies.
+ */
+export const notes = {
+  /** sp-version PASS — the conclusion, not a count. */
+  spVersionOk: ({ version, reviewed, source, where }) =>
+    `reviewed against ${version} on ${reviewed} — found as ${source} at ${where}`,
+
+  /** Drift found, but policy says not to report it. */
+  driftIgnored: (drift) => `${drift} Ignored by policy.`,
+
+  hookIdsDefined: (ids) => `${ids.length} hook IDs defined: ${ids.join(' · ')}`,
+  pathsChecked: (docCount, skillCount) =>
+    `${docCount} doc path citations + ${skillCount} skill-internal links checked`,
+  anchorsChecked: (n) => `${n} anchor citations checked`,
+  spVersionInspected: (version) =>
+    `checked against installed Superpowers ${version}`,
+  attachPointsChecked: (byKind) =>
+    `${byKind} — verified by position, no name list`,
+  workspaceSkills: (names) =>
+    `${names.length} workspace skills: ${names.join(' · ')}`,
+  stubLocations: (dirs) => `stub locations checked: ${dirs.join(' · ')}`,
+  hookPathsChecked: (n) => `${n} repo paths named by hooks checked`,
+  hookRefFilesScanned: (n) => `${n} files scanned for hook-filename references`,
+  messageAudit: ({ total, dead, inline, scanned }) =>
+    `${total} message exports, ${dead} unused; ${scanned} sibling script(s) scanned, ${inline} string(s) left in the code`,
+  allowlistEmpty: 'allowlist is empty',
+  allowlistInUse: (hits, total) =>
+    `${hits}/${total} allowlist entries still in use`,
+};
+
+/** The runner's own summary line — the harness counting its output. */
+export const runner = {
+  /**
+   * A rule threw instead of reporting.
+   *
+   * - **Used by** the runner, wrapping every rule call.
+   * - **Why** a crash must read as a FAILURE of that rule, not as a missing
+   *   result — a rule that silently produced nothing would leave its
+   *   invariant unchecked while the run still looked complete.
+   * - **Seen when** a rule hits a case its author did not handle.
+   */
+  ruleCrashed: (message) => `rule crashed: ${message}`,
+
+  /**
+   * A rule was registered with no title in this file.
+   *
+   * - **Used by** the rule registry, at load time — so it throws before any
+   *   rule runs, rather than printing `undefined` as a title.
+   * - **Why** registration deliberately carries no prose: the title is looked
+   *   up here. That only holds if a missing entry is loud.
+   * - **Seen when** someone adds a rule and forgets its `titles` entry.
+   */
+  missingTitle: (id) => `no title in messages.mjs for rule '${id}'`,
+  /**
+   * A `--rule=` name that matches nothing.
+   *
+   * Without this the run printed `All 0 rules passed` and exited 0, so a typo
+   * (`--rule=anchor` for `anchors`) read as a clean bill of health on files
+   * nothing had looked at — a silent green, which is the failure class this
+   * whole checker exists to catch.
+   */
+  unknownRule: (name, ids) =>
+    `no rule named '${name}'. Known rules: ${ids.join(' · ')}`,
+  allPassed: (n) => `All ${n} rules passed.`,
+  failures: (count, ruleCount) =>
+    `${count} failure(s) across ${ruleCount} rule(s).`,
+};
+
+/**
+ * Fragments interpolated into other printed text.
+ *
+ * - **Used by** `findSuperpowersSkills` (the source labels) and the sp-version
+ *   pass note (the missing-date fallback).
+ * - **Why** they are not whole messages, but they ARE words a person reads — the
+ *   pass line says "found as **Claude Code plugin** at …". A fragment left in the
+ *   code is still a string the file claims to own.
+ * - **Seen when** every run that finds Superpowers, or one whose baseline has no
+ *   recorded review date.
+ */
+export const labels = {
+  /**
+   * The three attach-point positions, named for the count line.
+   *
+   * Paired with their line tests in config.mjs — the test is a knob, the
+   * NAME is text a person reads ("5 at hook headings"), so it lives here.
+   * Kept as a triple rather than split by whether each one happens to look
+   * like prose: two of the three would have moved and one stayed, which
+   * reads as an oversight rather than a rule.
+   */
+  attachHookHeading: 'hook heading',
+  attachWhiteCircleLine: '⚪ line',
+  attachRoutingMarker: 'routing marker',
+
+  sourceClaudePlugin: 'Claude Code plugin',
+  sourceWorkspaceCopy: 'workspace copy',
+  dateUnrecorded: 'an unrecorded date',
+};

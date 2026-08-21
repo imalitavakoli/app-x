@@ -119,6 +119,149 @@ function descriptionOf(p) {
   return quoted ? quoted[2] : raw;
 }
 
+/**
+ * Every string literal in a piece of JavaScript, with its line number.
+ *
+ * A CHARACTER SCANNER rather than a regex, because three regex versions of this
+ * each produced a FALSE CLEAN — the tool reporting "no prose in the code" while
+ * prose sat in the code, which is worse than not checking:
+ *
+ *   1. only matched '…' and "…"        → every backtick template was invisible,
+ *                                        and a backtick is what you reach for
+ *                                        precisely when a sentence has values
+ *                                        spliced into it.
+ *   2. blanked block comments first    → line 4 of this very file is a LINE
+ *                                        comment containing a glob, and the
+ *                                        slash-star inside it opened a block
+ *                                        comment that ran to the next close
+ *                                        thirty lines down. Every literal in
+ *                                        between went unscanned, silently.
+ *   3. blanked regex literals by regex → could not tell a division from a
+ *                                        pattern without knowing what preceded.
+ *
+ * A scanner knows which state it is in, so none of those cases can arise. It
+ * skips comments and regex literals, and returns:
+ *
+ *   { text, line }   text = the literal's contents; for a template, its literal
+ *                    parts with each ${…} replaced by a space.
+ */
+function literalsOf(src) {
+  const out = [];
+  let i = 0;
+  let line = 1;
+  let prev = ''; // last significant (non-space, non-comment) character
+
+  const at = (s) => src.startsWith(s, i);
+  const bump = (n) => {
+    for (let k = 0; k < n; k++) if (src[i + k] === '\n') line++;
+    i += n;
+  };
+
+  /** A `/` starts a regex only where a value may start, not after one. */
+  const regexCanStart = () =>
+    prev === '' || '(,=:[!&|?{};+-*%~^<>'.includes(prev);
+
+  while (i < src.length) {
+    // line comment
+    if (at('//')) {
+      while (i < src.length && src[i] !== '\n') i++;
+      continue;
+    }
+    // block comment
+    if (at('/*')) {
+      const end = src.indexOf('*/', i + 2);
+      bump((end === -1 ? src.length : end + 2) - i);
+      continue;
+    }
+    // '…' and "…" — cannot span a raw newline
+    if (src[i] === "'" || src[i] === '"') {
+      const q = src[i];
+      const start = line;
+      let text = '';
+      i++;
+      while (i < src.length && src[i] !== q) {
+        if (src[i] === '\n') break; // unterminated; bail rather than run away
+        if (src[i] === '\\') {
+          text += src[i + 1] ?? '';
+          i += 2;
+          continue;
+        }
+        text += src[i++];
+      }
+      i++; // closing quote
+      out.push({ text, line: start });
+      prev = q;
+      continue;
+    }
+    // `…` — may span lines, and ${…} may nest braces, strings, even templates
+    if (src[i] === '`') {
+      const start = line;
+      let text = '';
+      bump(1);
+      while (i < src.length && src[i] !== '`') {
+        if (src[i] === '\\') {
+          text += src[i + 1] ?? '';
+          bump(2);
+          continue;
+        }
+        if (at('${')) {
+          // Skip the expression, tracking brace depth so a nested object or
+          // template does not end it early.
+          bump(2);
+          let depth = 1;
+          while (i < src.length && depth > 0) {
+            if (src[i] === '{') depth++;
+            else if (src[i] === '}') depth--;
+            else if (src[i] === '`' || src[i] === "'" || src[i] === '"') {
+              const q = src[i];
+              bump(1);
+              while (i < src.length && src[i] !== q)
+                bump(src[i] === '\\' ? 2 : 1);
+            }
+            bump(1);
+          }
+          text += ' '; // the hole an interpolation leaves in the sentence
+          continue;
+        }
+        if (src[i] === '\n') {
+          text += ' ';
+          bump(1);
+          continue;
+        }
+        text += src[i];
+        bump(1);
+      }
+      bump(1); // closing backtick
+      out.push({ text, line: start });
+      prev = '`';
+      continue;
+    }
+    // regex literal — skipped, not collected
+    if (src[i] === '/' && regexCanStart()) {
+      bump(1);
+      let inClass = false;
+      while (i < src.length) {
+        if (src[i] === '\\') {
+          bump(2);
+          continue;
+        }
+        if (src[i] === '[') inClass = true;
+        else if (src[i] === ']') inClass = false;
+        else if (src[i] === '/' && !inClass) break;
+        else if (src[i] === '\n') break; // not a regex after all
+        bump(1);
+      }
+      bump(1);
+      while (i < src.length && /[gimsuyd]/.test(src[i])) bump(1);
+      prev = '/';
+      continue;
+    }
+    if (!/\s/.test(src[i])) prev = src[i];
+    bump(1);
+  }
+  return out;
+}
+
 /* ---------------------------------------------------------------- constants */
 
 const AGENTS = CFG.AGENTS_FILE;
@@ -164,7 +307,7 @@ function findSuperpowersSkills() {
             found.push({
               version: v,
               dir: skills,
-              source: 'Claude Code plugin',
+              source: MSG.labels.sourceClaudePlugin,
               where: market,
             });
           }
@@ -193,7 +336,12 @@ function findSuperpowersSkills() {
       }
       if (version) break;
     }
-    found.push({ version, dir, source: 'workspace copy', where: dir });
+    found.push({
+      version,
+      dir,
+      source: MSG.labels.sourceWorkspaceCopy,
+      where: dir,
+    });
   }
 
   if (!found.length) return null;
@@ -249,7 +397,7 @@ const RULES = [];
  */
 const rule = (id, fn) => {
   const title = MSG.titles[id];
-  if (!title) throw new Error(`no title in messages.mjs for rule '${id}'`);
+  if (!title) throw new Error(MSG.runner.missingTitle(id));
   RULES.push({ id, title, fn });
 };
 
@@ -263,9 +411,7 @@ rule('hook-ids', (r) => {
       if (m) defined.set(m[1], p);
     }
   }
-  r.note(
-    `${defined.size} hook IDs defined: ${[...defined.keys()].join(' · ')}`,
-  );
+  r.note(MSG.notes.hookIdsDefined([...defined.keys()]));
 
   for (const p of WORKFLOW_DOCS) {
     for (const { n, text } of lines(p)) {
@@ -351,15 +497,18 @@ rule('links', (r) => {
           if (suppressed('links', p, t)) continue;
           emitMsg(
             r,
-            MSG.locators.skillLinkMissing({ file: p, line: n, cited: t, resolved }),
+            MSG.locators.skillLinkMissing({
+              file: p,
+              line: n,
+              cited: t,
+              resolved,
+            }),
           );
         }
       }
     }
   }
-  r.note(
-    `${checked} doc path citations + ${internal} skill-internal links checked`,
-  );
+  r.note(MSG.notes.pathsChecked(checked, internal));
 });
 
 /* --- 3. anchors ---------------------------------------------------------- */
@@ -400,15 +549,14 @@ rule('anchors', (r) => {
       }
     }
   }
-  r.note(`${checked} anchor citations checked`);
+  r.note(MSG.notes.anchorsChecked(checked));
 });
 
 /* --- 4. Superpowers skills exist ---------------------------------------- */
 rule('sp-skills', (r) => {
   const sp = findSuperpowersSkills();
-  if (!sp)
-    return r.skip(MSG.skips.supersededBySpVersion);
-  r.note(`checked against installed Superpowers ${sp.version}`);
+  if (!sp) return r.skip(MSG.skips.supersededBySpVersion);
+  r.note(MSG.notes.spVersionInspected(sp.version));
   const installed = new Set(
     readdirSync(sp.dir).filter((d) => existsSync(join(sp.dir, d, 'SKILL.md'))),
   );
@@ -456,243 +604,253 @@ rule('sp-skills', (r) => {
     }
   }
   r.note(
-    Object.entries(counts)
-      .map(([k, v]) => `${v} at ${k}s`)
-      .join(', ') + ' — verified by position, no name list',
+    MSG.notes.attachPointsChecked(
+      Object.entries(counts)
+        .map(([k, v]) => `${v} at ${k}s`)
+        .join(', '),
+    ),
   );
 });
 
 /* --- 5. reviewed-against Superpowers version ---------------------------- */
 rule('sp-version', (r) => {
-    // ENABLEMENT FIRST — files on disk prove nothing about whether the plugin is
-    // actually loaded. A real incident: the working entry was set to false while a
-    // second entry was added that never installed. Superpowers went dark for a
-    // whole session, and this rule reported green, because the old version was
-    // still sitting in the cache. Checking the cache alone is checking the wrong
-    // thing.
-    const settingsPath = '.claude/settings.json';
-    if (exists(settingsPath)) {
-      let cfg;
-      try {
-        cfg = JSON.parse(read(settingsPath));
-      } catch {
-        cfg = null;
-      }
-      const entries = Object.entries(cfg?.enabledPlugins ?? {}).filter(([k]) =>
-        k.startsWith(`${CFG.SP_PLUGIN_NAME}@`),
-      );
-
-      if (entries.length && entries.every(([, v]) => v === false)) {
-        emitMsg(
-          r,
-          MSG.allEntriesDisabled({
-            settingsPath,
-            keys: entries.map(([k]) => k).join(', '),
-          }),
-        );
-        return;
-      }
-
-      // Enabled, but from a marketplace with nothing in the plugin cache: the
-      // marketplace registered and the plugin never installed. Registering a
-      // marketplace is not installing from it.
-      const cacheRoot = join(
-        process.env.USERPROFILE || process.env.HOME || '',
-        ...CFG.SP_CACHE_ROOT_SEGMENTS,
-      );
-      for (const [key, val] of entries) {
-        // Enabled means `true` OR a non-empty version-constraint array — both resolve a
-        // plugin, so both need a marketplace that actually has one.
-        const enabled = val === true || (Array.isArray(val) && val.length > 0);
-        if (!enabled) continue;
-        const market = key.split('@')[1];
-        if (market && existsSync(join(cacheRoot, market))) continue;
-        emitMsg(r, MSG.enabledButNotInstalled({ settingsPath, key, market }));
-        return;
-      }
-    }
-
-    const sp = findSuperpowersSkills();
-
-    // ABSENT is worse than MISMATCHED, so it fails rather than skips. Every path
-    // routes through Superpowers and every hook anchors to one of its skills, so
-    // without it the workflow is not degraded — it is inoperative. This rule owns
-    // that report; sp-skills only skips, to keep one root cause to one failure.
-    if (!sp) {
-      emitMsg(
-        r,
-        MSG.notFoundAnywhere({
-          checkedDirs: CFG.SP_WORKSPACE_SKILL_DIRS.join(' / '),
-          uncheckedAgents: CFG.SP_PROBES_UNVERIFIED.join(', '),
-        }),
-      );
-      return;
-    }
-
-    const baselinePath = join(SKILL_DIR, 'scripts', CFG.SP_BASELINE_FILE);
-    if (!existsSync(baselinePath)) {
-      return emitMsg(
-        r,
-        MSG.baselineMissing({
-          baselineFile: CFG.SP_BASELINE_FILE,
-          installedVersion: sp.version,
-        }),
-      );
-    }
-
-    let baseline;
+  // ENABLEMENT FIRST — files on disk prove nothing about whether the plugin is
+  // actually loaded. A real incident: the working entry was set to false while a
+  // second entry was added that never installed. Superpowers went dark for a
+  // whole session, and this rule reported green, because the old version was
+  // still sitting in the cache. Checking the cache alone is checking the wrong
+  // thing.
+  const settingsPath = '.claude/settings.json';
+  if (exists(settingsPath)) {
+    let cfg;
     try {
-      baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
-    } catch (err) {
-      return emitMsg(
-        r,
-        MSG.baselineInvalid({
-          baselineFile: CFG.SP_BASELINE_FILE,
-          error: err.message,
-        }),
-      );
+      cfg = JSON.parse(read(settingsPath));
+    } catch {
+      cfg = null;
     }
+    const entries = Object.entries(cfg?.enabledPlugins ?? {}).filter(([k]) =>
+      k.startsWith(`${CFG.SP_PLUGIN_NAME}@`),
+    );
 
-    // The same plugin cached under two marketplaces loads every skill twice, and
-    // nothing else in the toolchain warns about it. Only visible because the
-    // lookup above scans marketplaces rather than assuming one.
-    if (sp.all?.length > 1) {
+    if (entries.length && entries.every(([, v]) => v === false)) {
       emitMsg(
         r,
-        MSG.foundInMultiplePlaces({
-          findings: sp.all
-            .map((f) => `${f.source} at ${f.where}${f.version ? ' v' + f.version : ''}`)
-            .join(' · '),
+        MSG.allEntriesDisabled({
+          settingsPath,
+          keys: entries.map(([k]) => k).join(', '),
         }),
       );
-    }
-
-    // A workspace copy may carry no manifest, so there is no version to compare.
-    // Saying "matches" would be a lie and failing would be a false alarm.
-    if (!sp.version) {
-      emitMsg(r, MSG.versionUnreadable({ source: sp.source, where: sp.where }));
       return;
     }
 
-    const reviewed = baseline.reviewed ?? 'an unrecorded date';
-    if (baseline.version === sp.version) {
-      return r.note(
-        `reviewed against ${baseline.version} on ${reviewed}` +
-          ` — found as ${sp.source} at ${sp.where}`,
-      );
-    }
-
-    // Which semver segment moved decides how loud this is (CFG.VERSION_DRIFT_POLICY).
-    const seg = (v) => String(v).split('.').map(Number);
-    const [bMaj, bMin] = seg(baseline.version);
-    const [iMaj, iMin] = seg(sp.version);
-    const tier = iMaj !== bMaj ? 'major' : iMin !== bMin ? 'minor' : 'patch';
-    const action = CFG.VERSION_DRIFT_POLICY[tier] ?? 'fail';
-
-    const why = MSG.driftWhy[tier];
-
-    const drift =
-      `Superpowers is at ${sp.version}; this workflow was reviewed against ` +
-      `${baseline.version} (${reviewed}) — a ${tier.toUpperCase()} difference.`;
-
-    if (action === 'ignore') return r.note(`${drift} Ignored by policy.`);
-
-    if (action === 'note') {
-      for (const line of MSG.driftNote({ drift, why })) r.note(line);
+    // Enabled, but from a marketplace with nothing in the plugin cache: the
+    // marketplace registered and the plugin never installed. Registering a
+    // marketplace is not installing from it.
+    const cacheRoot = join(
+      process.env.USERPROFILE || process.env.HOME || '',
+      ...CFG.SP_CACHE_ROOT_SEGMENTS,
+    );
+    for (const [key, val] of entries) {
+      // Enabled means `true` OR a non-empty version-constraint array — both resolve a
+      // plugin, so both need a marketplace that actually has one.
+      const enabled = val === true || (Array.isArray(val) && val.length > 0);
+      if (!enabled) continue;
+      const market = key.split('@')[1];
+      if (market && existsSync(join(cacheRoot, market))) continue;
+      emitMsg(r, MSG.enabledButNotInstalled({ settingsPath, key, market }));
       return;
     }
+  }
 
+  const sp = findSuperpowersSkills();
+
+  // ABSENT is worse than MISMATCHED, so it fails rather than skips. Every path
+  // routes through Superpowers and every hook anchors to one of its skills, so
+  // without it the workflow is not degraded — it is inoperative. This rule owns
+  // that report; sp-skills only skips, to keep one root cause to one failure.
+  if (!sp) {
     emitMsg(
       r,
-      MSG.driftFail({
-        drift,
-        why,
+      MSG.notFoundAnywhere({
+        checkedDirs: CFG.SP_WORKSPACE_SKILL_DIRS.join(' / '),
+        uncheckedAgents: CFG.SP_PROBES_UNVERIFIED.join(', '),
+      }),
+    );
+    return;
+  }
+
+  const baselinePath = join(SKILL_DIR, 'scripts', CFG.SP_BASELINE_FILE);
+  if (!existsSync(baselinePath)) {
+    return emitMsg(
+      r,
+      MSG.baselineMissing({
         baselineFile: CFG.SP_BASELINE_FILE,
         installedVersion: sp.version,
       }),
     );
-  },
-);
+  }
+
+  let baseline;
+  try {
+    baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
+  } catch (err) {
+    return emitMsg(
+      r,
+      MSG.baselineInvalid({
+        baselineFile: CFG.SP_BASELINE_FILE,
+        error: err.message,
+      }),
+    );
+  }
+
+  // The same plugin cached under two marketplaces loads every skill twice, and
+  // nothing else in the toolchain warns about it. Only visible because the
+  // lookup above scans marketplaces rather than assuming one.
+  if (sp.all?.length > 1) {
+    emitMsg(
+      r,
+      MSG.foundInMultiplePlaces({
+        findings: sp.all
+          .map(
+            (f) =>
+              `${f.source} at ${f.where}${f.version ? ' v' + f.version : ''}`,
+          )
+          .join(' · '),
+      }),
+    );
+  }
+
+  // A workspace copy may carry no manifest, so there is no version to compare.
+  // Saying "matches" would be a lie and failing would be a false alarm.
+  if (!sp.version) {
+    emitMsg(r, MSG.versionUnreadable({ source: sp.source, where: sp.where }));
+    return;
+  }
+
+  const reviewed = baseline.reviewed ?? MSG.labels.dateUnrecorded;
+  if (baseline.version === sp.version) {
+    return r.note(
+      MSG.notes.spVersionOk({
+        version: baseline.version,
+        reviewed,
+        source: sp.source,
+        where: sp.where,
+      }),
+    );
+  }
+
+  // Which semver segment moved decides how loud this is (CFG.VERSION_DRIFT_POLICY).
+  const seg = (v) => String(v).split('.').map(Number);
+  const [bMaj, bMin] = seg(baseline.version);
+  const [iMaj, iMin] = seg(sp.version);
+  const tier = iMaj !== bMaj ? 'major' : iMin !== bMin ? 'minor' : 'patch';
+  const action = CFG.VERSION_DRIFT_POLICY[tier] ?? 'fail';
+
+  const why = MSG.driftWhy[tier];
+
+  const drift = MSG.driftSummary({
+    installed: sp.version,
+    reviewed: baseline.version,
+    reviewedDate: reviewed,
+    tier,
+  });
+
+  if (action === 'ignore') return r.note(MSG.notes.driftIgnored(drift));
+
+  if (action === 'note') {
+    for (const line of MSG.driftNote({ drift, why })) r.note(line);
+    return;
+  }
+
+  emitMsg(
+    r,
+    MSG.driftFail({
+      drift,
+      why,
+      baselineFile: CFG.SP_BASELINE_FILE,
+      installedVersion: sp.version,
+    }),
+  );
+});
 
 /* --- 6. workspace skills + stubs ---------------------------------------- */
 rule('x-skills', (r) => {
-    const canonicalDir = CFG.CANONICAL_SKILL_DIR;
-    const stubDirs = CFG.STUB_SKILL_DIRS;
-    const isX = (n) => n.startsWith(CFG.OUR_SKILL_PREFIX);
-    const canon = existsSync(abs(canonicalDir))
-      ? readdirSync(abs(canonicalDir)).filter(
-          (n) => isX(n) && exists(`${canonicalDir}/${n}/SKILL.md`),
-        )
-      : [];
-    r.note(`${canon.length} workspace skills: ${canon.join(' · ')}`);
+  const canonicalDir = CFG.CANONICAL_SKILL_DIR;
+  const stubDirs = CFG.STUB_SKILL_DIRS;
+  const isX = (n) => n.startsWith(CFG.OUR_SKILL_PREFIX);
+  const canon = existsSync(abs(canonicalDir))
+    ? readdirSync(abs(canonicalDir)).filter(
+        (n) => isX(n) && exists(`${canonicalDir}/${n}/SKILL.md`),
+      )
+    : [];
+  r.note(MSG.notes.workspaceSkills(canon));
 
-    // Named in AGENTS.md but absent from disk. NOTE: skill names contain digits
-    // (x-ng-test-e2e-helper), so the character class must include 0-9.
-    const named = new Set();
-    for (const m of read(AGENTS).matchAll(/`(x-[a-z0-9-]+)`/g)) named.add(m[1]);
-    for (const n of [...named].sort()) {
-      if (!canon.includes(n))
-        emitMsg(
-          r,
-          MSG.locators.namedSkillMissing({
-            agentsFile: AGENTS,
-            name: n,
-            canonicalDir,
-          }),
-        );
-    }
+  // Named in AGENTS.md but absent from disk. NOTE: skill names contain digits
+  // (x-ng-test-e2e-helper), so the character class must include 0-9.
+  const named = new Set();
+  for (const m of read(AGENTS).matchAll(/`(x-[a-z0-9-]+)`/g)) named.add(m[1]);
+  for (const n of [...named].sort()) {
+    if (!canon.includes(n))
+      emitMsg(
+        r,
+        MSG.locators.namedSkillMissing({
+          agentsFile: AGENTS,
+          name: n,
+          canonicalDir,
+        }),
+      );
+  }
 
-    for (const n of canon) {
-      const c = `${canonicalDir}/${n}/SKILL.md`;
+  for (const n of canon) {
+    const c = `${canonicalDir}/${n}/SKILL.md`;
 
-      const fmName = (/^name:[ \t]*['"]?([^'"\n]+)/m.exec(read(c)) ||
-        [])[1]?.trim();
-      if (fmName !== n)
-        emitMsg(
-          r,
-          MSG.locators.skillNameFolderMismatch({
-            file: c,
-            frontmatterName: fmName,
-            folder: n,
-          }),
-        );
+    const fmName = (/^name:[ \t]*['"]?([^'"\n]+)/m.exec(read(c)) ||
+      [])[1]?.trim();
+    if (fmName !== n)
+      emitMsg(
+        r,
+        MSG.locators.skillNameFolderMismatch({
+          file: c,
+          frontmatterName: fmName,
+          folder: n,
+        }),
+      );
 
-      // Every stub location, not just one — the stub table is per AI tool and
-      // grows. A skill stubbed for one tool and missed for another is invisible
-      // to that tool, which is exactly how the x-* skills were once invisible to
-      // Claude Code's Skill tool.
-      for (const stubDir of stubDirs) {
-        const s = `${stubDir}/${n}/SKILL.md`;
-
-        if (!exists(s)) {
-          emitMsg(r, MSG.locators.stubMissing({ skill: n, stubPath: s }));
-          continue;
-        }
-
-        const dc = descriptionOf(c);
-        const ds = descriptionOf(s);
-        if (dc !== ds) {
-          emitMsg(r, MSG.locators.stubDescriptionDrifted({ skill: n, stubDir }));
-          r.detail(`  canonical: ${dc}`);
-          r.detail(`  stub     : ${ds}`);
-        }
-        if (/^metadata:/m.test(read(s)))
-          emitMsg(r, MSG.locators.stubCarriesMetadata({ stubPath: s }));
-      }
-    }
-
-    // Orphan stubs, in every stub location.
+    // Every stub location, not just one — the stub table is per AI tool and
+    // grows. A skill stubbed for one tool and missed for another is invisible
+    // to that tool, which is exactly how the x-* skills were once invisible to
+    // Claude Code's Skill tool.
     for (const stubDir of stubDirs) {
-      if (!existsSync(abs(stubDir))) continue;
-      for (const n of readdirSync(abs(stubDir))) {
-        if (!isX(n)) continue;
-        if (!canon.includes(n))
-          emitMsg(r, MSG.locators.orphanStub({ stubDir, skill: n }));
+      const s = `${stubDir}/${n}/SKILL.md`;
+
+      if (!exists(s)) {
+        emitMsg(r, MSG.locators.stubMissing({ skill: n, stubPath: s }));
+        continue;
       }
+
+      const dc = descriptionOf(c);
+      const ds = descriptionOf(s);
+      if (dc !== ds) {
+        emitMsg(r, MSG.locators.stubDescriptionDrifted({ skill: n, stubDir }));
+        r.detail(`  canonical: ${dc}`);
+        r.detail(`  stub     : ${ds}`);
+      }
+      if (/^metadata:/m.test(read(s)))
+        emitMsg(r, MSG.locators.stubCarriesMetadata({ stubPath: s }));
     }
-    r.note(`stub locations checked: ${stubDirs.join(' · ')}`);
-  },
-);
+  }
+
+  // Orphan stubs, in every stub location.
+  for (const stubDir of stubDirs) {
+    if (!existsSync(abs(stubDir))) continue;
+    for (const n of readdirSync(abs(stubDir))) {
+      if (!isX(n)) continue;
+      if (!canon.includes(n))
+        emitMsg(r, MSG.locators.orphanStub({ stubDir, skill: n }));
+    }
+  }
+  r.note(MSG.notes.stubLocations(stubDirs));
+});
 
 /* --- 7. version discipline ---------------------------------------------- */
 rule('versions', (r) => {
@@ -712,8 +870,7 @@ rule('versions', (r) => {
       /^metadata:[ \t]*\r?\n(?:[ \t]+.*\r?\n)*?[ \t]+version:[ \t]*'(\d+\.\d+\.\d+)'/m.exec(
         fm + '\n',
       );
-    if (!m)
-      emitMsg(r, MSG.locators.versionMissing({ file: p }));
+    if (!m) emitMsg(r, MSG.locators.versionMissing({ file: p }));
   }
 });
 
@@ -734,109 +891,104 @@ rule('path-isolation', (r) => {
 
 /* --- 9. landmark grammar ------------------------------------------------- */
 rule('landmarks', (r) => {
-    for (const p of PATH_FILES) {
-      if (!exists(p)) continue;
-      for (const { n, text } of lines(p)) {
-        // Only a hook gets a #### heading, and only a hook gets an {ID}.
-        const h4 = /^####\s+(.*)$/.exec(text);
-        if (h4) {
-          if (!h4[1].startsWith('🪝')) {
-            if (!suppressed('landmarks', p, text))
-              emitMsg(
-                r,
-                MSG.locators.headingNotHook({
-                  file: p,
-                  line: n,
-                  heading: h4[1].slice(0, 60),
-                }),
-              );
-          } else if (!/^🪝\s+[A-Z]\d+\s+·\s+\S/.test(h4[1])) {
-            if (!suppressed('landmarks', p, text))
-              emitMsg(
-                r,
-                MSG.locators.hookHeadingMalformed({
-                  file: p,
-                  line: n,
-                  heading: h4[1].slice(0, 60),
-                }),
-              );
-          }
-        }
-        // A reserved icon must not appear in a heading other than its own shape.
-        const h = /^(#{1,6})\s+(.*)$/.exec(text);
-        if (h && h[1].length <= 3) {
-          for (const icon of RESERVED_ICONS) {
-            if (!h[2].includes(icon)) continue;
-            if (icon === CFG.PATH_ICON && h[1].length === 1) continue; // the path's own H1
-            if (suppressed('landmarks', p, text)) continue;
+  for (const p of PATH_FILES) {
+    if (!exists(p)) continue;
+    for (const { n, text } of lines(p)) {
+      // Only a hook gets a #### heading, and only a hook gets an {ID}.
+      const h4 = /^####\s+(.*)$/.exec(text);
+      if (h4) {
+        if (!h4[1].startsWith('🪝')) {
+          if (!suppressed('landmarks', p, text))
             emitMsg(
               r,
-              MSG.locators.reservedIconMisused({
+              MSG.locators.headingNotHook({
                 file: p,
                 line: n,
-                icon,
-                level: h[1].length,
+                heading: h4[1].slice(0, 60),
               }),
             );
-          }
+        } else if (!/^🪝\s+[A-Z]\d+\s+·\s+\S/.test(h4[1])) {
+          if (!suppressed('landmarks', p, text))
+            emitMsg(
+              r,
+              MSG.locators.hookHeadingMalformed({
+                file: p,
+                line: n,
+                heading: h4[1].slice(0, 60),
+              }),
+            );
         }
       }
-    }
-
-    // Spans:/Members: must cite hook IDs, not prose.
-    for (const p of PATH_FILES) {
-      if (!exists(p)) continue;
-      for (const { n, text } of lines(p)) {
-        const m = /\*\*(Spans|Members):\*\*\s*(.+)$/.exec(text);
-        if (!m) continue;
-        if (/[ABC]\d/.test(m[2])) continue;
-        if (suppressed('landmarks', p, text)) continue;
-        emitMsg(
-          r,
-          MSG.locators.spanNamesNoId({ file: p, line: n, label: m[1] }),
-        );
-      }
-    }
-  },
-);
-
-/* --- 10. skills must not encode control flow ----------------------------- */
-rule('skill-coupling', (r) => {
-    const dir = CFG.CANONICAL_SKILL_DIR;
-    if (!existsSync(abs(dir))) return r.skip(MSG.skips.noDir(dir));
-
-    // Deliberately narrow: only a hook ID or a path letter is UNAMBIGUOUS coupling.
-    //
-    // Gate names are NOT checked, and that is a decision, not an omission.
-    // x-skill-build-helper explicitly permits a skill to head its own prerequisite
-    // guard with the same words the workflow uses for a gate ("A skill's own guard
-    // is not a violation"). x-ng-doc-prd-writer and x-ng-doc-tfs-writer both do exactly
-    // that, legitimately. No regex separates "my contract refuses this input" from
-    // "the workflow decided this upstream", so flagging gate names produces mostly
-    // false positives — and a check that cries wolf gets ignored, taking the true
-    // positives with it.
-    const coupling = CFG.COUPLING_PATTERN;
-
-    for (const n of readdirSync(abs(dir)).filter((x) =>
-      x.startsWith(CFG.OUR_SKILL_PREFIX),
-    )) {
-      // The x-{tech}-{tool}-* family may reference the tool's lifecycle it edits,
-      // and a skill whose SUBJECT is the workflow may name its landmarks.
-      if (CFG.COUPLING_EXEMPT.test(n)) continue;
-      for (const p of walk(`${dir}/${n}`)) {
-        for (const { n: ln, text } of lines(p)) {
-          const hit = coupling.exec(text);
-          if (!hit) continue;
-          if (suppressed('skill-coupling', p, text)) continue;
+      // A reserved icon must not appear in a heading other than its own shape.
+      const h = /^(#{1,6})\s+(.*)$/.exec(text);
+      if (h && h[1].length <= 3) {
+        for (const icon of RESERVED_ICONS) {
+          if (!h[2].includes(icon)) continue;
+          if (icon === CFG.PATH_ICON && h[1].length === 1) continue; // the path's own H1
+          if (suppressed('landmarks', p, text)) continue;
           emitMsg(
             r,
-            MSG.skillNamesControlFlow({ file: p, line: ln, hit: hit[0] }),
+            MSG.locators.reservedIconMisused({
+              file: p,
+              line: n,
+              icon,
+              level: h[1].length,
+            }),
           );
         }
       }
     }
-  },
-);
+  }
+
+  // Spans:/Members: must cite hook IDs, not prose.
+  for (const p of PATH_FILES) {
+    if (!exists(p)) continue;
+    for (const { n, text } of lines(p)) {
+      const m = /\*\*(Spans|Members):\*\*\s*(.+)$/.exec(text);
+      if (!m) continue;
+      if (/[ABC]\d/.test(m[2])) continue;
+      if (suppressed('landmarks', p, text)) continue;
+      emitMsg(r, MSG.locators.spanNamesNoId({ file: p, line: n, label: m[1] }));
+    }
+  }
+});
+
+/* --- 10. skills must not encode control flow ----------------------------- */
+rule('skill-coupling', (r) => {
+  const dir = CFG.CANONICAL_SKILL_DIR;
+  if (!existsSync(abs(dir))) return r.skip(MSG.skips.noDir(dir));
+
+  // Deliberately narrow: only a hook ID or a path letter is UNAMBIGUOUS coupling.
+  //
+  // Gate names are NOT checked, and that is a decision, not an omission.
+  // x-skill-build-helper explicitly permits a skill to head its own prerequisite
+  // guard with the same words the workflow uses for a gate ("A skill's own guard
+  // is not a violation"). x-ng-doc-prd-writer and x-ng-doc-tfs-writer both do exactly
+  // that, legitimately. No regex separates "my contract refuses this input" from
+  // "the workflow decided this upstream", so flagging gate names produces mostly
+  // false positives — and a check that cries wolf gets ignored, taking the true
+  // positives with it.
+  const coupling = CFG.COUPLING_PATTERN;
+
+  for (const n of readdirSync(abs(dir)).filter((x) =>
+    x.startsWith(CFG.OUR_SKILL_PREFIX),
+  )) {
+    // The x-{tech}-{tool}-* family may reference the tool's lifecycle it edits,
+    // and a skill whose SUBJECT is the workflow may name its landmarks.
+    if (CFG.COUPLING_EXEMPT.test(n)) continue;
+    for (const p of walk(`${dir}/${n}`)) {
+      for (const { n: ln, text } of lines(p)) {
+        const hit = coupling.exec(text);
+        if (!hit) continue;
+        if (suppressed('skill-coupling', p, text)) continue;
+        emitMsg(
+          r,
+          MSG.skillNamesControlFlow({ file: p, line: ln, hit: hit[0] }),
+        );
+      }
+    }
+  }
+});
 
 /* --- 11. paths named inside hook scripts -------------------------------- */
 rule('hook-paths', (r) => {
@@ -889,74 +1041,96 @@ rule('hook-paths', (r) => {
       }
     }
   }
-  r.note(`${checked} repo paths named by hooks checked`);
+  r.note(MSG.notes.hookPathsChecked(checked));
 });
 
 /* --- 12. no hook filenames in docs -------------------------------------- */
 rule('hook-refs', (r) => {
-    let scanned = 0;
-    const targets = CFG.HOOK_REF_SURFACES.flatMap((s) =>
-      s.endsWith('.md') ? [s] : walk(s),
-    );
+  let scanned = 0;
+  const targets = CFG.HOOK_REF_SURFACES.flatMap((s) =>
+    s.endsWith('.md') ? [s] : walk(s),
+  );
 
-    for (const p of targets) {
-      if (!exists(p)) continue;
-      scanned++;
-      for (const { n, text } of lines(p)) {
-        for (const m of text.matchAll(CFG.HOOK_REF_PATTERN)) {
-          if (suppressed('hook-refs', p, m[0])) continue;
-          emitMsg(r, MSG.hookFilenameInDoc({ file: p, line: n, name: m[0] }));
-        }
+  for (const p of targets) {
+    if (!exists(p)) continue;
+    scanned++;
+    for (const { n, text } of lines(p)) {
+      for (const m of text.matchAll(CFG.HOOK_REF_PATTERN)) {
+        if (suppressed('hook-refs', p, m[0])) continue;
+        emitMsg(r, MSG.hookFilenameInDoc({ file: p, line: n, name: m[0] }));
       }
     }
-    r.note(`${scanned} files scanned for hook-filename references`);
-  },
-);
+  }
+  r.note(MSG.notes.hookRefFilesScanned(scanned));
+});
 
 /* --- 13. dead message exports ------------------------------------------- */
 rule('dead-messages', (r) => {
-  // A message written into messages.mjs but never wired means the prose exists
-  // TWICE — there and inline at the call site — with nothing keeping the two in
-  // step. That is the drift site this whole skill is about, and it happened
-  // here: 8 of 13 exports were dead until a review caught it. A person cannot
-  // spot it by reading either file; only the comparison shows it.
-  const msgFile = `${CFG.CANONICAL_SKILL_DIR}/x-sp-workflow-helper/scripts/messages.mjs`;
-  const useFile = `${CFG.CANONICAL_SKILL_DIR}/x-sp-workflow-helper/scripts/check-workflow.mjs`;
-  if (!exists(msgFile) || !exists(useFile))
-    return r.skip(MSG.skips.noMessageModule);
+  // Two directions, both of which have actually failed here.
+  //
+  // ONE — a message exported but never wired. The prose then exists TWICE, here
+  // and inline at the call site, with nothing keeping the two in step. 8 of 13
+  // exports were dead until a review caught it. A person cannot spot it by
+  // reading either file; only the comparison shows it.
+  //
+  // TWO — prose still sitting in the code. Scanned across EVERY sibling script
+  // and in ALL THREE quote styles, because each narrower version of this scan
+  // missed something real:
+  //
+  //   only `r.fail`/`r.skip` lines   → missed r.note tallies and console.log
+  //   only '…' and "…"              → missed every backtick template, which is
+  //                                    exactly what you reach for when the
+  //                                    sentence has values spliced into it
+  //   only check-workflow.mjs        → missed three printed labels in config.mjs
+  //
+  // Each hole let the tool report "no prose in the code" while prose sat in the
+  // code — a false clean, which is worse than not checking at all.
+  const dir = `${CFG.CANONICAL_SKILL_DIR}/x-sp-workflow-helper/scripts`;
+  const msgFile = `${dir}/messages.mjs`;
+  if (!exists(msgFile)) return r.skip(MSG.skips.noMessageModule);
 
-  const names = [...read(msgFile).matchAll(/^export const (\w+)/gm)].map((m) => m[1]);
-  const uses = read(useFile);
-  const dead = names.filter((n) => !uses.includes(`MSG.${n}`));
+  // Every sibling script is both a consumer of messages and a suspect for
+  // holding prose. messages.mjs itself is neither.
+  const siblings = walk(dir, '.mjs').filter((p) => p !== msgFile);
+  if (!siblings.length) return r.skip(MSG.skips.noMessageModule);
+
+  const names = [...read(msgFile).matchAll(/^export const (\w+)/gm)].map(
+    (m) => m[1],
+  );
+  const allUses = siblings.map(read).join('\n');
+  const dead = names.filter((n) => !allUses.includes(`MSG.${n}`));
 
   for (const n of dead) {
     if (suppressed('dead-messages', msgFile, n)) continue;
     emitMsg(r, MSG.deadMessageExport({ name: n }));
   }
 
-  // The other direction: a VERDICT written inline instead of in the module. The
-  // axis is verdict vs telemetry — a title, a failure and a skip are what a
-  // person reads to understand the outcome, so they live together; counts and
-  // the run summary are telemetry and stay with the code that formats them.
-  // Without this check the split survives only on discipline, and it did not:
-  // it was re-drawn three times before it held.
+  /**
+   * Is this literal a sentence, or an address?
+   *
+   * Two lowercase words with a space between them is the test. A path, a
+   * dotted token or a lone identifier is an address, not language.
+   */
+  const isProse = (t) =>
+    /[a-z] [a-z]/.test(t) && !/^[\w.\/@-]+$/.test(t.trim());
+
   let inline = 0;
-  for (const { n, text } of lines(useFile)) {
-    if (!/r\.fail\(|r\.skip\(/.test(text)) continue;
-    if (/m\.fail/.test(text)) continue; // emitMsg's own body
-    const span = read(useFile)
-      .split(/\r?\n/)
-      .slice(n - 1, n + 5)
-      .join(' ');
-    if (span.includes('MSG.')) continue;
-    if (suppressed('dead-messages', useFile, text.trim())) continue;
-    inline++;
-    emitMsg(r, MSG.inlineVerdictText({ file: useFile, line: n }));
+  for (const file of siblings) {
+    for (const { text, line } of literalsOf(read(file))) {
+      if (!isProse(text)) continue;
+      if (suppressed('dead-messages', file, text)) continue;
+      inline++;
+      emitMsg(r, MSG.inlineString({ file, line, text: text.slice(0, 60) }));
+    }
   }
 
   r.note(
-    `${names.length} message exports, ${dead.length} unused; ` +
-      `${inline} verdicts written inline`,
+    MSG.notes.messageAudit({
+      total: names.length,
+      dead: dead.length,
+      inline,
+      scanned: siblings.length,
+    }),
   );
 });
 
@@ -970,7 +1144,7 @@ rule('allowlist-hygiene', (r) => {
     return r.skip(MSG.skips.filteredRun(onlyRule));
   }
 
-  if (!allowlist.length) return r.note('allowlist is empty');
+  if (!allowlist.length) return r.note(MSG.notes.allowlistEmpty);
   allowlist.forEach((e, i) => {
     if (allowlistHits.has(i)) return;
     emitMsg(
@@ -978,9 +1152,7 @@ rule('allowlist-hygiene', (r) => {
       MSG.staleAllowlistEntry({ index: i, rule: e.rule, file: e.file }),
     );
   });
-  r.note(
-    `${allowlistHits.size}/${allowlist.length} allowlist entries still in use`,
-  );
+  r.note(MSG.notes.allowlistInUse(allowlistHits.size, allowlist.length));
 });
 
 /* ------------------------------------------------------------------ runner */
@@ -988,6 +1160,18 @@ rule('allowlist-hygiene', (r) => {
 if (listOnly) {
   for (const { id, title } of RULES) console.log(`${id.padEnd(20)} ${title}`);
   process.exit(0);
+}
+
+// A `--rule=` typo must not read as success. Before this guard it printed
+// "All 0 rules passed" and exited 0.
+if (onlyRule && !RULES.some((x) => x.id === onlyRule)) {
+  console.error(
+    MSG.runner.unknownRule(
+      onlyRule,
+      RULES.map((x) => x.id),
+    ),
+  );
+  process.exit(1);
 }
 
 const results = [];
@@ -1012,7 +1196,7 @@ for (const def of RULES) {
   try {
     def.fn(r);
   } catch (err) {
-    res.failures.push(`rule crashed: ${err.message}`);
+    res.failures.push(MSG.runner.ruleCrashed(err.message));
   }
   results.push(res);
 }
@@ -1043,8 +1227,8 @@ if (asJson) {
   console.log();
   console.log(
     totalFailures === 0
-      ? `All ${results.filter((x) => !x.skipped).length} rules passed.`
-      : `${totalFailures} failure(s) across ${failed.length} rule(s).`,
+      ? MSG.runner.allPassed(results.filter((x) => !x.skipped).length)
+      : MSG.runner.failures(totalFailures, failed.length),
   );
 }
 

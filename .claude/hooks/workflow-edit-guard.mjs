@@ -25,7 +25,12 @@ const mode = process.argv[2] === 'post' ? 'post' : 'pre';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(scriptDir, '..', '..');
 const CHECKER = join(
-  ROOT, '.agents', 'skills', 'x-sp-workflow-helper', 'scripts', 'check-workflow.mjs',
+  ROOT,
+  '.agents',
+  'skills',
+  'x-sp-workflow-helper',
+  'scripts',
+  'check-workflow.mjs',
 );
 
 // Surfaces the checker governs. Keep in step with config.mjs.
@@ -46,7 +51,10 @@ const GUARDED_PREFIXES = [
   '.claude/hooks/',
 ];
 
-const emit = (obj) => { process.stdout.write(JSON.stringify(obj)); process.exit(0); };
+const emit = (obj) => {
+  process.stdout.write(JSON.stringify(obj));
+  process.exit(0);
+};
 const quiet = () => process.exit(0);
 
 /* ------------------------------------------------- read the hook's stdin */
@@ -66,20 +74,20 @@ try {
 }
 
 const filePath =
-  payload?.tool_input?.file_path ??
-  payload?.tool_response?.filePath ??
-  '';
+  payload?.tool_input?.file_path ?? payload?.tool_response?.filePath ?? '';
 if (!filePath) quiet();
 
 // Normalise to a repo-relative, forward-slash path so the prefix test works on
 // Windows (where the harness reports C:\... ) as well as POSIX.
 const slashed = filePath.split('\\').join('/');
 const relPath = (isAbsolute(filePath) ? relative(ROOT, filePath) : filePath)
-  .split('\\').join('/');
+  .split('\\')
+  .join('/');
 
-const strictHit = !relPath.startsWith('..')
-  && (GUARDED_FILES.includes(relPath)
-    || GUARDED_PREFIXES.some((p) => relPath.startsWith(p)));
+const strictHit =
+  !relPath.startsWith('..') &&
+  (GUARDED_FILES.includes(relPath) ||
+    GUARDED_PREFIXES.some((p) => relPath.startsWith(p)));
 
 // Fallback: match the guarded segment anywhere in the path. This deliberately
 // errs toward firing, because a path flavour we failed to anticipate (a POSIX
@@ -87,8 +95,10 @@ const strictHit = !relPath.startsWith('..')
 // GUARD fail silently — the precise failure mode it exists to prevent. The cost
 // of a false positive is one extra reminder and one fast checker run.
 const looseHit =
-  GUARDED_FILES.some((f) => slashed.endsWith(`/${f}`) || slashed === f)
-  || GUARDED_PREFIXES.some((p) => slashed.includes(`/${p}`) || slashed.startsWith(p));
+  GUARDED_FILES.some((f) => slashed.endsWith(`/${f}`) || slashed === f) ||
+  GUARDED_PREFIXES.some(
+    (p) => slashed.includes(`/${p}`) || slashed.startsWith(p),
+  );
 
 if (!strictHit && !looseHit) quiet();
 
@@ -105,7 +115,7 @@ if (mode === 'pre') {
         'duplicated into each tool stub — and every one of them breaks SILENTLY: the text still ' +
         'reads correctly afterwards, so review does not catch it.\n\n' +
         'Invoke the `x-sp-workflow-helper` skill before continuing, unless it is ' +
-        'already in your context. It carries the change procedure, the sweep for a rule\'s other ' +
+        "already in your context. It carries the change procedure, the sweep for a rule's other " +
         'homes (which no script can find), and the Superpowers upgrade playbook. ' +
         'The integrity checker runs automatically after this edit.',
     },
@@ -116,8 +126,7 @@ if (mode === 'pre') {
 
 if (!existsSync(CHECKER)) {
   emit({
-    systemMessage:
-      `Workflow guard: checker not found at ${relative(ROOT, CHECKER)} — edit NOT verified.`,
+    systemMessage: `Workflow guard: checker not found at ${relative(ROOT, CHECKER)} — edit NOT verified.`,
   });
 }
 
@@ -125,7 +134,10 @@ let out = '';
 let failed = false;
 try {
   out = execFileSync(process.execPath, [CHECKER], {
-    cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 60_000,
+    cwd: ROOT,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 60_000,
   });
 } catch (err) {
   failed = true;
