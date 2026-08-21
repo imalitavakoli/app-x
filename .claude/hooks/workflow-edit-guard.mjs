@@ -28,7 +28,7 @@ const CHECKER = join(
   ROOT, '.agents', 'skills', 'x-sp-workflow-helper', 'scripts', 'check-workflow.mjs',
 );
 
-// Surfaces the checker governs. Keep in step with workflow-config.mjs.
+// Surfaces the checker governs. Keep in step with config.mjs.
 //
 // Skill paths are narrowed to the `x-` prefix on purpose: `.agents/skills/` also
 // holds plugin-provided skills (`nx-*`), which are not ours to edit and which
@@ -156,7 +156,7 @@ emit({
       '`pnpm run check:workflow`.\n\n' +
       `${failingLines || out}\n\n` +
       'If a finding is a genuine false positive, fix the RULE or add a justified entry to ' +
-      "that skill's `scripts/allowlist.json` — never widen the " +
+      "that skill's `scripts/allowlist.mjs` — never widen the " +
       'allowlist just to reach green.',
   },
 });

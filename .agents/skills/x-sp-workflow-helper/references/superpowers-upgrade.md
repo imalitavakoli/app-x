@@ -2,9 +2,9 @@
 
 **Read this whenever the installed Superpowers version stops matching the one this workflow was reviewed against** — however that came about: an upgrade, a rollback, a fresh machine, or a deliberate change to how this workspace selects plugin versions. Not needed for an ordinary workflow edit.
 
-**You do not have to notice the change yourself.** Claude Code resolves plugins at startup, so by the time anyone is looking the new version is already in effect. What makes that _noticeable_ is the record below — not whatever mechanism chose the version.
+**You do not have to notice the change yourself.** Whichever agent you run, plugins resolve before anyone is looking, so the new version is already in effect. What makes that _noticeable_ is the record below — not whatever mechanism chose the version.
 
-`scripts/superpowers-baseline.json` records the version this workflow was last reviewed against, and the checker's **`sp-version`** rule compares it to what is installed. **How loud that is depends on which semver segment moved** — the policy lives in `scripts/workflow-config.mjs` → `VERSION_DRIFT_POLICY`:
+`scripts/superpowers-baseline.json` records the version this workflow was last reviewed against, and the checker's **`sp-version`** rule compares it to what is installed. **How loud that is depends on which semver segment moved** — the policy lives in `scripts/config.mjs` → `VERSION_DRIFT_POLICY`:
 
 | Drift     | Default  | Why                                                                                                                                                                                           |
 | --------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -29,37 +29,36 @@ That has already happened once: a hook anchored to `verification-before-completi
 
 ## Step 1 — establish what you are actually running
 
-```bash
-ls ~/.claude/plugins/cache/superpowers-marketplace/superpowers/
-```
-
-Each subdirectory is an installed version. More than one means a scope skew is _possible_ — check which is enabled where:
-
-```bash
-grep -A4 enabledPlugins ~/.claude/settings.json .claude/settings.json
-```
-
-Now compare that against `scripts/superpowers-baseline.json` — the version this workflow was **reviewed against**. That comparison is the whole trigger, and it is deliberately indifferent to _why_ the two differ.
-
-**Do not spend time establishing the cause before reviewing.** Whether the version moved on its own, was selected deliberately, or simply resolved differently on this machine, the work is identical: the behaviours in Step 3 either still hold or they do not. Cause matters only afterwards, when you decide whether to record the new version or roll back to the reviewed one.
-
-If you do want to know how this workspace currently selects versions, `.claude/settings.json` is where plugin enablement and any marketplace declarations live. That is a lookup, not a prerequisite.
-
-Record the version and the git ref, because "6.1.1" is not precise enough to reason about later:
-
-```bash
-git -C ~/.claude/plugins/cache/superpowers-marketplace/superpowers/<version> log -1 --format='%H %ad %s'
-```
-
-## Step 2 — run the checker first
+**Let the checker answer this — do not go path-hunting.**
 
 ```bash
 pnpm run check:workflow
 ```
 
+`sp-version` reports the version it found, **where** it found it, and — when it finds nothing — both what it inspected and what it could not. That last part matters: Superpowers is not Claude-only. Upstream ships it for Claude Code, Antigravity, Codex, Cursor, Factory Droid, GitHub Copilot CLI, Kimi Code, OpenCode and Pi, and it can also be copied straight into a workspace with no plugin manager at all. The checker knows two of those layouts (the Claude plugin cache, and a workspace copy); for the rest it says so rather than reporting absence it cannot establish.
+
+So read its output as one of:
+
+| It says | Means |
+| --- | --- |
+| a version and a source | that is what you are running; compare it to the baseline |
+| **found in more than one place** | each copy loads, so every skill registers more than once — resolve that first |
+| **version unreadable** | found, but no manifest beside it, so no comparison is possible at all |
+| **not found in any known location** | either genuinely absent, **or installed for an agent whose layout we have not taught it** |
+
+Then compare against `scripts/superpowers-baseline.json` — the version this workflow was **reviewed against**. That comparison is the whole trigger, and it is deliberately indifferent to _why_ the two differ.
+
+**Do not spend time establishing the cause before reviewing.** Whether the version moved on its own, was selected deliberately, or simply resolved differently on this machine, the work is identical: the behaviours in Step 3 either still hold or they do not. Cause matters only afterwards, when you decide whether to record the new version or roll back to the reviewed one.
+
+Record the exact ref too, because "6.1.1" is not precise enough to reason about later — for a git-backed install, `git -C <the dir the checker printed> log -1`.
+
+> **Honest limit.** The automatic warning at session start is a **Claude Code hook**, so it only fires in Claude sessions. Running another agent, nothing tells you unprompted — the checker is the agent-neutral half, and `pnpm run check:workflow` works from anywhere.
+
+## Step 2 — read what that checker run actually proved
+
 Two rules speak to upgrades. **`sp-version`** is what sent you here: it compares the installed version against `scripts/superpowers-baseline.json`, at the severity `VERSION_DRIFT_POLICY` assigns to the segment that moved, and it also checks Superpowers is actually _enabled_ (project settings can disable it, and a marketplace can be registered with nothing installed from it). **`sp-skills`** verifies every hook attach-point still names an installed skill, and prints the version it checked against. Run the whole checker **before** touching anything, so you know what the new version already broke.
 
-**A SKIP is not a pass.** If the plugin cache cannot be located, `sp-skills` reports SKIP — nothing was verified. (`sp-version` FAILS in that case rather than skipping, because an absent plugin makes the whole workflow inoperative, not merely unverified.) Either way, resolve it before reviewing.
+**A SKIP is not a pass.** When Superpowers cannot be located, `sp-skills` reports SKIP — nothing was verified — and `sp-version` **FAILS** and owns the report, so one root cause gives one failure. Resolve that before reviewing anything: as Step 1 notes, "not found" may mean "installed for an agent whose layout the checker has not been taught".
 
 What it proves: no attach-point dangles. What it cannot prove: that a skill still _does_ what we assume. That is Steps 3–4, and it is the whole of the work.
 
@@ -136,7 +135,7 @@ Read `RELEASE-NOTES.md` in the new version — it is large, so search it for the
 | A skill removed                                                                                                        | The moment it marked still governs. Decide where that work now attaches, run the hook there, and say so. Never silently skip it, and never substitute a similar-looking skill.                                                                                                                                                   |
 | A prose assumption reworded                                                                                            | Re-read the new wording and decide whether our reliance still holds. If it does not, the fix is usually a `AGENTS.md` _Workspace preferences_ entry, not a workflow restructure.                                                                                                                                                 |
 | A new skill that could win the routing match                                                                           | Read its `description`, assign it a path, update `AGENTS.md`'s path table if the marker changed.                                                                                                                                                                                                                                 |
-| **How Superpowers is obtained** changed — a pinned catalog, a repo-local marketplace, a plugin of ours that bundles it | A different **marketplace** needs no change: the checker discovers it. A different **plugin name** needs exactly one — see the boxed note on `SP_PLUGIN_NAME` in `scripts/workflow-config.mjs`, which also covers the nested-path case. Skip that and `sp-version` reports "NOT INSTALLED" while Superpowers is loaded and fine. |
+| **How Superpowers is obtained** changed — a pinned catalog, a repo-local marketplace, a plugin of ours that bundles it | A different **marketplace** needs no change: the checker discovers it. A different **plugin name** needs exactly one — see the boxed note on `SP_PLUGIN_NAME` in `scripts/config.mjs`, which also covers the nested-path case. Skip that and `sp-version` reports "NOT INSTALLED" while Superpowers is loaded and fine. |
 | Cosmetic / unrelated                                                                                                   | Record the version and move on.                                                                                                                                                                                                                                                                                                  |
 
 ## Step 6 — record it, which is also what clears the gate

@@ -121,9 +121,47 @@ export const HOOK_REF_PATTERN = /\.claude\/hooks\/[A-Za-z0-9._-]+/g;
 
 /* -------------------------------------------------- installed Superpowers */
 
-/** Path segments from the user's home to the Superpowers version directories.
- *  Re-verify after any Claude Code plugin-layout change. */
+/**
+ * WHERE SUPERPOWERS MIGHT BE, and how much of that we can actually check.
+ *
+ * Superpowers is not a Claude-only plugin. Upstream ships packaging for Claude
+ * Code, Antigravity, Codex (app and CLI), Cursor, Factory Droid, GitHub Copilot
+ * CLI, Kimi Code, OpenCode and Pi — and it can also simply be copied into a
+ * workspace with no plugin manager at all. So "installed" is a question with
+ * several possible answers, and a check that only knows one of them must say so
+ * rather than report absence.
+ *
+ * Each probe below is a location we know how to inspect. `SP_PROBES_UNVERIFIED`
+ * names the agents we know exist but whose install paths we have NOT confirmed:
+ * they are listed so the report can say what it did not check, instead of
+ * implying it looked everywhere. **Do not add a probe from a guessed path** — an
+ * invented path finds nothing and turns a silent gap into a false "not found".
+ */
 export const SP_CACHE_ROOT_SEGMENTS = ['.claude', 'plugins', 'cache'];
+
+/**
+ * Agents Superpowers supports whose on-disk layout we have not verified. Moving
+ * one into a real probe means: install it, find the path, confirm a version is
+ * readable there, then implement it in `findSuperpowers` — in that order.
+ */
+export const SP_PROBES_UNVERIFIED = [
+  'Antigravity',
+  'Codex (app / CLI)',
+  'Cursor',
+  'Factory Droid',
+  'GitHub Copilot CLI',
+  'Kimi Code',
+  'OpenCode',
+  'Pi',
+];
+
+/**
+ * Workspace-local copies: Superpowers skills committed into the repo with no
+ * plugin manager involved. Detected by a skill we know it ships — a directory
+ * name is enough, and no version may be readable, which the rule handles.
+ */
+export const SP_WORKSPACE_SKILL_DIRS = ['.agents/skills', '.claude/skills'];
+export const SP_MARKER_SKILL = 'using-superpowers';
 
 /**
  * The plugin's name as Claude Code knows it. It appears in two shapes, and this

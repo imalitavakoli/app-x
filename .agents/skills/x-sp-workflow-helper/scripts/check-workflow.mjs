@@ -21,7 +21,9 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, posix } from 'node:path';
-import * as CFG from './workflow-config.mjs';
+import * as CFG from './config.mjs';
+import * as MSG from './messages.mjs';
+import { allow as allowlist } from './allowlist.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(scriptDir, '..', '..', '..', '..');
@@ -137,43 +139,85 @@ const RESERVED_ICONS = CFG.RESERVED_ICONS;
  * marketplaces loads every skill twice, with no warning from anything else).
  */
 function findSuperpowersSkills() {
-  const home = process.env.USERPROFILE || process.env.HOME;
-  if (!home) return null;
-  const cacheRoot = join(home, ...CFG.SP_CACHE_ROOT_SEGMENTS);
-  if (!existsSync(cacheRoot)) return null;
-
   const cmp = (a, b) => {
-    const x = a.split('.').map(Number);
-    const y = b.split('.').map(Number);
+    const x = String(a).split('.').map(Number);
+    const y = String(b).split('.').map(Number);
     return x[0] - y[0] || x[1] - y[1] || x[2] - y[2];
   };
 
-  const found = []; // { version, dir, marketplace }
-  for (const market of readdirSync(cacheRoot)) {
-    const pluginDir = join(cacheRoot, market, CFG.SP_PLUGIN_NAME);
-    if (!existsSync(pluginDir)) continue;
-    for (const v of readdirSync(pluginDir)) {
-      if (!/^\d+\.\d+\.\d+$/.test(v)) continue;
-      const skills = join(pluginDir, v, CFG.SP_SKILLS_SUBDIR);
-      if (existsSync(skills))
-        found.push({ version: v, dir: skills, marketplace: market });
+  const found = []; // { version | null, dir, source, where }
+
+  // PROBE 1 — Claude Code plugin cache. The marketplace is discovered, not
+  // assumed (see SP_PLUGIN_NAME): Superpowers may arrive from upstream's
+  // marketplace or from one this workspace declares.
+  const home = process.env.USERPROFILE || process.env.HOME;
+  if (home) {
+    const cacheRoot = join(home, ...CFG.SP_CACHE_ROOT_SEGMENTS);
+    if (existsSync(cacheRoot)) {
+      for (const market of readdirSync(cacheRoot)) {
+        const pluginDir = join(cacheRoot, market, CFG.SP_PLUGIN_NAME);
+        if (!existsSync(pluginDir)) continue;
+        for (const v of readdirSync(pluginDir)) {
+          if (!/^\d+\.\d+\.\d+$/.test(v)) continue;
+          const skills = join(pluginDir, v, CFG.SP_SKILLS_SUBDIR);
+          if (existsSync(skills)) {
+            found.push({
+              version: v,
+              dir: skills,
+              source: 'Claude Code plugin',
+              where: market,
+            });
+          }
+        }
+      }
     }
   }
+
+  // PROBE 2 — copied into the workspace, no plugin manager involved. A bare
+  // `skills/` copy carries no version, which is reported as unknown rather
+  // than guessed.
+  for (const dir of CFG.SP_WORKSPACE_SKILL_DIRS) {
+    if (!exists(`${dir}/${CFG.SP_MARKER_SKILL}/SKILL.md`)) continue;
+    let version = null;
+    for (const rel of [
+      '.claude-plugin/plugin.json',
+      'gemini-extension.json',
+      'package.json',
+    ]) {
+      const manifest = `${posix.dirname(dir)}/${rel}`;
+      if (!exists(manifest)) continue;
+      try {
+        version = JSON.parse(read(manifest)).version ?? null;
+      } catch {
+        /* unreadable manifest is not a version */
+      }
+      if (version) break;
+    }
+    found.push({ version, dir, source: 'workspace copy', where: dir });
+  }
+
   if (!found.length) return null;
 
-  found.sort((a, b) => cmp(b.version, a.version));
+  // Prefer a finding whose version is knowable, then the highest version.
+  found.sort(
+    (a, b) =>
+      (b.version ? 1 : 0) - (a.version ? 1 : 0) ||
+      cmp(b.version ?? '0.0.0', a.version ?? '0.0.0'),
+  );
+
   return {
     ...found[0],
-    marketplaces: [...new Set(found.map((f) => f.marketplace))],
+    all: found,
+    marketplaces: [...new Set(found.map((f) => f.where))],
   };
 }
 
 /* ---------------------------------------------------------------- allowlist */
 
-const allowlistPath = join(SKILL_DIR, 'scripts', 'allowlist.json');
-const allowlist = existsSync(allowlistPath)
-  ? (JSON.parse(readFileSync(allowlistPath, 'utf8')).allow ?? [])
-  : [];
+// Imported, not read: the allowlist is part of this skill, so if it is missing
+// or malformed the module error naming it is the right outcome. (The BASELINE is
+// different — it is state that may legitimately be absent or hand-broken, so it
+// stays JSON and is read defensively, with its own two findings.)
 const allowlistHits = new Set();
 
 /** True when this finding is deliberately suppressed. Records the hit so an
@@ -188,13 +232,29 @@ function suppressed(rule, file, text) {
   return false;
 }
 
+/** Emit a message object from messages.mjs: its fail line, then its details. */
+function emitMsg(r, m) {
+  if (m.fail) r.fail(m.fail);
+  for (const d of m.details ?? []) r.detail(d);
+}
+
 /* -------------------------------------------------------------------- rules */
 
 const RULES = [];
-const rule = (id, title, fn) => RULES.push({ id, title, fn });
+/**
+ * Register a rule. The TITLE is not passed in — it is looked up in messages.mjs,
+ * so a registration carries no prose and every verdict the tool renders lives in
+ * one file. A missing title throws here rather than printing `undefined`, which
+ * would read like a broken tool.
+ */
+const rule = (id, fn) => {
+  const title = MSG.titles[id];
+  if (!title) throw new Error(`no title in messages.mjs for rule '${id}'`);
+  RULES.push({ id, title, fn });
+};
 
 /* --- 1. hook IDs ---------------------------------------------------------- */
-rule('hook-ids', 'Every cited hook ID resolves to a real hook heading', (r) => {
+rule('hook-ids', (r) => {
   const defined = new Map(); // id -> file
   for (const p of PATH_FILES) {
     if (!exists(p)) continue;
@@ -220,14 +280,14 @@ rule('hook-ids', 'Every cited hook ID resolves to a real hook heading', (r) => {
         if (/[-_A-Za-z]$/.test(before)) continue;
         if (defined.has(id)) continue;
         if (suppressed('hook-ids', p, text)) continue;
-        r.fail(`${p}:${n} cites hook \`${id}\`, which no path file defines`);
+        emitMsg(r, MSG.locators.hookIdUndefined({ file: p, line: n, id }));
       }
     }
   }
 });
 
 /* --- 2. link + path targets ---------------------------------------------- */
-rule('links', 'Every cited file path exists', (r) => {
+rule('links', (r) => {
   let checked = 0;
   for (const p of WORKFLOW_DOCS) {
     const dir = posix.dirname(p);
@@ -256,8 +316,9 @@ rule('links', 'Every cited file path exists', (r) => {
         checked++;
         if (exists(resolved)) continue; // matches a file OR a directory
         if (suppressed('links', p, t)) continue;
-        r.fail(
-          `${p}:${n} cites \`${t}\` — no such file or directory (resolved to ${resolved})`,
+        emitMsg(
+          r,
+          MSG.locators.docPathMissing({ file: p, line: n, cited: t, resolved }),
         );
       }
     }
@@ -288,8 +349,9 @@ rule('links', 'Every cited file path exists', (r) => {
           internal++;
           if (exists(resolved)) continue;
           if (suppressed('links', p, t)) continue;
-          r.fail(
-            `${p}:${n} links to \`${t}\` — no such file (resolved to ${resolved})`,
+          emitMsg(
+            r,
+            MSG.locators.skillLinkMissing({ file: p, line: n, cited: t, resolved }),
           );
         }
       }
@@ -301,7 +363,7 @@ rule('links', 'Every cited file path exists', (r) => {
 });
 
 /* --- 3. anchors ---------------------------------------------------------- */
-rule('anchors', 'Every cited #anchor resolves to a real heading', (r) => {
+rule('anchors', (r) => {
   const cache = new Map();
   const anchorsFor = (p) => {
     if (!cache.has(p)) cache.set(p, anchorsOf(p));
@@ -331,8 +393,9 @@ rule('anchors', 'Every cited #anchor resolves to a real heading', (r) => {
         checked++;
         if (anchorsFor(target).has(decodeURIComponent(anchor))) continue;
         if (suppressed('anchors', p, t)) continue;
-        r.fail(
-          `${p}:${n} cites \`#${anchor}\` in ${target} — no heading yields that slug under any renderer rule`,
+        emitMsg(
+          r,
+          MSG.locators.anchorMissing({ file: p, line: n, anchor, target }),
         );
       }
     }
@@ -341,12 +404,10 @@ rule('anchors', 'Every cited #anchor resolves to a real heading', (r) => {
 });
 
 /* --- 4. Superpowers skills exist ---------------------------------------- */
-rule('sp-skills', 'Every Superpowers skill we anchor to is installed', (r) => {
+rule('sp-skills', (r) => {
   const sp = findSuperpowersSkills();
   if (!sp)
-    return r.skip(
-      'Superpowers not installed — sp-version owns that failure; nothing to verify anchors against',
-    );
+    return r.skip(MSG.skips.supersededBySpVersion);
   r.note(`checked against installed Superpowers ${sp.version}`);
   const installed = new Set(
     readdirSync(sp.dir).filter((d) => existsSync(join(sp.dir, d, 'SKILL.md'))),
@@ -381,8 +442,15 @@ rule('sp-skills', 'Every Superpowers skill we anchor to is installed', (r) => {
         counts[kind.name]++;
         if (installed.has(name)) continue;
         if (suppressed('sp-skills', p, text)) continue;
-        r.fail(
-          `${p}:${n} — the ${kind.name} names \`${name}\`, which is NOT an installed Superpowers skill (${sp.version}). The lifecycle moment it marks still governs: re-anchor it, and never silently substitute a similar-looking skill.`,
+        emitMsg(
+          r,
+          MSG.attachPointNotInstalled({
+            file: p,
+            line: n,
+            kind: kind.name,
+            name,
+            version: sp.version,
+          }),
         );
       }
     }
@@ -395,10 +463,7 @@ rule('sp-skills', 'Every Superpowers skill we anchor to is installed', (r) => {
 });
 
 /* --- 5. reviewed-against Superpowers version ---------------------------- */
-rule(
-  'sp-version',
-  'Superpowers is enabled, installed, and at the version we reviewed against',
-  (r) => {
+rule('sp-version', (r) => {
     // ENABLEMENT FIRST — files on disk prove nothing about whether the plugin is
     // actually loaded. A real incident: the working entry was set to false while a
     // second entry was added that never installed. Superpowers went dark for a
@@ -418,13 +483,12 @@ rule(
       );
 
       if (entries.length && entries.every(([, v]) => v === false)) {
-        r.fail(
-          `${settingsPath} sets every Superpowers plugin entry to false ` +
-            `(${entries.map(([k]) => k).join(', ')}). Project settings outrank user settings, so ` +
-            'Superpowers is DISABLED for everyone on this repo — and the whole workflow with it.',
-        );
-        r.detail(
-          '  Enable exactly one entry whose marketplace is actually installed.',
+        emitMsg(
+          r,
+          MSG.allEntriesDisabled({
+            settingsPath,
+            keys: entries.map(([k]) => k).join(', '),
+          }),
         );
         return;
       }
@@ -443,14 +507,7 @@ rule(
         if (!enabled) continue;
         const market = key.split('@')[1];
         if (market && existsSync(join(cacheRoot, market))) continue;
-        r.fail(
-          `${settingsPath} enables \`${key}\` but no plugin cache exists for marketplace ` +
-            `\`${market}\` — the marketplace may be registered while the plugin was never ` +
-            'installed from it. That silently disables Superpowers.',
-        );
-        r.detail(
-          `  Check ~/.claude/plugins/cache/${market}/ and ~/.claude/plugins/marketplaces/${market}/.`,
-        );
+        emitMsg(r, MSG.enabledButNotInstalled({ settingsPath, key, market }));
         return;
       }
     }
@@ -462,34 +519,24 @@ rule(
     // without it the workflow is not degraded — it is inoperative. This rule owns
     // that report; sp-skills only skips, to keep one root cause to one failure.
     if (!sp) {
-      r.fail(
-        'Superpowers is NOT INSTALLED (no version found in the plugin cache). The whole ' +
-          'Superpowers-First Workflow is inoperative without it: every path routes through it and ' +
-          'every hook anchors to one of its skills.',
-      );
-      r.detail(
-        '  This workspace declares Superpowers so Claude Code installs it — see',
-      );
-      r.detail(
-        '  .claude/settings.json for how — so reaching here means that install did not happen.',
-      );
-      r.detail(
-        '  Do NOT hand-install it or work around it: find out why (offline, network policy,',
-      );
-      r.detail(
-        '  source unreachable, plugins disabled) and tell the user. Running a cycle',
-      );
-      r.detail(
-        '  without it produces work that only looks like it followed the workflow.',
+      emitMsg(
+        r,
+        MSG.notFoundAnywhere({
+          checkedDirs: CFG.SP_WORKSPACE_SKILL_DIRS.join(' / '),
+          uncheckedAgents: CFG.SP_PROBES_UNVERIFIED.join(', '),
+        }),
       );
       return;
     }
 
     const baselinePath = join(SKILL_DIR, 'scripts', CFG.SP_BASELINE_FILE);
     if (!existsSync(baselinePath)) {
-      return r.fail(
-        `no baseline at scripts/${CFG.SP_BASELINE_FILE} — nothing records which Superpowers version ` +
-          `this workflow was reviewed against. Installed: ${sp.version}.`,
+      return emitMsg(
+        r,
+        MSG.baselineMissing({
+          baselineFile: CFG.SP_BASELINE_FILE,
+          installedVersion: sp.version,
+        }),
       );
     }
 
@@ -497,29 +544,41 @@ rule(
     try {
       baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
     } catch (err) {
-      return r.fail(
-        `scripts/${CFG.SP_BASELINE_FILE} is not valid JSON: ${err.message}`,
+      return emitMsg(
+        r,
+        MSG.baselineInvalid({
+          baselineFile: CFG.SP_BASELINE_FILE,
+          error: err.message,
+        }),
       );
     }
 
     // The same plugin cached under two marketplaces loads every skill twice, and
     // nothing else in the toolchain warns about it. Only visible because the
     // lookup above scans marketplaces rather than assuming one.
-    if (sp.marketplaces?.length > 1) {
-      r.fail(
-        'Superpowers is installed from MORE THAN ONE marketplace ' +
-          `(${sp.marketplaces.join(', ')}). Both load, so every Superpowers skill is ` +
-          'registered twice and nothing else reports it. Leave exactly one enabled in ' +
-          '`.claude/settings.json` — project settings outrank user settings, so a `false` ' +
-          "there disables a teammate's own copy for this repo without touching their machine.",
+    if (sp.all?.length > 1) {
+      emitMsg(
+        r,
+        MSG.foundInMultiplePlaces({
+          findings: sp.all
+            .map((f) => `${f.source} at ${f.where}${f.version ? ' v' + f.version : ''}`)
+            .join(' · '),
+        }),
       );
+    }
+
+    // A workspace copy may carry no manifest, so there is no version to compare.
+    // Saying "matches" would be a lie and failing would be a false alarm.
+    if (!sp.version) {
+      emitMsg(r, MSG.versionUnreadable({ source: sp.source, where: sp.where }));
+      return;
     }
 
     const reviewed = baseline.reviewed ?? 'an unrecorded date';
     if (baseline.version === sp.version) {
       return r.note(
         `reviewed against ${baseline.version} on ${reviewed}` +
-          (sp.marketplace ? ` (installed from ${sp.marketplace})` : ''),
+          ` — found as ${sp.source} at ${sp.where}`,
       );
     }
 
@@ -530,16 +589,7 @@ rule(
     const tier = iMaj !== bMaj ? 'major' : iMin !== bMin ? 'minor' : 'patch';
     const action = CFG.VERSION_DRIFT_POLICY[tier] ?? 'fail';
 
-    const why = {
-      major: 'A major bump is breaking by declaration.',
-      minor:
-        'A minor bump adds features — and specifically may add SKILLS: a new skill whose ' +
-        'description claims "design work" or "a defect" can start winning the routing match and ' +
-        'silently change which path fires.',
-      patch:
-        'A patch is usually fixes, so this is reported rather than escalated — but note that ' +
-        'nothing obliges a patch to leave our prose-enforced dependencies alone.',
-    }[tier];
+    const why = MSG.driftWhy[tier];
 
     const drift =
       `Superpowers is at ${sp.version}; this workflow was reviewed against ` +
@@ -548,35 +598,24 @@ rule(
     if (action === 'ignore') return r.note(`${drift} Ignored by policy.`);
 
     if (action === 'note') {
-      r.note(`${drift} ${why}`);
-      r.note(
-        '  Spot-check references/superpowers-upgrade.md → Prose-enforced if you are touching ' +
-          'the workflow. Raise VERSION_DRIFT_POLICY.patch to "fail" to gate on this instead.',
-      );
+      for (const line of MSG.driftNote({ drift, why })) r.note(line);
       return;
     }
 
-    r.fail(
-      `${drift} ${why} Our layer relies on behaviours Superpowers does not know it promises, ` +
-        'so the change cannot fail loudly on its own.',
-    );
-    r.detail(
-      '  Work through references/superpowers-upgrade.md, then record the result:',
-    );
-    r.detail(
-      `  set version to "${sp.version}" in scripts/${CFG.SP_BASELINE_FILE} with today's date.`,
-    );
-    r.detail(
-      '  Editing the baseline without doing the review only silences the one thing that noticed.',
+    emitMsg(
+      r,
+      MSG.driftFail({
+        drift,
+        why,
+        baselineFile: CFG.SP_BASELINE_FILE,
+        installedVersion: sp.version,
+      }),
     );
   },
 );
 
 /* --- 6. workspace skills + stubs ---------------------------------------- */
-rule(
-  'x-skills',
-  'Workspace skills exist, and every stub matches its canonical',
-  (r) => {
+rule('x-skills', (r) => {
     const canonicalDir = CFG.CANONICAL_SKILL_DIR;
     const stubDirs = CFG.STUB_SKILL_DIRS;
     const isX = (n) => n.startsWith(CFG.OUR_SKILL_PREFIX);
@@ -593,8 +632,13 @@ rule(
     for (const m of read(AGENTS).matchAll(/`(x-[a-z0-9-]+)`/g)) named.add(m[1]);
     for (const n of [...named].sort()) {
       if (!canon.includes(n))
-        r.fail(
-          `${AGENTS} names \`${n}\`, which does not exist under ${canonicalDir}/`,
+        emitMsg(
+          r,
+          MSG.locators.namedSkillMissing({
+            agentsFile: AGENTS,
+            name: n,
+            canonicalDir,
+          }),
         );
     }
 
@@ -604,7 +648,14 @@ rule(
       const fmName = (/^name:[ \t]*['"]?([^'"\n]+)/m.exec(read(c)) ||
         [])[1]?.trim();
       if (fmName !== n)
-        r.fail(`${c} has \`name: ${fmName}\` but lives in folder \`${n}\``);
+        emitMsg(
+          r,
+          MSG.locators.skillNameFolderMismatch({
+            file: c,
+            frontmatterName: fmName,
+            folder: n,
+          }),
+        );
 
       // Every stub location, not just one — the stub table is per AI tool and
       // grows. A skill stubbed for one tool and missed for another is invisible
@@ -614,25 +665,19 @@ rule(
         const s = `${stubDir}/${n}/SKILL.md`;
 
         if (!exists(s)) {
-          r.fail(
-            `${n} has no stub at ${s} — invisible to whichever tool discovers skills there`,
-          );
+          emitMsg(r, MSG.locators.stubMissing({ skill: n, stubPath: s }));
           continue;
         }
 
         const dc = descriptionOf(c);
         const ds = descriptionOf(s);
         if (dc !== ds) {
-          r.fail(
-            `${n}: ${stubDir} stub description has drifted from canonical — the tool matches on the stale text`,
-          );
+          emitMsg(r, MSG.locators.stubDescriptionDrifted({ skill: n, stubDir }));
           r.detail(`  canonical: ${dc}`);
           r.detail(`  stub     : ${ds}`);
         }
         if (/^metadata:/m.test(read(s)))
-          r.fail(
-            `${s} carries \`metadata\` — stubs are name + description only`,
-          );
+          emitMsg(r, MSG.locators.stubCarriesMetadata({ stubPath: s }));
       }
     }
 
@@ -642,7 +687,7 @@ rule(
       for (const n of readdirSync(abs(stubDir))) {
         if (!isX(n)) continue;
         if (!canon.includes(n))
-          r.fail(`${stubDir}/${n} is an orphan stub — no canonical skill`);
+          emitMsg(r, MSG.locators.orphanStub({ stubDir, skill: n }));
       }
     }
     r.note(`stub locations checked: ${stubDirs.join(' · ')}`);
@@ -650,9 +695,9 @@ rule(
 );
 
 /* --- 7. version discipline ---------------------------------------------- */
-rule('versions', 'Every workspace skill carries a block-form semver', (r) => {
+rule('versions', (r) => {
   const dir = CFG.CANONICAL_SKILL_DIR;
-  if (!existsSync(abs(dir))) return r.skip(`no ${dir}`);
+  if (!existsSync(abs(dir))) return r.skip(MSG.skips.noDir(dir));
   for (const n of readdirSync(abs(dir)).filter((x) =>
     x.startsWith(CFG.OUR_SKILL_PREFIX),
   )) {
@@ -660,7 +705,7 @@ rule('versions', 'Every workspace skill carries a block-form semver', (r) => {
     if (!exists(p)) continue;
     const fm = frontmatterOf(p);
     if (/metadata:[ \t]*\{/.test(fm)) {
-      r.fail(`${p} uses inline metadata — use block form`);
+      emitMsg(r, MSG.inlineMetadata({ file: p }));
       continue;
     }
     const m =
@@ -668,12 +713,12 @@ rule('versions', 'Every workspace skill carries a block-form semver', (r) => {
         fm + '\n',
       );
     if (!m)
-      r.fail(`${p} has no \`version: 'x.y.z'\` under a block \`metadata:\``);
+      emitMsg(r, MSG.locators.versionMissing({ file: p }));
   }
 });
 
 /* --- 8. path isolation --------------------------------------------------- */
-rule('path-isolation', 'No path file cites another path file', (r) => {
+rule('path-isolation', (r) => {
   for (const p of PATH_FILES) {
     if (!exists(p)) continue;
     const me = posix.basename(p);
@@ -681,19 +726,14 @@ rule('path-isolation', 'No path file cites another path file', (r) => {
       for (const other of PATH_FILES.map((x) => posix.basename(x))) {
         if (other === me || !text.includes(other)) continue;
         if (suppressed('path-isolation', p, text)) continue;
-        r.fail(
-          `${p}:${n} cites ${other} — a path may never cite another path; extract to sp-workflow-shared.md or sp-workflow-procedures.md`,
-        );
+        emitMsg(r, MSG.pathCitesPath({ file: p, line: n, other }));
       }
     }
   }
 });
 
 /* --- 9. landmark grammar ------------------------------------------------- */
-rule(
-  'landmarks',
-  'Landmark headings and reserved icons follow the notation',
-  (r) => {
+rule('landmarks', (r) => {
     for (const p of PATH_FILES) {
       if (!exists(p)) continue;
       for (const { n, text } of lines(p)) {
@@ -702,13 +742,23 @@ rule(
         if (h4) {
           if (!h4[1].startsWith('🪝')) {
             if (!suppressed('landmarks', p, text))
-              r.fail(
-                `${p}:${n} — \`####\` heading is not a 🪝 hook: "${h4[1].slice(0, 60)}"`,
+              emitMsg(
+                r,
+                MSG.locators.headingNotHook({
+                  file: p,
+                  line: n,
+                  heading: h4[1].slice(0, 60),
+                }),
               );
           } else if (!/^🪝\s+[A-Z]\d+\s+·\s+\S/.test(h4[1])) {
             if (!suppressed('landmarks', p, text))
-              r.fail(
-                `${p}:${n} — hook heading does not match \`🪝 {ID} · {when}\`: "${h4[1].slice(0, 60)}"`,
+              emitMsg(
+                r,
+                MSG.locators.hookHeadingMalformed({
+                  file: p,
+                  line: n,
+                  heading: h4[1].slice(0, 60),
+                }),
               );
           }
         }
@@ -719,8 +769,14 @@ rule(
             if (!h[2].includes(icon)) continue;
             if (icon === CFG.PATH_ICON && h[1].length === 1) continue; // the path's own H1
             if (suppressed('landmarks', p, text)) continue;
-            r.fail(
-              `${p}:${n} — reserved landmark icon ${icon} used in a level-${h[1].length} heading`,
+            emitMsg(
+              r,
+              MSG.locators.reservedIconMisused({
+                file: p,
+                line: n,
+                icon,
+                level: h[1].length,
+              }),
             );
           }
         }
@@ -735,8 +791,9 @@ rule(
         if (!m) continue;
         if (/[ABC]\d/.test(m[2])) continue;
         if (suppressed('landmarks', p, text)) continue;
-        r.fail(
-          `${p}:${n} — \`${m[1]}:\` names no hook ID; it must address hooks by \`{ID}\`, never in prose`,
+        emitMsg(
+          r,
+          MSG.locators.spanNamesNoId({ file: p, line: n, label: m[1] }),
         );
       }
     }
@@ -744,12 +801,9 @@ rule(
 );
 
 /* --- 10. skills must not encode control flow ----------------------------- */
-rule(
-  'skill-coupling',
-  'Skills do not name workflow landmarks (control flow stays in the docs)',
-  (r) => {
+rule('skill-coupling', (r) => {
     const dir = CFG.CANONICAL_SKILL_DIR;
-    if (!existsSync(abs(dir))) return r.skip(`no ${dir}`);
+    if (!existsSync(abs(dir))) return r.skip(MSG.skips.noDir(dir));
 
     // Deliberately narrow: only a hook ID or a path letter is UNAMBIGUOUS coupling.
     //
@@ -774,8 +828,9 @@ rule(
           const hit = coupling.exec(text);
           if (!hit) continue;
           if (suppressed('skill-coupling', p, text)) continue;
-          r.fail(
-            `${p}:${ln} names workflow control flow ("${hit[0]}") — state the substance the skill owns instead`,
+          emitMsg(
+            r,
+            MSG.skillNamesControlFlow({ file: p, line: ln, hit: hit[0] }),
           );
         }
       }
@@ -784,7 +839,7 @@ rule(
 );
 
 /* --- 11. paths named inside hook scripts -------------------------------- */
-rule('hook-paths', 'Every repo path a hook names resolves', (r) => {
+rule('hook-paths', (r) => {
   // The reverse direction of hook-refs: that rule keeps hook FILENAMES out of
   // docs; this one keeps hook scripts from naming files that do not exist.
   //
@@ -794,10 +849,32 @@ rule('hook-paths', 'Every repo path a hook names resolves', (r) => {
   // a person reading a systemMessage cannot invoke a skill, so they get a path.
   // That path is the one thing here worth guarding, plus any that creep back.
   const dir = '.claude/hooks';
-  if (!exists(dir)) return r.skip('no .claude/hooks');
+  if (!exists(dir)) return r.skip(MSG.skips.noDir(dir));
 
   let checked = 0;
   for (const f of walk(dir, '.mjs')) {
+    // Paths assembled from SEGMENTS — join(ROOT, '.agents', 'skills', …) — are
+    // scanned over the WHOLE FILE, not line by line, because the call spans
+    // several lines. These are the dangerous ones: a rename breaks them and no
+    // text search for the path would ever find them. Both hooks locate the
+    // checker this way, and one exits SILENTLY when it is missing, so the
+    // failure would be permanent and quiet.
+    const whole = read(f);
+    const segCall =
+      /join\(\s*ROOT\s*,\s*((?:'[^']+'\s*,\s*)*'[^']+')\s*,?\s*\)/g;
+    for (const m of whole.matchAll(segCall)) {
+      const p = m[1]
+        .split(',')
+        .map((x) => x.trim().replace(/^'|'$/g, ''))
+        .filter(Boolean)
+        .join('/');
+      if (!p || p.includes('{')) continue;
+      const ln = whole.slice(0, m.index).split(/\r?\n/).length;
+      checked++;
+      if (exists(p)) continue;
+      if (suppressed('hook-paths', f, p)) continue;
+      emitMsg(r, MSG.hookSegmentPathBroken({ file: f, line: ln, path: p }));
+    }
     for (const { n, text } of lines(f)) {
       if (/^\s*\/\//.test(text)) continue; // comments explain, they do not point
       for (const m of text.matchAll(
@@ -808,10 +885,7 @@ rule('hook-paths', 'Every repo path a hook names resolves', (r) => {
         checked++;
         if (exists(p)) continue;
         if (suppressed('hook-paths', f, p)) continue;
-        r.fail(
-          `${f}:${n} names \`${p}\`, which does not exist — a hook that points at a ` +
-            'moved file says nothing useful, and nothing else would notice.',
-        );
+        emitMsg(r, MSG.hookPathBroken({ file: f, line: n, path: p }));
       }
     }
   }
@@ -819,10 +893,7 @@ rule('hook-paths', 'Every repo path a hook names resolves', (r) => {
 });
 
 /* --- 12. no hook filenames in docs -------------------------------------- */
-rule(
-  'hook-refs',
-  'Docs and skills name hook EVENTS, never hook filenames',
-  (r) => {
+rule('hook-refs', (r) => {
     let scanned = 0;
     const targets = CFG.HOOK_REF_SURFACES.flatMap((s) =>
       s.endsWith('.md') ? [s] : walk(s),
@@ -834,13 +905,7 @@ rule(
       for (const { n, text } of lines(p)) {
         for (const m of text.matchAll(CFG.HOOK_REF_PATTERN)) {
           if (suppressed('hook-refs', p, m[0])) continue;
-          r.fail(
-            `${p}:${n} names the hook script \`${m[0]}\` — a rename would make this ` +
-              'text wrong, silently. Name the EVENT and the job instead ' +
-              '("a SessionStart hook reports…", "the PostToolUse edit guard runs…") ' +
-              'and point at `.claude/settings.json`, which is the registry of what ' +
-              'is actually wired.',
-          );
+          emitMsg(r, MSG.hookFilenameInDoc({ file: p, line: n, name: m[0] }));
         }
       }
     }
@@ -848,25 +913,69 @@ rule(
   },
 );
 
-/* --- 13. stale suppressions --------------------------------------------- */
-rule('allowlist-hygiene', 'No stale allowlist entries', (r) => {
+/* --- 13. dead message exports ------------------------------------------- */
+rule('dead-messages', (r) => {
+  // A message written into messages.mjs but never wired means the prose exists
+  // TWICE — there and inline at the call site — with nothing keeping the two in
+  // step. That is the drift site this whole skill is about, and it happened
+  // here: 8 of 13 exports were dead until a review caught it. A person cannot
+  // spot it by reading either file; only the comparison shows it.
+  const msgFile = `${CFG.CANONICAL_SKILL_DIR}/x-sp-workflow-helper/scripts/messages.mjs`;
+  const useFile = `${CFG.CANONICAL_SKILL_DIR}/x-sp-workflow-helper/scripts/check-workflow.mjs`;
+  if (!exists(msgFile) || !exists(useFile))
+    return r.skip(MSG.skips.noMessageModule);
+
+  const names = [...read(msgFile).matchAll(/^export const (\w+)/gm)].map((m) => m[1]);
+  const uses = read(useFile);
+  const dead = names.filter((n) => !uses.includes(`MSG.${n}`));
+
+  for (const n of dead) {
+    if (suppressed('dead-messages', msgFile, n)) continue;
+    emitMsg(r, MSG.deadMessageExport({ name: n }));
+  }
+
+  // The other direction: a VERDICT written inline instead of in the module. The
+  // axis is verdict vs telemetry — a title, a failure and a skip are what a
+  // person reads to understand the outcome, so they live together; counts and
+  // the run summary are telemetry and stay with the code that formats them.
+  // Without this check the split survives only on discipline, and it did not:
+  // it was re-drawn three times before it held.
+  let inline = 0;
+  for (const { n, text } of lines(useFile)) {
+    if (!/r\.fail\(|r\.skip\(/.test(text)) continue;
+    if (/m\.fail/.test(text)) continue; // emitMsg's own body
+    const span = read(useFile)
+      .split(/\r?\n/)
+      .slice(n - 1, n + 5)
+      .join(' ');
+    if (span.includes('MSG.')) continue;
+    if (suppressed('dead-messages', useFile, text.trim())) continue;
+    inline++;
+    emitMsg(r, MSG.inlineVerdictText({ file: useFile, line: n }));
+  }
+
+  r.note(
+    `${names.length} message exports, ${dead.length} unused; ` +
+      `${inline} verdicts written inline`,
+  );
+});
+
+/* --- 14. stale suppressions --------------------------------------------- */
+rule('allowlist-hygiene', (r) => {
   // Staleness is only decidable when every rule ran: an entry proves it is still
   // needed by being CONSULTED, and a rule that did not run consults nothing. On a
   // filtered run (`--rule=`) this would report every entry as stale — a false
   // positive, and the loudest possible kind, since the advice is "delete it".
   if (onlyRule) {
-    return r.skip(
-      `cannot judge staleness on a filtered run (--rule=${onlyRule}) — ` +
-        'an entry proves itself by being consulted, and the rules it guards did not run. ' +
-        'Run the whole checker.',
-    );
+    return r.skip(MSG.skips.filteredRun(onlyRule));
   }
 
   if (!allowlist.length) return r.note('allowlist is empty');
   allowlist.forEach((e, i) => {
     if (allowlistHits.has(i)) return;
-    r.fail(
-      `allowlist entry ${i} (${e.rule} / ${e.file}) matched nothing — the text it suppressed is gone, so delete it`,
+    emitMsg(
+      r,
+      MSG.staleAllowlistEntry({ index: i, rule: e.rule, file: e.file }),
     );
   });
   r.note(
