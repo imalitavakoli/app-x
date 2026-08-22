@@ -123,7 +123,8 @@ export const COUPLING_EXEMPT = /^x-([a-z]+-)?sp-/;
  * it fires on (`SessionStart`, `PreToolUse`, `PostToolUse`) and the job it
  * does. So docs name those, and point at the
  * registry of the harness in question — `.claude/settings.json` for Claude Code,
- * `config.toml` for Codex — rather than at a script filename.
+ * `.cursor/hooks.json` for Cursor, `config.toml` for Codex — rather than at a
+ * script filename.
  *
  * A harness's own registry path and `.claude/skills/…` stub paths stay allowed:
  * a registry IS the thing to point at, and the stubs are a convention this

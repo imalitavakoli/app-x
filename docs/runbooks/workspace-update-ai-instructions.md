@@ -11,7 +11,7 @@ To achieve this, the following files should be reviewed regularly to make sure t
 - `AGENTS.md`.
 - `docs/agents/` — `AGENTS.md` and `CONTEXT.md` format docs, and Superpowers-First Workflow's related docs (e.g., the path files, the shared rules every path assumes, the shared procedures, the landmark notation, the rationale, and etc).
 - `.agents/skills/x-sp-workflow-helper` skill.
-- `.agents/hooks/` — hook scripts (SessionStart, PreToolUse, PostToolUse); `.claude/settings.json` is what wires them.
+- `.agents/hooks/` — hook scripts (SessionStart, PreToolUse, PostToolUse); each harness's own registry wires them (`.claude/settings.json`, `.cursor/hooks.json`).
 
 **Before editing `AGENTS.md`'s workflow section or anything under `docs/agents/`, invoke the `x-sp-workflow-helper` skill.** Any edit to the workflow, is potential to break it _silently_! That skill can help for a healthier workflow updates... It carries the change procedure, an integrity checker for the references, and the playbook for a Superpowers version change.
 

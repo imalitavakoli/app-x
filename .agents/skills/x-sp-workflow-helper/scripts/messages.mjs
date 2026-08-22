@@ -241,7 +241,7 @@ export const hookFilenameInDoc = ({ file, line, name }) => ({
     `${file}:${line} names the hook script \`${name}\` — a rename would make this text ` +
     'wrong, silently. Name the EVENT and the job instead ("a SessionStart hook reports…", ' +
     '"the PostToolUse edit guard runs…") and point at the registry of the harness in ' +
-    'question — `.claude/settings.json` for Claude Code — which is what actually wires it.',
+    'question — `.claude/settings.json` for Claude Code, `.cursor/hooks.json` for Cursor — which is what actually wires it.',
 });
 
 /**

@@ -25,11 +25,10 @@ import { dirname, join } from 'node:path';
 
 // `emit` only — no stdin. `readFileSync(0)` blocks, and a session-start hook
 // that blocks can hang the session before anyone sees a word of it; failing
-// closed is the contract these hooks are built on. Deriving the event name would
-// buy nothing either: `SessionStart` is spelled identically in every harness
-// verified so far (Claude Code, Codex, Gemini), and a harness that named it
-// differently while offering no readable stdin would fall back to this same
-// literal. The edit guard derives, because its event names really do differ.
+// closed is the contract these hooks are built on. Cursor spells this event
+// `sessionStart` and reads top-level `additional_context`; `emit()` mirrors the
+// nested Claude Code field onto that name so this file still need not detect
+// the harness. The edit guard derives, because its event names really do differ.
 import { emit } from './harness.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));

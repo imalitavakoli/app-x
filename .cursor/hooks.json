@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "node .agents/hooks/agents-file-inject.mjs"
+      },
+      {
+        "command": "node .agents/hooks/sp-version-check.mjs",
+        "timeout": 30
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "node .agents/hooks/workflow-edit-guard.mjs post",
+        "matcher": "Write|StrReplace|Delete|EditNotebook",
+        "timeout": 90
+      }
+    ]
+  }
+}

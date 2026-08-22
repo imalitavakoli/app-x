@@ -58,6 +58,8 @@ export function eventName(payload, fallback) {
  */
 export function editedPath(payload) {
   const candidates = [
+    payload?.tool_input?.path, // Cursor Write / StrReplace / Delete
+    payload?.tool_input?.target_notebook, // Cursor EditNotebook
     payload?.tool_input?.file_path,
     payload?.tool_input?.filePath,
     payload?.tool_response?.filePath,
@@ -73,9 +75,26 @@ export function editedPath(payload) {
   return { path: '', unknownShape: hadToolPayload };
 }
 
-/** Write a hook result to stdout and exit successfully. */
+/**
+ * Write a hook result to stdout and exit successfully.
+ *
+ * Callers emit the Claude Code shape (`hookSpecificOutput.additionalContext`).
+ * Cursor reads top-level `additional_context` instead, and SessionStart hooks
+ * must not read stdin to detect which harness they are in (a blocking read
+ * hangs startup). Mirror the nested field when present so one payload works
+ * for both; extra keys are ignored by each harness.
+ */
 export function emit(obj) {
-  process.stdout.write(JSON.stringify(obj));
+  const out = { ...obj };
+  const nested = obj?.hookSpecificOutput?.additionalContext;
+  if (
+    typeof nested === 'string' &&
+    nested &&
+    typeof out.additional_context !== 'string'
+  ) {
+    out.additional_context = nested;
+  }
+  process.stdout.write(JSON.stringify(out));
   process.exit(0);
 }
 

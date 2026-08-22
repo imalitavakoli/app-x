@@ -47,9 +47,11 @@ const CHECKER = join(
  * fires — the same reason `AGENTS.md` is guarded.
  *
  * A registry is listed only once we have verified our scripts would actually
- * FUNCTION on that harness: same event names AND same stdin/stdout contract.
- * Codex qualifies and is listed before it is adopted, which costs nothing — a
- * path that does not exist simply never matches, so no reminder ever fires.
+ * FUNCTION on that harness. Claude Code and Codex share event names and
+ * stdout shape; Cursor's documented contract differs (camelCase events,
+ * `additional_context`, `tool_input.path`) and is met via `harness.mjs`.
+ * Codex is listed before it is adopted, which costs nothing — a path that
+ * does not exist simply never matches, so no reminder ever fires.
  * Contrast GUARDED_PREFIXES, where an over-broad entry fires constantly.
  *
  * Which harnesses are deliberately NOT listed here, and the order for promoting
@@ -61,6 +63,7 @@ const GUARDED_FILES = [
   'AGENTS.local.md',
   '.claude/settings.json',
   '.codex/config.toml',
+  '.cursor/hooks.json',
 ];
 
 /** Matched as a path prefix. */
