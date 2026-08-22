@@ -60,6 +60,7 @@ export function editedPath(payload) {
   const candidates = [
     payload?.tool_input?.path, // Cursor Write / StrReplace / Delete
     payload?.tool_input?.target_notebook, // Cursor EditNotebook
+    payload?.tool_input?.notebook_path, // Claude Code NotebookEdit
     payload?.tool_input?.file_path,
     payload?.tool_input?.filePath,
     payload?.tool_response?.filePath,
