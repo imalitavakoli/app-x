@@ -2,7 +2,7 @@
 name: x-sp-workflow-helper
 description: 'WHAT? The procedure and integrity checker for changing the Superpowers-First Workflow surfaces — `AGENTS.md`, `docs/agents/sp-workflow-*.md` and the `x-*` skills they name. WHEN? Before adding, renaming, renumbering or deleting a hook, gate, constraint, entry, path or landmark; before moving a rule between those files; after any such edit, to prove nothing dangled; and whenever the installed Superpowers version changes.'
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # SP Workflow Helper
@@ -119,7 +119,7 @@ Hooks are the one part of this system a harness runs _for_ you. That is also why
 | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Pure Node, no dependencies** — no `jq`, no shell or PowerShell syntax                                          | it runs identically on macOS, Linux and Windows, and it cannot be broken by an install step nobody ran                                                                                                                                                    |
 | **Resolve every path from the script's own location**, `dirname(fileURLToPath(import.meta.url))` — never the cwd | harnesses disagree on the working directory they invoke a hook in. Claude Code happens to use the project root; Codex uses the _request_ cwd, so a cwd-relative path there works from the root and fails from a subdirectory — intermittently, and silently |
-| **Claude Code's registry `command` is cwd-relative** (`node .agents/hooks/…`) | Claude Code starts hooks at the project root on Windows, macOS and Linux, so one relative string works on all three — no bash `$VAR` / cmd `%VAR%` split. A later Codex registry can still anchor on that harness's project-root variable; that file is not this one. |
+| **Launched by one OS-portable registry `command`** — no bash `$VAR` / cmd `%VAR%` split | A command that only works on one OS never starts the script on the others, and nothing catches that. Claude Code's cwd-relative `node .agents/hooks/…` meets this because that harness starts at the project root on Windows, macOS and Linux. |
 
 **Everything that varies by harness comes from `.agents/hooks/harness.mjs`** — `readInput`, `eventName`, `editedPath`, `emit`, `quiet`. Each answers a question whose answer differs between harnesses, and answers it by **reading what the harness actually sent**. Every export is total: it returns a value rather than throwing, so a hook fails closed instead of taking the harness down with it.
 
