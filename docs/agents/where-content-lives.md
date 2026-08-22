@@ -24,6 +24,8 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 | **how to perform** a step            | the skill that owns it                    | that skill is invoked       |
 | how a **subsystem** works            | the relevant `docs/` page                 | working on that subsystem   |
 
+The **why** row is not every design conversation. Whether a decision earns an entry is the intro note on `docs/agents/sp-workflow-rationale.md` (_What earns an entry_).
+
 &nbsp;
 
 ## The sharp edge: a term's meaning vs its consequences

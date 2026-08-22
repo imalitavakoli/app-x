@@ -5,6 +5,8 @@
 Why the workflow in [`AGENTS.md`](../../AGENTS.md) → _Superpowers-First Workflow_ and its [path files](sp-workflow-path-a.md) is shaped the way it is.
 
 > **Rationale only — no rules.** Every rule lives in `AGENTS.md` or `sp-workflow-path-*.md`. Do **not** read this to execute a cycle. Read it when **editing** the workflow or **questioning** a decision — and when Superpowers changes, to see what to revisit.
+>
+> **What earns an entry.** Compare the candidate to the other entries, especially on the same path. It earns a slot only if someone editing later would re-litigate the choice from the path file and the notation catalog alone — a surprising shape, a failed previous design, or a **Revisit if** that would change the workflow. Using a landmark as [sp-workflow-format.md](sp-workflow-format.md) already defines it does not earn one. Restating a path file's rule does not. A smaller case of something on the same path that has no entry does not.
 
 &nbsp;
 

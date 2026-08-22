@@ -6,7 +6,7 @@ The landmark vocabulary the `sp-workflow-path-*.md` files are written in.
 
 **Read it whenever a landmark is unclear** — and always **before editing** a path file, where the `Shape` lines and the authoring rules become the point. Following a path usually needs only the `Meaning` lines, and often not even those: most landmarks state their semantics inline. The exception is a hook's **kind tag** (`[gated]` / `[close-out]`), which decides whether a gate can skip that hook and is not self-evident from the heading.
 
-Rules live in `AGENTS.md`, the path files, and [sp-workflow-shared.md](sp-workflow-shared.md) for what every path assumes; a **procedure** more than one path performs lives in [sp-workflow-procedures.md](sp-workflow-procedures.md) · which surface owns a given fact in [where-content-lives.md](where-content-lives.md). When **editing** a path file, why a decision was made: [sp-workflow-rationale.md](sp-workflow-rationale.md) — do not load it to follow a path.
+Rules live in `AGENTS.md`, the path files, and [sp-workflow-shared.md](sp-workflow-shared.md) for what every path assumes; a **procedure** more than one path performs lives in [sp-workflow-procedures.md](sp-workflow-procedures.md) · which surface owns a given fact in [where-content-lives.md](where-content-lives.md). When **editing** a path file, why a decision was made — if it earns an entry: the intro note on [sp-workflow-rationale.md](sp-workflow-rationale.md) (_What earns an entry_) — do not load it to follow a path.
 
 &nbsp;
 

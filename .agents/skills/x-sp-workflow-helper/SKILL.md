@@ -2,7 +2,7 @@
 name: x-sp-workflow-helper
 description: 'WHAT? The procedure and integrity checker for changing the Superpowers-First Workflow surfaces — `AGENTS.md`, `docs/agents/sp-workflow-*.md` and the `x-*` skills they name. WHEN? Before adding, renaming, renumbering or deleting a hook, gate, constraint, entry, path or landmark; before moving a rule between those files; after any such edit, to prove nothing dangled; and whenever the installed Superpowers version changes.'
 metadata:
-  version: '1.4.0'
+  version: '1.4.1'
 ---
 
 # SP Workflow Helper
@@ -15,7 +15,7 @@ It covers only the **change discipline**. It deliberately does not restate:
 
 - **what the landmarks mean** — that is `docs/agents/sp-workflow-format.md`, the notation catalog, and it stays the authority. Read it in full before editing a path file.
 - **which surface owns a fact** — that is `docs/agents/where-content-lives.md`.
-- **why a decision was made** — that is `docs/agents/sp-workflow-rationale.md`.
+- **why a decision was made** — that is `docs/agents/sp-workflow-rationale.md` (the bar is the intro note _What earns an entry_).
 - **how to build a skill** — that is `x-skill-build-helper`.
 
 All four remain the authority on their own subject. This skill is the one that says: _before you touch any of them, here is what breaks, and here is how to find out._
@@ -176,7 +176,7 @@ Reach for this when the change alters **what an agent decides** — a new gate, 
 1. **Run the checker.** Zero failures, or every remaining one pre-existing and named.
 2. **Sweep for the rule's other homes.** Take a distinctive phrase from the text you replaced and grep `AGENTS.md`, `CONTEXT.md`, `docs/` and `.agents/skills/`. This is `x-skill-build-helper` → _Before calling a rule change done_, and it applies to workflow edits identically — the checker finds broken **references**, never a stale **copy** of a rule that still parses.
 3. **Confirm the fact is in exactly one home** — `docs/agents/where-content-lives.md`. Moving a rule means the old site becomes a pointer, not a second copy.
-4. **Record the reasoning if a decision changed** — `docs/agents/sp-workflow-rationale.md`, one entry with its **Revisit if**. An undocumented decision gets re-litigated.
+4. **Record the reasoning only if it earns an entry** — the bar is the intro note on `docs/agents/sp-workflow-rationale.md` (_What earns an entry_). One entry with its **Revisit if**. Skip it when the path file plus the notation catalog already answer "why". An extra entry gets questioned; an undocumented decision that *does* earn one gets re-litigated.
 5. **Update the todo/step count** if you added or removed a step: a step that no path turns into a todo is a step that gets skipped.
 
 ## Common mistakes
@@ -193,6 +193,7 @@ Reach for this when the change alters **what an agent decides** — a new gate, 
 | Widening the allowlist to get to green             | A false positive means fix the rule; a true positive means fix the repo.                                                                    |
 | Editing a path file without the notation           | `sp-workflow-format.md` in full first — the `Shape` lines are the point when editing.                                                       |
 | Naming a hook script by filename in a doc          | Name the **event** and the job ("a SessionStart hook reports…"); point at the harness's own hook registry for what is wired. Run `hook-refs`.       |
+| Adding a rationale entry because "a decision changed" | The bar is the intro note _What earns an entry_ on the rationale file. Using a 📌 as defined, or restating **Leaves alone**, does not earn one. |
 
 ## Confirm the current tooling before relying on this
 

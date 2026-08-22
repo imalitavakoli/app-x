@@ -34,7 +34,12 @@ When the fix touches a `util`, `api`, or `app` lib, or libs belonging to more th
 
 1. **Gates answer per functionality.** A `util` / `api` / `app` part, or a **grab-bag** `ui` / `feature` part, always answers **No** — none of them has `docs/x/` to update. Each functionality's part is answered on its own lib types and its own `docs/x/{name}/`.
 2. **B1's `[gated]` band runs per functionality** whose gates both answer **Yes** — each against its own `docs/x/{name}/`. It runs whether or not that part of the fix minted an ID: verifying is the point, and an amended or retired requirement mints nothing.
-3. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–2 cover the libs **this fix touches**. If fixing one of them turns out to require work in a **further** lib, that is not this fix's scope: report it to the user and let them decide. Do not widen the fix, and do not run B1 for a functionality this fix never touched.
+3. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–2 cover the libs **this fix touches**. If fixing one of them turns out to require work in a **further** lib, that is not this fix's scope: report it to the user (📌 _Change-set paths_) and let them decide. Do not widen the fix, and do not run B1 for a functionality this fix never touched.
+
+📌 **Change-set paths** — **Spans:** `systematic-debugging` · 📌 Companion work (deeper-lib report) · B1. **Leaves alone:** whether to stop, which hypothesis to implement, TDD, B1's verification actions, and the order of any of it.
+
+1. **One fix, no extra stop.** Before the first edit that implements a fix, list the **repo-relative paths** of the files that fix will change, then continue. Do not add a stop of our own — the defect-investigation skill owns whether to stop.
+2. **Options already on the table.** Whenever this path **already** stops with more than one valid root-cause-level option — whatever caused that stop — list those paths **per option**. Among those options, recommend the one whose paths sit inside the **lib name**, **functionality name**, or `data-cy` prefix (`CONTEXT.md` → Lib name / Functionality name / `data-cy`) the user already gave. If the only honest option is elsewhere, say so and still show those paths. Do not invent options so there is something to compare, and do not recommend a symptom-layer edit just to match the user's mention.
 
 #### 🪝 B1 · After `verification-before-completion` [close-out]
 
@@ -44,7 +49,7 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 
 1. **Verify the PRD & TFS against the proven fix**, once per functionality (📌 _Companion work_), following [sp-workflow-procedures.md](sp-workflow-procedures.md) → _Verifying a functionality's docs against what shipped_. That procedure carries the scoped read, the two carve-outs, the four outcomes, the never-silent amend/retire and the `Last Verified` stamps — all of it part of this step, none of it optional.
 
-   **The changed set here is the files the fix touched**, which `systematic-debugging` already established: this path has no plan, and often no branch and no commits (_Git contract_). A one-line fix is where the scoping earns the most — without it, proving one behaviour would re-read every AC and every ID the functionality has. And a debugging cycle reaches this hook deep with no plan to fall back on, so relay the amend/retire confirmation rather than settling it.
+   **The changed set here is the files the fix touched**, which 📌 _Change-set paths_ already reported (`systematic-debugging` established them): this path has no plan, and often no branch and no commits (_Git contract_). A one-line fix is where the scoping earns the most — without it, proving one behaviour would re-read every AC and every ID the functionality has. And a debugging cycle reaches this hook deep with no plan to fall back on, so relay the amend/retire confirmation rather than settling it.
 
 **Always:**
 
