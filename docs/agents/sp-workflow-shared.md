@@ -4,7 +4,7 @@
 
 The rules **every path assumes**. Read this at the start of any cycle, before the path file.
 
-`sp-workflow-path-{a,b,c}.md` cite what is here **by name** and never repeat it — and never cite **each other**. A path that leans on another path's step cannot be edited without reading that other path, and renaming a step there silently breaks it. When two paths need the same **procedure**, it goes in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one of those when a hook cites it, never up front: they shape nothing about routing or planning, and the hooks needing them fire late.
+`sp-workflow-path-{a,b,c}.md` cite what is here **by name** and never repeat it — and never cite **each other**. A path that leans on another path's step cannot be edited without reading that other path, and renaming a step there silently breaks it. When two paths need the same **procedure**, it goes in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one of those when a hook cites it, never up front: they shape nothing about routing or planning, and the hooks needing them fire late. How to resolve `pref.*` keys: [sp-workflow-prefs.md](sp-workflow-prefs.md) — read that **in full** at the start of a cycle, before the first Superpowers skill that interviews the user.
 
 `AGENTS.md` routes you here; it holds no copy.
 
@@ -44,7 +44,7 @@ This is a different case from a named skill that is **missing** (section above).
 1. **Control flow lives in `AGENTS.md` and the path files, not in skills.** They decide which skill runs when and in what order. Our `x-*` skills are **atomic**: each does one job with its own inputs/outputs and must NOT call or name another skill — the one exception is the `x-{tech}-sp-*` family (e.g. `x-ng-sp-plan-enricher`), which by definition operates on a Superpowers artifact; see the `x-skill-build-helper` skill. A skill may declare a _prerequisite_ ("input: the PRD; if missing, stop and ask") — that guards its own contract; it is not orchestration.
 2. **The hook says WHEN and WHICH; the skill says HOW.** Keep hook steps terse here; the full procedure lives inside the named skill.
 3. **Track progress with todos.** When you enter a path, add one todo per step (prefix each `[x]`), **merge** them into the existing todo list (never replace it), and check them off as you go — this is how you remember the next step after a skill finishes.
-4. **Reaching execution / subagents.** Implementation and test-writing happen inside execution — in the `subagent-driven-development` path (auto mode), in isolated subagents that do NOT read `AGENTS.md` or these files. The ONLY carrier into them is the Superpowers **plan**. Where a path has execution modes, it **resolves** mode **before** `writing-plans`, so `writing-plans` writes that mode into the plan's Global Constraints. When functionality docs are in scope, `x-ng-sp-plan-enricher` folds PRD/TFS and test/lib conventions into the same plan. Anything implementers must obey has to be in the plan before Execution starts. (In interactive mode execution runs in-session via `executing-plans`, so the agent reads these rules directly — but the rules still go into the plan, so the two modes stay identical on content and the plan survives a compaction.)
+4. **Reaching execution / subagents.** Implementation and test-writing happen inside execution — in the `subagent-driven-development` path (auto mode), in isolated subagents that do NOT read `AGENTS.md` or these files. The ONLY carrier into them is the Superpowers **plan**. Where a path has execution modes, it **resolves** mode (and Path A's `app-serve`) **before** `writing-plans`, so `writing-plans` writes those into the plan's Global Constraints. When functionality docs are in scope, `x-ng-sp-plan-enricher` folds PRD/TFS and test/lib conventions into the same plan. Anything implementers must obey has to be in the plan before Execution starts. (In interactive mode execution runs in-session via `executing-plans`, so the agent reads these rules directly — but the rules still go into the plan, so the two modes stay identical on content and the plan survives a compaction.)
 5. **Prefer a durable path over held context.** A file read at the moment it is needed is unaffected by how long the session has run. Anything merely _held_ in context decays as the window fills — and the artifacts a path stakes the most on are the ones it writes last. So a controller loads what it must **reason with**, and passes a **resolvable repo-relative path** for whatever someone else will **imitate**. What that means depends on what the thing is for:
    - A **helper** skill splits cleanly: its `SKILL.md` holds rules a planner reasons with, its `assets/` hold examples a builder imitates. Load the first; pass the second onward as a path.
    - A **writer** skill cannot be split that way — it needs its own templates and examples to produce its document. So dispatch it to a subagent that loads them there, and take back its Summary and the file it wrote. The hook that dispatches it says what else that involves.
@@ -64,15 +64,23 @@ Standing preferences the Superpowers skills read from our instructions. This is 
 
 &nbsp;
 
+## Personal preferences (`pref.*`)
+
+Personal defaults in `AGENTS.local.md`. **Not** the Workspace preferences above — those are committed team constraints Superpowers honours without asking.
+
+Read [sp-workflow-prefs.md](sp-workflow-prefs.md) **in full** at the start of a cycle, **before** the first Superpowers skill that interviews the user. That file owns how to resolve and persist any `pref.*` key. A `every-path` key is resolved from that file at cycle start; a `one-path` key is resolved on the path that consumes it.
+
+&nbsp;
+
 ## Git contract
 
 Who commits and when — the whole answer. Keyed on the **kind of work**, which outlives any path's name (see _When a Superpowers skill we name is missing_):
 
-| Kind of work                          | Feature branch                    | Commits during execution                          | Who decides git        |
-| ------------------------------------- | --------------------------------- | ------------------------------------------------- | ---------------------- |
-| design work — **auto** mode           | yes                               | one per task — the review gates read those ranges | the skill              |
-| design work — **interactive** mode    | yes                               | none: no commit, push, merge, or PR               | the user, at each stop |
-| a defect fix                          | only if the user already made one | none, unless the user asks                        | the user               |
+| Kind of work                       | Feature branch                    | Commits during execution                          | Who decides git        |
+| ---------------------------------- | --------------------------------- | ------------------------------------------------- | ---------------------- |
+| design work — **auto** mode        | yes                               | one per task — the review gates read those ranges | the skill              |
+| design work — **interactive** mode | yes                               | none: no commit, push, merge, or PR               | the user, at each stop |
+| a defect fix                       | only if the user already made one | none, unless the user asks                        | the user               |
 
 **A functionality's docs are the user's commit, on request.** `docs/x/{name}/PRD/` and `TFS/` are written before any feature branch exists, so no row above covers them and no hook commits them. The close-out that ends documentation **asks** the user to commit them once both writers are done; if they decline, the docs stay uncommitted and that is reported plainly, never worked around by committing them anyway.
 

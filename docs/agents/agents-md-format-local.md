@@ -24,15 +24,17 @@ Family prefix `pref.`. Short kebab-case name. Value after a colon. One line.
 
 **Match** (when the workflow reads a key): the `pref.{key}` token and an allowed value on the same line. Extra spaces, a bullet, bold, or letter-case differences are fine. **Absent** — the key is unset; the consuming step's fallback runs — when the key is missing, both allowed values appear, or the line is a negation. **Never infer** a value from other sentences.
 
-Which step reads a key is the consuming step's job, not this catalog's — that step points here for match/write rules.
+Which step reads a key is the consuming step's job, not this catalog's. How to resolve and persist: [sp-workflow-prefs.md](sp-workflow-prefs.md).
 
-| Key | Values |
-| --- | --- |
-| `pref.mode` | `auto` \| `interactive` |
+| Key              | Values                                                               |
+| ---------------- | -------------------------------------------------------------------- |
+| `pref.mode`      | `auto` \| `interactive`                                              |
+| `pref.audience`  | `developer` \| `product`                                             |
+| `pref.app-serve` | `not-needed` \| an Nx project name (e.g. `ng-x-boilerplate-desktop`) |
 
-Discovery of a missing key is the consuming step's job, not this file's.
+Discovery of a missing key is the prefs doc / consuming step, not this file's.
 
-**Adding a key.** Add the row here first, then wire the step that should read it. Do not invent a `pref.*` name in a path file or in `AGENTS.local.md` without this row.
+**Adding a key.** Add the row here first, then follow [sp-workflow-prefs.md](sp-workflow-prefs.md) → Adding or removing a key. Do not invent a `pref.*` name without this row.
 
 &nbsp;
 

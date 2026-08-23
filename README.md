@@ -227,6 +227,7 @@ In the workspace, I've added specific comments as keywords. These make it easier
 - ## `3` [Where content lives](./docs/agents/where-content-lives.md)
 
 - ## `4` [Superpowers workflow — shared rules](./docs/agents/sp-workflow-shared.md)
+  - ### `— a` [Personal preferences](./docs/agents/sp-workflow-prefs.md)
 
 - ## `5` [Superpowers workflow — shared procedures](./docs/agents/sp-workflow-procedures.md)
 

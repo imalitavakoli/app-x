@@ -94,7 +94,7 @@ An existing undocumented functionality-type lib should not force a first-time PR
 
 ## Why the PRD/TFS steps precede `writing-plans`
 
-`brainstorming`'s exclusive exit guards against *implementation* skills, not document writers. A1 inserts in that gap (user-instruction precedence). The e2e verdict must precede planning — Superpowers has no e2e concept, and a task added later cannot carry the paths `writing-plans` requires.
+`brainstorming`'s exclusive exit guards against _implementation_ skills, not document writers. A1 inserts in that gap (user-instruction precedence). The e2e verdict must precede planning — Superpowers has no e2e concept, and a task added later cannot carry the paths `writing-plans` requires.
 
 **Revisit if** Superpowers grows native e2e, or that exclusive exit starts forbidding document skills too.
 
@@ -162,11 +162,21 @@ Superpowers already has the two modes. We resolve mode before `writing-plans` so
 
 [🔝](#superpowers-first-workflow--rationale-)
 
-## Why developer preferences live in `AGENTS.local.md`, not Workspace preferences
+## Why personal preferences live in `AGENTS.local.md`, not Workspace preferences
 
-Workspace preferences are committed team constraints Superpowers skills honour without asking (worktree, spec path). A `pref.*` key is a personal habit (today `pref.mode`). Putting those values in the shared rules would force every developer onto the same default. A cycle artifact (today the plan's mode line) stays that cycle's binding answer; the local key is only the default for a new cycle.
+Workspace preferences are committed team constraints Superpowers skills honour without asking (worktree, spec path). A `pref.*` key is a personal habit. Putting those values in the shared rules would force every developer onto the same default. A cycle artifact (today a plan line) stays that cycle's binding answer; the local key is only the default for a new cycle. How to resolve any key lives in `sp-workflow-prefs.md`, not next to Workspace preferences and not in the `AGENTS.local.md` format catalog.
 
 **Revisit if** the team wants committed defaults, or Superpowers grows a first-class prefs file.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why `audience` is chat-only
+
+`product` is a PM who owns the PRD and the ACs. Changing how files are written would break the plan (the only carrier into execution) and every skill that expects today's shapes. So `audience` never becomes a plan line and never forks a path: same hooks, same specs, same PRD/TFS — only the words in the thread change.
+
+**Revisit if** a second durable artifact must be written in product language (it would be a new document, not a rewritten plan).
 
 &nbsp;
 
@@ -216,7 +226,7 @@ But the plan has **two** channels into them, and they differ in reliability. A *
 
 ## Why A3 and B1 verify, instead of firing only on new IDs
 
-"New IDs only" missed amended, retired, and stale index rows. The plan is the only carrier *into* execution; these hooks are the carrier *out*. They always verify; only the actions are conditional. The Always band covers `util` / `app` / grab-bag `requirements/`.
+"New IDs only" missed amended, retired, and stale index rows. The plan is the only carrier _into_ execution; these hooks are the carrier _out_. They always verify; only the actions are conditional. The Always band covers `util` / `app` / grab-bag `requirements/`.
 
 **Revisit if** execution subagents may mint IDs, or reviews start checking shipped code against the PRD.
 

@@ -10,21 +10,22 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 
 ## The table
 
-| The fact is…                         | Home                                      | Loaded when                 |
-| ------------------------------------ | ----------------------------------------- | --------------------------- |
-| what a term **means**                | `CONTEXT.md` (repo root)                  | you meet an unfamiliar term |
-| a rule **every** request needs       | `AGENTS.md`                               | every turn (SessionStart)   |
-| a rule only **one path** needs       | `docs/agents/sp-workflow-path-{a,b,c}.md` | on that path                |
-| a **procedure** more than one path performs | `docs/agents/sp-workflow-procedures.md` | when a hook cites it |
-| **why** a workflow decision was made | `docs/agents/sp-workflow-rationale.md`    | questioning a decision      |
-| the **notation** of the path files   | `docs/agents/sp-workflow-format.md`       | editing a path file         |
-| how to **change** the workflow safely | the `x-sp-workflow-helper` skill         | before editing `AGENTS.md`'s workflow section or any `sp-workflow-*.md` |
-| how to edit **`AGENTS.md`** itself   | `docs/agents/agents-md-format.md`         | editing `AGENTS.md`         |
-| how to edit **`AGENTS.local.md`** / which `pref.*` keys exist | `docs/agents/agents-md-format-local.md` | writing or resolving a `pref.*` key |
-| a developer's standing preference **value** | `AGENTS.local.md` (gitignored) | when the consuming step resolves that key |
-| how to edit **`CONTEXT.md`** itself  | `docs/agents/context-md-format.md`        | adding or changing a term   |
-| **how to perform** a step            | the skill that owns it                    | that skill is invoked       |
-| how a **subsystem** works            | the relevant `docs/` page                 | working on that subsystem   |
+| The fact is…                                                  | Home                                      | Loaded when                                                             |
+| ------------------------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------- |
+| what a term **means**                                         | `CONTEXT.md` (repo root)                  | you meet an unfamiliar term                                             |
+| a rule **every** request needs                                | `AGENTS.md`                               | every turn (SessionStart)                                               |
+| a rule only **one path** needs                                | `docs/agents/sp-workflow-path-{a,b,c}.md` | on that path                                                            |
+| a **procedure** more than one path performs                   | `docs/agents/sp-workflow-procedures.md`   | when a hook cites it                                                    |
+| how to resolve / persist any `pref.*`                         | `docs/agents/sp-workflow-prefs.md`        | entering a path, or resolving a key                                     |
+| **why** a workflow decision was made                          | `docs/agents/sp-workflow-rationale.md`    | questioning a decision                                                  |
+| the **notation** of the path files                            | `docs/agents/sp-workflow-format.md`       | editing a path file                                                     |
+| how to **change** the workflow safely                         | the `x-sp-workflow-helper` skill          | before editing `AGENTS.md`'s workflow section or any `sp-workflow-*.md` |
+| how to edit **`AGENTS.md`** itself                            | `docs/agents/agents-md-format.md`         | editing `AGENTS.md`                                                     |
+| how to edit **`AGENTS.local.md`** / which `pref.*` keys exist | `docs/agents/agents-md-format-local.md`   | writing or resolving a `pref.*` key                                     |
+| a developer's standing preference **value**                   | `AGENTS.local.md` (gitignored)            | when the consuming step resolves that key                               |
+| how to edit **`CONTEXT.md`** itself                           | `docs/agents/context-md-format.md`        | adding or changing a term                                               |
+| **how to perform** a step                                     | the skill that owns it                    | that skill is invoked                                                   |
+| how a **subsystem** works                                     | the relevant `docs/` page                 | working on that subsystem                                               |
 
 The **why** row is not every design conversation. Whether a decision earns an entry is the intro note on `docs/agents/sp-workflow-rationale.md` (_What earns an entry_).
 
