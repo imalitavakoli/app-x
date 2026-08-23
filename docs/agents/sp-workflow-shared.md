@@ -31,6 +31,14 @@ This has already bitten us once — a hook anchored to `verification-before-comp
 
 &nbsp;
 
+## Skipping one Superpowers skill does not skip a later hook
+
+A hook runs when the path reaches **that hook's** named Superpowers skill. Skipping an earlier skill on the same path does not skip a later hook.
+
+This is a different case from a named skill that is **missing** (section above). Missing/renamed: the moment still governs. Installed but not invoked: the hook on that skill does not run. Do not invent a chain — e.g. declining `using-git-worktrees` does not skip `finishing-a-development-branch` or the hook that sits before it.
+
+&nbsp;
+
 ## Operating rules
 
 1. **Control flow lives in `AGENTS.md` and the path files, not in skills.** They decide which skill runs when and in what order. Our `x-*` skills are **atomic**: each does one job with its own inputs/outputs and must NOT call or name another skill — the one exception is the `x-{tech}-sp-*` family (e.g. `x-ng-sp-plan-enricher`), which by definition operates on a Superpowers artifact; see the `x-skill-build-helper` skill. A skill may declare a _prerequisite_ ("input: the PRD; if missing, stop and ask") — that guards its own contract; it is not orchestration.

@@ -165,6 +165,6 @@ In **auto** mode the tree has already been reviewed, so route every resulting te
 
 > **Note:** a stale doc does not stay a local problem. 📌 _PRD/TFS over cycle spec_ makes the PRD/TFS the **primary** source for the next cycle, so an uncorrected doc outranks a correct fresh brainstorm — and the next cycle to meet it, a bug fix included, sees a documented functionality and carries the error forward again. Verifying here is what stops drift compounding.
 
-⚪ **Hooks with no workspace step yet** — `using-git-worktrees` (after the user proceeds from A2; work in place per _Workspace preferences_, so just create the branch, in both modes) · execution (`subagent-driven-development` / `executing-plans`, picked by the mode) · `test-driven-development` · `requesting-code-review`
+⚪ **Hooks with no workspace step yet** — `using-git-worktrees` (after the user proceeds from A2; work in place per _Workspace preferences_, so just create the branch, in both modes. If the user declines a feature branch, that skips only this skill — execution and finishing still run, so A3 still runs; see _Skipping one Superpowers skill does not skip a later hook_ in the shared rules. Warn that docs stay on the current branch and stay uncommitted unless they commit) · execution (`subagent-driven-development` / `executing-plans`, picked by the mode) · `test-driven-development` · `requesting-code-review`
 
 [🔙](../../README.md#agents)
