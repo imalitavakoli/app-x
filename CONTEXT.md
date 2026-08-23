@@ -103,12 +103,20 @@ _Avoid_: Full-stack functionality, Smart functionality
 
 ## Requirements & IDs
 
+**PRD — Product Requirements Document**:
+A functionality's product spec, living in `docs/x/{name}/PRD/`. Holds the Acceptance Criteria.
+_Avoid_: Product Requirement Document, product spec (as the document name)
+
+**TSD — Technical Specification Document**:
+A functionality's technical spec, living in `docs/x/{name}/TSD/`. Holds each owned lib's Functional Requirements and Business Rules.
+_Avoid_: TFS, Technical Feature Spec, tech spec (as the document name)
+
 **AC — Acceptance Criterion**:
 One observable, product-level outcome of a functionality, living in its `PRD/README.md`. The unit an e2e `it` cites.
 _Avoid_: Requirement (unqualified), Criteria, Scenario
 
 **FR — Functional Requirement**:
-One capability of one lib, living in its TFS lib file. The unit a unit-test `describe` cites.
+One capability of one lib, living in its TSD lib file. The unit a unit-test `describe` cites.
 _Avoid_: Feature requirement, Spec item
 
 **BR — Business Rule**:
@@ -120,7 +128,7 @@ A story grouping the ACs a user pursues in one journey, living in an e2e app's `
 _Avoid_: Epic, Journey, Flow
 
 **ID registry**:
-A folder that holds requirement IDs and nothing else — `README.md` for live entries, `DECISIONS.md` for burned ones. Every `PRD/`, `TFS/`, `user-stories/` and `requirements/` is one. Bare "registry" always means this.
+A folder that holds requirement IDs and nothing else — `README.md` for live entries, `DECISIONS.md` for burned ones. Every `PRD/`, `TSD/`, `user-stories/` and `requirements/` is one. Bare "registry" always means this.
 _Avoid_: Spec folder, Requirements doc, Index
 
 **Live** (of an entry):
@@ -213,6 +221,6 @@ _Avoid_: lifecycle hook, Claude hook, agent hook
 
 ## Flagged ambiguities
 
-Terms **in use but not settled** — recorded so a contested one is not silently coined twice. Unlike a PRD's or TFS's Open Questions, nothing here blocks: resolve one when the work makes the answer obvious, then move it into the body above. Format rules: [docs/agents/context-md-format.md](docs/agents/context-md-format.md).
+Terms **in use but not settled** — recorded so a contested one is not silently coined twice. Unlike a PRD's or TSD's Open Questions, nothing here blocks: resolve one when the work makes the answer obvious, then move it into the body above. Format rules: [docs/agents/context-md-format.md](docs/agents/context-md-format.md).
 
 **None currently.** The section stays so a contested term has a home the moment one appears.
