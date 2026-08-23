@@ -159,6 +159,8 @@ Always runs on Path A before finishing. **This hook verifies; only its actions a
 
 2. **Verify the local `requirements/` registry** of any `util`, product `app`, or grab-bag `ui`/`feature` lib this cycle touched — the same shared procedure's closing rule, report-don't-block carve-out included. Changed set as above.
 
+3. **Verify CODEOWNERS when this cycle created or handed off an owned path.** If it did not, skip. If it did, confirm root `CODEOWNERS` has a line for each new or handed-off path. If a line is missing, load `x-codeowners-helper` and add it, and say it is a late fix (the same-commit step was missed). Do not change ownership for ordinary edits under an existing path.
+
 In **auto** mode the tree has already been reviewed, so route every resulting test-file change through a fix dispatch + scoped re-review like any other post-review change — never edit it from the controller session. Follow `x-ng-test-unit-helper` and `x-ng-test-e2e-helper` — **re-read their `SKILL.md` here rather than checking whether A1's copy survived** (_Operating rule 5_). This hook runs after a whole execution phase, so treat them as gone by default: a half-remembered convention does not announce itself, and a re-read costs one file.
 
 > **Note:** a stale doc does not stay a local problem. 📌 _PRD/TFS over cycle spec_ makes the PRD/TFS the **primary** source for the next cycle, so an uncorrected doc outranks a correct fresh brainstorm — and the next cycle to meet it, a bug fix included, sees a documented functionality and carries the error forward again. Verifying here is what stops drift compounding.
