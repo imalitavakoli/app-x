@@ -95,6 +95,23 @@ To improve teamwork, we follow some best practices:
 
 &nbsp;
 
+- **Use divider comments to group members inside a component (or similar class)**. This improves readability of the component: a reader can scan and find General fields, Angular lifecycle, X lifecycle, or a composed lib's members without reading an undifferentiated class body.
+
+  Two styles:
+  - Fields — one line, e.g. `/* General //////////////////////////////////////////////////////////////// */`
+  - Methods — a three-line block, as used for `Lifecycle` and `X lifecycle`:
+    ```
+    /* //////////////////////////////////////////////////////////////////////// */
+    /* X lifecycle                                                              */
+    /* //////////////////////////////////////////////////////////////////////// */
+    ```
+
+  Typical sections: `General`; `Constructor`; `Input, Output`; `Setter, Getter`; `Lifecycle` (Angular hooks); `X lifecycle` (the `_x*` hooks from the bases). When a '_page_' (or other parent) initializes several '_feature_' / '_ui_' libs, give each composed lib its own pair (e.g. `Starter lib #1: X Users`, `Other lib: …`) so that lib's fields sit under the field divider and its callbacks/init methods under the matching method divider.
+
+  Put each new member under the divider that names its concern. Do not dump it at the bottom of the class.
+
+&nbsp;
+
 - **Decision about which version of shared libs to import**. When building different types of libraries, you may need to import other shared libraries that already exist in the workspace. If multiple versions of a library are available, you should generally use the latest version, unless there is a clear and justified reason not to do so.
 
 &nbsp;
