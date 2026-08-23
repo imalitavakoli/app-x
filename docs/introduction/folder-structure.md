@@ -20,6 +20,8 @@ x/
 ├── .agents/                                        // Holds AI Agents related files (holds e.g., Skills, Hooks).
 │   ├── hooks/                                      // Holds our hook scripts — canonical for every agent; each agent's own settings file registers them.
 │   └── skills/                                     // Holds our skills — canonical; some agents need a pointer stub in their own dir.
+├── .claude/                                        // Holds Claude Code's own files (its settings, and the skill pointer stubs it needs).
+│   └── plugins/                                    // Our plugin catalog (`marketplace.json`): pins the third-party plugin versions this repo runs, and lists any plugin we author. Plugin CODE is never committed here — installs land in the per-machine cache.
 ├── apps/                                           // Holds our apps.
 ├── apps/{app-name}/
 │        ├── src/                                   // Holds the app's web source files (holds e.g., `index.html`, `main.ts`, and etc.)

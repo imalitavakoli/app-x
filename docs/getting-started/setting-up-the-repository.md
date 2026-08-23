@@ -80,8 +80,37 @@ You can automatically configure our NX monorepo to work best with AI agents and 
 
 ### Superpowers plugin
 
-[Superpowers](https://github.com/obra/superpowers) is a plugin that makes our AI agent follow a disciplined workflow instead of coding first and thinking later.  
-[Click here](https://github.com/obra/superpowers#installation) to learn how to install it for different AI tools.
+[Superpowers](https://github.com/obra/superpowers) is a plugin that makes our AI agent follow a disciplined workflow instead of coding first and thinking later.
+
+#### Installing it on a new machine
+
+**Use our catalog, not upstream's marketplace.** This repo runs a **pinned** commit of Superpowers, from our own catalog at `.claude/plugins/`, which `.claude/settings.json` declares.
+
+The pin is a **conservative choice, not a requirement.** Our workflow is built to survive new Superpowers versions — it routes on what a skill says it does rather than on its name, and attaches to lifecycle moments rather than titles. Pinning just means a new version arrives when we decide to take it, instead of turning up mid-cycle, so there's time to check the handful of behaviours we lean on. Everyone on Claude Code gets the same commit, which also makes "works on my machine" one less variable.
+
+After cloning, from the repo root:
+
+```bash
+claude plugin marketplace add ./.claude/plugins
+```
+
+```bash
+claude plugin install superpowers@x-local-marketplace
+```
+
+Then restart Claude Code, or run `/reload-plugins`.
+
+**Why two commands?** The first registers our catalog; the second installs the pinned commit from it. A marketplace that only the repo's settings declare isn't registered on its own, so the install fails without the first command. If Claude Code offers to install this repo's plugins when you first trust the folder, accepting does the same job and you can skip both.
+
+**Note!** You do **not** need to uninstall your own copy of Superpowers. Project settings outrank user settings, so this repo switches your copy off **here only** — it keeps working normally in all your other projects.
+
+**Note!** Until you run these, Superpowers is **off** in this repo — not merely unpinned, so no part of the workflow below applies. A check at session start tells you, and `pnpm run check:workflow` names the cause.
+
+**Tip!** To confirm it worked: `claude plugin list` shows `superpowers@x-local-marketplace` enabled, and `pnpm run check:workflow` passes both `sp-version` (the version we reviewed against) and `sp-pin` (the pinned commit is that same one).
+
+**Using a different AI tool?** Upstream ships Superpowers for several agents — see its [installation instructions](https://github.com/obra/superpowers#installation). The pin above is Claude Code only, so other tools install their own copy at whatever version upstream currently publishes. That's expected, not a misconfiguration: `pnpm run check:workflow` reports it as an informational **notice** (it still passes), because nothing you can do on that machine would match the pinned version. The workflow itself is designed to keep working across versions.
+
+#### How it works
 
 **The one piece of automation.** At the start of every session, a hook loads a single "router" skill (`using-superpowers`) — and reloads it if the session is cleared or compacted. That's the only automated part. Everything else is skills: plain markdown files the agent reads and obeys, each naming the next one to use. So a "workflow" is a chain of instructions, not a program — the agent follows it because it's strongly instructed to, which works dependably in practice even though nothing mechanically forces it. (New skills may be added over time; the mechanism stays the same.)
 

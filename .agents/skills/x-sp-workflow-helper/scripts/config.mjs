@@ -205,6 +205,34 @@ export const SP_CACHE_ROOT_SEGMENTS = ['.claude', 'plugins', 'cache'];
 export const SP_ENABLEMENT_SETTINGS_FILE = '.claude/settings.json';
 
 /**
+ * A marketplace manifest, relative to the directory that holds it.
+ *
+ * Used to reach a repo-local CATALOG — the file that pins which commit of a
+ * third-party plugin this workspace installs. The catalog's own directory is
+ * never hardcoded: `SP_ENABLEMENT_SETTINGS_FILE` → `extraKnownMarketplaces`
+ * already names it, and that declaration is what teammates actually run
+ * `marketplace add` against, so it is the one place that cannot be stale.
+ */
+export const SP_CATALOG_MANIFEST = '.claude-plugin/marketplace.json';
+
+/**
+ * "Is Claude Code in use on this machine at all?" — its home directory.
+ *
+ * Everything about enablement and pinning is Claude Code's model: the
+ * `enabledPlugins` keys, the marketplace cache, the project-over-user
+ * precedence. Applied to a machine running another agent, those checks describe
+ * nothing, and reporting them as failures hands that person a red they cannot
+ * clear — the surest way to teach a team to skip past every finding.
+ *
+ * The HOME directory rather than the plugin cache, deliberately: a Claude user
+ * who has not installed a plugin yet has the former and not the latter, and
+ * "you have not installed it" is exactly the failure worth keeping loud for
+ * them. A heuristic either way — being wrong downgrades a severity, it never
+ * hides a finding, since the notice still says what could not be verified.
+ */
+export const SP_CLAUDE_HOME_SEGMENTS = ['.claude'];
+
+/**
  * Agents Superpowers supports whose on-disk layout we have not verified. Moving
  * one into a real probe means: install it, find the path, confirm a version is
  * readable there, then implement it in `findSuperpowers` — in that order.

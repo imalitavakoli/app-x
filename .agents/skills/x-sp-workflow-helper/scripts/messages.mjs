@@ -130,6 +130,121 @@ export const enabledButNotInstalled = ({ settingsPath, key, market }) => ({
   ],
 });
 
+/**
+ * Superpowers is not in any layout we can inspect, and this machine shows no
+ * sign of running Claude Code plugins at all.
+ *
+ * - **Used by** the `sp-version` rule, as a NOTICE rather than a failure.
+ * - **Why** the workspace pins through a Claude Code marketplace, so a teammate
+ *   on another agent cannot be pinned and cannot be inspected either. Failing
+ *   them says "your setup is broken" when the likeliest truth is "we cannot see
+ *   your setup" — and a red they have no way to clear is how a checker teaches
+ *   people to ignore it. The distinction is the plugin cache root: absent means
+ *   no Claude plugins here, so this is a gap in our reach, not a broken install.
+ * - **Seen when** a Cursor / Antigravity / Codex teammate runs the checker.
+ */
+export const notFoundUncheckedAgent = ({ checkedDirs, uncheckedAgents }) => ({
+  fail:
+    'Superpowers was not found in any layout this checker knows ' +
+    `(${checkedDirs}), and Claude Code is not in use on this machine — so it is ` +
+    'probably installed for another agent, where we cannot see it. Nothing is ' +
+    `verified here: not the version, not the attach-points. Unchecked agents: ${uncheckedAgents}.`,
+  details: [
+    '  If Superpowers IS installed for your agent, the workflow may well be running fine — ' +
+      'this says only that we could not confirm it.',
+    '  Teaching the checker your layout is a probe in `findSuperpowersSkills`; ' +
+      'a guessed path would be worse than this gap.',
+  ],
+});
+
+/**
+ * Drift on an install the workspace pin does not reach.
+ *
+ * - **Used by** the `sp-version` rule, as a NOTICE rather than a failure.
+ * - **Why** the pin is delivered by a Claude Code marketplace. An install that
+ *   did not come from there follows whatever its own agent published, so drift
+ *   is its NORMAL state, not an incident — and no action available to the person
+ *   in front of it would clear the finding. The review is still owed, by whoever
+ *   maintains the workflow; being told is the whole point, being blocked is not.
+ * - **Seen when** a non-Claude teammate is a version ahead of the baseline.
+ */
+export const driftUngoverned = ({ drift, source }) => ({
+  fail:
+    `${drift} This copy is a ${source}, which the workspace pin does not reach — for it, ` +
+    'a version difference is ordinary rather than a fault, and nothing you can do here ' +
+    'would change it.',
+  details: [
+    '  Still worth saying out loud: our layer leans on a dozen prose sentences inside ' +
+      "Superpowers' own skill files, and a new version can reword one without breaking " +
+      'anything visible. The upgrade review is owed by whoever maintains the workflow.',
+  ],
+});
+
+/* ------------------------------------------------------------------ sp-pin */
+
+/**
+ * A declared directory marketplace whose manifest cannot be read.
+ *
+ * - **Used by** the `sp-pin` rule, per declared catalog.
+ * - **Why** settings name the path teammates run `marketplace add` against. If
+ *   the manifest is missing or malformed, that command fails for everyone who
+ *   clones — and nothing else in this repo looks at the file.
+ * - **Seen when** the catalog is moved or renamed without updating settings.
+ */
+export const pinCatalogUnreadable = ({ catalog, error }) => ({
+  fail:
+    `\`${catalog}\` is named as a marketplace in settings but cannot be read (${error}). ` +
+    'Everyone who clones this repo runs `marketplace add` against that path, so it fails ' +
+    'for all of them.',
+});
+
+/**
+ * The catalog lists Superpowers, but with no commit to pin it to.
+ *
+ * - **Used by** the `sp-pin` rule, when the entry carries no `sha`.
+ * - **Why** an entry without a `sha` is not a pin: installs follow whatever the
+ *   source's default branch points at today, which is the floating behaviour the
+ *   catalog exists to remove. It still LOOKS pinned, because a version string
+ *   sits right beside it.
+ * - **Seen when** an entry is copied from an upstream catalog, which has no
+ *   reason to pin itself.
+ */
+export const pinHasNoSha = ({ catalog, plugin }) => ({
+  fail:
+    `\`${catalog}\` lists \`${plugin}\` with no \`sha\` — so it is NOT pinned. ` +
+    "Installs follow the source's default branch, which is the floating behaviour a " +
+    'catalog exists to remove; the version string beside it makes this look deliberate.',
+});
+
+/**
+ * The pinned commit and the reviewed commit are not the same commit.
+ *
+ * - **Used by** the `sp-pin` rule, the whole reason it exists.
+ * - **Why** two files record one fact: the baseline says which commit was
+ *   REVIEWED, the catalog says which commit is INSTALLED. When they disagree,
+ *   every other signal still reads green — `sp-version` compares installed
+ *   against baseline, and installs match the pin — so the gap between "reviewed"
+ *   and "running" is invisible precisely while it matters.
+ * - **Seen when** an upgrade review updates the baseline and forgets the pin, or
+ *   the pin is bumped without a review.
+ */
+export const pinDisagreesWithBaseline = ({
+  catalog,
+  baselineFile,
+  pinned,
+  reviewed,
+}) => ({
+  fail:
+    `The pinned Superpowers commit and the reviewed one are different commits — ` +
+    `\`${catalog}\` pins ${pinned}, \`${baselineFile}\` records ${reviewed} as reviewed. ` +
+    'Everyone installs the pin, so the reviewed-version guarantee does not describe what ' +
+    'anyone is running — and nothing else reports it, because installs do match the pin.',
+  details: [
+    '  Whichever is right, make both say it: bump the pin to the reviewed commit, or run ' +
+      'the upgrade review for the pinned one and record THAT.',
+  ],
+});
+
 /* -------------------------------------------------------- sp-version: drift */
 
 /**
@@ -416,6 +531,7 @@ export const titles = {
   'sp-skills': 'Every Superpowers skill we anchor to is installed',
   'sp-version':
     'Superpowers is present, usable, and at the version we reviewed against',
+  'sp-pin': 'The pinned Superpowers commit is the one we reviewed',
   'x-skills': 'Workspace skills exist, and every stub matches its canonical',
   versions: 'Every workspace skill carries a block-form semver',
   'path-isolation': 'No path file cites another path file',
@@ -447,6 +563,15 @@ export const skips = {
 
   /** A governed directory is simply absent. */
   noDir: (dir) => `no ${dir}`,
+
+  /**
+   * Pinning is optional, so its absence is nothing to report — but it is also
+   * not a pass, and saying so keeps "we chose not to pin" distinguishable from
+   * "the pin was checked and agreed".
+   */
+  noPinnedCatalog:
+    'this workspace does not pin Superpowers — no directory marketplace in settings ' +
+    'lists it, so there is no second record to compare the baseline against',
 
   /** The message module could not be located, so nothing can be compared. */
   noMessageModule: 'message module not found',
@@ -593,6 +718,10 @@ export const notes = {
   spVersionDisabledIgnored: (markets) =>
     `not counted, disabled by project settings: ${markets.join(' · ')}`,
 
+  /** sp-pin PASS — the two records of one commit, agreeing. */
+  spPinOk: ({ catalog, version, sha }) =>
+    `${catalog} pins ${version} at ${sha.slice(0, 7)} — the commit the baseline records as reviewed`,
+
   hookIdsDefined: (ids) => `${ids.length} hook IDs defined: ${ids.join(' · ')}`,
   pathsChecked: (docCount, skillCount) =>
     `${docCount} doc path citations + ${skillCount} skill-internal links checked`,
@@ -647,6 +776,17 @@ export const runner = {
   unknownRule: (name, ids) =>
     `no rule named '${name}'. Known rules: ${ids.join(' · ')}`,
   allPassed: (n) => `All ${n} rules passed.`,
+
+  /**
+   * Passed, but something was reported that the exit code does not carry.
+   *
+   * A bare "All N rules passed" over a run that printed a NOTICE reads as a
+   * clean bill of health, and the notice scrolls past unread — which is how a
+   * finding nobody can act on becomes a finding nobody sees either.
+   */
+  passedWithNotices: (n, notices) =>
+    `All ${n} rules passed, with ${notices} notice(s) above — real findings that this ` +
+    'machine cannot act on, not failures.',
   failures: (count, ruleCount) =>
     `${count} failure(s) across ${ruleCount} rule(s).`,
 };

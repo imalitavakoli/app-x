@@ -75,21 +75,47 @@ const rule = result?.results?.find((r) => r.id === 'sp-version');
 // evidence, which is exactly how a once-a-session hook teaches people to ignore
 // it. "No list" and "empty list" both mean nothing to report. Today's checker
 // always sends the field, so this guards a shape change, not current behaviour.
-if (!rule || rule.skipped || !rule.failures?.length) process.exit(0);
+// NOTICES surface here too, and are the reason this is not simply `failures`.
+// A finding can be real and still be nothing the person in front of it can act
+// on — a teammate on another agent cannot install the version this workspace
+// pins. Those are reported rather than escalated: same channel, different tone,
+// because the alternative is either telling nobody or crying wolf at everybody.
+const failures = rule?.failures ?? [];
+const notices = rule?.notices ?? [];
+if (!rule || rule.skipped || !(failures.length || notices.length))
+  process.exit(0);
 
-const detail = [...(rule.failures ?? []), ...(rule.details ?? [])]
+const escalate = failures.length > 0;
+const detail = [...failures, ...notices, ...(rule.details ?? [])]
   .join(' ')
   .replace(/\s+/g, ' ');
 
 emit({
-  systemMessage:
-    'Superpowers version changed — the workflow upgrade review is owed. See ' +
-    '.agents/skills/x-sp-workflow-helper/references/superpowers-upgrade.md',
+  systemMessage: escalate
+    ? 'Superpowers version changed — the workflow upgrade review is owed. See ' +
+      '.agents/skills/x-sp-workflow-helper/references/superpowers-upgrade.md'
+    : 'Superpowers could not be confirmed against the reviewed version — informational. See ' +
+      '.agents/skills/x-sp-workflow-helper/references/superpowers-upgrade.md',
   hookSpecificOutput: {
     hookEventName: 'SessionStart',
-    additionalContext:
-      'SUPERPOWERS VERSION CHANGED SINCE THIS WORKFLOW WAS LAST REVIEWED.\n\n' +
-      `${detail}\n\n` +
+    additionalContext: !escalate
+      ? 'SUPERPOWERS COULD NOT BE CONFIRMED AGAINST THE REVIEWED VERSION.\n\n' +
+        `${detail}\n\n` +
+        'This is INFORMATIONAL, not a problem with your setup and not a blocker. This ' +
+        'workspace pins Superpowers through a Claude Code marketplace, so a copy installed ' +
+        'any other way is neither pinned nor inspectable from here — a version difference is ' +
+        'its ordinary state.\n\n' +
+        'The workflow is built to survive that: routing reads the description of whichever ' +
+        'skill fired, and hooks attach to lifecycle moments rather than to names. What it ' +
+        'cannot survive silently is a REWORDED behavioural promise inside a Superpowers ' +
+        'skill file, which is why the review is still owed by whoever maintains the ' +
+        'workflow.\n\nWHAT TO DO — answer the request exactly as you otherwise would, and ' +
+        'mention this once in a single sentence as a CLOSING note after your answer. It is ' +
+        'not a preamble: leading with it gives an unactionable finding more weight than the ' +
+        'work. Do not treat it as blocked, do not start the review unprompted, and do not ' +
+        'edit `scripts/superpowers-baseline.json`.'
+      : 'SUPERPOWERS VERSION CHANGED SINCE THIS WORKFLOW WAS LAST REVIEWED.\n\n' +
+        `${detail}\n\n` +
       'Our workflow is a layer over Superpowers and relies on behaviours Superpowers does not ' +
       'know it promises — a dozen of them rest on single sentences in its own skill files. An ' +
       'upgrade therefore cannot fail loudly; it can only start behaving differently while every ' +

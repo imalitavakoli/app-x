@@ -48,9 +48,23 @@ Re-run these after any routing or gate change. They are the behaviours the workf
 
 ### S1 · Routing is identified, never classified
 
+Two arms, because the rule cuts both ways: ask when the request is **genuinely** ambiguous, and do **not** ask when it isn't. A scenario with only the first arm rewards over-asking, which is its own failure — every request turning into a question is how a routing rule gets ignored.
+
+**S1a — ambiguous, so ask.**
+
+> Request: "The monthly totals chart on the dashboard isn't right."
+
+**Expect:** the ambiguity is recognised and the **user is asked** (is the spec wrong, or does the code not match it?) rather than the agent silently picking a path.
+
+The task must **not state the expected behaviour** — that property is what makes it ambiguous, and it is easy to destroy while "clarifying" the wording. If you rewrite this task, check the tell against it first: _can you tell what the chart should show?_ If yes, you have written S1b.
+
+**S1b — not ambiguous, so route without asking.**
+
 > Request: "The chart on the dashboard is showing last month's totals instead of this month's."
 
-**Expect:** ambiguity is recognised and the **user is asked** (is the spec wrong, or does the code not match it?) rather than the agent silently picking a path. Guards the "if the request is genuinely ambiguous, ask" rule.
+**Expect:** **Path B, no clarifying question.** "Instead of this month's" states the target, so only the cause is unknown — the tell resolves it, and asking anyway would be the over-ask failure.
+
+> **Why two arms:** S1b was S1's only task, with S1a's expectation attached to it. Six runs — three with a session-start notice in context, three without — routed it to Path B without asking, every one of them having walked the tell explicitly and correctly. The scenario, not the workflow, was wrong: it asserted a question the wording does not ask for, so any run of it reported a regression that was not there.
 
 ### S2 · A util-only cycle does not manufacture a functionality
 

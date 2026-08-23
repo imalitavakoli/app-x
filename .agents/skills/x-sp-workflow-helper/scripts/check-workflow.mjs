@@ -420,9 +420,20 @@ function suppressed(rule, file, text) {
   return false;
 }
 
-/** Emit a message object from messages.mjs: its fail line, then its details. */
-function emitMsg(r, m) {
-  if (m.fail) r.fail(m.fail);
+/**
+ * Emit a message object from messages.mjs: its line, then its details.
+ *
+ * `as: 'notice'` sends the same line down the NOTICE channel instead — reported
+ * and surfaced at session start, but not a failure and not an exit code. That
+ * tier exists because some findings are real and worth saying while being
+ * nothing the person reading them can act on: a teammate on another agent cannot
+ * install the version this workspace pins, so failing them produces a red they
+ * can never clear, and a checker that cries wolf gets ignored wholesale. The
+ * severity is the RULE's judgement, not the message's — the same text can be
+ * either depending on whether the reader could have prevented it.
+ */
+function emitMsg(r, m, { as = 'fail' } = {}) {
+  if (m.fail) (as === 'notice' ? r.notice : r.fail)(m.fail);
   for (const d of m.details ?? []) r.detail(d);
 }
 
@@ -660,8 +671,20 @@ rule('sp-version', (r) => {
   // whole session, and this rule reported green, because the old version was
   // still sitting in the cache. Checking the cache alone is checking the wrong
   // thing.
+  // Enablement, the plugin cache and the pin are ALL Claude Code's model. On a
+  // machine running another agent they describe nothing, so every check below
+  // that reads them is gated on Claude Code being in use here — otherwise a
+  // Cursor teammate fails on `enabledPlugins` entries that could not possibly
+  // apply to them, and nothing they can do clears it.
+  const claudeInUse = existsSync(
+    join(
+      process.env.USERPROFILE || process.env.HOME || '',
+      ...CFG.SP_CLAUDE_HOME_SEGMENTS,
+    ),
+  );
+
   const settingsPath = CFG.SP_ENABLEMENT_SETTINGS_FILE;
-  if (exists(settingsPath)) {
+  if (claudeInUse && exists(settingsPath)) {
     let cfg;
     try {
       cfg = JSON.parse(read(settingsPath));
@@ -709,13 +732,17 @@ rule('sp-version', (r) => {
   // without it the workflow is not degraded — it is inoperative. This rule owns
   // that report; sp-skills only skips, to keep one root cause to one failure.
   if (!sp) {
-    emitMsg(
-      r,
-      MSG.notFoundAnywhere({
-        checkedDirs: CFG.SP_WORKSPACE_SKILL_DIRS.join(' / '),
-        uncheckedAgents: CFG.SP_PROBES_UNVERIFIED.join(', '),
-      }),
-    );
+    // WHOSE FAULT decides the severity. On a Claude Code machine Superpowers
+    // should be installed and its absence is a real, fixable break — including
+    // the fresh clone that has not run the install yet. On a machine where
+    // Claude Code is not in use, this workspace can neither pin nor inspect, so
+    // absence means "outside our reach", not "broken".
+    const where = {
+      checkedDirs: CFG.SP_WORKSPACE_SKILL_DIRS.join(' / '),
+      uncheckedAgents: CFG.SP_PROBES_UNVERIFIED.join(', '),
+    };
+    if (claudeInUse) emitMsg(r, MSG.notFoundAnywhere(where));
+    else emitMsg(r, MSG.notFoundUncheckedAgent(where), { as: 'notice' });
     return;
   }
 
@@ -812,6 +839,19 @@ rule('sp-version', (r) => {
     return;
   }
 
+  // CAN THE READER HAVE PREVENTED THIS? The pin is delivered by a Claude Code
+  // marketplace, so it reaches only copies installed that way. For any other
+  // copy a version difference is the ordinary state, not an incident, and no
+  // action available here would change it — that is a NOTICE. Failing it would
+  // hand every non-Claude teammate a permanent red, and a red nobody can clear
+  // is one everybody learns to skip past, taking the real failures with it.
+  if (sp.source !== MSG.labels.sourceClaudePlugin) {
+    emitMsg(r, MSG.driftUngoverned({ drift, source: sp.source }), {
+      as: 'notice',
+    });
+    return;
+  }
+
   emitMsg(
     r,
     MSG.driftFail({
@@ -823,7 +863,96 @@ rule('sp-version', (r) => {
   );
 });
 
-/* --- 6. workspace skills + stubs ---------------------------------------- */
+/* --- 6. pinned commit vs reviewed commit --------------------------------- */
+rule('sp-pin', (r) => {
+  // ONE fact, TWO files. The baseline records the commit that was REVIEWED; a
+  // repo-local catalog records the commit everyone INSTALLS. Nothing else can
+  // notice them parting: `sp-version` compares installed against baseline, and
+  // installs faithfully match the pin, so the run stays green precisely while
+  // the reviewed-version guarantee has stopped describing what anyone runs.
+  //
+  // Pinning is optional, so absence SKIPS. A skip is not a pass — it says this
+  // workspace has no second record, which is different from having one that
+  // agrees.
+  const settingsFile = CFG.SP_ENABLEMENT_SETTINGS_FILE;
+  if (!exists(settingsFile)) return r.skip(MSG.skips.noPinnedCatalog);
+
+  let cfg;
+  try {
+    cfg = JSON.parse(read(settingsFile));
+  } catch {
+    return r.skip(MSG.skips.noPinnedCatalog); // sp-version owns settings health
+  }
+
+  // The catalog's directory comes from the declaration teammates actually run
+  // `marketplace add` against — never a hardcoded path, which would go stale the
+  // day the catalog moves and report "not pinned" while the pin is fine.
+  const catalogDirs = Object.values(cfg?.extraKnownMarketplaces ?? {})
+    .map((m) => m?.source)
+    .filter((s) => s?.source === 'directory' && typeof s?.path === 'string')
+    .map((s) => s.path.replace(/^\.\//, '').replace(/\/+$/, ''));
+
+  if (!catalogDirs.length) return r.skip(MSG.skips.noPinnedCatalog);
+
+  const baselinePath = join(SKILL_DIR, 'scripts', CFG.SP_BASELINE_FILE);
+  let baseline;
+  try {
+    baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
+  } catch {
+    return r.skip(MSG.skips.noPinnedCatalog); // sp-version owns a bad baseline
+  }
+
+  let pinsFound = 0;
+  for (const dir of catalogDirs) {
+    const catalog = `${dir}/${CFG.SP_CATALOG_MANIFEST}`;
+    let manifest;
+    try {
+      manifest = JSON.parse(read(catalog));
+    } catch (err) {
+      emitMsg(r, MSG.pinCatalogUnreadable({ catalog, error: err.message }));
+      continue;
+    }
+
+    const entry = (manifest?.plugins ?? []).find(
+      (p) => p?.name === CFG.SP_PLUGIN_NAME,
+    );
+    if (!entry) continue; // a catalog may exist for other plugins entirely
+    pinsFound++;
+
+    const sha = entry.source?.sha;
+    if (!sha) {
+      emitMsg(
+        r,
+        MSG.pinHasNoSha({ catalog, plugin: CFG.SP_PLUGIN_NAME }),
+      );
+      continue;
+    }
+
+    // Version too, not just the sha: they are shown side by side wherever a
+    // person looks, so a stale version string misleads even when the pin is right.
+    const versionOk = !entry.version || entry.version === baseline.version;
+    if (sha !== baseline.gitSha || !versionOk) {
+      emitMsg(
+        r,
+        MSG.pinDisagreesWithBaseline({
+          catalog,
+          baselineFile: CFG.SP_BASELINE_FILE,
+          pinned: `${entry.version ?? '?'} @ ${sha}`,
+          reviewed: `${baseline.version ?? '?'} @ ${baseline.gitSha ?? '?'}`,
+        }),
+      );
+      continue;
+    }
+
+    r.note(
+      MSG.notes.spPinOk({ catalog, version: entry.version ?? baseline.version, sha }),
+    );
+  }
+
+  if (!pinsFound) return r.skip(MSG.skips.noPinnedCatalog);
+});
+
+/* --- 7. workspace skills + stubs ---------------------------------------- */
 rule('x-skills', (r) => {
   const canonicalDir = CFG.CANONICAL_SKILL_DIR;
   const stubDirs = CFG.STUB_SKILL_DIRS;
@@ -902,7 +1031,7 @@ rule('x-skills', (r) => {
   r.note(MSG.notes.stubLocations(stubDirs));
 });
 
-/* --- 7. version discipline ---------------------------------------------- */
+/* --- 8. version discipline ---------------------------------------------- */
 rule('versions', (r) => {
   const dir = CFG.CANONICAL_SKILL_DIR;
   if (!existsSync(abs(dir))) return r.skip(MSG.skips.noDir(dir));
@@ -924,7 +1053,7 @@ rule('versions', (r) => {
   }
 });
 
-/* --- 8. path isolation --------------------------------------------------- */
+/* --- 9. path isolation --------------------------------------------------- */
 rule('path-isolation', (r) => {
   for (const p of PATH_FILES) {
     if (!exists(p)) continue;
@@ -939,7 +1068,7 @@ rule('path-isolation', (r) => {
   }
 });
 
-/* --- 9. landmark grammar ------------------------------------------------- */
+/* --- 10. landmark grammar ------------------------------------------------- */
 rule('landmarks', (r) => {
   for (const p of PATH_FILES) {
     if (!exists(p)) continue;
@@ -1003,7 +1132,7 @@ rule('landmarks', (r) => {
   }
 });
 
-/* --- 10. skills must not encode control flow ----------------------------- */
+/* --- 11. skills must not encode control flow ----------------------------- */
 rule('skill-coupling', (r) => {
   const dir = CFG.CANONICAL_SKILL_DIR;
   if (!existsSync(abs(dir))) return r.skip(MSG.skips.noDir(dir));
@@ -1040,7 +1169,7 @@ rule('skill-coupling', (r) => {
   }
 });
 
-/* --- 11. paths named inside hook scripts -------------------------------- */
+/* --- 12. paths named inside hook scripts -------------------------------- */
 rule('hook-paths', (r) => {
   // The reverse direction of hook-refs: that rule keeps hook FILENAMES out of
   // docs; this one keeps hook scripts from naming files that do not exist.
@@ -1117,7 +1246,7 @@ rule('hook-paths', (r) => {
   r.note(MSG.notes.hookPathsChecked(checked));
 });
 
-/* --- 12. no hook filenames in docs -------------------------------------- */
+/* --- 13. no hook filenames in docs -------------------------------------- */
 rule('hook-refs', (r) => {
   let scanned = 0;
   const targets = CFG.HOOK_REF_SURFACES.flatMap((s) =>
@@ -1137,7 +1266,7 @@ rule('hook-refs', (r) => {
   r.note(MSG.notes.hookRefFilesScanned(scanned));
 });
 
-/* --- 13. dead message exports ------------------------------------------- */
+/* --- 14. dead message exports ------------------------------------------- */
 rule('dead-messages', (r) => {
   // Two directions, both of which have actually failed here.
   //
@@ -1207,7 +1336,7 @@ rule('dead-messages', (r) => {
   );
 });
 
-/* --- 14. stale suppressions --------------------------------------------- */
+/* --- 15. stale suppressions --------------------------------------------- */
 rule('allowlist-hygiene', (r) => {
   // Staleness is only decidable when every rule ran: an entry proves it is still
   // needed by being CONSULTED, and a rule that did not run consults nothing. On a
@@ -1254,12 +1383,17 @@ for (const def of RULES) {
     id: def.id,
     title: def.title,
     failures: [],
+    notices: [],
     notes: [],
     details: [],
     skipped: null,
   };
   const r = {
     fail: (m) => res.failures.push(m),
+    // Between fail and note: reported and surfaced at session start, but not a
+    // failure and not an exit code. For findings that are real and unactionable
+    // BY THIS READER — see emitMsg. A note is a tally; a notice wants attention.
+    notice: (m) => res.notices.push(m),
     detail: (m) => res.details.push(m),
     note: (m) => res.notes.push(m),
     skip: (m) => {
@@ -1289,19 +1423,30 @@ if (asJson) {
   );
 } else {
   for (const res of results) {
-    const mark = res.skipped ? 'SKIP' : res.failures.length ? 'FAIL' : ' OK ';
+    const mark = res.skipped
+      ? 'SKIP'
+      : res.failures.length
+        ? 'FAIL'
+        : res.notices.length
+          ? 'NOTE'
+          : ' OK ';
     console.log(`[${mark}] ${res.id} — ${res.title}`);
     if (res.skipped) console.log(`       ${res.skipped}`);
     for (const f of res.failures) console.log(`       ✗ ${f}`);
+    for (const nc of res.notices) console.log(`       ! ${nc}`);
     for (const d of res.details) console.log(`       ${d}`);
     if (!res.failures.length)
       for (const nt of res.notes) console.log(`       · ${nt}`);
   }
+  const totalNotices = results.reduce((n, x) => n + x.notices.length, 0);
+  const passedCount = results.filter((x) => !x.skipped).length;
   console.log();
   console.log(
-    totalFailures === 0
-      ? MSG.runner.allPassed(results.filter((x) => !x.skipped).length)
-      : MSG.runner.failures(totalFailures, failed.length),
+    totalFailures > 0
+      ? MSG.runner.failures(totalFailures, failed.length)
+      : totalNotices > 0
+        ? MSG.runner.passedWithNotices(passedCount, totalNotices)
+        : MSG.runner.allPassed(passedCount),
   );
 }
 

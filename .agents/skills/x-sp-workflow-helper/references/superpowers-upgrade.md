@@ -14,11 +14,23 @@
 
 Exact-matching every segment was rejected deliberately: a gate that fires on every upstream patch is one people learn to silence. **The accepted risk is stated plainly** — a patch that rewords one of the prose dependencies below slips past with only a note. Raise `VERSION_DRIFT_POLICY.patch` to `'fail'` if you would rather pay the noise.
 
+**A second question decides severity, and the policy above does not know about it: can the reader do anything?** This workspace pins Superpowers through a Claude Code marketplace, so the pin reaches Claude installs and nothing else. A teammate on another agent installs whatever their agent publishes — for them a version difference is the ordinary state, not an incident, and no action available to them would clear it. Failing that person produces a permanent red, which is the same wolf-crying the patch tier exists to avoid, only worse because it never goes away.
+
+So `sp-version` reports three severities, not two:
+
+| Severity   | Exit code | Session start | When                                                                                                              |
+| ---------- | --------- | ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **fail**   | 1         | escalates     | Claude Code is in use here, so the finding is real and fixable: the pin should have prevented it, or the install did not happen |
+| **notice** | 0         | reports       | The finding is real but outside this machine's reach — Superpowers installed for an agent we cannot inspect, or drift on a copy the pin does not govern |
+| **note**   | 0         | silent        | A tally or a patch-level difference: worth printing, not worth interrupting anyone                                |
+
+A notice is **not** the review being waived. The review is still owed — by whoever maintains the workflow, not by the person who happened to open a session. That is the whole distinction: being told is the point, being blocked is not.
+
 Two things run the rule, at deliberately different cadences. Both are hooks whose scripts live in `.agents/hooks/`, and each harness registers them in its own registry — `.claude/settings.json` for Claude Code, `.cursor/hooks.json` for Cursor — **that registry is the source of truth, and this doc deliberately does not name the scripts.** A hook can be renamed; the event it fires on and the job it does cannot. Look the current filenames up in the harness's registry rather than expecting them here.
 
 | Trigger                                 | When                         | Why it exists                                                                                                                                                                                                                    |
 | --------------------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A **SessionStart** hook                 | **every session start**      | The primary signal. An upgrade lands at startup, so this is the first moment anyone is present to be told. Silent when the versions match.                                                                                       |
+| A **SessionStart** hook                 | **every session start**      | The primary signal. An upgrade lands at startup, so this is the first moment anyone is present to be told. Silent when the versions match; it speaks for a **notice** too, in a plainly informational tone rather than as an escalation. |
 | The **PostToolUse** workflow-edit guard | on any workflow-surface edit | A backstop. Necessary but **not sufficient on its own**: a workflow edit is the rarest activity in the repo, so between an upgrade and the next one, every cycle would run against an unreviewed version with nothing saying so. |
 
 Clearing the failure is Step 6 below, not an edit to the baseline: bumping the version without doing the review only silences the one thing that noticed.
@@ -141,6 +153,8 @@ Read `RELEASE-NOTES.md` in the new version — it is large, so search it for the
 ## Step 6 — record it, which is also what clears the gate
 
 **Update `scripts/superpowers-baseline.json`**: set `version` to the version you just reviewed, `gitSha` to the ref from Step 1, `reviewed` to today, and `reviewedBy` to who or what did it. That is what turns `sp-version` green again — and it is a claim that Steps 3–4 actually happened, so do not write it otherwise.
+
+**If this workspace PINS the version, move the pin in the same commit.** A repo-local catalog names an exact commit, and that commit — not the baseline — is what teammates actually install. Leave it behind and the two records disagree in the worst direction: the baseline claims a version was reviewed while every machine keeps installing the old one, and `sp-version` reports green because the installed copy still matches the pin. Update the pinned entry's `sha` and `version` to the same ref you just recorded; the checker's **`sp-pin`** rule fails while they disagree, so this one is enforced rather than remembered. Which file holds the catalog is a lookup, not a fact this playbook should duplicate — `.claude/settings.json` → `extraKnownMarketplaces` names its path.
 
 Then record the rest where the change is:
 

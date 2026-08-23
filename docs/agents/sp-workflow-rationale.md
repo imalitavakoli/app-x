@@ -272,4 +272,18 @@ The shared harness module was first rejected because Claude Code and Codex share
 
 **Revisit if** a harness sends no event name on stdin (the one assumption `eventName()` rests on), or a harness needs a hook the others must **not** run (which one shared directory cannot express).
 
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why we pin Superpowers, and why an unpinned agent is only a notice
+
+Pinning was never a requirement. The layer is built to survive a version change: routing reads the `description` of whichever skill fired rather than its name, hooks attach to lifecycle moments rather than to titles, and `sp-skills` proves every attach-point still resolves. A rename or a split is survivable by design.
+
+What that design does **not** cover is the dozen **prose-enforced** dependencies — single sentences inside Superpowers' own skill files, honoured at the model's discretion. Reword _"a fresh subagent needs its task, the interfaces it touches, and the global constraints"_ and the enricher keeps writing constraints that quietly stop reaching implementers. So pinning is the conservative choice: it converts "a new version may already be in effect" into "a new version arrives when we choose", buying time to run the review rather than removing the need for one.
+
+That choice is deliverable only where a Claude Code marketplace reaches, which is why severity is conditioned on the reader rather than on the finding alone. A teammate on another agent cannot install the pinned commit and cannot be inspected from here; for them a version difference is the ordinary state. Failing them yields a red they can never clear, which is the same wolf-crying `VERSION_DRIFT_POLICY` avoids at the patch tier — permanent instead of occasional. They get a **notice**: reported, surfaced at session start, exit 0. The review is still owed; it is owed by whoever maintains the workflow, not by whoever opened a session.
+
+**Revisit if** most of the team moves off Claude Code — a pin governing a minority of installs buys little and still costs the two-file sync — or if Superpowers starts declaring its behavioural contracts somewhere a script can read, which would replace the prose risk that motivates pinning at all.
+
 [🔙](../../README.md#agents)
