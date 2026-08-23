@@ -68,6 +68,49 @@ test('handoff on a missing path throws', () => {
   );
 });
 
+test('create with no matching section lands after the global fallback, never before', () => {
+  // ".github/workflows/" sorts, in plain string comparison, before "Global
+  // fallback & this file" (the meta-section title, not a path — '.' is
+  // below 'G'), so a naive title-order insert places it ahead of the
+  // fallback section. Because CODEOWNERS is last-matching-rule-wins, that
+  // would let the fallback's "* @Ali" silently override the specific line
+  // we just added. It must land after it, always.
+  const { text } = upsertOwner(SAMPLE, {
+    path: '/.github/workflows/',
+    owner: '@Ali',
+    mode: 'create',
+  });
+  assert.ok(text.indexOf('Global fallback') < text.indexOf('.github'));
+});
+
+test('sibling creates under the same new top-level directory join one section', () => {
+  const { text: afterFirst } = upsertOwner(SAMPLE, {
+    path: '/build-tools/ci/',
+    owner: '@Ali',
+    mode: 'create',
+  });
+  const { text } = upsertOwner(afterFirst, {
+    path: '/build-tools/lint/',
+    owner: '@Bob',
+    mode: 'create',
+  });
+  const bannerCount = [...text.matchAll(/# build-tools\/\s*#/g)].length;
+  assert.equal(bannerCount, 1);
+  assert.match(text, /\/build-tools\/ci\/ @Ali/);
+  assert.match(text, /\/build-tools\/lint\/ @Bob/);
+});
+
+test('tab-separated entry survives a create into the same section', () => {
+  const withTab = SAMPLE.replace('/libs/shared/ui/ng-alpha/ @Ali', '/libs/shared/ui/ng-alpha/\t@Ali');
+  const { text } = upsertOwner(withTab, {
+    path: '/libs/shared/ui/ng-beta/',
+    owner: '@Ali',
+    mode: 'create',
+  });
+  assert.match(text, /\/libs\/shared\/ui\/ng-alpha\/ @Ali/);
+  assert.match(text, /\/libs\/shared\/ui\/ng-beta\/ @Ali/);
+});
+
 test('parent path stays above a nested override even when owners would invert', () => {
   // Owners are @Zed (grandparent) / @Mid (parent) / @Ann (child) — alphabetical
   // owner order (@Ann < @Mid < @Zed) is the exact REVERSE of path-nesting order,

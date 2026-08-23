@@ -5,7 +5,7 @@ metadata:
   version: '1.0.0'
 ---
 
-# Codeowners Helper
+# CODEOWNERS Helper
 
 ## Overview
 
@@ -71,6 +71,8 @@ Reassigning an existing owner line:
 Section grouping and entry sort order inside `CODEOWNERS` are maintained by the script, not
 by hand. Never hand-edit the sort order or section banners — run the script and let it
 re-serialize the section it touched.
+
+The script's CLI: `--path <path>` `--owner <owner>` `--handoff` (omit for create) `--file <CODEOWNERS path>` (defaults to the repo-root `CODEOWNERS`). For a co-ownership handoff, pass `--owner "@old @new"` — see Handoff above.
 
 These conventions are enforced by
 `.agents/skills/x-codeowners-helper/scripts/upsert-owner.mjs`. When handing this off to an

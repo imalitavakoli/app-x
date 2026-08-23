@@ -97,11 +97,12 @@ function parseEntries(content) {
   for (const raw of content.split('\n')) {
     const line = raw.trim();
     if (line === '') continue;
-    const spaceIdx = line.indexOf(' ');
-    if (spaceIdx === -1) continue; // malformed / comment-only line, ignore
-    const path = line.slice(0, spaceIdx);
-    const owners = line.slice(spaceIdx + 1).trim();
-    entries.push({ path, owners });
+    if (line.startsWith('#')) continue; // comment line, not an entry
+    const match = line.match(/^(\S+)\s+(.+)$/);
+    if (!match) {
+      throw new Error(`Could not parse CODEOWNERS entry line: "${line}"`);
+    }
+    entries.push({ path: match[1], owners: match[2].trim() });
   }
   return entries;
 }
@@ -204,16 +205,28 @@ export function upsertOwner(fileText, { path, owner, mode }) {
 
     let sectionIndex = findSectionForPath(sections, normPath);
     if (sectionIndex === -1) {
-      // No matching section: create a new banner, inserted in title order.
-      const rawTitle = normPath.replace(/^\//, '');
-      const newSection = { title: rawTitle, content: '' };
+      // No matching section: group by the path's top-level directory (so a
+      // later sibling create under the same top-level dir joins this section
+      // instead of spawning another one), and insert in title order among
+      // the OTHER sections — but never ahead of section 0. By this file's
+      // own header convention ("Put the fallback first"), section 0 is
+      // always the global-fallback section; inserting a new path section
+      // ahead of it would let "last matching rule wins" silently let the
+      // fallback override the specific line we just added.
+      const withoutLeadingSlash = normPath.replace(/^\//, '');
+      const firstSegment = withoutLeadingSlash.split('/')[0];
+      const hasMoreSegments = withoutLeadingSlash.length > firstSegment.length;
+      const newTitle = hasMoreSegments ? `${firstSegment}/` : withoutLeadingSlash;
+
+      const newSection = { title: newTitle, content: '' };
       let insertAt = sections.length;
-      for (let i = 0; i < sections.length; i++) {
-        if (rawTitle < sections[i].title) {
+      for (let i = 1; i < sections.length; i++) {
+        if (newTitle < sections[i].title) {
           insertAt = i;
           break;
         }
       }
+      if (sections.length > 0 && insertAt < 1) insertAt = 1;
       sections.splice(insertAt, 0, newSection);
       sectionIndex = insertAt;
     }
@@ -289,6 +302,6 @@ function main() {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main();
 }
