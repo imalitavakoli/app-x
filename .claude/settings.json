@@ -49,9 +49,16 @@
   "enabledPlugins": {
     "nx@nx-claude-plugins": true,
     "context-mode@context-mode": true,
-    "superpowers@superpowers-marketplace": true
+    "superpowers@x-local-marketplace": true,
+    "superpowers@superpowers-marketplace": false
   },
   "extraKnownMarketplaces": {
+    "x-local-marketplace": {
+      "source": {
+        "source": "directory",
+        "path": "./.claude/plugins"
+      }
+    },
     "nx-claude-plugins": {
       "source": {
         "source": "github",

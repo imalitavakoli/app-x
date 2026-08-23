@@ -54,7 +54,7 @@ If you'd like to use Claude LLM as your AI code assistant, then you should insta
 
 **Note!** On Windows, open System Properties → Environment Variables → Edit User PATH → New → Add `C:\Users\{user}\.local\bin` path. Then CD to your workspace, and run `claude` to login and set the initial configurations to make Claude ready on your machine.
 
-**Tip!** In a Claude session, run `/mcp` to make sure that all of the workspace MCPs are already available on your workspace. e.g., Figma MCP may require your authentication.
+**Tip!** The workspace's MCP servers need a one-time approval (and one of them a login) — see [MCP servers](#mcp-servers) below.
 
 &nbsp;
 
@@ -76,6 +76,18 @@ You can automatically configure our NX monorepo to work best with AI agents and 
 
 **Tip!** We've already configured Claude on this monorepo by default.
 
+#### The Nx plugin
+
+Separately from the above, Claude Code gets an **Nx plugin**, which is also what provides the `nx-mcp` server that `AGENTS.md` treats as the first place to look for anything about this workspace. The repo enables it; you install it:
+
+```bash
+claude plugin install nx@nx-claude-plugins --scope user
+```
+
+`--scope user` for the same reason as Superpowers below — a user-scoped install carries no path, so the Windows drive-letter casing can't strand it.
+
+**Note!** Unlike Superpowers, the Nx plugin is deliberately **not pinned**. We depend on Superpowers' *behaviour* — our workflow, hooks and docs are layered on it, so it moves only when we choose. Nx is a tool we simply want current, and its updates track the Nx versions this workspace is built on. Don't "fix" that inconsistency; it's the point.
+
 &nbsp;
 
 ### Superpowers plugin
@@ -95,10 +107,12 @@ claude plugin marketplace add ./.claude/plugins
 ```
 
 ```bash
-claude plugin install superpowers@x-local-marketplace
+claude plugin install superpowers@x-local-marketplace --scope user
 ```
 
 Then restart Claude Code, or run `/reload-plugins`.
+
+**Why `--scope user`?** A project-scoped install is recorded against the exact path string of your clone — and on Windows the CLI and the VS Code extension disagree on the drive-letter case (`C:\…` vs `c:\…`), so an install made by one can read as "enabled but not installed" in the other. A user-scoped install records no path at all, so it cannot mismatch. Enablement still comes from the repo, which is what pins the version for everyone.
 
 **Why two commands?** The first registers our catalog; the second installs the pinned commit from it. A marketplace that only the repo's settings declare isn't registered on its own, so the install fails without the first command. If Claude Code offers to install this repo's plugins when you first trust the folder, accepting does the same job and you can skip both.
 
@@ -165,6 +179,41 @@ Designs and plans come before code, approval checkpoints keep you in control, do
 **Bottom line:** it turns the AI from an eager junior into a disciplined engineer that designs, plans, tests, reviews, and checks in with you.
 
 _Sources: Superpowers' README workflow and each skill's own trigger description._
+
+&nbsp;
+
+[🔝](#setting-up-the-repository-on-a-new-machine-💻)
+
+### MCP servers
+
+MCP servers are how the agent reaches things outside the repo — the Nx project graph, Angular's docs, Figma. Which ones to prefer for which question is in [`AGENTS.md`](../../AGENTS.md) → _MCP Usage Priority_; this section is only about getting them running on a new machine.
+
+They arrive two different ways, and only one of them needs anything from you:
+
+| Server                                | Comes from                                   | You do                          |
+| ------------------------------------- | -------------------------------------------- | ------------------------------- |
+| `nx-mcp`                              | the **Nx plugin** (see above)                 | nothing — installing it is enough |
+| `angular-cli`, `figma-mcp`, `context7` | `.mcp.json`, committed at the repo root      | approve them once; log in to Figma |
+
+**Approve the repo's servers.** A committed `.mcp.json` is not trusted automatically — a cloned repo could otherwise run commands on your machine. The first Claude Code session in the repo asks whether to use them; say yes. Your answer is stored in the git-ignored `.claude/settings.local.json`, so it is yours alone and survives future clones of nobody else's.
+
+Check what happened:
+
+```bash
+claude mcp list
+```
+
+Approved servers are health-checked; unapproved ones show as **⏸ Pending approval** and are not connected. If you dismissed the prompt and want it back, `claude mcp reset-project-choices` clears the answers for this project and you'll be asked again.
+
+**Log in to Figma.** `figma-mcp` is an HTTP server behind OAuth, so approval alone is not enough:
+
+```bash
+claude mcp login figma-mcp
+```
+
+Nothing needs a hand-managed API key, and no MCP secret belongs in `.mcp.json` — it is committed. Anything requiring a credential uses `claude mcp login`, which stores it outside the repo.
+
+**Note!** `angular-cli` runs through `npx`, so its first start downloads a package and can be slow; `claude mcp list` reporting a timeout on the very first run usually just means that. Re-run it.
 
 &nbsp;
 
