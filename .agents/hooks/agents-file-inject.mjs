@@ -52,7 +52,7 @@ const localPath = join(ROOT, 'AGENTS.local.md');
 if (existsSync(localPath)) {
   directive +=
     ` Then read AGENTS.local.md IN FULL (${lineCount(localPath)} lines at ${localPath}) — ` +
-    `it overrides AGENTS.md.`;
+    `it layers on AGENTS.md; on conflict, local wins.`;
 }
 
 emit({

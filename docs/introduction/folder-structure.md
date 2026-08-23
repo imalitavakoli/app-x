@@ -64,7 +64,7 @@ x/
 │   └── jest/                                       // Holds jest preset configs that will be read by `jest.preset.js`.
 ├── .eslintrc.json                                  // Defines the Eslint rules (library types constraints).
 ├── AGENTS.md                                       // Defines the AI agents' settings and instructions.
-├── AGENTS.local.md                                 // Defines the AI agents' local (personal) settings and instructions (overrides `AGENTS.md` if exists).
+├── AGENTS.local.md                                 // Personal overlay on `AGENTS.md` (gitignored). Free-form; may hold `pref.*` keys.
 ├── CLAUDE.md                                       // Claude Code's entry point — it delegates to `AGENTS.md` (and `AGENTS.local.md`). Other AI tools read `AGENTS.md` directly.
 ├── CODEOWNERS                                      // Defines individuals or teams (code-owners) who are expert in a specific code area.
 ├── CONTEXT.md                                      // Defines the workspace's own vocabulary. Search it for a term in bold ('functionality', 'grab-bag', 'ID registry', 'burned', …) — it is a lookup surface, not a read-through doc.

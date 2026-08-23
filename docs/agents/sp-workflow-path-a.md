@@ -67,7 +67,7 @@ Read `ACs Approved`, then:
 
 📌 **PRD/TFS over cycle spec** — **Spans:** `writing-plans` · A2 step 1 (the enricher's coverage check). **Leaves alone:** which hooks run — that is the gates' answer, not this rule.
 
-When A1's `[gated]` band ran this cycle, for `writing-plans` (and A2's enricher coverage check): (1) read `docs/x/{name}/` **PRD and TFS as the primary source of truth**; (2) on any **conflict** with the Superpowers brainstorm spec under `.superpowers/specs/`, **PRD/TFS win** (user decisions during the writers win); (3) for anything the plan still needs that PRD/TFS **do not cover** (e.g. companion-lib tasks, plan-level narrative), use the **synced** brainstorm spec; (4) do **not invent** requirements that appear in neither — ask. A1 syncs the spec so Superpowers' native "plan from the spec" path stays aligned with (1)–(2). When that band was skipped, the brainstorm spec alone remains the plan's requirements source (vanilla Superpowers); A1's Always band still asks mode, still loads `x-codeowners-helper` when this cycle creates a path, and `writing-plans` still records it, then A2 hard-stops.
+When A1's `[gated]` band ran this cycle, for `writing-plans` (and A2's enricher coverage check): (1) read `docs/x/{name}/` **PRD and TFS as the primary source of truth**; (2) on any **conflict** with the Superpowers brainstorm spec under `.superpowers/specs/`, **PRD/TFS win** (user decisions during the writers win); (3) for anything the plan still needs that PRD/TFS **do not cover** (e.g. companion-lib tasks, plan-level narrative), use the **synced** brainstorm spec; (4) do **not invent** requirements that appear in neither — ask. A1 syncs the spec so Superpowers' native "plan from the spec" path stays aligned with (1)–(2). When that band was skipped, the brainstorm spec alone remains the plan's requirements source (vanilla Superpowers); A1's Always band still resolves mode, still loads `x-codeowners-helper` when this cycle creates a path, and `writing-plans` still records it, then A2 hard-stops.
 
 📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** `writing-plans` (task order) · both gates (re-answered for the companion) · A1's `[gated]` band, A2's `[gated]` band and A3's `[gated]` band (once per functionality). **Leaves alone:** the current functionality's own gate answers and its docs.
 
@@ -108,11 +108,17 @@ Always runs on Path A before invoking `writing-plans`. One hook at this attach-p
 
 **Always:**
 
-5. **Ask the user the execution mode** for this cycle — auto (recommended) or interactive; see the 🎛️ block below.
+5. **Resolve the execution mode** for this cycle — auto (recommended) or interactive; see the 🎛️ block below. Load [agents-md-format-local.md](agents-md-format-local.md) for the `pref.mode` match/write rules.
 6. **Load `x-codeowners-helper` when this cycle creates an owned path** — a new app, lib, or shared version-folder (any lib type, including `util` / `api` / `app` / grab-bag). Load that helper's `SKILL.md` so `writing-plans` is born with a same-commit `CODEOWNERS` step on the create-path task. If this cycle only updates existing paths, skip — unless the user stated an ownership handoff (path + new owner); then load it because they asked. Do not infer a handoff from file edits.
 7. **Invoke `writing-plans`** so the plan's `## Global Constraints` includes (merge; do not omit): the **Plan line (verbatim)** for the chosen mode from the 🎛️ block, and `Path A phase: Documentation (draft).` Do **not** let vanilla `writing-plans` re-ask mode at the end as a substitute.
 
-🎛️ **Execution mode — auto or interactive.** The mode decides which Superpowers skill runs execution and whether the agent commits. Ask **once per cycle** (not per task), **before** `writing-plans`, so the plan is born with the answer and handoff works whether or not the enricher runs later. **Auto is the recommended default.**
+🎛️ **Execution mode — auto or interactive.** The mode decides which Superpowers skill runs execution and whether the agent commits. **Resolve once per cycle** (not per task), **before** `writing-plans`, so the plan is born with the answer and handoff works whether or not the enricher runs later. **Auto is the recommended default.** A user override this cycle always wins; do not rewrite `pref.mode` unless they ask to change the default. Still write the plan line.
+
+**Resolve order** — first match wins:
+
+1. The plan already has an `Execution mode:` line → use it.
+2. Else `AGENTS.local.md` has a valid `pref.mode` → use it. Announce in one sentence; do not block.
+3. Else ask once. Include a one-clause hint: add `pref.mode: auto` to `AGENTS.local.md` to skip this next time (or ask me to). After they answer, offer **once** to append that exact line (create the file if needed; do not restructure). If they decline, do not re-pitch the file again this cycle or on later asks; keep only the short hint on later asks.
 
 | Mode                   | Execution skill               | Behaviour                                                                                                                                                                              | Plan line (verbatim)                                                                                                                                                                                                                                                                                                          |
 | ---------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -142,7 +148,7 @@ Always runs on Path A after `writing-plans` produces a plan. This is the end of 
 
 > ▶️ **Resume** (after the user proceeds). Not a step band — Execution starts here. For other-session / plan-path entry, also follow the plan-path 🚪 **Entry** at the top of Path A.
 >
-> - **Other session (recommended)** — user provides the plan path. Follow Path A's plan-path 🚪 **Entry** (phase line → Resume or ask draft vs ready). If mode is missing after they confirm ready, stop and ask, then ensure the plan records it before executing.
+> - **Other session (recommended)** — user provides the plan path. Follow Path A's plan-path 🚪 **Entry** (phase line → Resume or ask draft vs ready). If mode is missing after they confirm ready, run the 🎛️ resolve order starting at `pref.mode` (the plan has no line), then ensure the plan records it before executing.
 > - **Same session** — do not re-ask mode unless the user explicitly changes it. Continue from `using-git-worktrees` (work in place per _Workspace preferences_) → the execution skill for the mode already in the plan.
 
 #### 🪝 A3 · Before `finishing-a-development-branch` [close-out]

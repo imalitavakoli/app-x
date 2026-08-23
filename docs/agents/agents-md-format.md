@@ -32,6 +32,8 @@ This is a rule about **what qualifies**, not about length. A line budget would o
 
 It does **not** hold the paths themselves, the rules they share, their notation, or the reasoning behind them. Those are `docs/agents/sp-workflow-*.md`, each loaded only when it is actually needed — including [sp-workflow-shared.md](sp-workflow-shared.md), which holds the Operating rules, the Workspace preferences declared to Superpowers, and the Git contract.
 
+The gitignored companion is `AGENTS.local.md` — no forced shape, and the `pref.*` catalog: [agents-md-format-local.md](agents-md-format-local.md). Load that doc when writing or resolving a `pref.*` key, not when editing this file.
+
 &nbsp;
 
 ## Adding a rule to the Superpowers workflow

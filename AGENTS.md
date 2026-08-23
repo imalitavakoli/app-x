@@ -63,7 +63,7 @@
 
 # Developer Workflows
 
-**MANDATORY:** Before responding to any request, after reading this file, you MUST also read `AGENTS.local.md` (if it exists, it overrides this file).
+**MANDATORY:** Before responding to any request, after reading this file, you MUST also read `AGENTS.local.md` if it exists. It is a **personal overlay**: add its instructions on top of this file; where they conflict, it wins.
 
 - **Always use Nx CLI** (`nx run`, `nx build`, `nx test`, etc.) for builds, tests, linting, and generation.
 - Use `pnpm` as the package manager.

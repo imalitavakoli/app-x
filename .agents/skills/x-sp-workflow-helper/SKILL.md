@@ -2,7 +2,7 @@
 name: x-sp-workflow-helper
 description: 'WHAT? The procedure and integrity checker for changing the Superpowers-First Workflow surfaces — `AGENTS.md`, `docs/agents/sp-workflow-*.md` and the `x-*` skills they name. WHEN? Before adding, renaming, renumbering or deleting a hook, gate, constraint, entry, path or landmark; before moving a rule between those files; after any such edit, to prove nothing dangled; and whenever the installed Superpowers version changes.'
 metadata:
-  version: '1.6.0'
+  version: '1.6.1'
 ---
 
 # SP Workflow Helper
@@ -154,7 +154,7 @@ Cursor's `preToolUse` cannot inject context into the model (allow / deny / rewri
 - It is **self-cleaning**: `hook-paths` fails on an entry that no hook named during the run. A stale exemption does nothing except sit ready to pre-emptively excuse some future hook that names a genuinely **required** file of the same name.
 - Deleting an entry restores the check, so making a path required again is one line.
 
-Today's only entry is `AGENTS.local.md` — per-developer overrides, gitignored on purpose.
+Today's only entry is `AGENTS.local.md` — personal overlay, gitignored on purpose.
 
 **Adding a hook.** `hook-paths` covers it with no edit at all: the rule walks the directory. The registry entry is a **separate edit in a separate file**, and every registry in `GUARDED_FILES` is itself a guarded surface — so the guard fires on that edit and the checker runs behind it.
 

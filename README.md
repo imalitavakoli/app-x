@@ -240,6 +240,7 @@ In the workspace, I've added specific comments as keywords. These make it easier
 - ## `8` [Superpowers workflow — path notation](./docs/agents/sp-workflow-format.md)
 
 - ## `9` [`AGENTS.md` format](./docs/agents/agents-md-format.md)
+  - ### `— a` [`AGENTS.local.md` format](./docs/agents/agents-md-format-local.md)
 
 - ## `10` [`CONTEXT.md` format](./docs/agents/context-md-format.md)
 

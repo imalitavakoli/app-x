@@ -154,9 +154,19 @@ A1 often changes what the spec said; planning from the stale spec fights the doc
 
 ## Why the execution-mode question is ours to ask
 
-Superpowers already has the two modes. We ask before `writing-plans` so the plan is born with the answer. Interactive uses `executing-plans` because muting git inside `subagent-driven-development` would empty the commit-range reviews.
+Superpowers already has the two modes. We resolve mode before `writing-plans` so the plan is born with the answer. Interactive uses `executing-plans` because muting git inside `subagent-driven-development` would empty the commit-range reviews.
 
 **Revisit if** Superpowers lets that skill run without commits, or `writing-plans` asks mode up front itself.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why developer preferences live in `AGENTS.local.md`, not Workspace preferences
+
+Workspace preferences are committed team constraints Superpowers skills honour without asking (worktree, spec path). A `pref.*` key is a personal habit (today `pref.mode`). Putting those values in the shared rules would force every developer onto the same default. A cycle artifact (today the plan's mode line) stays that cycle's binding answer; the local key is only the default for a new cycle.
+
+**Revisit if** the team wants committed defaults, or Superpowers grows a first-class prefs file.
 
 &nbsp;
 

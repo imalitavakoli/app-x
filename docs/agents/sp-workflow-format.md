@@ -74,8 +74,8 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 **Under a hook (not step bands)**
 
 - **🎛️ mode block** — execution-mode contract for the cycle.
-  - **Meaning:** Defines auto/interactive and the Plan lines for Global Constraints. Not a step band and not a `####` heading — do not turn it into todos.
-  - **Shape:** under the hook that asks for mode — `🎛️ **Execution mode — …**` then the mode table (behaviour + Plan line verbatim) and any short follow-on prose.
+  - **Meaning:** Defines auto/interactive and the Plan lines for Global Constraints. Resolved from the plan, a `pref.mode` key, or an ask — the consuming path's step names the order. Not a step band and not a `####` heading — do not turn it into todos.
+  - **Shape:** under the hook that resolves mode — `🎛️ **Execution mode — …**` then the mode table (behaviour + Plan line verbatim) and any short follow-on prose.
   - **Example:** Path A A1 `🎛️ **Execution mode — auto or interactive.** …`
 
 - **▶️ resume block** — post-hard-stop contract: what to do after the user proceeds.

@@ -161,7 +161,7 @@ export const HOOK_REF_PATTERN =
  * job. If a path here ever becomes REQUIRED, deleting its entry restores the
  * check.
  *
- * - `AGENTS.local.md` — optional per-developer overrides, gitignored on purpose.
+ * - `AGENTS.local.md` — optional personal overlay, gitignored on purpose.
  */
 export const OPTIONAL_HOOK_PATHS = ['AGENTS.local.md'];
 

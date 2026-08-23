@@ -49,7 +49,7 @@ Some directories & files are familiar to all of us right at the beginning! But t
 
 - `AGENTS.md`: It's the global AI agents' settings and instructions file.
 
-- `AGENTS.local.md`: It's the AI agents' local (personal) settings and instructions file. It overrides `AGENTS.md` if exists.
+- `AGENTS.local.md`: It's the AI agents' local (personal) overlay on `AGENTS.md` (gitignored). Free-form; may hold `pref.*` keys.
 
 &nbsp;
 
