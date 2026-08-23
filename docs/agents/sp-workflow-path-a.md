@@ -6,7 +6,7 @@
 
 &nbsp;
 
-**Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD (+ AC approval stop) + TFS + spec sync + e2e verdict** _(A1 `[gated]` band)_ → **mode + `writing-plans`** _(A1 Always band)_ → **(enricher |) docs commit-ask + plan-review stop** _(A2)_ → _(user proceeds)_ → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **verify docs vs. what shipped** _(A3 — always; actions conditional)_ → `finishing-a-development-branch`
+**Typical flow** — bold = our steps, the rest is Superpowers' own; each hook's own condition is what actually governs: `brainstorming` → **PRD (+ AC approval stop) + TFS + spec sync + e2e verdict** _(A1 `[gated]` band)_ → **mode + codeowners load (if create) + `writing-plans`** _(A1 Always band)_ → **(enricher |) docs commit-ask + plan-review stop** _(A2)_ → _(user proceeds)_ → branch → execution (`test-driven-development`) → `requesting-code-review` _(auto only)_ → **verify docs vs. what shipped** _(A3 — always; actions conditional)_ → `finishing-a-development-branch`
 
 Path A has two parts: **Documentation** (through the plan-review stop) and **Execution** (after the user proceeds — same session or another session with the plan path).
 
@@ -48,7 +48,7 @@ Read `ACs Approved`, then:
 3. **The field is absent** (a PRD written before it existed) → treat it as `NOT YET`: nothing recorded an approval, so nothing may be assumed. Rule 1 applies.
 4. User may override (“redo the PRD”, “the ACs are fine, carry on”). Taking their word here is legitimate — they are the approver; stamp the field with today's date.
 
-**Docs-in-scope set** — **Members:** **A1's `[gated]` band** · **A2's `[gated]` band** · **A3's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A1's Always band (mode → `writing-plans` with mode in the plan), A2's hard stop, **A3's Always band** (verifying `util` / `app` / grab-bag `requirements/`), and `test-driven-development` when tests are in scope.
+**Docs-in-scope set** — **Members:** **A1's `[gated]` band** · **A2's `[gated]` band** · **A3's `[gated]` band**. **Combine:** each gate below is answered on its own terms, and **any gate answering No skips the whole set** for this cycle. **Regardless:** Superpowers' `brainstorming`, A1's Always band (mode → codeowners load (if create) → `writing-plans` with mode in the plan), A2's hard stop, **A3's Always band** (verifying `util` / `app` / grab-bag `requirements/`), and `test-driven-development` when tests are in scope.
 
 > 🚧 **Functionality gate** [auto] — **Asks:** is the work (or does it produce) a **single-purpose** lib from `map` / `data-access` / `ui` / `feature` / `page`?
 >
@@ -67,7 +67,7 @@ Read `ACs Approved`, then:
 
 📌 **PRD/TFS over cycle spec** — **Spans:** `writing-plans` · A2 step 1 (the enricher's coverage check). **Leaves alone:** which hooks run — that is the gates' answer, not this rule.
 
-When A1's `[gated]` band ran this cycle, for `writing-plans` (and A2's enricher coverage check): (1) read `docs/x/{name}/` **PRD and TFS as the primary source of truth**; (2) on any **conflict** with the Superpowers brainstorm spec under `.superpowers/specs/`, **PRD/TFS win** (user decisions during the writers win); (3) for anything the plan still needs that PRD/TFS **do not cover** (e.g. companion-lib tasks, plan-level narrative), use the **synced** brainstorm spec; (4) do **not invent** requirements that appear in neither — ask. A1 syncs the spec so Superpowers' native "plan from the spec" path stays aligned with (1)–(2). When that band was skipped, the brainstorm spec alone remains the plan's requirements source (vanilla Superpowers); A1's Always band still asks mode and `writing-plans` still records it, then A2 hard-stops.
+When A1's `[gated]` band ran this cycle, for `writing-plans` (and A2's enricher coverage check): (1) read `docs/x/{name}/` **PRD and TFS as the primary source of truth**; (2) on any **conflict** with the Superpowers brainstorm spec under `.superpowers/specs/`, **PRD/TFS win** (user decisions during the writers win); (3) for anything the plan still needs that PRD/TFS **do not cover** (e.g. companion-lib tasks, plan-level narrative), use the **synced** brainstorm spec; (4) do **not invent** requirements that appear in neither — ask. A1 syncs the spec so Superpowers' native "plan from the spec" path stays aligned with (1)–(2). When that band was skipped, the brainstorm spec alone remains the plan's requirements source (vanilla Superpowers); A1's Always band still asks mode, still loads `x-codeowners-helper` when this cycle creates a path, and `writing-plans` still records it, then A2 hard-stops.
 
 📌 **Companion work — `util`/`api`/`app`, or another functionality's libs** — **Spans:** `writing-plans` (task order) · both gates (re-answered for the companion) · A1's `[gated]` band, A2's `[gated]` band and A3's `[gated]` band (once per functionality). **Leaves alone:** the current functionality's own gate answers and its docs.
 
@@ -109,7 +109,8 @@ Always runs on Path A before invoking `writing-plans`. One hook at this attach-p
 **Always:**
 
 5. **Ask the user the execution mode** for this cycle — auto (recommended) or interactive; see the 🎛️ block below.
-6. **Invoke `writing-plans`** so the plan's `## Global Constraints` includes (merge; do not omit): the **Plan line (verbatim)** for the chosen mode from the 🎛️ block, and `Path A phase: Documentation (draft).` Do **not** let vanilla `writing-plans` re-ask mode at the end as a substitute.
+6. **Load `x-codeowners-helper` when this cycle creates an owned path** — a new app, lib, or shared version-folder (any lib type, including `util` / `api` / `app` / grab-bag). Load that helper's `SKILL.md` so `writing-plans` is born with a same-commit `CODEOWNERS` step on the create-path task. If this cycle only updates existing paths, skip — unless the user stated an ownership handoff (path + new owner); then load it because they asked. Do not infer a handoff from file edits.
+7. **Invoke `writing-plans`** so the plan's `## Global Constraints` includes (merge; do not omit): the **Plan line (verbatim)** for the chosen mode from the 🎛️ block, and `Path A phase: Documentation (draft).` Do **not** let vanilla `writing-plans` re-ask mode at the end as a substitute.
 
 🎛️ **Execution mode — auto or interactive.** The mode decides which Superpowers skill runs execution and whether the agent commits. Ask **once per cycle** (not per task), **before** `writing-plans`, so the plan is born with the answer and handoff works whether or not the enricher runs later. **Auto is the recommended default.**
 
