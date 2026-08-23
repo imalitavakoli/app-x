@@ -1,8 +1,8 @@
 {
   "name": "x-local-marketplace",
-  "description": "This workspace's own plugin catalog: pins the exact third-party plugin versions app-x runs, and is where any repo-authored plugin gets listed.",
+  "description": "This workspace's own plugin catalog: pins the exact third-party plugin versions X runs, and is where any repo-authored plugin gets listed.",
   "owner": {
-    "name": "app-x"
+    "name": "x"
   },
   "plugins": [
     {
