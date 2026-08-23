@@ -270,6 +270,33 @@ const WORKFLOW_DOCS = [AGENTS, ...walk(CFG.WORKFLOW_DOC_DIR)];
 const RESERVED_ICONS = CFG.RESERVED_ICONS;
 
 /**
+ * Marketplaces whose Superpowers entry is explicitly `false` in project settings.
+ *
+ * Project settings outrank user settings, so such a copy CANNOT load here even
+ * though its files sit in the plugin cache. Counting it would report a duplicate
+ * that does not exist — and the remedy the duplicate message prints IS that
+ * `false`, so a filesystem-only count tells people to do what they already did.
+ *
+ * Only an explicit `false` filters. A missing entry means UNKNOWN, not disabled:
+ * user settings may still enable it, so it stays counted.
+ */
+function disabledSuperpowersMarkets() {
+  if (!exists(CFG.SP_ENABLEMENT_SETTINGS_FILE)) return new Set();
+  let cfg;
+  try {
+    cfg = JSON.parse(read(CFG.SP_ENABLEMENT_SETTINGS_FILE));
+  } catch {
+    return new Set(); // unreadable settings prove nothing about enablement
+  }
+  const prefix = `${CFG.SP_PLUGIN_NAME}@`;
+  return new Set(
+    Object.entries(cfg?.enabledPlugins ?? {})
+      .filter(([k, v]) => k.startsWith(prefix) && v === false)
+      .map(([k]) => k.slice(prefix.length)),
+  );
+}
+
+/**
  * Locate the installed Superpowers skills dir, or null when unavailable.
  *
  * Discovers the MARKETPLACE rather than assuming it: Superpowers may arrive from
@@ -277,9 +304,13 @@ const RESERVED_ICONS = CFG.RESERVED_ICONS;
  * version, and a hardcoded marketplace name would make this report "NOT
  * INSTALLED" the day that changes — a false alarm, which is worse than no check.
  *
- * Returns the highest version found, plus every marketplace it was found under,
- * so the caller can report a duplicate install (the same plugin from two
- * marketplaces loads every skill twice, with no warning from anything else).
+ * Returns the highest version found among the copies that CAN load here, plus
+ * every marketplace it was found under, so the caller can report a duplicate
+ * install (the same plugin from two marketplaces loads every skill twice, with
+ * no warning from anything else). Copies a project `false` has disabled are
+ * excluded and reported separately as `ignoredDisabled` — pinning a version by
+ * adding a second marketplace leaves the old copy in the cache on purpose, and
+ * counting it would fail every machine that kept its own.
  */
 function findSuperpowersSkills() {
   const cmp = (a, b) => {
@@ -289,10 +320,12 @@ function findSuperpowersSkills() {
   };
 
   const found = []; // { version | null, dir, source, where }
+  const ignoredDisabled = []; // marketplaces present on disk but disabled here
 
   // PROBE 1 — Claude Code plugin cache. The marketplace is discovered, not
   // assumed (see SP_PLUGIN_NAME): Superpowers may arrive from upstream's
   // marketplace or from one this workspace declares.
+  const disabled = disabledSuperpowersMarkets();
   const home = process.env.USERPROFILE || process.env.HOME;
   if (home) {
     const cacheRoot = join(home, ...CFG.SP_CACHE_ROOT_SEGMENTS);
@@ -300,6 +333,12 @@ function findSuperpowersSkills() {
       for (const market of readdirSync(cacheRoot)) {
         const pluginDir = join(cacheRoot, market, CFG.SP_PLUGIN_NAME);
         if (!existsSync(pluginDir)) continue;
+        // Present, but project settings switch it off for this repo — so it is
+        // not a second loaded copy, and must not be counted as one.
+        if (disabled.has(market)) {
+          ignoredDisabled.push(market);
+          continue;
+        }
         for (const v of readdirSync(pluginDir)) {
           if (!/^\d+\.\d+\.\d+$/.test(v)) continue;
           const skills = join(pluginDir, v, CFG.SP_SKILLS_SUBDIR);
@@ -357,6 +396,7 @@ function findSuperpowersSkills() {
     ...found[0],
     all: found,
     marketplaces: [...new Set(found.map((f) => f.where))],
+    ignoredDisabled,
   };
 }
 
@@ -620,7 +660,7 @@ rule('sp-version', (r) => {
   // whole session, and this rule reported green, because the old version was
   // still sitting in the cache. Checking the cache alone is checking the wrong
   // thing.
-  const settingsPath = '.claude/settings.json';
+  const settingsPath = CFG.SP_ENABLEMENT_SETTINGS_FILE;
   if (exists(settingsPath)) {
     let cfg;
     try {
@@ -679,6 +719,11 @@ rule('sp-version', (r) => {
     return;
   }
 
+  // Said out loud rather than silently subtracted: a copy someone can see in the
+  // cache was considered and ruled out, which is different from not looking.
+  if (sp.ignoredDisabled?.length)
+    r.note(MSG.notes.spVersionDisabledIgnored(sp.ignoredDisabled));
+
   const baselinePath = join(SKILL_DIR, 'scripts', CFG.SP_BASELINE_FILE);
   if (!existsSync(baselinePath)) {
     return emitMsg(
@@ -706,6 +751,11 @@ rule('sp-version', (r) => {
   // The same plugin cached under two marketplaces loads every skill twice, and
   // nothing else in the toolchain warns about it. Only visible because the
   // lookup above scans marketplaces rather than assuming one.
+  //
+  // Counts only the copies that CAN load: the lookup has already dropped any a
+  // project `false` disables. Pinning a version deliberately leaves the old copy
+  // in the cache — counting that would fail every machine whose owner kept their
+  // own, and the remedy this failure prints is the very `false` they applied.
   if (sp.all?.length > 1) {
     emitMsg(
       r,

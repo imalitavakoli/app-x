@@ -186,6 +186,25 @@ export const OPTIONAL_HOOK_PATHS = ['AGENTS.local.md'];
 export const SP_CACHE_ROOT_SEGMENTS = ['.claude', 'plugins', 'cache'];
 
 /**
+ * Where PROBE 1's enablement answer comes from: Claude Code's project settings.
+ *
+ * Pairs with the cache probe above, and only with that probe. A copy in the cache
+ * may be switched off for this repo by `enabledPlugins: { "{plugin}@{marketplace}":
+ * false }` — project settings outrank user settings — so it cannot load and must
+ * not be counted as a second loaded copy.
+ *
+ * **Deliberately one file, not a list.** A second agent needs a READER, not
+ * another path: `enabledPlugins`, the `{plugin}@{marketplace}` key shape and the
+ * project-over-user precedence are Claude Code's model, and nothing says another
+ * harness expresses "switched off" the same way. A list of paths would quietly
+ * assert that it does. Enablement is also meaningless without a probe to attach
+ * it to — a workspace copy (`SP_WORKSPACE_SKILL_DIRS`) has no such concept at
+ * all. So the order is the same as for probes: implement the probe first, then
+ * its reader. See `SP_PROBES_UNVERIFIED` and the do-not-guess rule above.
+ */
+export const SP_ENABLEMENT_SETTINGS_FILE = '.claude/settings.json';
+
+/**
  * Agents Superpowers supports whose on-disk layout we have not verified. Moving
  * one into a real probe means: install it, find the path, confirm a version is
  * readable there, then implement it in `findSuperpowers` — in that order.
@@ -221,7 +240,8 @@ export const SP_MARKER_SKILL = 'using-superpowers';
  * and hardcoding one means the check cries "NOT INSTALLED" the day that changes.
  * A false alarm from the guard is worse than no guard. Scanning also surfaces
  * what a fixed path cannot: the same plugin cached under two marketplaces, which
- * loads every skill twice with no warning from anything else.
+ * loads every skill twice with no warning from anything else — counting only the
+ * copies a project `false` has not disabled, since a disabled one cannot load.
  *
  * ┌─ IF YOU EVER OBTAIN SUPERPOWERS DIFFERENTLY — READ THIS ────────────────┐
  * │ Changing the MARKETPLACE (a pinned catalog, a repo-local one, a plugin  │

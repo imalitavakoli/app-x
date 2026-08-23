@@ -583,6 +583,16 @@ export const notes = {
   /** Drift found, but policy says not to report it. */
   driftIgnored: (drift) => `${drift} Ignored by policy.`,
 
+  /**
+   * sp-version — copies on disk that a project `false` stops from loading.
+   *
+   * Said out loud because the alternative is a silent subtraction: someone can
+   * SEE a second copy in the cache and needs to know the checker considered it
+   * and ruled it out, rather than wondering whether it looked at all.
+   */
+  spVersionDisabledIgnored: (markets) =>
+    `not counted, disabled by project settings: ${markets.join(' · ')}`,
+
   hookIdsDefined: (ids) => `${ids.length} hook IDs defined: ${ids.join(' · ')}`,
   pathsChecked: (docCount, skillCount) =>
     `${docCount} doc path citations + ${skillCount} skill-internal links checked`,
