@@ -1,9 +1,18 @@
 # CODEOWNERS — current owners of paths in this repo (no ownership history here).
 # Compatible with common Git hosts that read a root CODEOWNERS file.
-# Last matching rule wins. Put the fallback first; put more specific paths below.
+# Last matching rule wins. If you use a global `*` fallback, put it first;
+# put more specific paths below. A `*` line is optional; missing it is fine.
 #
 # When to add or hand off a line, how to resolve the owner, and layout:
 # see .agents/skills/x-codeowners-helper/SKILL.md
+#
+# Notes (for anyone editing this file by hand):
+# - Prefer a stable team over an individual when a group owns an area.
+# - This file should itself have an owner (`CODEOWNERS @…`) so ownership
+#   edits are reviewable.
+# - If you add or hand off a path by hand, edit this file in the same commit.
+# - On a handoff, choose whether to keep the old owner as co-owner
+#   (`@old @new`) or replace them (`@new` only).
 #
 # Learn more (example host docs):
 # https://marketplace.atlassian.com/apps/1218598/code-owners-for-bitbucket
