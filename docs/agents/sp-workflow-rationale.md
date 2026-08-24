@@ -32,6 +32,18 @@ The first Superpowers skill starts talking before any path file is loaded, so re
 
 [🔝](#superpowers-first-workflow--rationale-)
 
+## Why the path file is read at a named moment, not by a hook
+
+Pre-flight used to defer the path file and shared rules with "those wait for a skill to fire" — a deferral naming no moment to come back at. It failed measurably: agents quoted that sentence, and the routing table's "before continuing", as grounds for treating those reads as something that happens _after_ the skill fires. Naming the moment instead closed it — 8/8 post-change runs read them, against 4/8 failures before, every failure citing the text that changed.
+
+A **PreToolUse** hook on skill invocation was the alternative, and a harness does offer one — close to what _Why pre-flight is a checklist_ anticipates, though from the harness rather than from Superpowers. It stays unbuilt: the wording alone tested sufficient, and such a hook could only repeat a directive the docs already carry (it cannot inject a file this size), at the cost of a surface the checker must keep alive. The general rule this is one instance of — a deferred read needs something at that moment to say so, and a hook is the last resort — is [where-content-lives.md](where-content-lives.md) → _Writing a pointer_.
+
+**Revisit if** the named moment starts failing in real use — those runs were subagents, whose context is lighter than a full session — or a harness offers a pre-skill hook that can deliver a file's contents rather than a directive.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
 ## Why work in place, with no worktree
 
 A feature branch already isolates the work. A worktree is a cold checkout: no `node_modules` or Nx cache, and none of our git-ignored local files (`AGENTS.local.md`, `.superpowers/`).

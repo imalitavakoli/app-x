@@ -78,7 +78,7 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 
 - Discover skills under the **repo-root** `.agents/skills/` only.
 - **Never modify Superpowers' own files** — they update independently. All of our customization lives in this file, in `/docs/agents/`, and in our `.agents/skills/x-*` skills.
-- **Editing the workflow itself** — this section, any `/docs/agents/sp-workflow-*.md`, or an `x-*` skill — invoke **`x-sp-workflow-helper`** first, and after any such edit run its checker (`pnpm run check:workflow`) to zero failures. These surfaces are held together by references that break **silently**: the text still reads correctly, so review does not catch it. A `PreToolUse` hook reminds you at the edit and a `PostToolUse` hook runs the checker, but neither replaces reading the skill — it owns the sweep for a rule's other homes, which no script can find.
+- **Editing the workflow itself** — this section, any `/docs/agents/sp-workflow-*.md`, `/docs/agents/where-content-lives.md`, or an `x-*` skill — invoke **`x-sp-workflow-helper`** first, and after any such edit run its checker (`pnpm run check:workflow`) to zero failures.
 
 &nbsp;
 
@@ -90,7 +90,7 @@ Run these checks **before invoking any Superpowers skill.** Once that skill star
 
 Run each check in order. **Unsure → Yes** for that check. A wrong Yes costs a read you would have skipped. A wrong No silently skips a convention, and nothing downstream catches it.
 
-Do not pull path files, shared rules, or hooked workspace skills into this list — those wait for a skill to fire.
+Do not pull path files, shared rules, or hooked workspace skills into this list. They are read at a specific later moment — once the path is identified and before you invoke that skill (_The paths_, below) — not here.
 
 1. Does this request touch or produce a **single-purpose** `map` / `data-access` / `ui` / `feature` / `page` lib? (Not: what *kind of work* it is.)
 
@@ -113,7 +113,7 @@ The path files ask check 1 again under a name you will meet there — you do not
 
 Every path assumes the same three sets of rules, so they live in one place rather than in each path: **`/docs/agents/sp-workflow-shared.md`** — the **Operating rules** (control flow, todos, how rules reach execution subagents), the **Workspace preferences** declared to Superpowers (no worktree; spec/plan at ignored paths; never commit them), and the **Git contract** (who branches and commits, per path and mode).
 
-Read it once at the start of a cycle, together with the path file. The path files cite these by name and never repeat them.
+Read it together with the path file, once the path is identified and before you invoke that skill. The path files cite these by name and never repeat them.
 
 &nbsp;
 
@@ -121,7 +121,7 @@ Read it once at the start of a cycle, together with the path file. The path file
 
 Do **not** pre-classify the request. Route it through `superpowers:using-superpowers` as normal and let it match on the skills' own descriptions — then **the skill it picks names your path**:
 
-| What the skill that fired says it opens, in its own `description`                                            | You are on | Read in full before continuing                                             |
+| What the skill that fired says it opens, in its own `description`                                            | You are on | Read in full before invoking that skill                                    |
 | ------------------------------------------------------------------------------------------------------------ | ---------- | -------------------------------------------------------------------------- |
 | **design work** — creating, building, adding functionality, or _modifying behavior_ · today `brainstorming`   | **Path A** | [`/docs/agents/sp-workflow-path-a.md`](/docs/agents/sp-workflow-path-a.md) |
 | **a defect** — a bug, test failure, _unexpected_ behavior, or a broken build/perf/integration · today `systematic-debugging` | **Path B** | [`/docs/agents/sp-workflow-path-b.md`](/docs/agents/sp-workflow-path-b.md) |
@@ -129,7 +129,7 @@ Do **not** pre-classify the request. Route it through `superpowers:using-superpo
 
 **The names are markers, not the definition.** If a release renames, splits or replaces one of these, read the **`description` of the skill that actually fired** — the same text `using-superpowers` matched on — and route by what it says it opens: design work → A · a defect → B · neither → C. Which skills exist is checkable, not guessable. This is the marker-vs-moment rule the hooks already use, applied to routing (`/docs/agents/sp-workflow-shared.md`).
 
-Read the shared rules and that path file **once, at the start of the cycle**, and hold them through it: the todos you create (Operating rule 3) and the plan the enricher writes (Operating rule 4) are what carry them past a compaction. Re-read if either is lost.
+Read the shared rules and that path file **once the path is identified and before you invoke that skill**, and hold them through the cycle: the todos you create (Operating rule 3) and the plan the enricher writes (Operating rule 4) are what carry them past a compaction. Re-read if either is lost.
 
 **Why identification and not classification:** the routing decision already exists in `using-superpowers`, and duplicating it here only creates a second, weaker copy that can disagree with it. Our paths do not choose the Superpowers skill — they attach our hooks to the lifecycle of whichever one it chose.
 

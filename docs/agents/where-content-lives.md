@@ -86,6 +86,13 @@ Pointing instead of copying is what keeps one fact in one home — but a badly w
    Which paths are safe to cite at all — `docs/` freely, code under `libs/` / `apps/` only conceptually — is `x-skill-build-helper` → _Don't hardcode paths to volatile code_. This rule is about how to cite once you know you may.
 
 6. **Every inbound pointer must filter, not just the one you are writing.** It only takes one unfiltered route in to defeat all the filtered ones. When a doc gains a pointer, grep its other inbound pointers and check they all carry a condition — and check you are not adding a second pointer to a target the same file already points at.
+7. **A read that must happen later needs something at that moment to say so.** A pointer whose condition is true _now_ enforces itself — you follow it, or you visibly do not. One whose condition comes true **later** is a promise with no creditor: a deferral with no return address is how a required read gets dropped, and the text still reads correctly afterwards, so nothing catches it. Give the deferral an address, in this order:
+
+   1. **Name the moment.** "Those wait for a skill to fire" defers to nobody; "once the path is identified, before invoking that skill" is a moment the reader can act on. This _addresses_ the deferral rather than removing it — the read still happens later — but a named moment is actionable where a vague one strands. It is also the cheap option: a vague deferral invites reading every candidate target rather than the one that applies.
+   2. **Restate it in the surface that is open at that moment** — stronger than naming, where a surface exists, because it removes the distance instead of describing it. This is why the procedures file's deferral holds: it is read only when a hook cites it, and the citing step sits in the path file the reader already has open.
+   3. **A harness hook — only when we own no surface at that moment**, such as a moment that occurs inside a plugin's own files. Name the **event**, never the script. And keep it **delivery, not policy**: the docs still decide whether the read happens, or control flow moves into a script that no review and no checker can see.
+
+   Never write "wait for X" with nothing waiting at X. **Finding these is not a grep** — a deferral need not contain any deferral-word ("the enricher writes those paths into the plan; the implementer opens it there" is one). Ask each pointer when its condition becomes true.
 
 &nbsp;
 
