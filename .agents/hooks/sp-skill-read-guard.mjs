@@ -60,17 +60,22 @@ emit({
   hookSpecificOutput: {
     hookEventName: eventName(payload, 'PreToolUse'),
     additionalContext:
-      `You are about to invoke \`${skill}\`. This workspace owes three reads BEFORE that skill ` +
-      'starts talking. Skip any one of them that you have ALREADY read in full this session:\n\n' +
+      `You are about to invoke \`${skill}\`. Before that skill starts talking, this workspace ` +
+      'owes three reads. Skip any you have ALREADY done in full this session:\n\n' +
       '1. `docs/agents/sp-workflow-shared.md` — IN FULL. The Operating rules, the Workspace ' +
       'preferences declared to Superpowers (these OVERRIDE the skill on where a spec/plan is ' +
       'written and whether it is committed), and the Git contract.\n' +
       "2. The path file for the path this skill opens — route it per `AGENTS.md`'s path table, " +
       "which names A/B/C by what the fired skill's own description says it opens. IN FULL.\n" +
-      '3. `docs/agents/sp-workflow-prefs.md` — IN FULL, before the first skill that interviews ' +
-      'the user.\n\n' +
-      'These are the reads `AGENTS.md` defers to this exact moment. Nothing downstream catches ' +
-      'a skip: the cycle still runs, and the work still looks correct afterwards.',
+      '3. `docs/agents/sp-workflow-prefs.md` — IN FULL.\n\n' +
+      'THEN, BEFORE this skill asks you anything: some of what you just read is an ACTION due ' +
+      'at this moment, not a fact to carry. Find every rule in those files that says something ' +
+      'must happen before the first skill speaks or before it interviews you, DO those things, ' +
+      'and state what you did. **Having read a rule is not having obeyed it** — the observed ' +
+      'failure is an agent that read the file, quoted the rule back accurately, and let the ' +
+      'skill ask its first question first.\n\n' +
+      'Nothing downstream catches a skip: the cycle still runs, and the work still looks ' +
+      'correct afterwards.',
   },
 });
 
