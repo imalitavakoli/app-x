@@ -1142,7 +1142,7 @@ rule('skill-coupling', (r) => {
   // Gate names are NOT checked, and that is a decision, not an omission.
   // x-skill-build-helper explicitly permits a skill to head its own prerequisite
   // guard with the same words the workflow uses for a gate ("A skill's own guard
-  // is not a violation"). x-ng-doc-prd-writer and x-ng-doc-tfs-writer both do exactly
+  // is not a violation"). x-ng-doc-prd-writer and x-ng-doc-tsd-writer both do exactly
   // that, legitimately. No regex separates "my contract refuses this input" from
   // "the workflow decided this upstream", so flagging gate names produces mostly
   // false positives — and a check that cries wolf gets ignored, taking the true

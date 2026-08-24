@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TFS/feature-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `feature` lib spec + its FR/BR,
+Template for `docs/x/{name}/TSD/feature-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `feature` lib spec + its FR/BR,
 followed by the 🧳 User Experience & Flows journey (one sub-section per exported feature component).
 Include this file only when this functionality **owns** a `feature` lib (required for mixed; optional for visual / visual+ / mixed+). Lib name: `{domain}-feature-{name}` (same `{name}` as the functionality).
 Remove `>` helpers from the final draft. Register every FR/BR ID in the README's 🧭 ID Index.
@@ -52,7 +52,7 @@ export class V1{Name}FeaComponent extends V2BaseFeatureExtComponent implements V
 
 ###### Functional Requirements & Business Rule Breakdown
 
-> `describe`↔FR, `it`↔BR. Cover the **data-fetching** behaviour as **observable effects** — the data the component exposes to the `ui` once ready, its `state`/`hasError` on failure, DEP-config-driven inputs — **not** "the facade was called". To prove a request is correct, prime the facade to return data for the expected params and assert the exposed result. `Given/When/Then`. Back-link PRD ACs. New unique IDs, scoped to the component, unique across the TFS folder.
+> `describe`↔FR, `it`↔BR. Cover the **data-fetching** behaviour as **observable effects** — the data the component exposes to the `ui` once ready, its `state`/`hasError` on failure, DEP-config-driven inputs — **not** "the facade was called". To prove a request is correct, prime the facade to return data for the expected params and assert the exposed result. `Given/When/Then`. Back-link PRD ACs. New unique IDs, scoped to the component, unique across the TSD folder.
 
 ###### Error Handling & Edge Cases
 

@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TFS/data-access-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `data-access` lib spec + its FR/BR.
+Template for `docs/x/{name}/TSD/data-access-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `data-access` lib spec + its FR/BR.
 A `map` lib ALWAYS has a sister `data-access` lib, so include this whenever this functionality OWNS a map lib.
 Ownership decides the file set — never include this because a REUSED lib has a map/data-access pair.
 For an ABSTRACT functionality (no feature/ui), also add the short facade-consumer note at the end.

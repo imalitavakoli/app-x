@@ -1,6 +1,6 @@
-<!-- Example TFS folder for a MIXED+ functionality with the full optional set (map + data-access + ui + feature + page). mixed+ requires page + data-access; map/ui/feature are optional. A plain mixed requires data-access + feature and omits page-v1.md. Mirrors docs/x/ng-x-wallet/TFS/. -->
+<!-- Example TSD folder for a MIXED+ functionality with the full optional set (map + data-access + ui + feature + page). mixed+ requires page + data-access; map/ui/feature are optional. A plain mixed requires data-access + feature and omits page-v1.md. Mirrors docs/x/ng-x-wallet/TSD/. -->
 
-# TFS — ng-x-wallet
+# TSD — ng-x-wallet
 
 - **Last Updated**: 2026-07-26
 - **Last Verified**: 2026-07-26
@@ -53,7 +53,7 @@ _NONE_ — x-wallet's own `map`/`data-access` do not depend on other functionali
 
 ## 🧭 ID Index
 
-> Every FR/BR in this TFS, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
+> Every FR/BR in this TSD, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
 
 | ID                      | Lib file            | Maps to PRD AC               |
 | ----------------------- | ------------------- | ---------------------------- |

@@ -1,6 +1,6 @@
 # Amending and retiring an FR/BR
 
-Read this whenever you are **updating** an existing TFS and something already in it is no longer true — because the code now behaves differently, or the behaviour is gone.
+Read this whenever you are **updating** an existing TSD and something already in it is no longer true — because the code now behaves differently, or the behaviour is gone.
 
 Adding a new FR/BR is the easy case and needs nothing from this file: mint the next number, register it in the ID Index, done. The two hard cases are below.
 
@@ -8,7 +8,7 @@ Adding a new FR/BR is the easy case and needs nothing from this file: mint the n
 
 | The requirement itself…                                                     | Case             | What happens to the ID                               |
 | --------------------------------------------------------------------------- | ---------------- | ---------------------------------------------------- |
-| still exists, but the TFS **describes it wrongly** (an expectation changed) | **amend**        | **kept** — correct the text under it                 |
+| still exists, but the TSD **describes it wrongly** (an expectation changed) | **amend**        | **kept** — correct the text under it                 |
 | **no longer exists** (the behaviour was removed)                            | **retire**       | **burned** — moved to `DECISIONS.md`, never recycled |
 | has been **replaced by a different requirement**                            | **retire + add** | old burned, new number minted                        |
 
@@ -35,7 +35,7 @@ An FR/BR was approved when it was written, often by someone who is not in this s
 
 1. **Show the old text beside the new**, per ID. Not a summary — the actual before and after, so the reader can see exactly what is being reversed.
 2. **Get explicit confirmation.** Amending or retiring is not a mechanical edit; it reverses a prior decision.
-3. **Name who else is affected.** If the change is to a lib **other functionalities reuse**, their docs may now be wrong too. Find them by searching every `docs/x/*/TFS/README.md` **Existing Dependencies & Reuse** section for this lib's name, and list what you found. You are not fixing their docs — you are telling the user whose docs just became suspect.
+3. **Name who else is affected.** If the change is to a lib **other functionalities reuse**, their docs may now be wrong too. Find them by searching every `docs/x/*/TSD/README.md` **Existing Dependencies & Reuse** section for this lib's name, and list what you found. You are not fixing their docs — you are telling the user whose docs just became suspect.
 4. **If confirmation does not come, change nothing** and leave the discrepancy reported. A doc that is known-wrong and flagged is safer than one silently rewritten on an assumption.
 
 ## Common mistakes

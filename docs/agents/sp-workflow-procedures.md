@@ -27,7 +27,7 @@ The user is the only party who can resolve an approval. A caller asserting "thes
 
 **Read in this order, and scope the walk by the changed set** — on a mature functionality an unscoped walk is mostly a no-op that still reads everything:
 
-1. Open the TFS README's **ID Index** first. It maps every ID → its lib file → its PRD AC, so it is the cheap index that decides what else to open.
+1. Open the TSD README's **ID Index** first. It maps every ID → its lib file → its PRD AC, so it is the cheap index that decides what else to open.
 2. Intersect it with **the changed set** (the citing hook defines this).
 3. Walk **in full** only the entries those libs own, plus the ACs they back-link. Open a `{libtype}-v{n}.md` only when the Index says an in-scope ID lives in it — a v2-only pass never opens `ui-v1.md`.
 4. Entries whose libs the changed set never touched are **unchanged** by construction; record that without re-deriving it.
@@ -36,7 +36,7 @@ The user is the only party who can resolve an approval. A caller asserting "thes
 
 **The four outcomes** — act on what you find:
 
-- **Added** — implementation needed a requirement that has no ID → mint it (`x-ng-doc-prd-writer`, then `x-ng-doc-tfs-writer`) and re-tag the affected test titles. **Rename only**: the coverage already exists, because an execution subagent may not invent an ID — it flags a gap instead.
+- **Added** — implementation needed a requirement that has no ID → mint it (`x-ng-doc-prd-writer`, then `x-ng-doc-tsd-writer`) and re-tag the affected test titles. **Rename only**: the coverage already exists, because an execution subagent may not invent an ID — it flags a gap instead.
 - **Amended** — an existing AC/FR/BR is described wrongly (its expectation changed) → correct its text **under its existing ID**. Never renumber, and never mint a second ID for the same behaviour.
 - **Retired** — an existing AC/FR/BR describes behaviour that no longer exists → remove the entry, its **ID Index row** and its **AC back-link**, and confirm its test was deleted too. **Never recycle the number.**
 - **Unchanged** — the docs already match. Record it and move on; no edit.

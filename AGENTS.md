@@ -146,7 +146,7 @@ Which of our skills the workflow invokes, and where. _For orientation_ — each 
 | Skill                   | Kind     | Invoked at       |
 | ----------------------- | -------- | ---------------- |
 | `x-ng-doc-prd-writer`       | writer   | A1 · A3 · B1     |
-| `x-ng-doc-tfs-writer`       | writer   | A1 · A3 · B1     |
+| `x-ng-doc-tsd-writer`       | writer   | A1 · A3 · B1     |
 | `x-ng-lib-build-helper` | helper   | A1               |
 | `x-codeowners-helper`   | helper   | A1 (if create) · A3 (verify) |
 | `x-ng-test-unit-helper` | helper   | A1 · A3 · B1     |
@@ -160,7 +160,7 @@ Which of our skills the workflow invokes, and where. _For orientation_ — each 
 
 ### Where the workspace's docs live
 
-`/docs/introduction/folder-structure.md` maps every directory, including the 🆔 **ID registries** — `docs/x/{name}/PRD/` and `TFS/` for functionalities, `requirements/` for `util` / product `app` / grab-bag items, and `apps/{app}-e2e/user-stories/` — and the one shape they all share (`README.md` live · `DECISIONS.md` burned). Which lib type gets which: `/docs/getting-started/library-types-and-their-relationship.md`.
+`/docs/introduction/folder-structure.md` maps every directory, including the 🆔 **ID registries** — `docs/x/{name}/PRD/` and `TSD/` for functionalities, `requirements/` for `util` / product `app` / grab-bag items, and `apps/{app}-e2e/user-stories/` — and the one shape they all share (`README.md` live · `DECISIONS.md` burned). Which lib type gets which: `/docs/getting-started/library-types-and-their-relationship.md`.
 
 &nbsp;
 

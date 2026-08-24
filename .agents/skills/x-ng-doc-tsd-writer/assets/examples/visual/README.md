@@ -1,6 +1,6 @@
-<!-- Example TFS folder for a VISUAL functionality with ui + feature (either alone is also valid visual). Mirrors docs/x/ng-x-profile/TFS/. A visual+ owns a page — add page-v{n}.md (see mixed-plus example for its shape). This folder also demonstrates TWO LIVE VERSIONS of one lib: ui-v1.md + ui-v2.md. -->
+<!-- Example TSD folder for a VISUAL functionality with ui + feature (either alone is also valid visual). Mirrors docs/x/ng-x-profile/TSD/. A visual+ owns a page — add page-v{n}.md (see mixed-plus example for its shape). This folder also demonstrates TWO LIVE VERSIONS of one lib: ui-v1.md + ui-v2.md. -->
 
-# TFS — ng-x-profile
+# TSD — ng-x-profile
 
 - **Last Updated**: 2026-08-13
 - **Last Verified**: 2026-08-13
@@ -44,7 +44,7 @@ x-profile presents the user's profile in two forms — a compact card and an exp
 
 - **`[TO-UPDATE]`** `shared-ui-ng-popup` — the detail's "expand" popup.
   - **Surface it must gain for us:** a `size` input (`'sm' | 'lg'`), so the expanded detail can open at the large size.
-  - **Owner:** `ng-popup` (a separate visual functionality). Its requirements live in its own PRD & TFS; a companion task in the plan. No FR/BR here describes the popup's own behaviour or the surface it must gain — our only entry is the boundary BR `XPROFILE_DETAILV1_BR-05`, which asserts what we pass it.
+  - **Owner:** `ng-popup` (a separate visual functionality). Its requirements live in its own PRD & TSD; a companion task in the plan. No FR/BR here describes the popup's own behaviour or the surface it must gain — our only entry is the boundary BR `XPROFILE_DETAILV1_BR-05`, which asserts what we pass it.
   - **Blocks:** `XPROFILE-AC-05`.
 
 ### Used util libs
@@ -53,7 +53,7 @@ x-profile presents the user's profile in two forms — a compact card and an exp
 
 ## 🧭 ID Index
 
-> Every FR/BR in this TFS, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
+> Every FR/BR in this TSD, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
 
 | ID                         | Lib file        | Maps to PRD AC |
 | -------------------------- | --------------- | -------------- |

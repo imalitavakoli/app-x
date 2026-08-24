@@ -1,27 +1,27 @@
 # Reuse boundary — markers, ownership, and keeping them true
 
-Read this whenever this functionality reuses a lib it does not own — existing, not yet built, or needing a change for us — and whenever you **update** a TFS that already has reuse markers.
+Read this whenever this functionality reuses a lib it does not own — existing, not yet built, or needing a change for us — and whenever you **update** a TSD that already has reuse markers.
 
 ## Every requirement has exactly one home
 
 | The thing whose behaviour the requirement describes                                          | Where that requirement lives                                     |
 | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| A lib **this** functionality owns                                                            | this `docs/x/{name}/TFS/{libtype}-v{n}.md` — as an FR/BR         |
-| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/TFS/`            |
+| A lib **this** functionality owns                                                            | this `docs/x/{name}/TSD/{libtype}-v{n}.md` — as an FR/BR         |
+| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/TSD/`            |
 | An item in a **grab-bag** `ui` / `feature` lib                                               | that item's own `requirements/`, beside its inner version README |
 | A `util` lib                                                                                 | that util's own `requirements/`                                  |
 | An `api` lib                                                                                 | nowhere — `api` libs have no requirements doc                    |
 | An `app`                                                                                     | `apps/{app-name}/requirements/`                                  |
 
-This holds no matter who asked for the change. A reused lib that must gain something **for us** is still that lib's requirement, so it is still its owner's doc that gains it — and its creation or update is a **companion task in the plan**, never an owned lib of this TFS.
+This holds no matter who asked for the change. A reused lib that must gain something **for us** is still that lib's requirement, so it is still its owner's doc that gains it — and its creation or update is a **companion task in the plan**, never an owned lib of this TSD.
 
 ## A reused lib's spec — where it goes, and what you must not do
 
 Recording the dependency correctly in the README does **not** also license a `{libtype}-v{n}.md` for that lib. Emitting a spec file is a **separate decision**, governed by ownership alone:
 
-| The reused lib belongs to…                                               | Where its spec goes                                                                                                                                                          | In **this** TFS folder                                                         |
+| The reused lib belongs to…                                               | Where its spec goes                                                                                                                                                          | In **this** TSD folder                                                         |
 | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| a functionality **with** `docs/x/{its-name}/`                            | that functionality's own TFS, in a **separate writer run**                                                                                                                   | nothing but the reuse entry                                                    |
+| a functionality **with** `docs/x/{its-name}/`                            | that functionality's own TSD, in a **separate writer run**                                                                                                                   | nothing but the reuse entry                                                    |
 | a functionality **without** docs                                         | its docs must be written first — **a separate decision, and a separate run of the writers for that functionality**, not this one. **Report that they are missing and stop.** | nothing; do **not** write its docs from this run and do **not** park them here |
 | that gate answered **No** — or it is a `util` / `app` / grab-bag / `api` | the `[TO-UPDATE]` surface list is the whole record; the plan carries the work                                                                                                | nothing but the reuse entry                                                    |
 
@@ -36,10 +36,10 @@ Every entry under **🔗 Existing Dependencies & Reuse** carries its state for t
 | Marker        | Means                              | What it implies                                                                                                               |
 | ------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | _(none)_      | exists, used as-is                 | nothing — just record what we consume                                                                                         |
-| `[TO-CREATE]` | does not exist yet                 | companion task in the plan; a functionality needs its own PRD & TFS, a `util`/`app` its own `requirements/`, an `api` nothing |
+| `[TO-CREATE]` | does not exist yet                 | companion task in the plan; a functionality needs its own PRD & TSD, a `util`/`app` its own `requirements/`, an `api` nothing |
 | `[TO-UPDATE]` | exists, must gain something for us | same, plus: name the exact surface, its owning functionality, and the ACs it blocks                                           |
 
-Use exactly these two markers — never wording of your own (`[RECOMMENDED]`, `[UPDATE REQUIRED]`, `[NEEDS UPDATE]`, bold prose). The value of a marker is that one search finds every one of them across every TFS in the workspace; a synonym is invisible to that search.
+Use exactly these two markers — never wording of your own (`[RECOMMENDED]`, `[UPDATE REQUIRED]`, `[NEEDS UPDATE]`, bold prose). The value of a marker is that one search finds every one of them across every TSD in the workspace; a synonym is invisible to that search.
 
 ## Write the expiry condition into the marker
 
@@ -52,9 +52,9 @@ Instead, write each marker so a reader can retire it themselves in seconds, by n
 
 Anyone can now open that lib, see whether those three exist, and know whether the marker still holds. Compare with a bare `[TO-UPDATE] shared-feature-ng-notification-banner`, which can only be resolved by re-deriving the whole decision.
 
-## Clear stale markers when updating a TFS
+## Clear stale markers when updating a TSD
 
-**Whenever you update an existing `docs/x/{name}/TFS/`, re-verify every marker before writing anything else:**
+**Whenever you update an existing `docs/x/{name}/TSD/`, re-verify every marker before writing anything else:**
 
 1. For each `[TO-CREATE]` entry — does the lib exist now? If yes, **remove the marker** and keep the entry as a plain used-as-is dependency.
 2. For each `[TO-UPDATE]` entry — does the lib now have the surface the marker lists? If all of it landed, **remove the marker and the surface list**, leaving the plain entry. If only part landed, keep `[TO-UPDATE]` and narrow the list to what is still missing.
@@ -83,6 +83,6 @@ The last row is the subtle one: encoding another lib's output format into our BR
 | `{OWNER}` set to a reused component                    | `{OWNER}` is always an owned component or helper service.                    |
 | Inventing marker wording                               | `[TO-CREATE]` / `[TO-UPDATE]`, exactly — nothing else is greppable.          |
 | A bare `[TO-UPDATE]` with no surface list              | Name the surface, the owner, and the blocked ACs, so a reader can retire it. |
-| Updating a TFS without re-checking its markers         | Re-verify every marker first; clear the ones whose work has landed.          |
+| Updating a TSD without re-checking its markers         | Re-verify every marker first; clear the ones whose work has landed.          |
 | Clearing a marker because the work was "probably done" | Verify, or leave it and raise an Open Technical Question.                    |
 | A "these marks were accurate when written" disclaimer  | Redundant with **Last Updated**, and it makes every marker unactionable.     |

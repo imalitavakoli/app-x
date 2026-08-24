@@ -1,6 +1,6 @@
-<!-- Example TFS folder for an ABSTRACT functionality that uses map + data-access (map is optional in general — required here because it calls an API). Mirrors docs/x/ng-user-geo/TFS/. -->
+<!-- Example TSD folder for an ABSTRACT functionality that uses map + data-access (map is optional in general — required here because it calls an API). Mirrors docs/x/ng-user-geo/TSD/. -->
 
-# TFS — ng-user-geo
+# TSD — ng-user-geo
 
 - **Last Updated**: 2026-07-26
 - **Last Verified**: 2026-07-26
@@ -47,7 +47,7 @@ _NONE_ (abstract — no visual libs).
 
 ## 🧭 ID Index
 
-> Every FR/BR in this TFS, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
+> Every FR/BR in this TSD, the file it lives in, and the PRD AC it maps to. Keeps IDs unique across all files.
 
 | ID              | Lib file            | Maps to PRD AC                             |
 | --------------- | ------------------- | ------------------------------------------ |
