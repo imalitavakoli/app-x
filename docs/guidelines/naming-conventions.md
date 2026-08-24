@@ -135,7 +135,9 @@ Branch and commit naming (conventions, not tooling-enforced). Release / `fin` br
 
 `{type}/{TRACKER-ID}-{kebab-summary}` — **type** ∈ `feature` | `bugfix` | `hotfix` | `release`; **TRACKER-ID** = the task id (e.g. `TEA-4600`); **kebab-summary** = short, lowercase, hyphenated.
 
-e.g. `feature/TEA-4600-add-auth-page` · `bugfix/TEA-4611-fix-chart-zoom` · `release/TEA-4601-lib-auth`.
+If a **TRACKER-ID** is not already in the request, the current branch, or an obvious ticket reference, ask for it. Do not invent, omit, or placeholder one. If the user says there is no ID, drop that segment: `{type}/{kebab-summary}`.
+
+e.g. `feature/TEA-4600-add-auth-page` · `bugfix/TEA-4611-fix-chart-zoom` · `release/TEA-4601-lib-auth` · `feature/add-auth-page` (user said no ID).
 
 &nbsp;
 

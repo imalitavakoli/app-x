@@ -45,7 +45,7 @@
 
 - **Workspace vocabulary** — `/CONTEXT.md` is the authoritative glossary. **Search it for the term in bold** (it is a lookup surface, not a read-through doc) when you meet a workspace term you cannot define from the request alone, and before writing any such term into a doc, skill, or test title. A miss means it is not a term — continue; do not invent or offer an entry. Edit `CONTEXT.md` only when the user explicitly asks to add or change a term: `/docs/agents/context-md-format.md`.
 - Before naming a lib, folder, class, selector or CSS class: `/docs/guidelines/naming-conventions.md`.
-- Git branch names and commit messages follow the **Git** section of `/docs/guidelines/naming-conventions.md#git` (commits are `type(scope): summary`).
+- Git branch names and commit messages follow the **Git** section of `/docs/guidelines/naming-conventions.md#git` (commits are `type(scope): summary`). A branch needs a **TRACKER-ID** unless the user says there is none — ask if missing; do not invent one.
 - Before writing, changing or reviewing any code: `/docs/guidelines/best-practices.md` **in full** — Mindset, Documenting and Organizing. You will not know which of the three binds until you are into the work, so read it whole rather than picking a section.
 - Shared libraries are versioned and reused across apps (see `/docs/getting-started/library-types-and-their-relationship.md#versioning-shared-libs`).
 - For Angular, see `/docs/guidelines/available-commands.md#angular-related` for generation and build patterns.
