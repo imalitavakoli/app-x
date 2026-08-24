@@ -57,7 +57,7 @@ Optional **Rules** after the list — only what is true of the **key**, never a 
 
 - **Scope:** every-path
 - **In the plan:** none
-- **Casual default:** `developer`
+- **Casual default:** none
 - **Does:** chat register only — same work, different words.
 
 **Rules.** Resolve at cycle start, before the first interviewing Superpowers skill. `developer` is today's register (paths, libs, code). `product` is a PM / PRD owner: they know **ACs**, not HTML/JS/TS/SCSS/CSS/Angular or other framework syntax.
