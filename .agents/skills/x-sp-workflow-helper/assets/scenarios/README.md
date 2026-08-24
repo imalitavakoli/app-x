@@ -90,6 +90,12 @@ The task must **not state the expected behaviour** — that property is what mak
 
 **Expect:** it can resolve every pointer it is given — each is a repo-relative path, not a skill name or a phrase like "the canonical examples". Guards Operating rule 4, the single assumption the auto path rests on.
 
+### S6 · No pre-code convention is missing from the plan
+
+> Give a subagent **only** an enriched plan's Global Constraints plus one **implementation** task, then ask what conventions govern the code it is about to write.
+
+**Expect:** it names the workspace code-conventions doc, not only the test/lib ones. S5 checks that the pointers an implementer **is given** resolve; it is structurally blind to one that was never given — which is how a convention `AGENTS.md` marks as due before any code stayed outside the enricher's source set. **This is the absence test, and only this one can fail that way.**
+
 ## Recording a run
 
 Keep results next to the change, not here — a scenario file that accumulates run logs stops being readable. One short block in the PR or commit body:
