@@ -1068,6 +1068,42 @@ rule('path-isolation', (r) => {
   }
 });
 
+/* --- 9b. AGENTS.md carries no path-file notation -------------------------- */
+// Hook IDs and kind tags only. The full ban in agents-md-format.md also covers
+// the landmark icons, but those are NOT checked here: AGENTS.md legitimately
+// uses emoji in its own headings, so matching icons would need the reserved-set
+// distinction and would fire on correct text. A narrow rule that never cries
+// wolf beats a broad one people learn to suppress — this catches the class that
+// actually shipped, where an orientation table listed hook IDs and three
+// separate agents each invented the same wrong meaning for one.
+rule('agents-notation', (r) => {
+  if (!exists(AGENTS)) return;
+  const HOOK_ID = /(?<![\w-])([ABC][1-9])(?![\w-])/g;
+  const isTableRow = (t) => t.trimStart().startsWith('|');
+  const all = [...lines(AGENTS)];
+
+  // An ID is resolvable when the file also names it OUTSIDE a table — the
+  // legend beneath the table. A bare ID in a table cell, with nothing in the
+  // file defining it, is the forward reference this rule exists to catch.
+  const defined = new Set();
+  for (const { text } of all) {
+    if (isTableRow(text)) continue;
+    for (const m of text.matchAll(HOOK_ID)) defined.add(m[1]);
+  }
+
+  for (const { n, text } of all) {
+    if (suppressed('agents-notation', AGENTS, text)) continue;
+    for (const m of text.matchAll(/\[(?:gated|close-out)\]/g)) {
+      emitMsg(r, MSG.agentsUsesKindTag({ file: AGENTS, line: n, token: m[0] }));
+    }
+    if (!isTableRow(text)) continue;
+    for (const m of text.matchAll(HOOK_ID)) {
+      if (defined.has(m[1])) continue;
+      emitMsg(r, MSG.agentsIdUndefined({ file: AGENTS, line: n, token: m[1] }));
+    }
+  }
+});
+
 /* --- 10. landmark grammar ------------------------------------------------- */
 rule('landmarks', (r) => {
   for (const p of PATH_FILES) {

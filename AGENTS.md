@@ -154,6 +154,8 @@ Which of our skills the workflow invokes, and where. _For orientation_ — each 
 | `x-ng-sp-plan-enricher` | enricher | A2               |
 | `x-skill-build-helper`  | helper   | C1               |
 
+**Where those fire** — `A1` before planning · `A2` after the plan is written, before execution · `A3` before finishing · `B1` on a defect fix, before finishing · `C1` on other work. The path file that owns each one defines it fully; this line exists so the IDs above resolve without leaving this file.
+
 **If a referenced skill is missing, say so and ask** — do not skip its step silently. (A later step whose required input never arrived will stop and ask per its own prerequisite guard, rather than produce wrong output.)
 
 &nbsp;

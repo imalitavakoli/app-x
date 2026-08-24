@@ -431,6 +431,45 @@ export const pathCitesPath = ({ file, line, other }) => ({
 });
 
 /**
+ * `AGENTS.md` uses a landmark kind tag.
+ *
+ * - **Used by** the `agents-notation` rule.
+ * - **Why** a kind tag carries semantics only the notation catalog defines
+ *   (whether a gate may skip that hook), and unlike a hook ID it cannot be
+ *   made resolvable by a one-line legend — the meaning is the whole catalog
+ *   entry. `AGENTS.md` is read first, so the tag can only mislead.
+ * - **Seen when** a rule moves into `AGENTS.md` from a path file and keeps the
+ *   landmark decoration it had there.
+ */
+export const agentsUsesKindTag = ({ file, line, token }) => ({
+  fail:
+    `${file}:${line} names \`${token}\` — a landmark kind tag, which ${file} must not use: ` +
+    'it is read before the notation catalog, and unlike a hook ID a tag cannot be made ' +
+    'resolvable in one line. Say plainly what it does instead, and leave the tag to the ' +
+    'path file that defines it.',
+});
+
+/**
+ * `AGENTS.md` names a hook ID it never defines.
+ *
+ * - **Used by** the `agents-notation` rule.
+ * - **Why** `AGENTS.md` is read before the path files, so an ID that appears
+ *   only as a bare label is a forward reference — and readers do not stop at
+ *   "unknown", they invent a meaning. Three agents each invented the same
+ *   wrong one for the same orientation table. An ID is allowed here **when the
+ *   file also defines it**, which a one-line legend does; the ban is on the
+ *   dangling reference, not on the notation.
+ * - **Seen when** a table lists where skills fire and the legend that resolved
+ *   those IDs is removed, reworded away, or never written.
+ */
+export const agentsIdUndefined = ({ file, line, token }) => ({
+  fail:
+    `${file}:${line} names \`${token}\` in a table, but ${file} never defines it outside ` +
+    'one — so a reader who has not opened the path file cannot resolve it and will guess. ' +
+    'Add it to the legend beneath the table, or say the moment plainly instead.',
+});
+
+/**
  * A skill names the workflow's control flow.
  *
  * - **Used by** the `skill-coupling` rule.
@@ -535,6 +574,7 @@ export const titles = {
   'x-skills': 'Workspace skills exist, and every stub matches its canonical',
   versions: 'Every workspace skill carries a block-form semver',
   'path-isolation': 'No path file cites another path file',
+  'agents-notation': 'Every hook ID AGENTS.md names is defined in AGENTS.md',
   landmarks: 'Landmark headings and reserved icons follow the notation',
   'skill-coupling':
     'Skills do not name workflow landmarks (control flow stays in the docs)',

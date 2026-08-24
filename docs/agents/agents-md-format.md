@@ -70,7 +70,11 @@ Do not use the path files' notation here. Do not add a second pointer from Pre-f
 - **`#` for top-level sections, `##` for the workflow's own subsections.** Inside a path file, only a 🪝 hook takes a `####` heading — see [sp-workflow-format.md](sp-workflow-format.md).
 - **Absolute repo paths** (`/docs/…`, `/CONTEXT.md`) when pointing out of the file, so the reference resolves the same whichever directory an agent is working from.
 - **State the trigger, not the topic**, in every pointer. See the pointer rule above.
-- **Never use the path files' notation here.** No 🚧 gate, 📌 constraint, `[gated]` / `[close-out]`, set names, or hook IDs. `AGENTS.md` is read _before_ [sp-workflow-format.md](sp-workflow-format.md), so every one of those is a forward reference to vocabulary the reader does not have yet. Say the thing plainly instead; if a path file names the same rule under a landmark, that is the path file's job. Checkable in one grep before you commit.
+- **Never leave the path files' notation unresolvable here.** `AGENTS.md` is read _before_ [sp-workflow-format.md](sp-workflow-format.md), so its notation is vocabulary the reader does not have yet — and a reader who cannot resolve a token does not stop, they invent a meaning. Two cases, and they differ:
+  - **A 🚧 gate, 📌 constraint, `[gated]` / `[close-out]` tag, or set name: never.** Their meaning _is_ the catalog entry, so no short gloss makes them resolvable. Say the thing plainly; if a path file names the same rule under a landmark, that is the path file's job.
+  - **A hook ID: only if this file defines it.** A bare `A1` in a table is the forward reference — three agents each invented the same wrong meaning for one. The same `A1` beside a legend that says what it is costs one line and keeps a cross-reference table readable at a glance. Define every ID the file uses, outside the table that uses them.
+
+  The `agents-notation` checker rule enforces both, so this is checkable rather than remembered.
 
 &nbsp;
 
