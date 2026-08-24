@@ -17,14 +17,14 @@ No execution mode here — that question belongs to path A only. For git, see _G
 > - **Yes** → B1's `[gated]` band runs.
 > - **No** (`util` / `api` / `app`, or a **grab-bag** `ui` / `feature`) → **skip that band**: those never have `docs/x/` docs to verify. B1’s Always band still verifies their local `requirements/` registry.
 >
-> Grab-bag `ui` / `feature` libs are defined in `/docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Unit tests for all of these libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TFS writers.
+> Grab-bag `ui` / `feature` libs are defined in `/docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Unit tests for all of these libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TSD writers.
 
 > 🚧 **Missing-docs gate** [auto] — **Asks:** does that lib's functionality already have `docs/x/{name}/`?
 >
 > - **Yes** → B1's `[gated]` band runs.
-> - **No** → **skip that band**: with no `docs/x/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TFS FR/BRs — so there is nothing to verify, amend, retire or re-tag.
+> - **No** → **skip that band**: with no `docs/x/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TSD FR/BRs — so there is nothing to verify, amend, retire or re-tag.
 >
-> `[auto]`, not `[ask]`: a bug fix is not the place for a first-time PRD/TFS interview. If the user wants that functionality documented, that is a design-work cycle of its own.
+> `[auto]`, not `[ask]`: a bug fix is not the place for a first-time PRD/TSD interview. If the user wants that functionality documented, that is a design-work cycle of its own.
 
 **When no lib is under test at all.** `systematic-debugging` covers more than feature defects — build failures, performance problems, integration issues. A broken CI pipeline, a slow tooling script or a misconfigured executor has no lib under test, so **both gates answer No**, the whole docs-in-scope set is skipped, and this path is exactly `systematic-debugging` → `test-driven-development` → `verification-before-completion`, with B1's Always band finding nothing to verify. That is the correct outcome, not a gap — do not go hunting for docs to update.
 
@@ -47,7 +47,7 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 
 **[gated]** — part of the docs-in-scope set; runs only when both gates answer **Yes**:
 
-1. **Verify the PRD & TFS against the proven fix**, once per functionality (📌 _Companion work_), following [sp-workflow-procedures.md](sp-workflow-procedures.md) → _Verifying a functionality's docs against what shipped_. That procedure carries the scoped read, the two carve-outs, the four outcomes, the never-silent amend/retire and the `Last Verified` stamps — all of it part of this step, none of it optional.
+1. **Verify the PRD & TSD against the proven fix**, once per functionality (📌 _Companion work_), following [sp-workflow-procedures.md](sp-workflow-procedures.md) → _Verifying a functionality's docs against what shipped_. That procedure carries the scoped read, the two carve-outs, the four outcomes, the never-silent amend/retire and the `Last Verified` stamps — all of it part of this step, none of it optional.
 
    **The changed set here is the files the fix touched**, which 📌 _Change-set paths_ already reported (`systematic-debugging` established them): this path has no plan, and often no branch and no commits (_Git contract_). A one-line fix is where the scoping earns the most — without it, proving one behaviour would re-read every AC and every ID the functionality has. And a debugging cycle reaches this hook deep with no plan to fall back on, so relay the amend/retire confirmation rather than settling it.
 

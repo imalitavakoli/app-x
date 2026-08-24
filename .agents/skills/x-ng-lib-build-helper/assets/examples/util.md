@@ -2,7 +2,7 @@
 
 Sample files from a `util` lib — non-UI, framework-free helpers that any lib or app may import. Use them as inspiration when creating or extending one, e.g. `shared-util-formatters`.
 
-> **A `util` is never a functionality.** No `docs/x/{name}/` PRD or TFS, no ACs, no e2e — ever, whatever shape it takes. Its unit-test FR/BR IDs come from a local `requirements/` registry (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → 'util' type.
+> **A `util` is never a functionality.** No `docs/x/{name}/` PRD or TSD, no ACs, no e2e — ever, whatever shape it takes. Its unit-test FR/BR IDs come from a local `requirements/` registry (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → 'util' type.
 
 ## Two shapes — and why it changes nothing here
 
@@ -91,7 +91,7 @@ export function v1DateFormatShort(
 
 ### `requirements/README.md` file
 
-The item's own FR/BR registry — a `util` has no TFS, so this is what its unit tests map to. IDs are `UTIL-{KEY}-…`, where `{KEY}` is the folder basename minus `-v{n}`, uppercased with `-` → `_` (`date-v1` → `DATE`):
+The item's own FR/BR registry — a `util` has no TSD, so this is what its unit tests map to. IDs are `UTIL-{KEY}-…`, where `{KEY}` is the folder basename minus `-v{n}`, uppercased with `-` → `_` (`date-v1` → `DATE`):
 
 ```markdown
 # `date-v1` requirements
@@ -177,4 +177,4 @@ Run `nx test shared-util-formatters` to execute the unit tests.
 | No `data-access` / `map` imports | if it needs data, take it as an argument; if it truly must import, go through an `api` re-export lib |
 | No URL / route access            | that is a `page` concern                                                                             |
 | Exports are `v{n}{FunName}`      | there is no class or selector to carry the version                                                   |
-| Never a `docs/x/` PRD or TFS     | a `util` is not a functionality, whatever its shape                                                  |
+| Never a `docs/x/` PRD or TSD     | a `util` is not a functionality, whatever its shape                                                  |

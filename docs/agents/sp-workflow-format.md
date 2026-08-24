@@ -41,7 +41,7 @@ Landmark catalog — one entry per type (**Meaning** → **Shape** → **Example
 - **step** — one piece of work inside a step band (or directly under a simple `[gated]` hook). No landmark icon.
   - **Meaning:** Each step becomes one todo (Operating rule 3).
   - **Shape:** numbered list item under its step band (or directly under the hook when there is no band).
-  - **Example:** `1. **Write/refresh the PRD & TFS** — …` (Path A A1 gated band)
+  - **Example:** `1. **Write/refresh the PRD & TSD** — …` (Path A A1 gated band)
 
 **On a path (not inside a hook)**
 

@@ -1,6 +1,6 @@
 # Example — unit spec
 
-A `feature` component (`V1XProfileCardFeaComponent`) whose behaviour the TFS specified as FRs/BRs. Shows: `describe`=FR / `it`=BR with **comment dividers**, `Given/When/Then` titles + **AAA** bodies, the **`jest.preset.js` handling** (native modules not re-stubbed; a hoisted barrel mock only for import safety), and **observable-effect** assertions — never asserting a collaborator was called.
+A `feature` component (`V1XProfileCardFeaComponent`) whose behaviour the TSD specified as FRs/BRs. Shows: `describe`=FR / `it`=BR with **comment dividers**, `Given/When/Then` titles + **AAA** bodies, the **`jest.preset.js` handling** (native modules not re-stubbed; a hoisted barrel mock only for import safety), and **observable-effect** assertions — never asserting a collaborator was called.
 
 _(Illustrative — adapt the facade double to the real lib's base-class wiring. `.spec.ts`/`jest` are today's runner; re-check `jest.preset.js`.)_
 

@@ -41,7 +41,7 @@ The first two rows collide constantly, so the boundary is explicit:
 | Fact                                                                                                    | Home                                                           |
 | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
 | "A **grab-bag** holds several unrelated items sharing only a technical kind."                           | `CONTEXT.md`                                                   |
-| "A grab-bag is therefore not a functionality, so it gets no PRD/TFS — it uses a local `requirements/`." | `docs/getting-started/library-types-and-their-relationship.md` |
+| "A grab-bag is therefore not a functionality, so it gets no PRD/TSD — it uses a local `requirements/`." | `docs/getting-started/library-types-and-their-relationship.md` |
 
 A skill or doc that needs the consequence writes **one line of consequence plus a term citation**, never a re-derivation of the definition:
 
@@ -70,7 +70,7 @@ Pointing instead of copying is what keeps one fact in one home — but a badly w
    | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
    | a **lookup surface** — glossary, index, registry, ID table, large multi-topic reference | the one entry or section, named in the pointer                                               |
    | a **contract or procedure** — a path file, the shared rules, a `SKILL.md`, a template   | **in full**, and the pointer must say _in full_ — its parts interact, so half of it misleads |
-   | a document you are **updating** — a PRD, a TFS lib file, a registry you are editing     | **in full**, so you cannot miss the entry that contradicts the change you are about to make  |
+   | a document you are **updating** — a PRD, a TSD lib file, a registry you are editing     | **in full**, so you cannot miss the entry that contradicts the change you are about to make  |
 
    **The test: do you arrive with a question, or with a job?** A question has its answer in one place — point at that place. A job needs the whole contract, because you do not yet know which parts will bind. Most of this workspace's mandated reads are jobs, and they are correctly whole-file: `AGENTS.md` every turn, a path file before executing it, a `SKILL.md` before following it.
 

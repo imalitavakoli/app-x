@@ -43,7 +43,7 @@ x/
 │   ├── agents/                                     // Holds the AI-agent docs: the Superpowers workflow paths, their shared rules and notation, and how to edit `AGENTS.md` / `CONTEXT.md`.
 │   └── x/{functionality-name}/                     // Holds ONE functionality's specs — the source of truth its tests are written against.
 │       ├── PRD/                                    // 🆔 Product spec: the Acceptance Criteria (AC) an e2e `it` cites.
-│       └── TFS/                                    // 🆔 Technical spec, per lib type per live version: the FRs (`describe`) and BRs (`it`) a unit test cites, plus the README's ID Index.
+│       └── TSD/                                    // 🆔 Technical spec, per lib type per live version: the FRs (`describe`) and BRs (`it`) a unit test cites, plus the README's ID Index.
 ├── fin/apps/{app-name}/                            // Holds the final distribution files of an app (autmation tools may use them).
 ├── libs/                                           // Holds our libs.
 │   ├── {app-name}/                                 // Holds libs of a specific app.

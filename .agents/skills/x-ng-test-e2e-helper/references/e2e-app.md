@@ -13,7 +13,7 @@ Read this before adding or reusing a User Story (US) when writing e2e tests.
 
 Example: `apps/ng-boilerplate-e2e/user-stories/README.md`.
 
-`README.md` lists only what is live. Retiring or merging a US **moves** its row to `DECISIONS.md` rather than deleting it — the same split a functionality uses between `PRD/README.md` and `PRD/DECISIONS.md`, and the same reason the TFS ID Index drops a retired row while `DECISIONS.md` keeps it: an index that accumulates dead entries stops being readable at the moment it is read most.
+`README.md` lists only what is live. Retiring or merging a US **moves** its row to `DECISIONS.md` rather than deleting it — the same split a functionality uses between `PRD/README.md` and `PRD/DECISIONS.md`, and the same reason the TSD ID Index drops a retired row while `DECISIONS.md` keeps it: an index that accumulates dead entries stops being readable at the moment it is read most.
 
 ## Lifecycle
 

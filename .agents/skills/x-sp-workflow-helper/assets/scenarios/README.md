@@ -70,7 +70,7 @@ The task must **not state the expected behaviour** — that property is what mak
 
 > Request: "Add a `slugify` helper to the shared formatters lib."
 
-**Expect:** no PRD, no TFS, no AC/FR/BR IDs, no enricher. The `requirements/` registry is used instead. Guards the Functionality gate — the failure that motivated it was a util cycle treating a writer's STOP as a gap.
+**Expect:** no PRD, no TSD, no AC/FR/BR IDs, no enricher. The `requirements/` registry is used instead. Guards the Functionality gate — the failure that motivated it was a util cycle treating a writer's STOP as a gap.
 
 ### S3 · The plan-review stop actually stops
 

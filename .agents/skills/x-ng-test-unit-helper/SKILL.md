@@ -1,8 +1,8 @@
 ---
 name: x-ng-test-unit-helper
-description: "WHAT? The workspace conventions for a lib's Jest unit tests — FR/BR ID mapping from TFS (single-purpose functionalities) or a local requirements/ registry (util / app / grab-bag ui-feature), what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for map / data-access / ui / feature / page, or for util / app / a grab-bag lib when tests are in scope; when deciding a spec's IDs, structure, mocking, or readability. Api libs have no such registry. Read references/libs/util.md, app.md or grab-bag.md when testing those lib types."
+description: "WHAT? The workspace conventions for a lib's Jest unit tests — FR/BR ID mapping from TSD (single-purpose functionalities) or a local requirements/ registry (util / app / grab-bag ui-feature), what `jest.preset.js` already provides, and the required spec formatting. WHEN? Before writing or updating any `*.spec.ts` for map / data-access / ui / feature / page, or for util / app / a grab-bag lib when tests are in scope; when deciding a spec's IDs, structure, mocking, or readability. Api libs have no such registry. Read references/libs/util.md, app.md or grab-bag.md when testing those lib types."
 metadata:
-  version: '1.6.1'
+  version: '1.6.2'
 ---
 
 # Test Unit Helper
@@ -11,7 +11,7 @@ metadata:
 
 This skill is a **helper**: it puts the workspace's unit-test conventions into your context. It **produces nothing** — whoever is doing the work writes the tests, following these conventions.
 
-For a **functionality** lib, unit tests trace to that functionality's **TFS**: **FR → `describe`, BR → `it`**. For a **`util`**, a product **`app`**, or an item in a **grab-bag** `ui`/`feature` lib, there is still **no** `docs/x/` PRD/TFS — FR/BR IDs come from a local **`requirements/`** registry instead (see [Lib-type extras](#lib-type-extras-read-on-demand)). **`api`** libs have no code and no such registry; if somehow tested, use ID-less titles.
+For a **functionality** lib, unit tests trace to that functionality's **TSD**: **FR → `describe`, BR → `it`**. For a **`util`**, a product **`app`**, or an item in a **grab-bag** `ui`/`feature` lib, there is still **no** `docs/x/` PRD/TSD — FR/BR IDs come from a local **`requirements/`** registry instead (see [Lib-type extras](#lib-type-extras-read-on-demand)). **`api`** libs have no code and no such registry; if somehow tested, use ID-less titles.
 
 **A `ui` or `feature` lib is only a functionality when it is single-purpose.** A **grab-bag** (`CONTEXT.md`) is not, and takes the local `requirements/` route. The tell that separates the two is in `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 
@@ -21,10 +21,10 @@ It only adds **workspace specifics** (FR/BR IDs from the right source, test conf
 
 Writing or updating a `*.spec.ts` for any testable TypeScript/JavaScript in a workspace lib:
 
-- **Functionality libs** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) — a component, service, directive, pipe, guard, or a pure helper inside one. Use the full FR/BR ID contract from the TFS below.
-- **Grab-bag `ui` / `feature`** — read [references/libs/grab-bag.md](references/libs/grab-bag.md) first: create/update that **item's** `requirements/` folder beside its inner version README and map `describe`/`it` to its `UI-…` / `FEA-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS, and never e2e.
-- **`util`** — when the workflow, brainstorm, or plan includes unit tests. Read [references/libs/util.md](references/libs/util.md) first: create/update that version's `requirements/` and map `describe`/`it` to its `UTIL-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS.
-- **`app`** (product under `apps/{app-name}/`, not `{app}-e2e`) — when unit tests are in scope. Read [references/libs/app.md](references/libs/app.md) first: create/update `apps/{app-name}/requirements/` and map to `APP-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TFS. E2e apps use `user-stories/`, not this file.
+- **Functionality libs** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`) — a component, service, directive, pipe, guard, or a pure helper inside one. Use the full FR/BR ID contract from the TSD below.
+- **Grab-bag `ui` / `feature`** — read [references/libs/grab-bag.md](references/libs/grab-bag.md) first: create/update that **item's** `requirements/` folder beside its inner version README and map `describe`/`it` to its `UI-…` / `FEA-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TSD, and never e2e.
+- **`util`** — when the workflow, brainstorm, or plan includes unit tests. Read [references/libs/util.md](references/libs/util.md) first: create/update that version's `requirements/` and map `describe`/`it` to its `UTIL-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TSD.
+- **`app`** (product under `apps/{app-name}/`, not `{app}-e2e`) — when unit tests are in scope. Read [references/libs/app.md](references/libs/app.md) first: create/update `apps/{app-name}/requirements/` and map to `APP-…` FR/BR IDs. Do **not** create `docs/x/` PRD/TSD. E2e apps use `user-stories/`, not this file.
 - **`api`** — no `requirements/` registry (proxy-only, no code). Do not invent FR/BR IDs or functionality docs for them.
 
 ## Keeping a local `requirements/` registry true
@@ -36,7 +36,7 @@ The registry is a **folder**, laid out like a functionality's `PRD/`:
 | `README.md`    | the **live** FR/BR registry — every ID a spec may reference        |
 | `DECISIONS.md` | **burned** IDs — retired requirements, so a number is never reused |
 
-When you touch a lib that already has one, its existing entries can go stale the same way a TFS does. Four outcomes, same as for a functionality's docs:
+When you touch a lib that already has one, its existing entries can go stale the same way a TSD does. Four outcomes, same as for a functionality's docs:
 
 | Outcome       | What to do                                                                                                                                                      |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -59,18 +59,18 @@ When you touch a lib that already has one, its existing entries can go stale the
 - **`app`** (product app, not e2e) — [references/libs/app.md](references/libs/app.md)
 - **grab-bag `ui` / `feature`** — [references/libs/grab-bag.md](references/libs/grab-bag.md)
 
-## Map each block to a TFS ID (functionality libs only)
+## Map each block to a TSD ID (functionality libs only)
 
 **Skip this section** when the lib under test is `util`, a product `app`, or a **grab-bag** `ui`/`feature` — use [Lib-type extras](#lib-type-extras-read-on-demand) instead. **Skip** for `api` — ID-less titles only if ever tested.
 
-**No TFS in scope:** if there is no `docs/x/{name}/TFS/` for the functionality under test and this work is not producing one, **do not** require FR/BR IDs — use plain titles. Do not invent IDs and do not create a TFS from here.
+**No TSD in scope:** if there is no `docs/x/{name}/TSD/` for the functionality under test and this work is not producing one, **do not** require FR/BR IDs — use plain titles. Do not invent IDs and do not create a TSD from here.
 
-For a **functionality** lib, the TFS — the `docs/x/{name}/TFS/` folder, specifically the `{libtype}-v{n}.md` file for the lib version you're testing (an unversioned app-domain lib uses the plain `{libtype}.md`) (its FR/BR live in that file; the README's ID Index lists every ID and where it lives) — is the source of the IDs. Each exported component and helper service owns its own. Use the **exact IDs written in the TFS** (the TFS defines their format; don't invent your own).
+For a **functionality** lib, the TSD — the `docs/x/{name}/TSD/` folder, specifically the `{libtype}-v{n}.md` file for the lib version you're testing (an unversioned app-domain lib uses the plain `{libtype}.md`) (its FR/BR live in that file; the README's ID Index lists every ID and where it lives) — is the source of the IDs. Each exported component and helper service owns its own. Use the **exact IDs written in the TSD** (the TSD defines their format; don't invent your own).
 
 - **`describe`** ↔ a **Functional Requirement (FR)** — titled `<FR-ID>: <what it tests>`.
 - **`it`** ↔ a **Business Rule (BR)** — titled `<BR-ID>: Given <…>; When <…>; Then <…>`, and use **AAA** (Arrange / Act / Assert) in the body.
 
-Every test that asserts a **functionality behavior** uses the **exact FR/BR ID from the TFS** — the TFS is the source of truth for IDs; a test never invents one. In the rare case you hit a real behavior the TFS doesn't cover, don't write an untraceable test and **don't edit the TFS here** — **flag it as a TFS gap** so the FR/BR is added to the TFS by its author (a separate step); the test then uses that new ID. Reserve a plain (ID-less) title only for tests of purely-internal helpers the TFS does not track.
+Every test that asserts a **functionality behavior** uses the **exact FR/BR ID from the TSD** — the TSD is the source of truth for IDs; a test never invents one. In the rare case you hit a real behavior the TSD doesn't cover, don't write an untraceable test and **don't edit the TSD here** — **flag it as a TSD gap** so the FR/BR is added to the TSD by its author (a separate step); the test then uses that new ID. Reserve a plain (ID-less) title only for tests of purely-internal helpers the TSD does not track.
 
 ## Read the test config first (Jest today)
 
@@ -109,12 +109,12 @@ For util/app local FR/BR registries, imitate the example folder [assets/examples
 
 | Mistake                                                            | Fix                                                                                                                                                         |
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `describe` / `it` without FR / BR IDs (functionality lib)          | Tag each from the TFS: FR → `describe`, BR → `it`, using the exact TFS IDs.                                                                                 |
-| Skipping util/app unit tests because no TFS                        | No `docs/x/` docs — use the local `requirements/` registry (`UTIL-` / `APP-` IDs). See [Lib-type extras](#lib-type-extras-read-on-demand).                  |
+| `describe` / `it` without FR / BR IDs (functionality lib)          | Tag each from the TSD: FR → `describe`, BR → `it`, using the exact TSD IDs.                                                                                 |
+| Skipping util/app unit tests because no TSD                        | No `docs/x/` docs — use the local `requirements/` registry (`UTIL-` / `APP-` IDs). See [Lib-type extras](#lib-type-extras-read-on-demand).                  |
 | Inventing FR/BR IDs for an `api` lib                               | No `requirements/` registry for api — ID-less titles only if ever tested; do not invent IDs or create functionality docs.                                   |
-| Using TFS / `docs/x/` paths for util/app IDs                       | IDs come from the local `requirements/README.md` beside the inner (util) or app README.                                                                     |
-| A real functionality behavior tested without a TFS ID              | Don't invent an ID or write an untraceable test; flag it as a TFS gap (the TFS author adds the FR/BR, then the test uses it). Don't edit the TFS from here. |
-| Requiring TFS IDs when no TFS is in scope                          | No `docs/x/{name}/TFS/` and none being written — plain titles; do not invent IDs or create a TFS from here.                                                 |
+| Using TSD / `docs/x/` paths for util/app IDs                       | IDs come from the local `requirements/README.md` beside the inner (util) or app README.                                                                     |
+| A real functionality behavior tested without a TSD ID              | Don't invent an ID or write an untraceable test; flag it as a TSD gap (the TSD author adds the FR/BR, then the test uses it). Don't edit the TSD from here. |
+| Requiring TSD IDs when no TSD is in scope                          | No `docs/x/{name}/TSD/` and none being written — plain titles; do not invent IDs or create a TSD from here.                                                 |
 | Asserting a mock was called                                        | Test the unit's real observable output; asserting on mocks is a TDD anti-pattern.                                                                           |
 | Re-stubbing Capacitor / Firebase for import safety                 | The preset already makes their imports safe — read it before adding any stub.                                                                               |
 | Manually setting up jQuery / browser globals                       | The preset installs them before module evaluation.                                                                                                          |

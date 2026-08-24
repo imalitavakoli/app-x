@@ -2,7 +2,7 @@
 
 - **Last Verified** (YYYY-MM-DD): {date}
 
-> Local **live** FR/BR registry for unit tests. **Not** a `docs/x/` PRD/TFS. Burned IDs live in [DECISIONS.md](DECISIONS.md) beside this file.
+> Local **live** FR/BR registry for unit tests. **Not** a `docs/x/` PRD/TSD. Burned IDs live in [DECISIONS.md](DECISIONS.md) beside this file.
 >
 > - **util:** IDs are `UTIL-{KEY}-FR-##` / `UTIL-{KEY}-BR-##`
 > - **app:** IDs are `APP-{KEY}-FR-##` / `APP-{KEY}-BR-##`

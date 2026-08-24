@@ -21,17 +21,17 @@ Nx module boundaries (`@nx/enforce-module-boundaries` in `.eslintrc.json`) contr
 | --------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------- |
 | **What it describes** | What a **single** lib is allowed to do                              | A **product feature** made of one or more libs working together |
 | **Values**            | `api`, `util`, `map`, `data-access`, `ui`, `feature`, `page`, `app` | `abstract`, `visual`, `visual+`, `mixed`, `mixed+`              |
-| **PRD / TFS**         | Not by themselves                                                   | Yes — under `docs/x/{name}/` for functionalities only           |
+| **PRD / TSD**         | Not by themselves                                                   | Yes — under `docs/x/{name}/` for functionalities only           |
 
-**PRD and TFS exist only for functionalities.** They do **not** exist for a bare library that is not a functionality.
+**PRD and TSD exist only for functionalities.** They do **not** exist for a bare library that is not a functionality.
 
-- `util`, `api`, and `app` **never** form a functionality — alone or as part of one. Editing one of these does **not** call for a PRD or TFS.
+- `util`, `api`, and `app` **never** form a functionality — alone or as part of one. Editing one of these does **not** call for a PRD or TSD.
   - `util` / `api` — supporting libs (utilities / proxy doors).
   - `app` — a final product under `apps/`, not a functionality and not a reusable lib.
-- `data-access`, `ui`, `feature`, and `page` **can** each be a functionality on their own, or part of a larger one — then PRD/TFS **do** apply — **but only when the lib is single-purpose**. A **grab-bag** `ui` or `feature` lib is never a functionality; see [Single-purpose vs grab-bag](#single-purpose-vs-grab-bag).
+- `data-access`, `ui`, `feature`, and `page` **can** each be a functionality on their own, or part of a larger one — then PRD/TSD **do** apply — **but only when the lib is single-purpose**. A **grab-bag** `ui` or `feature` lib is never a functionality; see [Single-purpose vs grab-bag](#single-purpose-vs-grab-bag).
 - `map` is never a functionality by itself: if present, it always sits under an `abstract` / `mixed` / `mixed+` functionality together with `data-access`.
 
-Before writing or updating a PRD/TFS, ask: _"Is this a functionality (a product feature), or just a lib?"_ If it is only a `util`, `api`, or `app` lib — or a **grab-bag** `ui` / `feature` lib — stop; no functionality docs.
+Before writing or updating a PRD/TSD, ask: _"Is this a functionality (a product feature), or just a lib?"_ If it is only a `util`, `api`, or `app` lib — or a **grab-bag** `ui` / `feature` lib — stop; no functionality docs.
 
 Details and valid shapes: [Functionality types](#functionality-types).
 
@@ -46,8 +46,8 @@ Two shapes of the same library type. Only the first can be a functionality.
 | **What it holds**                   | one product concern — everything in the lib serves it    | several unrelated items sharing only a technical kind (directives, pipes, animations) |
 | **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`       | each item versions on its own — `src/lib/toggle-me-v1/`                               |
 | **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info` | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                       |
-| **A functionality?**                | **yes** — PRD + TFS under `docs/x/{name}/`               | **no** — it is shared infrastructure                                                  |
-| **Requirements live in**            | `docs/x/{name}/PRD/README.md` + `docs/x/{name}/TFS/`     | a `requirements/` folder (`README.md` + `DECISIONS.md`) beside **each item’s** inner version README |
+| **A functionality?**                | **yes** — PRD + TSD under `docs/x/{name}/`               | **no** — it is shared infrastructure                                                  |
+| **Requirements live in**            | `docs/x/{name}/PRD/README.md` + `docs/x/{name}/TSD/`     | a `requirements/` folder (`README.md` + `DECISIONS.md`) beside **each item’s** inner version README |
 
 **The test:** does the lib have **one** product concern, or is it a bucket of unrelated items that merely share a mechanism? For a **shared** lib the folder shape is the tell — independently versioned items _are_ independent concerns. **App-domain** libs have no version folders ([Versioning shared libs](#versioning-shared-libs)), so apply the concern test directly.
 
@@ -70,7 +70,7 @@ Two shapes of the same library type. Only the first can be a functionality.
 - `util` needs `data-access` or `feature` → prefer input/arg; if it must import, go through an `api` re-export lib.
 - URL query params and route navigation → `page` only; pass values down via inputs.
 - Using a functionality as a whole → import its [natural entry lib](#natural-entry-lib).
-- PRD/TFS → functionalities only (see above).
+- PRD/TSD → functionalities only (see above).
 
 &nbsp;
 
@@ -223,7 +223,7 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 | **Role**        | Final products under `apps/` — buildable/deployable applications that compose functionalities for end users.  |
 | **May import**  | `util`, `map` (types only), `data-access`, `ui`, `feature`, `page`                                            |
 | **Owns / does** | Bootstrap and compose; carries `type:app` so boundaries treat it like other types.                            |
-| **Must not**    | Import `api`; be treated as a reusable functionality lib or as something that gets a PRD/TFS under `docs/x/`. |
+| **Must not**    | Import `api`; be treated as a reusable functionality lib or as something that gets a PRD/TSD under `docs/x/`. |
 
 **Notes**
 
@@ -258,7 +258,7 @@ Example — a `profile` functionality for **Angular** (`ng` in the lib names), s
 
 Lib names are technology-specific (`ng` = Angular). The same functionality on another stack would use that technology's segment instead.
 
-Library type vs functionality type (PRD/TFS rules): see [Library type vs functionality type](#library-type-vs-functionality-type).
+Library type vs functionality type (PRD/TSD rules): see [Library type vs functionality type](#library-type-vs-functionality-type).
 
 **Functionalities must not have their own `util`, `api`, or `app` libs** (libs named after the functionality). Reuse existing `util` libs; `api` libs are proxies only; `app` libs are the products that combine functionalities.
 
@@ -384,7 +384,7 @@ Wanting a private `ui` or to initialize another family's `map` means something r
 - **Presentation trapped in a family** → split into its own `ui`-only `visual` functionality; import from both families.
 - **Endpoint trapped in a non-abstract family** → if already `abstract`, use rung 0. If not, extract `map` + `data-access` into its own `abstract` functionality.
 
-Cost: touches an existing family and its `docs/x/{name}/` PRD & TFS.
+Cost: touches an existing family and its `docs/x/{name}/` PRD & TSD.
 
 **2. Duplicate, and skip the refactor.** Build the equivalent inside the functionality being worked on — deliberate trade: lighter change now, two implementations that can drift.
 

@@ -8,7 +8,7 @@ In order to create a new functionality in the workspace, you need to go through 
 
 **Tip!** [Click here](../getting-started/library-types-and-their-relationship.md#functionality-types) to read more about different types.
 
-- Create PRD & TFS files of the functionality.
+- Create PRD & TSD files of the functionality.
 
 Based on the functionality type, generate & build the required libs:
 

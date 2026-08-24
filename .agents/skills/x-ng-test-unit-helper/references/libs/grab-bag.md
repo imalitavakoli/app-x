@@ -12,7 +12,7 @@ A grab-bag holds several **unrelated** items that share only a technical kind (d
 - **A `util` may be either shape and it changes nothing** — it is never a functionality either way, so use [util.md](util.md), not this file. This file is for `ui` / `feature`, where the shape decides whether the lib is a functionality at all.
 - Authoritative definition: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 
-A grab-bag is **not a functionality**: no `docs/x/…` PRD or TFS, no ACs, and **never e2e**. A single-purpose `ui`/`feature` lib is the opposite — use the parent skill's TFS contract for those.
+A grab-bag is **not a functionality**: no `docs/x/…` PRD or TSD, no ACs, and **never e2e**. A single-purpose `ui`/`feature` lib is the opposite — use the parent skill's TSD contract for those.
 
 ## Where
 
@@ -30,7 +30,7 @@ Example: `libs/shared/ui/ng-directives/src/lib/toggle-me-v1/requirements/README.
 - Missing when you write the first ID-tagged test for that item → **create** the folder and its `README.md`.
 - Exists → **update** it: preserve existing IDs and never renumber. Adding is not the only outcome — an entry can also be **amended** (rewritten under its existing ID) or **retired** (moved to `DECISIONS.md`, number burned). The four outcomes and the reporting rule are in the parent skill.
 - **A new item-version folder copies the predecessor's `DECISIONS.md`** — `{KEY}` drops the version, so `toggle-me-v1` and `toggle-me-v2` share one ID space.
-- Do **not** create `docs/x/…` PRD/TFS, and do **not** add the item to another functionality's TFS.
+- Do **not** create `docs/x/…` PRD/TSD, and do **not** add the item to another functionality's TSD.
 
 ## IDs
 
@@ -55,7 +55,7 @@ Minimal: short intro + FRs with nested BRs (Given/When/Then). Imitate the exampl
 
 | Mistake                                                    | Fix                                                                              |
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Writing a PRD/TFS because the lib type is `ui` / `feature` | Grab-bags are not functionalities — use this file for its IDs                    |
+| Writing a PRD/TSD because the lib type is `ui` / `feature` | Grab-bags are not functionalities — use this file for its IDs                    |
 | One `requirements/` for the whole grab-bag lib             | One per item, beside its inner version README                                    |
 | Using `UTIL-` for a grab-bag `ui` item                     | `UI-{KEY}-…` (or `FEA-{KEY}-…`) — the prefix names the lib type                  |
 | Treating a single-purpose `ui` lib as a grab-bag           | One product concern, one version folder for the lib → it **is** a functionality  |

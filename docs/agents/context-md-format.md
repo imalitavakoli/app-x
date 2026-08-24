@@ -46,7 +46,7 @@ Ask: **is this term specific to this workspace, or would it mean the same in any
 
 It is the working half of an entry. Our naming rules are load-bearing — a wrong marker or class name breaks a grep or a selector, not just a style preference — so the rejected spellings belong here rather than as a mistakes-table row inside one skill:
 
-- `[TO-UPDATE]`, never `[UPDATE REQUIRED]` — it must stay greppable across every TFS.
+- `[TO-UPDATE]`, never `[UPDATE REQUIRED]` — it must stay greppable across every TSD.
 - `e-popup`, never `e-popup-v2` — the CSS class carries no version.
 - **retired**, never "deleted" — a retired entry moves to `DECISIONS.md`; deleting it is a different (wrong) action.
 
@@ -58,7 +58,7 @@ Omit `_Avoid_` only when no alternative name is plausible.
 
 A `## Flagged ambiguities` section at the end holds terms that are **in use but not settled** — two readings in circulation, or a name nobody is happy with. Record the competing readings so the eventual resolution is a real decision rather than a fresh coinage.
 
-**This does not block anything.** It is deliberately weaker than a PRD's or TFS's Open Questions, which must be put to the user before that doc is finished. A glossary ambiguity is a parking spot: it exists so a contested term is not silently coined twice in two skills. Resolve one when the work makes the answer obvious, and move it into the body.
+**This does not block anything.** It is deliberately weaker than a PRD's or TSD's Open Questions, which must be put to the user before that doc is finished. A glossary ambiguity is a parking spot: it exists so a contested term is not silently coined twice in two skills. Resolve one when the work makes the answer obvious, and move it into the body.
 
 &nbsp;
 
@@ -76,7 +76,7 @@ Growth still matters, though, because a glossary that has absorbed things that a
 
 ## Maintenance — event-driven, not dated
 
-The glossary is **not** verified against code, so it carries **no `Last Verified` stamp**. That stamp means "checked against shipped behaviour" everywhere else in the workspace (PRD, TFS, `user-stories/`, `requirements/`), and reusing the word here for a different relationship would be exactly the confusion this file exists to prevent.
+The glossary is **not** verified against code, so it carries **no `Last Verified` stamp**. That stamp means "checked against shipped behaviour" everywhere else in the workspace (PRD, TSD, `user-stories/`, `requirements/`), and reusing the word here for a different relationship would be exactly the confusion this file exists to prevent.
 
 Its failure mode is not staleness against code but **incompleteness against vocabulary**: a term coined and not recorded, or renamed and not updated. So it is maintained at the moment a term changes, not on a review cadence:
 

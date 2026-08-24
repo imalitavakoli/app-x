@@ -18,7 +18,7 @@ Example: `libs/shared/util/ng-formatters/src/lib/date-format-v1/requirements/REA
 - If missing when you write the first ID-tagged util unit test → **create** the folder and its `README.md`.
 - If it exists → **update** it: preserve existing IDs and never renumber. Adding is not the only outcome — an entry can also be **amended** (rewritten under its existing ID) or **retired** (moved to `DECISIONS.md`, number burned). The four outcomes and the reporting rule are in the parent skill.
 - **A new version folder copies the predecessor's `DECISIONS.md`** — `{KEY}` drops the version, so `date-format-v1` and `date-format-v2` share one ID space; without the copy, deleting v1 frees numbers v2 could re-mint.
-- Do **not** create `docs/x/…` PRD/TFS for a util lib.
+- Do **not** create `docs/x/…` PRD/TSD for a util lib.
 
 ## IDs
 
@@ -43,8 +43,8 @@ Minimal: short intro + FRs with nested BRs (Given/When/Then). Imitate the exampl
 
 | Mistake                                              | Fix                                                                           |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Skipping util unit tests because no TFS              | Write tests; use this file for IDs                                            |
-| Inventing TFS-like IDs without `UTIL-` prefix        | Always `UTIL-{KEY}-…`                                                         |
+| Skipping util unit tests because no TSD              | Write tests; use this file for IDs                                            |
+| Inventing TSD-like IDs without `UTIL-` prefix        | Always `UTIL-{KEY}-…`                                                         |
 | Putting `requirements/` at lib outer root only       | It lives beside the **inner** version README                                  |
 | Deleting a retired entry instead of moving it        | Move it to `DECISIONS.md` — a deleted number cannot be seen to be burned      |
 | A new version folder starting with no `DECISIONS.md` | Copy the predecessor's — `{KEY}` drops the version, so the ID space is shared |

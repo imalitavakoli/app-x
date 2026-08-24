@@ -15,7 +15,7 @@ Example: `apps/ng-boilerplate/requirements/README.md`.
 - Created/updated by the **unit-test work**, not by a separate writer skill.
 - If missing when you write the first ID-tagged app unit test → **create** the folder and its `README.md`. A product app is unversioned, so there is no predecessor `DECISIONS.md` to carry forward.
 - If it exists → **update** it: preserve existing IDs and never renumber. Adding is not the only outcome — an entry can also be **amended** (rewritten under its existing ID) or **retired** (moved to `DECISIONS.md`, number burned). The four outcomes and the reporting rule are in the parent skill.
-- Do **not** create `docs/x/…` PRD/TFS for an app.
+- Do **not** create `docs/x/…` PRD/TSD for an app.
 - Do **not** put this file in `{app}-e2e` — e2e apps use a `user-stories/` folder instead.
 
 ## IDs

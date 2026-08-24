@@ -17,11 +17,11 @@ This skill is a **helper**: it puts the workspace's canonical library examples i
 
 Building or updating a functionality's `map`, `data-access`, **single-purpose** `ui`, `feature`, or `page` lib — or deciding its structure, base class, versioning, READMEs, or `data-cy` naming. Not for non-lib code.
 
-**Grab-bag `ui` / `feature` libs** (`CONTEXT.md`) are **not** functionalities: no `docs/x/` PRD or TFS, and each item carries its own `requirements/` registry. Build the item to [assets/examples/ui-grab-bag.md](assets/examples/ui-grab-bag.md). Its lib-level scaffolding (`project.json`, tags, tsconfigs, outer README) already exists — adding an item only creates a folder and one `index.ts` line. See `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
+**Grab-bag `ui` / `feature` libs** (`CONTEXT.md`) are **not** functionalities: no `docs/x/` PRD or TSD, and each item carries its own `requirements/` registry. Build the item to [assets/examples/ui-grab-bag.md](assets/examples/ui-grab-bag.md). Its lib-level scaffolding (`project.json`, tags, tsconfigs, outer README) already exists — adding an item only creates a folder and one `index.ts` line. See `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 
 **`util` libs** are likewise never functionalities, whatever their shape — build them to [assets/examples/util.md](assets/examples/util.md).
 
-`util`, `api`, and `app` are **not** functionalities — they have **no** PRD/TFS under `docs/x/` (`docs/getting-started/library-types-and-their-relationship.md`) — and neither is a **grab-bag** `ui` / `feature`. That does not mean they have no example: `util` has [assets/examples/util.md](assets/examples/util.md) and grab-bag items have [assets/examples/ui-grab-bag.md](assets/examples/ui-grab-bag.md). Only **`api`** (a proxy lib with no code) and **`app`** have no example — for those, use [Fallback](#fallback--only-when-the-example-doesnt-cover-it) (ask which existing lib to imitate).
+`util`, `api`, and `app` are **not** functionalities — they have **no** PRD/TSD under `docs/x/` (`docs/getting-started/library-types-and-their-relationship.md`) — and neither is a **grab-bag** `ui` / `feature`. That does not mean they have no example: `util` has [assets/examples/util.md](assets/examples/util.md) and grab-bag items have [assets/examples/ui-grab-bag.md](assets/examples/ui-grab-bag.md). Only **`api`** (a proxy lib with no code) and **`app`** have no example — for those, use [Fallback](#fallback--only-when-the-example-doesnt-cover-it) (ask which existing lib to imitate).
 
 ## Pick the matching example
 
@@ -30,17 +30,17 @@ Building or updating a functionality's `map`, `data-access`, **single-purpose** 
 | `map`                           | `assets/examples/map.md`                                                                                      |
 | `data-access`                   | `assets/examples/data-access-{single-instance,multi-instance,entity}.md` (by variant — see below)             |
 | `ui` (single-purpose)           | `assets/examples/ui.md`                                                                                       |
-| `ui` / `feature` (**grab-bag**) | `assets/examples/ui-grab-bag.md` — pipes / directives; per-item folders, per-item `requirements/`, no PRD/TFS |
+| `ui` / `feature` (**grab-bag**) | `assets/examples/ui-grab-bag.md` — pipes / directives; per-item folders, per-item `requirements/`, no PRD/TSD |
 | `feature`                       | `assets/examples/feature.md`                                                                                  |
 | `page`                          | `assets/examples/page.md`                                                                                     |
-| `util`                          | `assets/examples/util.md` — plain `v{n}{FunName}` functions, per-item `requirements/`, no PRD/TFS             |
+| `util`                          | `assets/examples/util.md` — plain `v{n}{FunName}` functions, per-item `requirements/`, no PRD/TSD             |
 
 **Handing an example to a subagent?** These files live under `.agents/skills/x-ng-lib-build-helper/assets/examples/` — give that full path. An execution agent resolves paths against the repo root and cannot read this skill, so the skill-relative paths above mean nothing to it.
 
 Read the one matching example and reproduce what it demonstrates:
 
 - **Directory & files** — `src/lib/{version}/`, `index.ts`, `test-setup.ts`, the config files (`project.json`, `.eslintrc.json`, `jest.config.ts`, `tsconfig*.json`), and the outer `README.md`. Scaffold the config files with the Nx generator; shape the content to the example.
-- **Base class** — extend whatever base class the matching example extends for that lib type (`ui`, `feature`, `map`, the `data-access` facade / effects / reducer helpers, and `page` parent / child). The example is kept up to date, so it is the source of truth for the base to use: always take the base from the example rather than a base-class name you already know or assume — that way you always extend the latest base available in the workspace for that lib type. (The `page` example also shows specialized `…Ext{Name}` bases — use those **only** when the TFS names one.)
+- **Base class** — extend whatever base class the matching example extends for that lib type (`ui`, `feature`, `map`, the `data-access` facade / effects / reducer helpers, and `page` parent / child). The example is kept up to date, so it is the source of truth for the base to use: always take the base from the example rather than a base-class name you already know or assume — that way you always extend the latest base available in the workspace for that lib type. (The `page` example also shows specialized `…Ext{Name}` bases — use those **only** when the TSD names one.)
 - **Versioned naming** — `v{n}/` folders, `V{n}` class prefixes, `-v{n}` selectors (e.g. `x-balance-card-fea-v1`).
 - **Both READMEs** — outer (high-level: what the lib is + the `nx test …` line) **and** inner (per component/version: a **ready-to-use copy-paste** example for the Boilerplate Test page; for `page` libs, an `app.routes.ts` snippet).
 - **`data-cy` naming** — `{lib}-v{n}_{component}_{part}`, carrying the lib's own version (a shared lib is versioned; an app-domain lib has no version segment). These live in `ui` libs.
@@ -51,7 +51,7 @@ If a lib type, variant, or a specific file isn't in the examples (e.g. an `api` 
 
 ## `data-access` variant
 
-Use the object structure the TFS specifies (it usually already chose):
+Use the object structure the TSD specifies (it usually already chose):
 
 - **entity** — only for a **pure** CRUD resource.
 - **single-instance** — the lib is initialized once per page.
@@ -72,9 +72,9 @@ Lib types & import boundaries: `docs/getting-started/library-types-and-their-rel
 | Mistake                                             | Fix                                                                                                                                                                                                                               |
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Copying an arbitrary existing lib                   | Use the `assets/examples/` example for that type — it is the source of truth.                                                                                                                                                     |
-| Expecting a PRD/TFS for a `util` / `api` / `app`    | Those are never functionalities — no `docs/x/…` docs; build the lib without them.                                                                                                                                                 |
-| Expecting a PRD/TFS for a grab-bag `ui` / `feature` | A grab-bag is not a functionality — build the item and give it a local `requirements/` registry. |
-| Inventing a base class                              | Extend whatever base the matching `assets/examples/` example uses for that lib type (a specialized `…Ext{Name}` only if the TFS names one).                                                                                       |
+| Expecting a PRD/TSD for a `util` / `api` / `app`    | Those are never functionalities — no `docs/x/…` docs; build the lib without them.                                                                                                                                                 |
+| Expecting a PRD/TSD for a grab-bag `ui` / `feature` | A grab-bag is not a functionality — build the item and give it a local `requirements/` registry. |
+| Inventing a base class                              | Extend whatever base the matching `assets/examples/` example uses for that lib type (a specialized `…Ext{Name}` only if the TSD names one).                                                                                       |
 | Only an outer README                                | Add the inner, copy-paste-ready README too.                                                                                                                                                                                       |
 | `entity` data-access for a non-pure-CRUD write      | Use single- or multi-instance.                                                                                                                                                                                                    |
 | Treating this skill as a builder                    | It only supplies references; the builder (an implementation plan, or you) does the actual building.                                                                                                                               |

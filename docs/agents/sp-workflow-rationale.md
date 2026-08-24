@@ -72,7 +72,7 @@ They ask different questions (documentable vs document-now). Each states its tri
 
 [🔝](#superpowers-first-workflow--rationale-)
 
-## Why Path A/B skip PRD/TFS for `util` / `api` / `app` and grab-bag libs
+## Why Path A/B skip PRD/TSD for `util` / `api` / `app` and grab-bag libs
 
 Those are not functionalities. Without a gate, a util-only cycle still invoked A1 and treated the writers' STOP as a gap. The Functionality gate skips the docs-in-scope set; unit tests still run via local `requirements/`.
 
@@ -92,7 +92,7 @@ An existing undocumented functionality-type lib should not force a first-time PR
 
 [🔝](#superpowers-first-workflow--rationale-)
 
-## Why the PRD/TFS steps precede `writing-plans`
+## Why the PRD/TSD steps precede `writing-plans`
 
 `brainstorming`'s exclusive exit guards against _implementation_ skills, not document writers. A1 inserts in that gap (user-instruction precedence). The e2e verdict must precede planning — Superpowers has no e2e concept, and a task added later cannot carry the paths `writing-plans` requires.
 
@@ -114,7 +114,7 @@ A writer needs its templates and examples to produce its document; the session t
 
 ## Why A1 has its own resume block and an unapproved-PRD entry
 
-Relaying the AC approval gave A1 a second stopping point, and a hook that stops and waits needs a ▶️ resume contract — without one an interrupted approval has no way back, and the cycle stalls later at the TFS writer's guard. The 🚪 entry needed no new payload: the PRD's approval field already records where it stopped.
+Relaying the AC approval gave A1 a second stopping point, and a hook that stops and waits needs a ▶️ resume contract — without one an interrupted approval has no way back, and the cycle stalls later at the TSD writer's guard. The 🚪 entry needed no new payload: the PRD's approval field already records where it stopped.
 
 **Revisit if** the relay stops being how approval reaches the writers, or the PRD stops recording its approval state.
 
@@ -142,11 +142,11 @@ The enricher already writes each canonical example's resolvable path into the pl
 
 [🔝](#superpowers-first-workflow--rationale-)
 
-## Why PRD/TFS outrank the brainstorm spec for planning
+## Why PRD/TSD outrank the brainstorm spec for planning
 
-A1 often changes what the spec said; planning from the stale spec fights the docs. When the docs-in-scope set ran: PRD/TFS win on conflicts, spec fills gaps, A1 syncs the spec. When it skipped: spec alone (vanilla Superpowers).
+A1 often changes what the spec said; planning from the stale spec fights the docs. When the docs-in-scope set ran: PRD/TSD win on conflicts, spec fills gaps, A1 syncs the spec. When it skipped: spec alone (vanilla Superpowers).
 
-**Revisit if** `writing-plans` can plan from PRD/TFS natively.
+**Revisit if** `writing-plans` can plan from PRD/TSD natively.
 
 &nbsp;
 
@@ -174,7 +174,7 @@ Workspace preferences are committed team constraints Superpowers skills honour w
 
 ## Why `audience` is chat-only
 
-`product` is a PM who owns the PRD and the ACs. Changing how files are written would break the plan (the only carrier into execution) and every skill that expects today's shapes. So `audience` never becomes a plan line and never forks a path: same hooks, same specs, same PRD/TFS — only the words in the thread change.
+`product` is a PM who owns the PRD and the ACs. Changing how files are written would break the plan (the only carrier into execution) and every skill that expects today's shapes. So `audience` never becomes a plan line and never forks a path: same hooks, same specs, same PRD/TSD — only the words in the thread change.
 
 **Revisit if** a second durable artifact must be written in product language (it would be a new document, not a rewritten plan).
 
@@ -194,7 +194,7 @@ The stop is human plan review plus a handoff-ready artifact (mode and phase line
 
 ## Why execution prefers a fresh session
 
-The hard stop already produces a handoff-ready artifact: the plan carries the mode, the dated ready marker and the enriched conventions, and the freshness check is what makes handing it over safe. The session that reaches the stop has just written the PRD, the TFS and the plan, so continuing there starts execution at the cycle's deepest point for no gain.
+The hard stop already produces a handoff-ready artifact: the plan carries the mode, the dated ready marker and the enriched conventions, and the freshness check is what makes handing it over safe. The session that reaches the stop has just written the PRD, the TSD and the plan, so continuing there starts execution at the cycle's deepest point for no gain.
 
 **Revisit if** the plan stops being sufficient on its own, or the freshness check can no longer tell a stale plan from a current one.
 

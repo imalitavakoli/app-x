@@ -62,7 +62,7 @@ Optional **Rules** after the list — only what is true of the **key**, never a 
 
 **Rules.** Resolve at cycle start, before the first interviewing Superpowers skill. `developer` is today's register (paths, libs, code). `product` is a PM / PRD owner: they know **ACs**, not HTML/JS/TS/SCSS/CSS/Angular or other framework syntax.
 
-`product` changes **only the chat**. Routing, hooks, skills, Superpowers specs, plans, PRD, TFS, and every other file stay exactly as today. Same decisions, same gates — simpler words. Never skip a question because the audience is `product`. Rephrase it in product terms, or say an engineer is needed.
+`product` changes **only the chat**. Routing, hooks, skills, Superpowers specs, plans, PRD, TSD, and every other file stay exactly as today. Same decisions, same gates — simpler words. Never skip a question because the audience is `product`. Rephrase it in product terms, or say an engineer is needed.
 
 To `product`: never name paths, hooks, step IDs, or code syntax. Describe the **work** in product terms. ACs are the shared language. Examples, not a map: say “we're defining what the product should do” not a path letter; “here's the build plan” not a hook ID; “AC-03” not an FR/BR ID; behaviour, not a `.ts` snippet.
 
