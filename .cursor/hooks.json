@@ -10,6 +10,18 @@
         "timeout": 30
       }
     ],
+    "preToolUse": [
+      {
+        "command": "node .agents/hooks/workflow-edit-guard.mjs pre",
+        "matcher": "Write|StrReplace|Delete|EditNotebook",
+        "timeout": 20
+      },
+      {
+        "command": "node .agents/hooks/sp-skill-read-guard.mjs",
+        "matcher": "Read|Skill",
+        "timeout": 20
+      }
+    ],
     "postToolUse": [
       {
         "command": "node .agents/hooks/workflow-edit-guard.mjs post",

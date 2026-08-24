@@ -30,6 +30,10 @@ Then record, verbatim:
 
 **Run each arm at least 3 times.** Single samples lie; `writing-skills` says 5+ for wording-level work. Variance is itself a result: if three reps route three different ways, the wording is not binding, and adding words is the wrong fix — tighten the form.
 
+**Say which model ran each arm, and run the weakest one this workspace is used from.** A dispatch that does not name a model inherits the caller's, so a strong model silently tests itself — that is how a wording fix went 8/8 here and then failed in a real session on a weaker model, against the same file. **A pass is a claim about the model that ran it, never about the wording**, so record the model beside the counts. Where a rule must hold for every model, prose cannot be the enforcement; see _Why the path-file read is both named and hook-reminded_ in the rationale file.
+
+**Two harness traps, both of which voided reps here.** Do not tell the subagent to distrust the repo's real instruction files or to treat a substitute as authoritative — that reads as prompt injection, and an agent right to refuse it produces no data (4 of 5 reps in one arm). And make the stop condition name the exact skill to stop after: "the first Superpowers process skill" was read as the router by one model and as `brainstorming` by another, so half the reps stopped before the decision point.
+
 ## The three arms
 
 | Arm         | Docs given                      | Question it answers                     |

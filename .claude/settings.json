@@ -30,6 +30,17 @@
             "timeout": 20
           }
         ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .agents/hooks/sp-skill-read-guard.mjs",
+            "statusMessage": "Checking workflow reads...",
+            "timeout": 20
+          }
+        ]
       }
     ],
     "PostToolUse": [

@@ -2,7 +2,7 @@
 name: x-sp-workflow-helper
 description: 'WHAT? The procedure and integrity checker for changing the Superpowers-First Workflow surfaces — `AGENTS.md`, `docs/agents/sp-workflow-*.md` and the `x-*` skills they name. WHEN? Before adding, renaming, renumbering or deleting a hook, gate, constraint, entry, path or landmark; before moving a rule between those files; after any such edit, to prove nothing dangled; and whenever the installed Superpowers version changes.'
 metadata:
-  version: '1.7.0'
+  version: '1.8.0'
 ---
 
 # SP Workflow Helper
@@ -137,7 +137,7 @@ Hooks are the one part of this system a harness runs _for_ you. That is also why
 
 **Registering the guard requires a file-editing matcher.** Its unrecognised-payload report is **unconditional on purpose** — it is the only thing standing between a payload shape we failed to anticipate and a silent no-op. The consequence is that a registration with no per-tool matcher would fire it on _every_ tool call in the session. So a file-editing matcher (Claude Code uses `Edit|Write`; Cursor uses `Write|StrReplace|Delete|EditNotebook`) is a **precondition** of wiring the guard on any harness, not a tuning preference. Narrowing the report instead would reopen the silent path it was built to close.
 
-Cursor's `preToolUse` cannot inject context into the model (allow / deny / rewrite only). The pre-edit reminder is therefore **not registered** there; `sessionStart` and `postToolUse` are.
+Cursor's `preToolUse` **can** inject `additional_context` (confirmed by Cursor, including on deny). Both reminders that must land *before* the action are registered there — the skill-invocation reminder (matcher `Read|Skill`) and the pre-edit reminder (same file-editing matcher as `postToolUse`). A later event is after the skill is already talking, or after the edit is already in flight, which is the failure those reminders exist to close. `postToolUse` still runs the checker after an edit.
 
 **Which registries are guarded, and how one gets promoted.** `GUARDED_FILES` in the guard lists a registry only once that harness's contract is **verified** — our scripts actually function there, via `harness.mjs` when the stdin/stdout shape is not Claude Code's. Today that is Claude Code, Codex, and Cursor. Everything else is recorded **here, as prose**: this list drives no behaviour, and making it a constant would invite something to act on it.
 

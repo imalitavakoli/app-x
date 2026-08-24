@@ -32,13 +32,15 @@ The first Superpowers skill starts talking before any path file is loaded, so re
 
 [🔝](#superpowers-first-workflow--rationale-)
 
-## Why the path file is read at a named moment, not by a hook
+## Why the path-file read is both named and hook-reminded
 
-Pre-flight used to defer the path file and shared rules with "those wait for a skill to fire" — a deferral naming no moment to come back at. It failed measurably: agents quoted that sentence, and the routing table's "before continuing", as grounds for treating those reads as something that happens _after_ the skill fires. Naming the moment instead closed it — 8/8 post-change runs read them, against 4/8 failures before, every failure citing the text that changed.
+Pre-flight used to defer the path file and shared rules with "those wait for a skill to fire" — a deferral naming no moment to come back at. That wording failed measurably: agents quoted it, and the routing table's "before continuing", as grounds for treating those reads as something that happens _after_ the skill fires. Naming the moment fixed the **misreading** — 8/8 post-change scenario runs read them, against 4/8 failures before.
 
-A **PreToolUse** hook on skill invocation was the alternative, and a harness does offer one — close to what _Why pre-flight is a checklist_ anticipates, though from the harness rather than from Superpowers. It stays unbuilt: the wording alone tested sufficient, and such a hook could only repeat a directive the docs already carry (it cannot inject a file this size), at the cost of a surface the checker must keep alive. The general rule this is one instance of — a deferred read needs something at that moment to say so, and a hook is the last resort — is [where-content-lives.md](where-content-lives.md) → _Writing a pointer_.
+**Naming it was not enough — and the reason is the model, not the wording.** Those 8/8 runs all inherited the strongest model, because the scenario harness never said to control for one. Re-run against a weaker model, the same fixed wording failed at the same point, matching a real session that skipped the reads while quoting the new rule back accurately. So a **PreToolUse** reminder on skill invocation exists as well, matched on the plugin namespace rather than any skill name. It fires every time: a once-per-session marker was tried and removed because subagents share the parent's session id, so one subagent consumed the reminder the controller owed.
 
-**Revisit if** the named moment starts failing in real use — those runs were subagents, whose context is lighter than a full session — or a harness offers a pre-skill hook that can deliver a file's contents rather than a directive.
+**The durable lesson: this workspace is read by more than one model, so prose is a floor only as high as the weakest one that reads it.** "The wording tested sufficient" was never a claim about the wording — it was a claim about the model that happened to run the test. Where a rule must hold across models, mechanical enforcement is the only thing with a uniform floor; prose degrades unevenly and silently. The general rule this is one instance of — a deferred read needs something at that moment to say so, and a hook is the last resort — is [where-content-lives.md](where-content-lives.md) → _Writing a pointer_.
+
+**Revisit if** the reminder proves unnecessary across every model in use, or a harness offers a pre-skill hook that can deliver a file's contents rather than a directive.
 
 &nbsp;
 
