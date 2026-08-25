@@ -4,7 +4,7 @@
 
 Procedures **more than one path performs**, written once so no path has to cite another.
 
-> **Read a procedure when a hook cites it — not at the start of a cycle.** Nothing here shapes routing or planning, and the hooks that need these fire late, so loading them up front only carries them through a whole cycle to be used once (_sp-workflow-shared.md_ → Operating rule 5). The **rules** every path assumes are the ones you read up front; they live in `sp-workflow-shared.md`.
+> **Read a procedure when a hook cites it — not at cycle start.** Nothing here shapes routing or planning, and the hooks that need these fire late, so loading them up front only carries them through a whole cycle to be used once (_sp-workflow-shared.md_ → Operating rule 5). The **rules** every path assumes are the ones you read up front; they live in `sp-workflow-shared.md`.
 
 A citing hook names the procedure and supplies only what is genuinely its own — usually just what counts as **the changed set**. If a procedure ends up cited by one path only, move it back into that path file: this file is for what is actually shared, not a general dumping ground.
 

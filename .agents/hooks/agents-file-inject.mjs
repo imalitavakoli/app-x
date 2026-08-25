@@ -55,6 +55,19 @@ if (existsSync(localPath)) {
     `it layers on AGENTS.md; on conflict, local wins.`;
 }
 
+// A REJOIN is a cycle start, and it is the route this reminder exists to cover.
+// A fresh session handed a plan path — or asked to continue work already in
+// progress — reaches its first decision, and its first question to the user,
+// without ever invoking a Superpowers skill. So the skill-invocation reminder
+// cannot have fired yet, and the cycle-start reads read as something owed later.
+// They are not. This is the only surface open at that moment, which is why the
+// clause rides along here rather than becoming a hook of its own.
+directive +=
+  ` If this session begins by resuming a plan, continuing a cycle already in ` +
+  `progress, or being handed a path to one, that IS a cycle start: the reads ` +
+  `AGENTS.md marks for cycle start fall due BEFORE your first question to the ` +
+  `user — not before your first skill invocation, which on that route comes last.`;
+
 emit({
   hookSpecificOutput: {
     hookEventName: 'SessionStart',

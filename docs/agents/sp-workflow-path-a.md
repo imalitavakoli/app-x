@@ -2,7 +2,7 @@
 
 # 🛣️ Path A — Build a feature, or change an existing feature's behavior
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, the **Git contract**, and the pointer at [sp-workflow-prefs.md](sp-workflow-prefs.md) (resolve `pref.*` before the first interviewing skill). Without it you will miss that the plan is the only carrier into execution subagents (Operating rule 4). The notation used below (🪝 hook · 🚧 gate · 📌 constraint · 🚪 entry · 🎛️ mode · ▶️ resume) is defined in [sp-workflow-format.md](sp-workflow-format.md). Procedures this path shares with another live in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one only when a hook below cites it, never up front.
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, the **Git contract**, and **Required reads and when they are due** — the one table naming which docs are due at which moment, [sp-workflow-prefs.md](sp-workflow-prefs.md) among them, due before the first question put to the user. Without it you will miss that the plan is the only carrier into execution subagents (Operating rule 4). The notation used below (🪝 hook · 🚧 gate · 📌 constraint · 🚪 entry · 🎛️ mode · ▶️ resume) is defined in [sp-workflow-format.md](sp-workflow-format.md). Procedures this path shares with another live in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one only when a hook below cites it, never up front.
 
 &nbsp;
 
@@ -20,6 +20,8 @@ Path A has two parts: **Documentation** (through the plan-review stop) and **Exe
 | At A2 hard stop (after enricher-or-skip, before wait)      | `Path A phase: ready for Execution (YYYY-MM-DD).` |
 
 The **date** on the ready line is when the plan was declared ready. It exists because the plan lives at a git-ignored path, so nothing else can date it — and a plan is only safe to execute against the docs and code it was written from.
+
+**Before you put any question to the user here** — the draft-vs-ready ask below included — the cycle-start reads are already due: [sp-workflow-shared.md](sp-workflow-shared.md) → _Required reads and when they are due_. A rejoin **is** a cycle start, and this Entry is usually where the first question gets asked, so this is the moment they fall due, not some later one. Resolve whatever is still unset first, and fold it into the same ask rather than returning to the user twice.
 
 Read `Path A phase` from the plan's Global Constraints, then:
 

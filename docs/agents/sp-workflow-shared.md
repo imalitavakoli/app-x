@@ -4,11 +4,37 @@
 
 The rules **every path assumes**. Read this at the start of any cycle, before the path file.
 
-`sp-workflow-path-{a,b,c}.md` cite what is here **by name** and never repeat it — and never cite **each other**. A path that leans on another path's step cannot be edited without reading that other path, and renaming a step there silently breaks it. When two paths need the same **procedure**, it goes in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one of those when a hook cites it, never up front: they shape nothing about routing or planning, and the hooks needing them fire late. How to resolve `pref.*` keys: [sp-workflow-prefs.md](sp-workflow-prefs.md) — read that **in full** at the start of a cycle, before the first Superpowers skill that interviews the user.
+`sp-workflow-path-{a,b,c}.md` cite what is here **by name** and never repeat it — and never cite **each other**. A path that leans on another path's step cannot be edited without reading that other path, and renaming a step there silently breaks it. When two paths need the same **procedure**, it goes in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one of those when a hook cites it, never up front: they shape nothing about routing or planning, and the hooks needing them fire late. Which reads are due, and at which moment — this file, the path file, [sp-workflow-prefs.md](sp-workflow-prefs.md) and the rest — is the _Required reads_ table below. That table is the **only** statement of those moments; every other surface points at it rather than restating it.
 
 `AGENTS.md` routes you here; it holds no copy.
 
 **If a landmark in a path file is unclear** — 🪝 hook · 🚧 gate · 📌 constraint · set · 🚪 entry · 🎛️ mode · ▶️ resume · a `[gated]` or `[close-out]` tag — read [sp-workflow-format.md](sp-workflow-format.md) for what it means. Most landmarks state their own semantics inline (a gate spells out its Yes/No, a set its Members/Combine/Regardless), so you will usually not need it; the hook **kind tags** are the exception, since `[close-out]` vs `[gated]` decides whether a gate can skip that hook at all.
+
+&nbsp;
+
+## Required reads and when they are due
+
+Where every other surface points, instead of restating a moment in its own words. A second copy is what drifts: the personal-preference read was anchored to "before the first Superpowers skill that interviews the user" in six places at once, and on a rejoin that skill is the **execution** skill — so the condition stayed false until after every decision it was meant to shape.
+
+**Three moments. Use these words** — a paraphrase is how one rule comes to mean two things in two files:
+
+- **cycle start** — entering **or rejoining** a path. Joining with existing state (a plan path you were handed, a cycle you are resuming) is a cycle start, not an exception to one.
+- **before the first question put to the user** — whoever asks it: a Superpowers skill, one of our `x-*` skills, or you.
+- **when a hook cites it** — named at the citing step, never read up front.
+
+`AGENTS.md` owns what falls due **before you reach this file** — itself, its Pre-flight checks, this file, and the path file; it is the router, and only it is loaded early enough to say so. What falls due **from here on**:
+
+| Read                                                                                     | Due at                                                     |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [sp-workflow-prefs.md](sp-workflow-prefs.md) — in full                                   | cycle start, **before the first question put to the user** |
+| [sp-workflow-procedures.md](sp-workflow-procedures.md) — the cited procedure             | when a hook cites it                                       |
+| [sp-workflow-format.md](sp-workflow-format.md) — that entry; in full to edit a path file | a landmark is unclear · before editing a path file         |
+
+The full inventory — every doc an agent reads and when it loads — is [where-content-lives.md](where-content-lives.md) → _The table_. That file is for whoever is **writing** a doc; this section is for whoever is **following** a path, and carries only what falls due after this point.
+
+**Having read a rule is not having obeyed it.** Some of what these files carry is an **action due at the moment you read it**, not a fact to carry onward. So after each read above, scan what you just read for anything due **now** — at cycle start, or before the first question — then **do it, and say you did**.
+
+Keep that general. Resolving `pref.*` is today's instance of it, **not its extent**: a rule added later with the same timing is covered by the sentence above and will not announce itself, so a reader who learned this as "the preferences rule" will walk past the next one. The observed failure is an agent that read the file, quoted the rule back accurately, and let the first question be asked anyway.
 
 &nbsp;
 
@@ -68,7 +94,7 @@ Standing preferences the Superpowers skills read from our instructions. This is 
 
 Personal defaults in `AGENTS.local.md`. **Not** the Workspace preferences above — those are committed team constraints Superpowers honours without asking.
 
-Read [sp-workflow-prefs.md](sp-workflow-prefs.md) **in full** at the start of a cycle, **before** the first Superpowers skill that interviews the user. That file owns how to resolve and persist any `pref.*` key. A `every-path` key is resolved from that file at cycle start; a `one-path` key is resolved on the path that consumes it.
+Read [sp-workflow-prefs.md](sp-workflow-prefs.md) **in full** at **cycle start**, **before the first question put to the user** (_Required reads and when they are due_). That file owns how to resolve and persist any `pref.*` key. An `every-path` key is resolved from that file at cycle start; a `one-path` key is resolved on the path that consumes it.
 
 &nbsp;
 

@@ -82,19 +82,19 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 
 &nbsp;
 
-### Pre-flight — before the first Superpowers skill
+### Pre-flight — at cycle start
 
-Run these checks **before invoking any Superpowers skill.** Once that skill starts talking, these reads and loads are too late to shape it — that is why this is here and not on a path.
+Run these checks at **cycle start** — when you enter a path, **or rejoin one already in progress** (a plan you were handed, a cycle you are resuming) — and always before invoking any Superpowers skill. Once that skill starts talking, these reads and loads are too late to shape it; and on a rejoin the first skill invoked is the *execution* skill, so waiting for one means waiting until the work has already begun. That is why this is here and not on a path.
 
 **Who answers:** you. Never interview the user here.
 
 Run each check in order. **Unsure → Yes** for that check. A wrong Yes costs a read you would have skipped. A wrong No silently skips a convention, and nothing downstream catches it.
 
-Do not pull path files, shared rules, or hooked workspace skills into this list. They are read at a specific later moment — once the path is identified and before you invoke that skill (_The paths_, below) — not here.
+Do not pull path files, shared rules, or hooked workspace skills into this list. They are read at a specific later moment — once the path is identified, and before you invoke that skill **or put your first question to the user**, whichever comes first (_The paths_, below) — not here.
 
 1. Does this request touch or produce a **single-purpose** `map` / `data-access` / `ui` / `feature` / `page` lib? (Not: what _kind of work_ it is.)
 
-   **Yes** → read these before letting any skill start:
+   **Yes** → read these **now** — at cycle start, before your first question to the user, and before any skill starts:
    - `/docs/getting-started/library-types-and-their-relationship.md` and `/docs/guidelines/naming-conventions.md`
    - that functionality's existing `docs/x/{name}/`, if it has one
 
@@ -111,9 +111,9 @@ The path files ask check 1 again under a name you will meet there — you do not
 
 ### Shared rules — read before the path file
 
-Every path assumes the same three sets of rules, so they live in one place rather than in each path: **`/docs/agents/sp-workflow-shared.md`** — the **Operating rules** (control flow, todos, how rules reach execution subagents), the **Workspace preferences** declared to Superpowers (no worktree; spec/plan at ignored paths; never commit them), and the **Git contract** (who branches and commits, per path and mode).
+Every path assumes the same rules, so they live in one place rather than in each path: **`/docs/agents/sp-workflow-shared.md`** — the **Required reads** (which docs are due, and at which moment — the only place those moments are stated), the **Operating rules** (control flow, todos, how rules reach execution subagents), the **Workspace preferences** declared to Superpowers (no worktree; spec/plan at ignored paths; never commit them), and the **Git contract** (who branches and commits, per path and mode).
 
-Read it together with the path file, once the path is identified and before you invoke that skill. The path files cite these by name and never repeat them.
+Read it together with the path file, once the path is identified and before you invoke that skill — and note that its **Required reads** falls due earlier still: it names what is owed at cycle start, including the personal preferences to resolve **before the first question put to the user**. The path files cite these by name and never repeat them.
 
 &nbsp;
 

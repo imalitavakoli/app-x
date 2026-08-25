@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 // PreToolUse hook: reminds you of the reads this workspace owes BEFORE a
-// Superpowers skill starts talking — the shared rules, the path file for the
-// path that skill opens, and the personal-preference resolution.
+// Superpowers skill starts talking — the path file for the path that skill
+// opens, and the shared rules that carry the table of everything else.
+//
+// It does NOT enumerate the reads. Skill invocation is the moment the PATH
+// becomes known, and that is the one thing only this moment can say; the rest
+// is a list with a single home (`sp-workflow-shared.md` -> Required reads and
+// when they are due), and a second copy here would drift out of step with it
+// silently — hook prose is checked by nothing.
 //
 // Cursor has no Skill tool, so a Superpowers skill is invoked by reading its
 // SKILL.md. The Cursor registry therefore matches `Read|Skill` on `preToolUse`
@@ -60,18 +66,24 @@ emit({
   hookSpecificOutput: {
     hookEventName: eventName(payload, 'PreToolUse'),
     additionalContext:
-      `You are about to invoke \`${skill}\`. Before that skill starts talking, this workspace ` +
-      'owes three reads. Skip any you have ALREADY done in full this session:\n\n' +
-      '1. `docs/agents/sp-workflow-shared.md` — IN FULL. The Operating rules, the Workspace ' +
-      'preferences declared to Superpowers (these OVERRIDE the skill on where a spec/plan is ' +
-      'written and whether it is committed), and the Git contract.\n' +
-      "2. The path file for the path this skill opens — route it per `AGENTS.md`'s path table, " +
-      "which names A/B/C by what the fired skill's own description says it opens. IN FULL.\n" +
-      '3. `docs/agents/sp-workflow-prefs.md` — IN FULL.\n\n' +
+      `You are about to invoke \`${skill}\`. Skip anything you have ALREADY done in full ` +
+      'this session.\n\n' +
+      'THIS is the moment the PATH becomes known — no earlier surface could name it. Route ' +
+      "it per `AGENTS.md`'s path table, which names A/B/C by what the fired skill's own " +
+      'description says it opens, then read THAT path file IN FULL before this skill starts ' +
+      'talking.\n\n' +
+      'Everything else this workspace owes, and the moment each read falls due, is ONE table: ' +
+      '`docs/agents/sp-workflow-shared.md` -> Required reads and when they are due. Read that ' +
+      'file IN FULL — the table is in it, and so are the Operating rules, the Git contract, ' +
+      'and the Workspace preferences that OVERRIDE this skill on where a spec/plan is written ' +
+      'and whether it is committed.\n\n' +
       'THEN, BEFORE this skill asks you anything: some of what you just read is an ACTION due ' +
-      'at this moment, not a fact to carry. Find every rule in those files that says something ' +
-      'must happen before the first skill speaks or before it interviews you, DO those things, ' +
-      'and state what you did. **Having read a rule is not having obeyed it** — the observed ' +
+      'at this moment, not a fact to carry. Find EVERY rule in those files that must happen at ' +
+      'CYCLE START (entering OR REJOINING a path) or BEFORE THE FIRST QUESTION IS PUT TO THE ' +
+      'USER — whoever asks it: this skill, one of ours, or you — DO those things, and state ' +
+      'what you did. Resolving `pref.*` is ONE such rule, named as an example only: it is not ' +
+      'the list, and a rule added later with the same timing will not announce itself. ' +
+      '**Having read a rule is not having obeyed it** — the observed ' +
       'failure is an agent that read the file, quoted the rule back accurately, and let the ' +
       'skill ask its first question first.\n\n' +
       'Nothing downstream catches a skip: the cycle still runs, and the work still looks ' +

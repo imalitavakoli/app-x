@@ -4,7 +4,7 @@
 
 How the workflow **resolves and persists** `pref.*` keys, and the workflow meaning of each key.
 
-Read this **in full** at the start of a cycle, before the first Superpowers skill that interviews the user (`sp-workflow-shared.md` → Personal preferences).
+Read this **in full** at **cycle start** — entering or rejoining a path — and **before the first question put to the user**, whoever asks it (`sp-workflow-shared.md` → Required reads and when they are due).
 
 **Not this file.** Key names, allowed values, and match/write rules: [agents-md-format-local.md](agents-md-format-local.md). The value itself: `AGENTS.local.md`. The **contract** of a `one-path` key (what the value does on that path): the consuming path. Workspace preferences declared to Superpowers: `sp-workflow-shared.md` — a different family; do not mix them.
 
@@ -20,11 +20,13 @@ First match wins:
 
 1. **In the plan** is not `none`, a plan exists, and a line under that plan's `## Global Constraints` starts with that text → use it (this cycle already chose).
 2. Else `AGENTS.local.md` has a valid `pref.{key}` (match rules: the catalog) → use it. Announce in one sentence; do not block.
-3. Else run the consuming step's fallback (usually: ask once).
+3. Else the key is **unset — ASK the user, once, now.** A missing `AGENTS.local.md` is the **normal** state of this workspace, not a signal that there is nothing to resolve: being unset is what makes the ask **due**, not what excuses it. A consuming step may name a narrower fallback — deriving the value without asking, as Path A's app-serve does — and where it names none, the fallback **is** the ask.
+
+**Run this ladder once per key, not once per cycle.** A key resolved at rule 1 says nothing about any other key. A key whose **In the plan** is `none` can never match rule 1 at all — no plan line will ever carry it — so for that key the ladder always runs on to rule 2, and with no `AGENTS.local.md`, to rule 3's ask. Today `pref.audience` is that key: a plan carrying `Execution mode:` and `App serve:` resolves those two and leaves `audience` exactly as unresolved as it was. Finish the ladder for **every** key in _Keys_ below before the first question, and put whatever is still unset into **one** ask rather than returning to the user twice.
 
 A user override **this cycle / this conversation** always wins. Do not rewrite `pref.{key}` unless they ask to change the default. If **In the plan** is not `none`, still write that line into the plan.
 
-Casual questions that have not entered a path: if the key is set, use it; if it is unset, do **not** interview — use that key's **Casual default** (below), or skip the key if it has none.
+**Off-path only — this paragraph does not apply once a path has been entered.** For a casual question that has not entered a path: if the key is set, use it; if it is unset, do **not** interview — use that key's **Casual default** (below), or skip the key if it has none. **On a path, unset means ask (rule 3); only off-path does unset mean skip.** Keep the two apart: with no `AGENTS.local.md` every key is unset, so this is the case that arises on nearly every cycle, and reading the off-path answer onto a path silently drops the interview the cycle depends on.
 
 &nbsp;
 
@@ -60,7 +62,7 @@ Optional **Rules** after the list — only what is true of the **key**, never a 
 - **Casual default:** none
 - **Does:** chat register only — same work, different words.
 
-**Rules.** Resolve at cycle start, before the first interviewing Superpowers skill. `developer` is today's register (paths, libs, code). `product` is a PM / PRD owner: they know **ACs**, not HTML/JS/TS/SCSS/CSS/Angular or other framework syntax.
+**Rules.** Resolve at **cycle start**, **before the first question put to the user** — whoever asks it. `developer` is today's register (paths, libs, code). `product` is a PM / PRD owner: they know **ACs**, not HTML/JS/TS/SCSS/CSS/Angular or other framework syntax.
 
 `product` changes **only the chat**. Routing, hooks, skills, Superpowers specs, plans, PRD, TSD, and every other file stay exactly as today. Same decisions, same gates — simpler words. Never skip a question because the audience is `product`. Rephrase it in product terms, or say an engineer is needed.
 

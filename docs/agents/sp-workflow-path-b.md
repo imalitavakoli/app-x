@@ -2,7 +2,7 @@
 
 # 🛣️ Path B — Fix a bug, a test failure, or anything else technically broken
 
-> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, the **Git contract**, and the pointer at [sp-workflow-prefs.md](sp-workflow-prefs.md) (resolve `pref.audience` before the first interviewing skill). The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md). Procedures this path shares with another live in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one only when a hook below cites it, never up front.
+> **Read [sp-workflow-shared.md](sp-workflow-shared.md) first — required, not optional.** It owns the rules this path assumes and cites by name: the **Operating rules**, the **Workspace preferences** declared to Superpowers, the **Git contract**, and **Required reads and when they are due** — the one table naming which docs are due at which moment, [sp-workflow-prefs.md](sp-workflow-prefs.md) among them, due before the first question put to the user. The notation used below is defined in [sp-workflow-format.md](sp-workflow-format.md). Procedures this path shares with another live in [sp-workflow-procedures.md](sp-workflow-procedures.md) — read one only when a hook below cites it, never up front.
 
 &nbsp;
 

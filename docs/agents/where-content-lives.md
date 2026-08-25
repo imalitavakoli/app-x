@@ -16,7 +16,7 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 | a rule **every** request needs                                | `AGENTS.md`                               | every turn (SessionStart)                                               |
 | a rule only **one path** needs                                | `docs/agents/sp-workflow-path-{a,b,c}.md` | on that path                                                            |
 | a **procedure** more than one path performs                   | `docs/agents/sp-workflow-procedures.md`   | when a hook cites it                                                    |
-| how to resolve / persist any `pref.*`                         | `docs/agents/sp-workflow-prefs.md`        | entering a path, or resolving a key                                     |
+| how to resolve / persist any `pref.*`                         | `docs/agents/sp-workflow-prefs.md`        | cycle start (entering **or rejoining** a path), before the first question put to the user; or resolving a key |
 | **why** a workflow decision was made                          | `docs/agents/sp-workflow-rationale.md`    | questioning a decision                                                  |
 | the **notation** of the path files                            | `docs/agents/sp-workflow-format.md`       | editing a path file                                                     |
 | how to **change** the workflow safely                         | the `x-sp-workflow-helper` skill          | before editing `AGENTS.md`'s workflow section or any `sp-workflow-*.md` |
