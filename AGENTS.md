@@ -92,7 +92,7 @@ Run each check in order. **Unsure → Yes** for that check. A wrong Yes costs a 
 
 Do not pull path files, shared rules, or hooked workspace skills into this list. They are read at a specific later moment — once the path is identified and before you invoke that skill (_The paths_, below) — not here.
 
-1. Does this request touch or produce a **single-purpose** `map` / `data-access` / `ui` / `feature` / `page` lib? (Not: what *kind of work* it is.)
+1. Does this request touch or produce a **single-purpose** `map` / `data-access` / `ui` / `feature` / `page` lib? (Not: what _kind of work_ it is.)
 
    **Yes** → read these before letting any skill start:
    - `/docs/getting-started/library-types-and-their-relationship.md` and `/docs/guidelines/naming-conventions.md`
@@ -121,11 +121,11 @@ Read it together with the path file, once the path is identified and before you 
 
 Do **not** pre-classify the request. Route it through `superpowers:using-superpowers` as normal and let it match on the skills' own descriptions — then **the skill it picks names your path**:
 
-| What the skill that fired says it opens, in its own `description`                                            | You are on | Read in full before invoking that skill                                    |
-| ------------------------------------------------------------------------------------------------------------ | ---------- | -------------------------------------------------------------------------- |
-| **design work** — creating, building, adding functionality, or _modifying behavior_ · today `brainstorming`   | **Path A** | [`/docs/agents/sp-workflow-path-a.md`](/docs/agents/sp-workflow-path-a.md) |
+| What the skill that fired says it opens, in its own `description`                                                            | You are on | Read in full before invoking that skill                                    |
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------- |
+| **design work** — creating, building, adding functionality, or _modifying behavior_ · today `brainstorming`                  | **Path A** | [`/docs/agents/sp-workflow-path-a.md`](/docs/agents/sp-workflow-path-a.md) |
 | **a defect** — a bug, test failure, _unexpected_ behavior, or a broken build/perf/integration · today `systematic-debugging` | **Path B** | [`/docs/agents/sp-workflow-path-b.md`](/docs/agents/sp-workflow-path-b.md) |
-| **neither** · today `writing-skills`, `dispatching-parallel-agents`, …                                        | **Path C** | [`/docs/agents/sp-workflow-path-c.md`](/docs/agents/sp-workflow-path-c.md) |
+| **neither** · today `writing-skills`, `dispatching-parallel-agents`, …                                                       | **Path C** | [`/docs/agents/sp-workflow-path-c.md`](/docs/agents/sp-workflow-path-c.md) |
 
 **The names are markers, not the definition.** If a release renames, splits or replaces one of these, read the **`description` of the skill that actually fired** — the same text `using-superpowers` matched on — and route by what it says it opens: design work → A · a defect → B · neither → C. Which skills exist is checkable, not guessable. This is the marker-vs-moment rule the hooks already use, applied to routing (`/docs/agents/sp-workflow-shared.md`).
 
@@ -143,16 +143,16 @@ Read the shared rules and that path file **once the path is identified and befor
 
 Which of our skills the workflow invokes, and where. _For orientation_ — each skill's own `description` says what it does, and each path file names the skills its hooks invoke.
 
-| Skill                   | Kind     | Invoked at       |
-| ----------------------- | -------- | ---------------- |
-| `x-ng-doc-prd-writer`       | writer   | A1 · A3 · B1     |
-| `x-ng-doc-tsd-writer`       | writer   | A1 · A3 · B1     |
-| `x-ng-lib-build-helper` | helper   | A1               |
+| Skill                   | Kind     | Invoked at                   |
+| ----------------------- | -------- | ---------------------------- |
+| `x-ng-doc-prd-writer`   | writer   | A1 · A3 · B1                 |
+| `x-ng-doc-tsd-writer`   | writer   | A1 · A3 · B1                 |
+| `x-ng-lib-build-helper` | helper   | A1                           |
 | `x-codeowners-helper`   | helper   | A1 (if create) · A3 (verify) |
-| `x-ng-test-unit-helper` | helper   | A1 · A3 · B1     |
-| `x-ng-test-e2e-helper`  | helper   | A1 (if e2e) · A3 |
-| `x-ng-sp-plan-enricher` | enricher | A2               |
-| `x-skill-build-helper`  | helper   | C1               |
+| `x-ng-test-unit-helper` | helper   | A1 · A3 · B1                 |
+| `x-ng-test-e2e-helper`  | helper   | A1 (if e2e) · A3             |
+| `x-ng-sp-plan-enricher` | enricher | A2                           |
+| `x-skill-build-helper`  | helper   | C1                           |
 
 **Where those fire** — `A1` before planning · `A2` after the plan is written, before execution · `A3` before finishing · `B1` on a defect fix, before finishing · `C1` on other work. The path file that owns each one defines it fully; this line exists so the IDs above resolve without leaving this file.
 

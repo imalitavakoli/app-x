@@ -86,7 +86,7 @@ claude plugin install nx@nx-claude-plugins --scope user
 
 `--scope user` for the same reason as Superpowers below — a user-scoped install carries no path, so the Windows drive-letter casing can't strand it.
 
-**Note!** Unlike Superpowers, the Nx plugin is deliberately **not pinned**. We depend on Superpowers' *behaviour* — our workflow, hooks and docs are layered on it, so it moves only when we choose. Nx is a tool we simply want current, and its updates track the Nx versions this workspace is built on. Don't "fix" that inconsistency; it's the point.
+**Note!** Unlike Superpowers, the Nx plugin is deliberately **not pinned**. We depend on Superpowers' _behaviour_ — our workflow, hooks and docs are layered on it, so it moves only when we choose. Nx is a tool we simply want current, and its updates track the Nx versions this workspace is built on. Don't "fix" that inconsistency; it's the point.
 
 &nbsp;
 
@@ -190,10 +190,10 @@ MCP servers are how the agent reaches things outside the repo — the Nx project
 
 They arrive two different ways, and only one of them needs anything from you:
 
-| Server                                | Comes from                                   | You do                          |
-| ------------------------------------- | -------------------------------------------- | ------------------------------- |
-| `nx-mcp`                              | the **Nx plugin** (see above)                 | nothing — installing it is enough |
-| `angular-cli`, `figma-mcp`, `context7` | `.mcp.json`, committed at the repo root      | approve them once; log in to Figma |
+| Server                                 | Comes from                              | You do                             |
+| -------------------------------------- | --------------------------------------- | ---------------------------------- |
+| `nx-mcp`                               | the **Nx plugin** (see above)           | nothing — installing it is enough  |
+| `angular-cli`, `figma-mcp`, `context7` | `.mcp.json`, committed at the repo root | approve them once; log in to Figma |
 
 **Approve the repo's servers.** A committed `.mcp.json` is not trusted automatically — a cloned repo could otherwise run commands on your machine. The first Claude Code session in the repo asks whether to use them; say yes. Your answer is stored in the git-ignored `.claude/settings.local.json`, so it is yours alone and survives future clones of nobody else's.
 
