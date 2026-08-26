@@ -60,5 +60,6 @@ actual config rather than trusting this file. Keeps the skill alive across tool 
 ## Notes
 
 - **State the "produces nothing" contract in the Overview.** Without it, agents treat a helper as a builder and start writing code from it.
+- **A helper may ship one mechanical `scripts/` transform and stay a helper** — the kind follows what `SKILL.md` instructs, and a helper still tells you to reason. When it does, say in the Overview what the script writes instead of claiming the skill produces nothing: the flat claim reads as false to anyone who opens the folder.
 - Prefer **one excellent example** over many mediocre ones. Keep examples in `assets/examples/`.
 - Pin conventions to what is observable in the repo, not to a tool version — a helper that hardcodes today's runner rots the moment the runner changes.

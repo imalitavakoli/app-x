@@ -2,7 +2,8 @@
 name: x-ng-lib-build-helper
 description: "WHAT? The workspace's canonical examples and guidelines for an Nx + Angular library (map, data-access, ui, feature, page, util, and grab-bag ui/feature) — the reference to imitate instead of an arbitrary existing lib. WHEN? Before planning or building any workspace library; when scaffolding or updating one, or deciding its folder/file structure, base class, versioning, README files, or data-cy naming. For api and app there is no example — use the fallback (ask which lib to imitate)."
 metadata:
-  version: '1.4.1'
+  kind: helper
+  version: '1.4.2'
 ---
 
 # Lib Build Helper

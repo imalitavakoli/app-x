@@ -1,6 +1,6 @@
 # Template — enricher skill (`x-{tech}-{tool}-…`)
 
-An **enricher** edits a document that belongs to another tool — typically so workspace rules reach a place they otherwise could not, such as an execution step that runs in an isolated context and reads only that document.
+An **enricher** supplies the spec for editing a document that belongs to another tool — typically so workspace rules reach a place they otherwise could not, such as an execution step that runs in an isolated context and reads only that document.
 
 This is the one kind that is **not** independently usable: it only makes sense inside the other tool's lifecycle. It is also the one kind permitted to name another skill, and then only to read something inside it.
 
@@ -8,13 +8,13 @@ Example: `x-ng-sp-plan-enricher`.
 
 ```markdown
 ---
-name: x-{tech}-{tool}-{artifact}-{verb}
+name: x-{tech}-{tool}-{artifact}-enricher
 description: "WHAT? <the other tool's artifact, edited so <what> reaches <where>>. WHEN? <the lifecycle point + keywords>"
 metadata:
   version: '1.0.0'
 ---
 
-# {Artifact} {Verb}
+# {TOOL} {Artifact} Enricher
 
 ## Overview
 
@@ -84,7 +84,7 @@ the whole list; only when all pass, report.
 
 ## Notes
 
-- **Name it after the artifact and the verb**, not after the rules it carries — the artifact is what makes this kind distinct. Keep the tool segment: it is the short name of the tool that owns the artifact (`sp` = Superpowers), so `x-ng-sp-plan-enricher` reads as "Angular · Superpowers · plan · enricher".
+- **Name it after the artifact**, not after the rules it carries — the artifact is what makes this kind distinct. The last segment is still the kind word, like every other kind. Keep the tool segment: it is the short name of the tool that owns the artifact (`sp` = Superpowers), so `x-ng-sp-plan-enricher` reads as "Angular · Superpowers · plan · enricher", and its H1 keeps the upper-cased tool segment — `# SP Plan Enricher`.
 - **This kind is exempt from "never name another skill", narrowly.** It may name one to read that skill's internals (a template or asset it must stay in sync with). It still may not name a skill merely to consume its output — reference the produced file instead.
 - Its output is only as durable as the artifact. If the other tool's file is ephemeral, everything this skill writes disappears with it — which is correct, and the reason the durable rules must also live somewhere permanent.
 - Because it is lifecycle-bound, it is the one kind whose Prerequisites should include _decisions_ as well as files.

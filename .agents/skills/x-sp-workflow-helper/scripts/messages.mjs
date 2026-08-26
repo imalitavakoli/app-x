@@ -573,6 +573,8 @@ export const titles = {
   'sp-pin': 'The pinned Superpowers commit is the one we reviewed',
   'x-skills': 'Workspace skills exist, and every stub matches its canonical',
   versions: 'Every workspace skill carries a block-form semver',
+  'skill-kinds':
+    'Every skill names a known kind, each kind has its template, and AGENTS.md agrees',
   'path-isolation': 'No path file cites another path file',
   'agents-notation': 'Every hook ID AGENTS.md names is defined in AGENTS.md',
   landmarks: 'Landmark headings and reserved icons follow the notation',
@@ -685,6 +687,72 @@ export const locators = {
     fail: `${file} has no \`version: 'x.y.z'\` under a block \`metadata:\``,
   }),
 
+  /**
+   * A skill whose last name segment is not a kind.
+   *
+   * - **Why** the suffix IS the kind, so an unknown one means either a coined
+   *   fifth kind or a typo — and both read as intentional. Neither is visible
+   *   to any other rule: the folder exists, its links resolve, its version
+   *   parses.
+   * - **Seen when** a skill is added or renamed with a suffix nobody registered.
+   */
+  skillKindUnknown: ({ skill, suffix, kinds }) => ({
+    fail:
+      `${skill} ends in \`-${suffix}\`, which is not a skill kind (${kinds.join(' · ')}) — ` +
+      'either rename it to the kind it actually is, or register the new kind deliberately',
+  }),
+
+  /**
+   * A registered kind with no template on disk.
+   *
+   * - **Why** the kind names its template; an author told to start from one
+   *   finds nothing. `links` cannot see this — there is no citation left to
+   *   test once the file is gone.
+   * - **Seen when** a template is renamed or deleted without the kind list.
+   */
+  kindTemplateMissing: ({ kind, path }) => ({
+    fail: `kind \`${kind}\` has no template at ${path} — an author of that kind has nothing to start from`,
+  }),
+
+  /**
+   * A skill with no `kind:` under `metadata:`.
+   *
+   * - **Why** the field is what tooling reads without parsing a name. A skill
+   *   missing it is invisible to anything that classifies by field, and the
+   *   suffix alone cannot tell you whether the omission was deliberate.
+   * - **Seen when** a skill predates the field, or a new one copies an old one.
+   */
+  kindFieldMissing: ({ file, suffix }) => ({
+    fail: `${file} has no \`kind:\` under a block \`metadata:\` — its name says \`${suffix}\`, so say so in the field too`,
+  }),
+
+  /**
+   * `kind:` and the name's suffix disagreeing.
+   *
+   * - **Why** they are two statements of one fact. Whichever a reader trusts,
+   *   the other is wrong, and both look authoritative.
+   * - **Seen when** a skill changes kind and only one of the two is updated —
+   *   the same class as the AGENTS.md column below, one file closer in.
+   */
+  kindFieldMismatch: ({ file, field, suffix }) => ({
+    fail:
+      `${file} declares \`kind: ${field}\` but its name ends in \`-${suffix}\` — ` +
+      'the two must agree; change whichever is wrong',
+  }),
+
+  /**
+   * `AGENTS.md` declaring a kind its skill's own name contradicts.
+   *
+   * - **Why** the table column duplicates the suffix, and a duplicated fact
+   *   drifts. Both readings look right, so review does not catch it.
+   * - **Seen when** a skill changes kind and only one of the two is updated.
+   */
+  agentsKindMismatch: ({ file, line, skill, declared, actual }) => ({
+    fail:
+      `${file}:${line} lists ${skill} as \`${declared}\`, but its name says \`${actual}\` — ` +
+      'the name is the kind, so the table is the copy that drifted',
+  }),
+
   headingNotHook: ({ file, line, heading }) => ({
     fail: `${file}:${line} — \`####\` heading is not a 🪝 hook: "${heading}"`,
   }),
@@ -773,6 +841,8 @@ export const notes = {
   workspaceSkills: (names) =>
     `${names.length} workspace skills: ${names.join(' · ')}`,
   stubLocations: (dirs) => `stub locations checked: ${dirs.join(' · ')}`,
+  skillKindsChecked: ({ skills, kinds, fields, declared }) =>
+    `${skills} skills across ${kinds} kinds; ${fields} metadata field(s) and ${declared} AGENTS.md row(s) cross-checked against the name`,
   hookPathsChecked: (n) => `${n} repo paths named by hooks checked`,
   hookRefFilesScanned: (n) => `${n} files scanned for hook-filename references`,
   messageAudit: ({ total, dead, inline, scanned }) =>

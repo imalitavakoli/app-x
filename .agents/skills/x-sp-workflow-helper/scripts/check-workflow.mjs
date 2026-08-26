@@ -1053,6 +1053,100 @@ rule('versions', (r) => {
   }
 });
 
+/* --- 8b. skill kinds ----------------------------------------------------- */
+// Three failures, one rule, because all three are the same fact disagreeing
+// with itself: a skill's kind is stated in its NAME, in the TEMPLATE list, and
+// in AGENTS.md's table. Nothing else looks at any of them — a wrong suffix
+// still resolves, a deleted template leaves no citation for `links` to test,
+// and a drifted table column reads as plausible as the truth.
+rule('skill-kinds', (r) => {
+  const dir = CFG.CANONICAL_SKILL_DIR;
+  if (!existsSync(abs(dir))) return r.skip(MSG.skips.noDir(dir));
+
+  const skills = readdirSync(abs(dir)).filter((x) =>
+    x.startsWith(CFG.OUR_SKILL_PREFIX),
+  );
+
+  // 1. Every skill's last segment is a known kind.
+  const kindOf = new Map();
+  for (const skill of skills) {
+    const suffix = skill.slice(skill.lastIndexOf('-') + 1);
+    if (CFG.SKILL_KINDS.includes(suffix)) {
+      kindOf.set(skill, suffix);
+      continue;
+    }
+    emitMsg(
+      r,
+      MSG.locators.skillKindUnknown({
+        skill,
+        suffix,
+        kinds: CFG.SKILL_KINDS,
+      }),
+    );
+  }
+
+  // 2. Every registered kind still has a template to start from.
+  for (const kind of CFG.SKILL_KINDS) {
+    const p = `${CFG.KIND_TEMPLATE_DIR}/${kind}.md`;
+    if (!exists(p)) emitMsg(r, MSG.locators.kindTemplateMissing({ kind, path: p }));
+  }
+
+  // 2b. `metadata.kind` agrees with the suffix. Two statements of one fact, so
+  //     the check is agreement — neither is treated as authoritative over the
+  //     other, because a reader has no way to know which was updated.
+  let fields = 0;
+  for (const [skill, suffix] of kindOf) {
+    const p = `${dir}/${skill}/SKILL.md`;
+    if (!exists(p)) continue;
+    const m = CFG.SKILL_KIND_FIELD.exec(frontmatterOf(p) + '\n');
+    if (!m) {
+      emitMsg(r, MSG.locators.kindFieldMissing({ file: p, suffix }));
+      continue;
+    }
+    fields++;
+    if (m[1] !== suffix)
+      emitMsg(
+        r,
+        MSG.locators.kindFieldMismatch({ file: p, field: m[1], suffix }),
+      );
+  }
+
+  // 3. AGENTS.md's table agrees with the name. Rows naming a skill we could not
+  //    classify are left alone — rule 1 already reported that, and a second
+  //    failure for one cause is noise.
+  let declared = 0;
+  if (exists(AGENTS)) {
+    for (const { n, text } of lines(AGENTS)) {
+      const m = CFG.AGENTS_SKILL_KIND_ROW.exec(text);
+      if (!m) continue;
+      const [, skill, kind] = m;
+      const actual = kindOf.get(skill);
+      if (!actual) continue;
+      declared++;
+      if (kind !== actual)
+        emitMsg(
+          r,
+          MSG.locators.agentsKindMismatch({
+            file: AGENTS,
+            line: n,
+            skill,
+            declared: kind,
+            actual,
+          }),
+        );
+    }
+  }
+
+  r.note(
+    MSG.notes.skillKindsChecked({
+      skills: skills.length,
+      kinds: CFG.SKILL_KINDS.length,
+      fields,
+      declared,
+    }),
+  );
+});
+
 /* --- 9. path isolation --------------------------------------------------- */
 rule('path-isolation', (r) => {
   for (const p of PATH_FILES) {

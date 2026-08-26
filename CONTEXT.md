@@ -219,6 +219,14 @@ _Avoid_: lifecycle hook, Claude hook, agent hook
 
 &nbsp;
 
+## Skills
+
+**Skill kind**:
+Which of seven jobs one of our own `x-*` skills does — `writer`, `helper`, `scaffolder`, `editor`, `enricher`, `reviewer`, `runner` — each an agent noun, stated twice: as the last segment of the skill's name and as `kind:` in its `metadata`. A property of our skills only: skills also arrive from plugins and other sources, and those carry no kind. Distinct from a **Lib type**, which is what "kind" means of a library.
+_Avoid_: Skill type, Skill category, Skill flavour, Skill role
+
+&nbsp;
+
 ## Flagged ambiguities
 
 Terms **in use but not settled** — recorded so a contested one is not silently coined twice. Unlike a PRD's or TSD's Open Questions, nothing here blocks: resolve one when the work makes the answer obvious, then move it into the body above. Format rules: [docs/agents/context-md-format.md](docs/agents/context-md-format.md).

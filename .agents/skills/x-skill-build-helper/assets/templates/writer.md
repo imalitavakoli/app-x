@@ -1,6 +1,8 @@
 # Template — writer skill
 
-A **writer** produces a document at a known path. It owns the shape of that document (its template), validates its own output, and reports what it wrote.
+A **writer** supplies what is needed to produce a document — its shape, the procedure for filling it, and the checks it must pass before it counts as done. The agent reading the skill writes the file and reports what it wrote.
+
+**Two shapes, and the difference is only the path.** A writer bound to **one document** owns its location and its template: the path is a constant, and the skill states it. A writer bound to a **format or artifact type** is handed the path by the caller, and owns the format's mechanics instead of a template. Everything else — Prerequisites, the validation loop, the Summary — is the same, which is why both are the same kind. Say which shape yours is in the Overview, because it decides whether the path is a constant or a required input.
 
 Examples: `x-ng-doc-prd-writer`, `x-ng-doc-tsd-writer`.
 
@@ -17,7 +19,8 @@ metadata:
 ## Overview
 
 <What it outputs, and the role you take while writing it (e.g. "you are a product owner").
-State the output path. Say what deliberately does NOT belong in this document.>
+State the output path if the skill owns it; if the caller supplies it, say so and list it
+under Prerequisites instead. Say what deliberately does NOT belong in this document.>
 
 ## When to use
 
@@ -31,7 +34,7 @@ State the output path. Say what deliberately does NOT belong in this document.>
 ## Inputs & output
 
 - **Reads:** <inputs, and any docs/ references by exact path>
-- **Writes:** <exact output path>
+- **Writes:** <exact output path — or "the path given as input", for a format-bound writer>
 
 ## Workflow
 

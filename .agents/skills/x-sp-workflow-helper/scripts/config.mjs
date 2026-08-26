@@ -44,6 +44,54 @@ export const OUR_SKILL_PREFIX = 'x-';
  */
 export const STUB_SKILL_DIRS = ['.claude/skills'];
 
+/**
+ * The skill kinds. A workspace skill's LAST name segment is its kind, and the
+ * kind names its template — both are `x-skill-build-helper`'s rules, and
+ * `skill-kinds` is what stops either drifting.
+ *
+ * Adding an entry is a deliberate act, not bookkeeping: that skill tells an
+ * author to ASK rather than coin a fifth kind, so a new entry here is the record
+ * that the conversation happened. Removing one is how a kind is retired — the
+ * rule then fails on any skill still carrying that suffix, which is the point.
+ */
+export const SKILL_KINDS = [
+  'writer',
+  'helper',
+  'scaffolder',
+  'editor',
+  'enricher',
+  'reviewer',
+  'runner',
+];
+
+/**
+ * `kind:` under a block `metadata:` — the second, machine-readable statement of
+ * the same fact the name's suffix carries. Two statements can disagree, which is
+ * why `skill-kinds` reads both and compares them rather than trusting either.
+ */
+export const SKILL_KIND_FIELD =
+  /^metadata:[ \t]*\r?\n(?:[ \t]+.*\r?\n)*?[ \t]+kind:[ \t]*([a-z-]+)[ \t]*$/m;
+
+/**
+ * Where each kind's starting template lives.
+ *
+ * Checked separately from the `links` rule on purpose: `links` proves the
+ * template link inside a `SKILL.md` resolves, this proves the KIND LIST above
+ * agrees with what is on disk. A kind whose template was renamed away has a
+ * valid-looking entry here and leaves every future author of that kind with
+ * nothing to start from — and no citation anywhere for `links` to test.
+ */
+export const KIND_TEMPLATE_DIR = `${CANONICAL_SKILL_DIR}/x-skill-build-helper/assets/templates`;
+
+/**
+ * The workspace-skills table in `AGENTS.md`: a row names a skill and declares
+ * its kind. That column is a second copy of the suffix already in the skill's
+ * name, so it can disagree with it — silently, since both readings are
+ * plausible. This pattern is what `skill-kinds` reads it with.
+ */
+export const AGENTS_SKILL_KIND_ROW =
+  /^\|\s*`(x-[a-z0-9-]+)`\s*\|\s*([a-z-]+)\s*\|/;
+
 /** Directory prefixes that may be cited as repo-root-relative paths. */
 export const CITABLE_ROOTS = ['docs', 'apps', 'libs', 'tools'];
 

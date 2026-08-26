@@ -2,7 +2,8 @@
 name: x-ng-doc-tsd-writer
 description: "WHAT? A functionality's TSD folder at docs/x/{name}/TSD/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TSD, TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
-  version: '4.0.0'
+  kind: writer
+  version: '4.0.1'
 ---
 
 # TSD Writer

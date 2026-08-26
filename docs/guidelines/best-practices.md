@@ -13,7 +13,7 @@ To improve teamwork, we follow some best practices:
 ## Mindset
 
 - **Prioritize docs**. Before generating/updating a project (app or lib), always begin by writing or updating its `README.md` (for apps, it's also essential to update the `CHANGELOG.md` file).  
-  **Note!** Keep the root `CODEOWNERS` file current when you add or hand off an app/lib — follow `.agents/skills/x-codeowners-helper/SKILL.md`. This helps the Product Manager (PM) assign upgrade/bug-fix work to the right owner.
+  **Note!** Keep the root `CODEOWNERS` file current when you add or hand off an app/lib — follow `.agents/skills/x-codeowners-editor/SKILL.md`. This helps the Product Manager (PM) assign upgrade/bug-fix work to the right owner.
 
 &nbsp;
 

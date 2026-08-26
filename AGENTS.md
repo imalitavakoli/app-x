@@ -84,7 +84,7 @@ This workspace is governed by the **Superpowers** plugin. Route every request th
 
 ### Pre-flight — at cycle start
 
-Run these checks at **cycle start** — when you enter a path, **or rejoin one already in progress** (a plan you were handed, a cycle you are resuming) — and always before invoking any Superpowers skill. Once that skill starts talking, these reads and loads are too late to shape it; and on a rejoin the first skill invoked is the *execution* skill, so waiting for one means waiting until the work has already begun. That is why this is here and not on a path.
+Run these checks at **cycle start** — when you enter a path, **or rejoin one already in progress** (a plan you were handed, a cycle you are resuming) — and always before invoking any Superpowers skill. Once that skill starts talking, these reads and loads are too late to shape it; and on a rejoin the first skill invoked is the _execution_ skill, so waiting for one means waiting until the work has already begun. That is why this is here and not on a path.
 
 **Who answers:** you. Never interview the user here.
 
@@ -148,7 +148,7 @@ Which of our skills the workflow invokes, and where. _For orientation_ — each 
 | `x-ng-doc-prd-writer`   | writer   | A1 · A3 · B1                 |
 | `x-ng-doc-tsd-writer`   | writer   | A1 · A3 · B1                 |
 | `x-ng-lib-build-helper` | helper   | A1                           |
-| `x-codeowners-helper`   | helper   | A1 (if create) · A3 (verify) |
+| `x-codeowners-editor`   | editor   | A1 (if create) · A3 (verify) |
 | `x-ng-test-unit-helper` | helper   | A1 · A3 · B1                 |
 | `x-ng-test-e2e-helper`  | helper   | A1 (if e2e) · A3             |
 | `x-ng-sp-plan-enricher` | enricher | A2                           |

@@ -1,18 +1,23 @@
 ---
-name: x-codeowners-helper
+name: x-codeowners-editor
 description: 'WHAT? The rules and a mechanical insert for updating root CODEOWNERS when a path is created or handed off. WHEN? Creating a new path (app, lib, version-folder, or any other new file/dir); an explicit ownership handoff; asked to update a CODEOWNERS owner, hand off a path, or add a code-owner line. Not for ordinary edits to an existing path, whether or not it already has a more-specific owner line.'
 metadata:
-  version: '1.2.0'
+  kind: editor
+  version: '2.0.0'
 ---
 
-# CODEOWNERS Helper
+# CODEOWNERS Editor
 
 ## Overview
 
-This skill is a **helper**: it puts the workspace's root `CODEOWNERS` conventions into your
-context. It **produces nothing** — the edit is made by the session that loaded this skill, or
-by running `.agents/skills/x-codeowners-helper/scripts/upsert-owner.mjs`, never by hand-editing
-the file from what this skill says.
+This skill is an **editor**: it supplies the workspace's root `CODEOWNERS` conventions **and the
+machinery that applies them**. Resolving the owner is judgement and stays yours; the line itself is
+written by running `.agents/skills/x-codeowners-editor/scripts/upsert-owner.mjs`, which appends or
+updates that one owner line idempotently. Never hand-edit the file from what this skill says — the
+script exists so the same input always produces the same line.
+
+**Invoker & moment — `script`.** Whoever holds that script's repo-relative path runs it, at the
+moment a path is created or handed off. Nothing else invokes it, and it needs no lifecycle to sit in.
 
 ## When to use
 
@@ -88,7 +93,7 @@ re-serialize the section it touched.
 The script's CLI: `--path <path>` `--owner <owner>` `--handoff` (omit for create) `--file <CODEOWNERS path>` (defaults to the repo-root `CODEOWNERS`). For a co-ownership handoff, pass `--owner "@old @new"` — see Handoff above.
 
 These conventions are enforced by
-`.agents/skills/x-codeowners-helper/scripts/upsert-owner.mjs`. When handing this off to an
+`.agents/skills/x-codeowners-editor/scripts/upsert-owner.mjs`. When handing this off to an
 agent that cannot read this skill, give it that literal repo-relative path.
 
 ## Common mistakes

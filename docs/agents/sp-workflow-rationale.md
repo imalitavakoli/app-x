@@ -318,4 +318,20 @@ That choice is deliverable only where a Claude Code marketplace reaches, which i
 
 **Revisit if** most of the team moves off Claude Code — a pin governing a minority of installs buys little and still costs the two-file sync — or if Superpowers starts declaring its behavioural contracts somewhere a script can read, which would replace the prose risk that motivates pinning at all.
 
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why a green checker is not enough
+
+The obvious economy is to keep the checker and drop the other two mechanisms: if every reference resolves, what is left to go wrong? Enough that both of the following passed a green run.
+
+**A rule that resolves but attaches in the wrong place.** `x-ng-sp-plan-enricher` wrote implementer conventions into the plan's Global Constraints — every path valid, every ID defined — but that section only reaches an implementer if the controller carries it there. The constraint existed, resolved, and arrived nowhere. Only running the change as a scenario, with a subagent given what an implementer is actually given, showed the gap.
+
+**A sentence that the fix falsified.** Correcting the above made a line in this very file wrong: it stated that implementers get the plan's Global Constraints and nothing else. Still perfectly grammatical, still citing real things, and now false. No rule can see that, because nothing about it is broken — it simply no longer describes the system. The sweep for a rule's other homes is what finds it.
+
+So the three mechanisms partition the failure space rather than overlapping: **the checker proves references resolve, a scenario proves behaviour changed as intended, the sweep proves no other copy of the rule now contradicts it.** Dropping either of the latter two does not lose redundancy; it loses a class of failure entirely, and one that a green run actively disguises.
+
+**Revisit if** a checker rule ever becomes able to test intent rather than resolution — a rule that could tell a stale-but-valid sentence from a current one would absorb the sweep — or if scenario runs stop discriminating, which would mean the wording is not what governs behaviour and the effort belongs somewhere else.
+
 [🔙](../../README.md#agents)
