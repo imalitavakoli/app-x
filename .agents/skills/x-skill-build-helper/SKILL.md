@@ -1,9 +1,9 @@
 ---
 name: x-skill-build-helper
-description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, or where its templates and examples live."
+description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, where its templates and examples live, or where its team/local state (prefs, registries) lives."
 metadata:
   kind: helper
-  version: '2.1.0'
+  version: '2.3.1'
 ---
 
 # Skill Build Helper
@@ -323,35 +323,80 @@ Keep linking a skill's own files the normal way — relative to the skill root (
 
 One line, and whoever carries the path onward copies something that resolves instead of reconstructing it.
 
-## Skill-local state
+## Skill state
 
-A skill may keep **local state** between runs — not only preferences. Preferences are the first kind; a question queue, an accumulating learning record, or a cache are others. Naming the convention after one kind leaves the next kind homeless.
+A skill may keep **state** between runs so later runs work better — not only preferences that skip a question. Preferences are one kind. A question queue, an answered-questions registry, a decided-standards log, a cache, or any other accumulating record are others. Naming the convention after prefs leaves those homeless.
 
-### Where it lives
+State is optional memory. The skill must work with both homes empty; a registry makes the next run better, it does not enable a capability the skill otherwise lacks. Workspace-wide terms and rules still belong in `CONTEXT.md` and `docs/` — a skill registry is that skill's memory, not a second glossary.
+
+Two homes, same inner shape. The grain is **per item**, not per file: a preference key, a registry entry, or a verbatim sibling.
 
 ```
-.agents/local/{skill-name}/prefs.json      # declarative preferences
-.agents/local/{skill-name}/{other}         # any other local state that skill owns
+.agents/team/{skill-name}/prefs.json       # committed — the team's lock
+.agents/team/{skill-name}/{other}          # committed siblings (registries, verbatim fragments, …)
+.agents/local/{skill-name}/prefs.json      # gitignored — one checkout
+.agents/local/{skill-name}/{other}         # gitignored siblings
 ```
 
-One ignore rule on the parent, `/.agents/local/`. Written once; adding a skill never changes it.
+Same relative path under both homes is the same store (`answered-questions.jsonl` next to `prefs.json`, in each home). One ignore rule, on the local parent only: `/.agents/local/`. Written once; adding a skill never changes it. **Do not ignore `.agents/team/`.** That path is how every clone sees the same lock, and how a change to it is reviewed.
 
-`prefs.json` carries a `version` integer so a later format change is recognised rather than misread. No per-user path segment — the folder is git-ignored, so the checkout already provides the isolation a shared file would need one for.
+**Every state file carries a `version` integer** so a later format change is recognised rather than misread — not only `prefs.json`. That file puts it at the top level. A registry or any other sibling puts it where that skill documents (a header line, a field on each entry, …). Check each file on its own: a version mismatch (older, missing, or newer than the shape the skill documents) means treat **that file** as absent for this run — announced defaults for its items, and offer to rewrite it to match. No per-user path segment — local isolation is the gitignore; team isolation is the folder-per-skill split below.
+
+### Overlay
+
+First match wins, **per item**. This run's explicit instruction always wins.
+
+For a **preference key** in `prefs.json` (and a verbatim sibling named by that object):
+
+1. Team file.
+2. Local file.
+3. Announced default in the skill.
+
+A key present on the team file **wins over local**, even when the team value equals the announced default. A key omitted from the team file can still come from local. A missing file is not a layer.
+
+For an **accumulating registry** (append-only `.jsonl`, or another file of entries the skill names):
+
+1. The skill declares the **identity** of an entry (`id`, question text, …).
+2. Same identity in both homes → **team wins**.
+3. Identity only in local → local stands, until it is promoted.
+4. Identity only in team → team stands.
+5. Missing team file → treat as empty team; local entries still apply.
+
+Do not invent a merge the skill did not declare. Do not treat the whole registry file as one overlay unit — that would drop every local-only entry the moment a team file exists.
+
+Announce in one line which layer supplied each item that is not the announced default.
+
+### Write target
+
+Reading team-over-local does not stop drift if "remember this?" still writes local. The write home follows what the **item** does:
+
+| The item…                                                                 | Write                              |
+| ------------------------------------------------------------------------- | ---------------------------------- |
+| changes how everyone should act, or would help the next clone / agent     | `.agents/team/{skill-name}/`       |
+| only skips a question for this user; the artifact is the same either way  | `.agents/local/{skill-name}/`      |
+
+Never write a team item to local. If the team store already has that item, do not offer at all unless they explicitly ask to change the team record. Create the file and its parent when writing; a team write is a git change — say so. A local write is personal state that should not be committed.
+
+**New item, not in team yet.** After they have seen this run use it: if it would help the team, **offer to add it under `.agents/team/`** (create the registry file if it does not exist) rather than leaving it only in local. Explicit yes, once. Decline → keep the write-target table (local for skip-only; do not silently copy). The same offer applies the first time a team registry file would be created.
+
+The skill names which of **its** items are team vs local. Unnamed items: apply the table (helps the next clone → team).
 
 ### Conventional shapes
 
-| State kind             | Shape                                          | Why                                                     |
-| ---------------------- | ---------------------------------------------- | ------------------------------------------------------- |
+Same shape in both homes.
+
+| State kind               | Shape                                          | Why                                                     |
+| ------------------------ | ---------------------------------------------- | ------------------------------------------------------- |
 | preferences (skill-wide) | `prefs.json` top-level scalars (`version`, which variant we prefer) | read whole, written rarely, small |
 | preferences (per variant) | one object of scalars per name, under a map in the same file | a flat file makes the next variant's keys collide with the first |
-| a verbatim fragment    | its own plain-text file, named by `prefs.json` | escaping into JSON is how verbatim stops being verbatim |
-| an accumulating record | append-only `.jsonl`                           | appending cannot corrupt what is already there          |
+| a verbatim fragment      | its own plain-text file, named by `prefs.json` | escaping into JSON is how verbatim stops being verbatim |
+| an accumulating record   | append-only `.jsonl`, with `version` as that skill specifies | appending cannot corrupt what is already there; a format bump is visible |
 
-When the skill has a named index of variants (mechanisms, targets, kinds), each variant's prefs are an object under that name in the map. Adding a variant is a new object, not a rename of the first one's keys. Nest only that map — values inside each object stay scalars. A verbatim fragment is still its own sibling file, named from the object that owns it.
+When the skill has a named index of variants (mechanisms, targets, kinds), each variant's prefs are an object under that name in the map. Adding a variant is a new object, not a rename of the first one's keys. Nest only that map — values inside each object stay scalars. A verbatim fragment is still its own sibling file, named from the object that owns it, in the **same home** as the `prefs.json` that points at it. A registry uses the same relative filename in both homes; overlay is per entry identity, not per file.
 
 ### Why not inside the skill folder
 
-A skill is a distributable versioned artifact. State there is destroyed by an update or reinstall, travels when the skill is copied, and needs an ignore rule per skill.
+A skill is a distributable versioned artifact. State there is destroyed by an update or reinstall, travels when the skill is copied, and needs an ignore rule per skill. Team policy for this repo is not the skill; local taste is not the skill either.
 
 ### Why not `AGENTS.local.md`
 
@@ -359,18 +404,18 @@ It is prose loaded at session start, so every skill's state would enter every se
 
 ### Why a folder per skill, not a shared file
 
-Execution runs several agents at once. A single shared file means two skills writing in the same window clobber each other. A skill only ever writes its own folder.
+Execution runs several agents at once. A single shared file means two skills writing in the same window clobber each other. A skill only ever writes its own folder — under `team/` or `local/` as the write target says.
 
 ### The six rules
 
 Each names the failure it prevents:
 
-1. **Optional, never required.** A preference may only skip a question, never enable a capability or change an outcome that is not already the announced default — otherwise the skill stops being portable. A skill works fully with the file absent.
+1. **Optional, never required.** The skill works fully with both homes empty. A skip-pref may only skip a question. A registry may inform later runs but must not be the only way the skill can do its job — otherwise the skill stops being portable.
 2. **A stored value is a default, not a law.** This run's explicit instruction wins, and the skill says which it used.
 3. **Declarative, not procedural.** Free text is stored and replayed verbatim, never re-interpreted.
-4. **Offer, don't assume.** Write only after an explicit yes, once, and only after the user has seen the result it would make default.
-5. **Create the ignore rule, and say why.** Must work in a repo with no such convention, including creating the file and its parent. If the path is not ignored, add the rule and tell the user it is personal state that should not be committed.
-6. **Never secrets.** Git-ignored is not encrypted.
+4. **Offer, don't assume.** Write only after an explicit yes, once, and only after the user has seen the result it would make default. Write to the home the write-target table names. A new item that is not in team yet, and would help the team, is offered to team — not written to local by default and forgotten.
+5. **Ignore local only; never ignore team.** Must work in a repo with no such convention, including creating the file and its parent. If `.agents/local/` is not ignored, add `/.agents/local/` and tell the user it is personal state that should not be committed. If `.agents/team/` is ignored, remove that ignore — a locked team value nobody else can see is local wearing a different path.
+6. **Never secrets.** Git-ignored is not encrypted; committed is not encrypted either.
 
 ## Human-only references, and how they do not rot
 
@@ -466,3 +511,12 @@ Write every skill so it stands on its own and triggers from its own `description
 | Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                                                     |
 | Relocating content so an agent can reach it              | Leave it where it is and give the path.                                                                                                  |
 | Skill-relative path handed to an execution agent         | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.                                      |
+| A team key written to `.agents/local/`                   | Artifact-shaping keys go under `.agents/team/{skill-name}/`. Local is skip-memory only.                                                  |
+| `.agents/team/` added to gitignore                       | Remove it. A lock nobody else can clone is local at a different path.                                                                    |
+| A team registry dumped into `.agents/local/`             | If the next clone should know it, offer team (create the file if needed). Explicit yes.                                                 |
+| Overlaying a whole `.jsonl` as one file                  | Overlay per entry identity the skill declares. Team wins on a clash; local-only ids stay until promoted.                                |
+| Treating the team file as all-or-nothing                 | Overlay is per item. An item the team store omits can still come from local.                                                            |
+| Local winning over team on the same item                 | Team wins per item, even when the team value equals the announced default.                                                              |
+| A registry required for the skill to function            | Both homes empty must still work. A registry improves later runs; it does not enable the skill.                                         |
+| `version` only on `prefs.json`                           | Every state file the skill stores carries one. The skill names where it lives on a registry or sibling.                                 |
+| Workspace rules stuffed into a skill registry            | Terms go to `CONTEXT.md`; subsystem rules to `docs/`. The registry is that skill's memory.                                              |

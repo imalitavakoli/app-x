@@ -22,7 +22,7 @@ Under `prefs.json` → `mechanisms["js-console"]`:
 | `guard`        | `"dev-mode"`             | wraps `DEBUG`/`INFO` only                                        |
 | `sourcePrefix` | `"@"`                    | prepended to the named file's stem on the console source string  |
 | `eventSuffix`  | `":"`                    | appended to the event string only when the record has attributes |
-| `guardFile`    | `"js-console.guard.txt"` | sibling file; only when `guard` is `"custom"`                    |
+| `guardFile`    | `"js-console.guard.txt"` | sibling file; only when `guard` is `"custom"`; verbatim, no `version` of its own — a format change bumps `prefs.json`'s `version` |
 
 Missing object or key → that row's announced default. Do not fail the run.
 

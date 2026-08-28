@@ -1,6 +1,6 @@
 # Logging methodology — the reasoning behind the rules
 
-**Explains:** `x-log-diag-editor` v1.0.0
+**Explains:** `x-log-diag-editor` v1.8.0
 **Load this when:** someone questions a rule, wants to change one, or is adding a new one.
 
 This file changes no decision. It exists so the rules are not relitigated from scratch, and so a
@@ -39,6 +39,16 @@ temporary record, and what does it do when it cannot?
 Putting the how in the skill forces every new mechanism to lie about what it can do, or to rewrite
 the rules.
 
+## Why a preferred mechanism that cannot apply is not a silent fallback
+
+A mechanism that declares `inapplicable: ask` is preferred over whatever remains (lower
+`priority` number). When it cannot apply, using the leftover mechanism without asking is a
+different product than the one the catalog preferred. Asking, with skip as the recommendation,
+is how the team can choose "do not log". Do not add a library or dependency to make that
+mechanism apply. A pref that remembered "always use the leftover" would recreate the silent
+path; the ask is the rule, not a key. Which leftover exists, and why the preferred one cannot
+apply, are facts in the references — not this file.
+
 ## Why records live in a companion
 
 Inline mechanism calls dirty the named file, in both modes. The dirt is specific to one API. A
@@ -58,6 +68,13 @@ remain available. This skill is the selective one.
 
 A guide that demonstrates an API without saying when to call it teaches the API and not the
 restraint. The result is pollution. The restraint is the whole contribution.
+
+## Why event keys are identifiers
+
+A companion's one-liner is a method. The event key is that method's name. A slash is not a legal
+identifier, so `fetchCards/failed` cannot be the method. Sub-steps belong in the name
+(`loadItemsFailed`) or in attributes (`reason`), not as punctuation in the key. A shape the
+companion cannot spell is a shape every `companion: yes` reference would have to lie about.
 
 ## Why coverage never removes a boundary log
 

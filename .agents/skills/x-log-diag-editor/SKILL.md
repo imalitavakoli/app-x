@@ -3,7 +3,7 @@ name: x-log-diag-editor
 description: 'WHAT? The rule for which call sites deserve a diagnostic log, and the edit that adds, prunes or downgrades them in named files. WHEN? Asked to add, audit, prune or level-correct logging in components, services, utils or plain TS/JS; deciding whether a call site deserves a log, which severity it takes, or which logging mechanism to use. Not for diagnosing a defect, and not for analytics or product-event logging.'
 metadata:
   kind: editor
-  version: '1.0.0'
+  version: '1.8.0'
 ---
 
 # Log Diag Editor
@@ -67,7 +67,7 @@ The table states meaning and recommended intent, not a procedure: do not write a
 Three parts, because unstructured strings are unsearchable:
 
 - **source** — the class or module the record comes from
-- **event key** — camelCase, `/` for a sub-step, e.g. `fetchCards/failed`
+- **event key** — camelCase identifier, legal as a method name, e.g. `loadItemsFailed`
 - **attributes** — the data, named fields only
 
 This file defines the three parts as the recommended record shape. Each mechanism reference maps them onto its own API. When the reference isolates in a companion, the named file's one-liners _are_ this shape (source = companion, event key = operation name, attributes = argument). Do not write a call from this file.
@@ -195,7 +195,12 @@ Copy these into todos so they stay grouped. Load `references/methodology.md` on 
 | Investigation logs left behind after the session                                  | Remove all marked records in the companion and the matching one-liners; delete an emptied companion. |
 | A second record added beside an existing one for the same event                   | Match on source + event key and update in place.                                                     |
 | A test written because a pure function was uncovered                              | Report it and hand it back. This skill does not write tests.                                         |
-| A mechanism chosen by asking when the file already settled it                     | Derive, apply, announce in one line. Ask only on the four stop conditions.                           |
+| A mechanism chosen by asking when the file already settled it                     | Derive, apply, announce in one line. Ask only on the stop conditions in the index.                   |
+| Silent leftover when an `inapplicable: ask` mechanism cannot apply                | Stop. The index recommends skip (no new logs). Do not add a lib to make that mechanism apply.        |
+| This skill's prefs written to `.agents/local/`                                    | Write `.agents/team/x-log-diag-editor/` after an explicit yes. These keys change the artifact.       |
+| A non-default pref used without saying which file supplied it                     | Name the layer (`team`, `local`, or this run) in the same line as the mechanism pick.                |
 | An existing log at a site step 1 now rejects, deleted while adding logs elsewhere | Report that existing log; whether to remove it is the user's call.                                   |
 | Mechanism written into the named file when the reference can isolate              | Follow the companion. The named file holds construct + one-liners only.                              |
 | A class (or other language construct) named in this file                          | State the companion pattern only. The reference names the construct.                                 |
+| `logDebug` exposed on the companion, or called from the named file                | Named file: event-named one-liners. Companion: private `log` is the only hop onto the service.       |
+| Inline `logDebug` rewritten into a companion while adding logs elsewhere          | Update inline in place. Companion is for sites with no existing record.                              |

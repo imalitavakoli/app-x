@@ -1,11 +1,14 @@
 Copy this file into `references/mechanisms/`, fill it, and add a row to `references/README.md`.
 
+`inapplicable: ask` — when this mechanism does not apply and a worse-priority (higher number) mechanism would win, the index stops and asks; recommended answer is skip (no new logs). Omit the field to let remaining mechanisms apply silently. The index owns the stop; this file only declares the field.
+
 ---
 
 applicability: <which contexts this mechanism can serve>
 priority: <integer; a framework-specific mechanism outranks a generic one, and lower means preferred>
 modes: <standing, investigation, or both>
 companion: <yes | no>
+inapplicable: <omit this field | ask>
 
 ---
 
@@ -19,7 +22,7 @@ How the named file obtains this mechanism — import, construct, inject — or t
 
 ## Preference keys
 
-Which keys this mechanism reads under `prefs.json` → `mechanisms.<this-name>`. Announced default per key when the object or key is absent. If this mechanism has none, say so in one line. A verbatim fragment (a custom guard expression) is a sibling file named from this object, not a JSON string.
+Which keys this mechanism reads under `prefs.json` → `mechanisms.<this-name>`. Announced default per key when the object or key is absent. If this mechanism has none, say so in one line. A verbatim fragment (a custom guard expression) is a sibling file named from this object, not a JSON string; it has no `version` of its own — a format change bumps `prefs.json`'s `version`.
 
 ## Call shape
 
@@ -43,11 +46,11 @@ Console only? Retained? Exportable? Remote?
 
 ## Contexts this mechanism cannot serve
 
-The contexts this mechanism cannot serve.
+The contexts this mechanism cannot serve. If `inapplicable: ask`, do not restate the index stop here beyond one pointer.
 
 ## Worked before/after
 
-One invented example; when `companion: yes` show both files; demonstrate all four of: an I/O boundary as start / success / failure, a developer-level record that runs only in development, a `WARN` or `ERROR` on an error edge that also runs in production, and an attribute naming specific fields rather than passing a whole value.
+One invented example; when `companion: yes` show both files; demonstrate an I/O boundary as start / success / failure, and an attribute naming specific fields rather than passing a whole value. If this mechanism can keep developer-only records out of production, show that on start/success and a `WARN` or `ERROR` on the error edge that also runs in production. If it cannot, state that ceiling in **Honoring developer-only vs always-on intent** and do not fake a gate in the example.
 
 ## Already done?
 
