@@ -3,7 +3,7 @@ name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, or where its templates and examples live."
 metadata:
   kind: helper
-  version: '2.0.0'
+  version: '2.1.0'
 ---
 
 # Skill Build Helper
@@ -322,6 +322,79 @@ Keep linking a skill's own files the normal way — relative to the skill root (
 > These examples live under `.agents/skills/{name}/assets/examples/`. When handing one to an agent that cannot read this skill, give it that full path.
 
 One line, and whoever carries the path onward copies something that resolves instead of reconstructing it.
+
+## Skill-local state
+
+A skill may keep **local state** between runs — not only preferences. Preferences are the first kind; a question queue, an accumulating learning record, or a cache are others. Naming the convention after one kind leaves the next kind homeless.
+
+### Where it lives
+
+```
+.agents/local/{skill-name}/prefs.json      # declarative preferences
+.agents/local/{skill-name}/{other}         # any other local state that skill owns
+```
+
+One ignore rule on the parent, `/.agents/local/`. Written once; adding a skill never changes it.
+
+`prefs.json` carries a `version` integer so a later format change is recognised rather than misread. No per-user path segment — the folder is git-ignored, so the checkout already provides the isolation a shared file would need one for.
+
+### Conventional shapes
+
+| State kind             | Shape                                          | Why                                                     |
+| ---------------------- | ---------------------------------------------- | ------------------------------------------------------- |
+| preferences (skill-wide) | `prefs.json` top-level scalars (`version`, which variant we prefer) | read whole, written rarely, small |
+| preferences (per variant) | one object of scalars per name, under a map in the same file | a flat file makes the next variant's keys collide with the first |
+| a verbatim fragment    | its own plain-text file, named by `prefs.json` | escaping into JSON is how verbatim stops being verbatim |
+| an accumulating record | append-only `.jsonl`                           | appending cannot corrupt what is already there          |
+
+When the skill has a named index of variants (mechanisms, targets, kinds), each variant's prefs are an object under that name in the map. Adding a variant is a new object, not a rename of the first one's keys. Nest only that map — values inside each object stay scalars. A verbatim fragment is still its own sibling file, named from the object that owns it.
+
+### Why not inside the skill folder
+
+A skill is a distributable versioned artifact. State there is destroyed by an update or reinstall, travels when the skill is copied, and needs an ignore rule per skill.
+
+### Why not `AGENTS.local.md`
+
+It is prose loaded at session start, so every skill's state would enter every session's context.
+
+### Why a folder per skill, not a shared file
+
+Execution runs several agents at once. A single shared file means two skills writing in the same window clobber each other. A skill only ever writes its own folder.
+
+### The six rules
+
+Each names the failure it prevents:
+
+1. **Optional, never required.** A preference may only skip a question, never enable a capability or change an outcome that is not already the announced default — otherwise the skill stops being portable. A skill works fully with the file absent.
+2. **A stored value is a default, not a law.** This run's explicit instruction wins, and the skill says which it used.
+3. **Declarative, not procedural.** Free text is stored and replayed verbatim, never re-interpreted.
+4. **Offer, don't assume.** Write only after an explicit yes, once, and only after the user has seen the result it would make default.
+5. **Create the ignore rule, and say why.** Must work in a repo with no such convention, including creating the file and its parent. If the path is not ignored, add the rule and tell the user it is personal state that should not be committed.
+6. **Never secrets.** Git-ignored is not encrypted.
+
+## Human-only references, and how they do not rot
+
+A skill may hold long-form reasoning aimed at a human rather than an agent, in `references/`.
+
+### The split test
+
+**Would an agent produce different output without this?** — never "is it a rationale?". Reasoning that *is* the decision procedure stays inline in `SKILL.md`; reasoning that only explains, defends or records why a choice was made goes to `references/`.
+
+### Why the test and not length
+
+A reason every run must load is not on-demand content, it is inline with extra steps.
+
+### Name the occasion it loads on
+
+A reference whose load trigger cannot be named should not exist.
+
+### Declare the skill version it explains
+
+Pair it with `Explains: vX.Y.Z`, so a minor or major bump leaves an observable mismatch rather than silent staleness. This needs no new discipline: the bump rules here already make a minor bump mean "a changed or added rule", which is the signal the reasoning needs revisiting, while a patch does not.
+
+Updating that pairing line belongs in the skill's own **checklist**, not only its prose — an obligation the todos do not name is one that gets skipped.
+
+These make staleness **visible instead of silent**; they do not make the reasoning correct.
 
 ## Before calling a rule change done — sweep for its other homes
 
