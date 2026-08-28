@@ -5,6 +5,7 @@
 - **ACs Approved** (YYYY-MM-DD): 2026-07-26
 - **Owner**: Ali
 - **Feature key**: PROFILE
+- **Domain**: shared
 
 ## 📖 Introduction
 
