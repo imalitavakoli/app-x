@@ -523,7 +523,7 @@ rule('links', (r) => {
 
   // Skill-internal navigation links (SKILL.md -> references/, assets/, …).
   // ONLY markdown links here, never backticked paths: a skill legitimately shows
-  // illustrative sample content (`docs/x/{name}/PRD/README.md`, example names no
+  // illustrative sample content (`docs/x/{domain}/{name}/PRD/README.md`, example names no
   // functionality has yet), and failing those would fail documentation for doing
   // its job. Hook script paths are handled by the hook-refs rule, which forbids
   // them rather than resolving them.

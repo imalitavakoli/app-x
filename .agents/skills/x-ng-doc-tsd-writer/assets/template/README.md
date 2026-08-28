@@ -1,6 +1,6 @@
 <!--
-Template for `docs/x/{name}/TSD/README.md` — the functionality-level sections only.
-Replace `{NAME}` with the PRD's **Feature key**, copied verbatim from its field in `docs/x/{name}/PRD/README.md` — never re-derived from the functionality name.
+Template for `docs/x/{domain}/{name}/TSD/README.md` — the functionality-level sections only.
+Replace `{NAME}` with the PRD's **Feature key**, copied verbatim from its field in `docs/x/{domain}/{name}/PRD/README.md` — never re-derived from the functionality name.
 Remove every `>` helper note from the final draft; keep every heading you use.
 The per-lib specs live in sibling files, one per LIVE VERSION of each owned lib (map-v1.md / data-access-v2.md / ui-v1.md / ui-v2.md / feature-v1.md / page-v1.md) — NOT here.
 A shared lib is versioned, so its version is in the filename from v1; an app-domain lib is unversioned and keeps the plain name (ui.md).
@@ -9,16 +9,16 @@ A shared lib is versioned, so its version is in the filename from v1; an app-dom
 # TSD — {name}
 
 - **Last Updated** (YYYY-MM-DD): {date}
-- **Last Verified** (YYYY-MM-DD): {date}
+- **Last Verified** (YYYY-MM-DD): NOT YET
 - **Owner**: {owner}
 
-> **Last Updated vs Last Verified** — `Last Updated` is when this document's text last changed. `Last Verified` is when someone last confirmed it still matches the shipped code, **including when nothing needed changing** — that is the outcome a writer can never record, so only the post-execution verification step stamps it. A `Last Verified` older than the functionality's last commit means the TSD is unverified against current behaviour.
+> **Last Updated vs Last Verified** — `Last Updated` is when this document's text last changed. `Last Verified` is when someone last confirmed it still matches the shipped code, **including when nothing needed changing** — that is the outcome a writer can never record, so only the post-execution verification step stamps it. On first create the value is `NOT YET`; a later verification step overwrites it with a date. Do not copy dates from examples. A `Last Verified` older than the functionality's last commit means the TSD is unverified against current behaviour.
 
 ## ℹ️ Overview
 
 ### Functionality Name
 
-> The technical name (kebab-case; prefix `ng-` when the feature has logic), e.g. `ng-balance-card`.
+> Copy `{name}` from the PRD (already technology-prefixed).
 
 ### Functionality Classification
 
@@ -34,7 +34,7 @@ A shared lib is versioned, so its version is in the filename from v1; an app-dom
 
 ### Domain
 
-> The functionality's domain (scope). If you cannot infer it from the PRD/context, ask: is it **shared** (usable by any app) or specific to one app in the workspace? A **shared** functionality's libs live under `libs/shared/…`; an app-specific one under `libs/{domain}/…` (the domain is that app's name). The domain is the first segment of every **owned** lib name (`{domain}-{type}-{name}`), and every owned lib uses this functionality's **same** `{name}`. Library boundaries per domain are enforced in `.eslintrc.json`.
+> Copy the PRD header **Domain** field verbatim (`shared` or one app's name). Do not ask and do not re-derive. This TSD lives at `docs/x/{domain}/{name}/TSD/` beside that PRD.
 
 ### Rationale
 

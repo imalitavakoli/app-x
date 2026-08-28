@@ -1,4 +1,4 @@
-<!-- Example TSD folder for a VISUAL functionality with ui + feature (either alone is also valid visual). Mirrors docs/x/ng-x-profile/TSD/. A visual+ owns a page — add page-v{n}.md (see mixed-plus example for its shape). This folder also demonstrates TWO LIVE VERSIONS of one lib: ui-v1.md + ui-v2.md. -->
+<!-- Example TSD folder for a VISUAL functionality with ui + feature (either alone is also valid visual). Mirrors docs/x/shared/ng-x-profile/TSD/. A visual+ owns a page — add page-v{n}.md (see mixed-plus example for its shape). This folder also demonstrates TWO LIVE VERSIONS of one lib: ui-v1.md + ui-v2.md. -->
 
 # TSD — ng-x-profile
 

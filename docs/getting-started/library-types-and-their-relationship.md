@@ -9,6 +9,8 @@ Nx module boundaries (`@nx/enforce-module-boundaries` in `.eslintrc.json`) contr
 | **domain** | Horizontal slice — which app the lib belongs to (one domain per app + `shared`). `shared` libs may be imported from any domain. |
 | **type**   | Vertical slice — the lib's responsibility (the eight library types below).                                                      |
 
+A functionality belongs to **one** domain (the same dimension as its owned libs). Its PRD and TSD live at `docs/x/{domain}/{name}/`.
+
 **Tip!** Inspired by Nx [Library Types](https://nx.dev/concepts/more-concepts/library-types) and [Using Nx at Enterprises](<https://nx.dev/concepts/more-concepts/monorepo-nx-enterprise#type-(what-is-in-the-library)>).
 
 &nbsp;
@@ -21,7 +23,7 @@ Nx module boundaries (`@nx/enforce-module-boundaries` in `.eslintrc.json`) contr
 | --------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------- |
 | **What it describes** | What a **single** lib is allowed to do                              | A **product feature** made of one or more libs working together |
 | **Values**            | `api`, `util`, `map`, `data-access`, `ui`, `feature`, `page`, `app` | `abstract`, `visual`, `visual+`, `mixed`, `mixed+`              |
-| **PRD / TSD**         | Not by themselves                                                   | Yes — under `docs/x/{name}/` for functionalities only           |
+| **PRD / TSD**         | Not by themselves                                                   | Yes — under `docs/x/{domain}/{name}/` for functionalities only  |
 
 **PRD and TSD exist only for functionalities.** They do **not** exist for a bare library that is not a functionality.
 
@@ -46,8 +48,8 @@ Two shapes of the same library type. Only the first can be a functionality.
 | **What it holds**                   | one product concern — everything in the lib serves it    | several unrelated items sharing only a technical kind (directives, pipes, animations)               |
 | **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`       | each item versions on its own — `src/lib/toggle-me-v1/`                                             |
 | **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info` | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                                     |
-| **A functionality?**                | **yes** — PRD + TSD under `docs/x/{name}/`               | **no** — it is shared infrastructure                                                                |
-| **Requirements live in**            | `docs/x/{name}/PRD/README.md` + `docs/x/{name}/TSD/`     | a `requirements/` folder (`README.md` + `DECISIONS.md`) beside **each item’s** inner version README |
+| **A functionality?**                | **yes** — PRD + TSD under `docs/x/{domain}/{name}/`      | **no** — it is shared infrastructure                                                                |
+| **Requirements live in**            | `docs/x/{domain}/{name}/PRD/README.md` + `docs/x/{domain}/{name}/TSD/` | a `requirements/` folder (`README.md` + `DECISIONS.md`) beside **each item’s** inner version README |
 
 **The test:** does the lib have **one** product concern, or is it a bucket of unrelated items that merely share a mechanism? For a **shared** lib the folder shape is the tell — independently versioned items _are_ independent concerns. **App-domain** libs have no version folders ([Versioning shared libs](#versioning-shared-libs)), so apply the concern test directly.
 
@@ -384,7 +386,7 @@ Wanting a private `ui` or to initialize another family's `map` means something r
 - **Presentation trapped in a family** → split into its own `ui`-only `visual` functionality; import from both families.
 - **Endpoint trapped in a non-abstract family** → if already `abstract`, use rung 0. If not, extract `map` + `data-access` into its own `abstract` functionality.
 
-Cost: touches an existing family and its `docs/x/{name}/` PRD & TSD.
+Cost: touches an existing family and its `docs/x/{domain}/{name}/` PRD & TSD.
 
 **2. Duplicate, and skip the refactor.** Build the equivalent inside the functionality being worked on — deliberate trade: lighter change now, two implementations that can drift.
 

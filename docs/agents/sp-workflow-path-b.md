@@ -19,10 +19,10 @@ No execution mode here — that question belongs to path A only. For git, see _G
 >
 > Grab-bag `ui` / `feature` libs are defined in `/docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Unit tests for all of these libs still follow TDD and `x-ng-test-unit-helper` when tests are in scope — retag their IDs as part of normal test edits, not via B1's PRD/TSD writers.
 
-> 🚧 **Missing-docs gate** [auto] — **Asks:** does that lib's functionality already have `docs/x/{name}/`?
+> 🚧 **Missing-docs gate** [auto] — **Asks:** does that lib's functionality already have `docs/x/{domain}/{name}/`?
 >
 > - **Yes** → B1's `[gated]` band runs.
-> - **No** → **skip that band**: with no `docs/x/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TSD FR/BRs — so there is nothing to verify, amend, retire or re-tag.
+> - **No** → **skip that band**: with no `docs/x/{domain}/{name}/`, that functionality has no ID namespace at all — no PRD ACs, no TSD FR/BRs — so there is nothing to verify, amend, retire or re-tag.
 >
 > `[auto]`, not `[ask]`: a bug fix is not the place for a first-time PRD/TSD interview. If the user wants that functionality documented, that is a design-work cycle of its own.
 
@@ -32,8 +32,8 @@ No execution mode here — that question belongs to path A only. For git, see _G
 
 When the fix touches a `util`, `api`, or `app` lib, or libs belonging to more than one functionality:
 
-1. **Gates answer per functionality.** A `util` / `api` / `app` part, or a **grab-bag** `ui` / `feature` part, always answers **No** — none of them has `docs/x/` to update. Each functionality's part is answered on its own lib types and its own `docs/x/{name}/`.
-2. **B1's `[gated]` band runs per functionality** whose gates both answer **Yes** — each against its own `docs/x/{name}/`. It runs whether or not that part of the fix minted an ID: verifying is the point, and an amended or retired requirement mints nothing.
+1. **Gates answer per functionality.** A `util` / `api` / `app` part, or a **grab-bag** `ui` / `feature` part, always answers **No** — none of them has `docs/x/` to update. Each functionality's part is answered on its own lib types and its own `docs/x/{domain}/{name}/`.
+2. **B1's `[gated]` band runs per functionality** whose gates both answer **Yes** — each against its own `docs/x/{domain}/{name}/`. It runs whether or not that part of the fix minted an ID: verifying is the point, and an amended or retired requirement mints nothing.
 3. **One level deep — deeper companions are surfaced, never absorbed.** Rules 1–2 cover the libs **this fix touches**. If fixing one of them turns out to require work in a **further** lib, that is not this fix's scope: report it to the user (📌 _Change-set paths_) and let them decide. Do not widen the fix, and do not run B1 for a functionality this fix never touched.
 
 📌 **Change-set paths** — **Spans:** `systematic-debugging` · 📌 Companion work (deeper-lib report) · B1. **Leaves alone:** whether to stop, which hypothesis to implement, TDD, B1's verification actions, and the order of any of it.

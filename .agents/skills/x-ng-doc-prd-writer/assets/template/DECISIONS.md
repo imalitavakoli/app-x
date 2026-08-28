@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/PRD/DECISIONS.md` — this functionality's **product** decision history.
+Template for `docs/x/{domain}/{name}/PRD/DECISIONS.md` — this functionality's **product** decision history.
 Its sibling `README.md` states what is true NOW; this file records what stopped being true and what was ruled out.
 Remove every `>` helper note from the final draft; keep every heading you use.
 -->

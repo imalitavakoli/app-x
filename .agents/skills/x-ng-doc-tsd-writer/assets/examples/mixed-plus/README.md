@@ -1,4 +1,4 @@
-<!-- Example TSD folder for a MIXED+ functionality with the full optional set (map + data-access + ui + feature + page). mixed+ requires page + data-access; map/ui/feature are optional. A plain mixed requires data-access + feature and omits page-v1.md. Mirrors docs/x/ng-x-wallet/TSD/. -->
+<!-- Example TSD folder for a MIXED+ functionality with the full optional set (map + data-access + ui + feature + page). mixed+ requires page + data-access; map/ui/feature are optional. A plain mixed requires data-access + feature and omits page-v1.md. Mirrors docs/x/shared/ng-x-wallet/TSD/. -->
 
 # TSD — ng-x-wallet
 

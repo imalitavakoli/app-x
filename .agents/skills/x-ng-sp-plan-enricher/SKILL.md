@@ -3,7 +3,7 @@ name: x-ng-sp-plan-enricher
 description: "WHAT? A just-written Superpowers plan, edited so the workspace's PRD/TSD traceability and test/lib conventions reach context-isolated execution subagents — the plan being their only carrier. WHEN? At Path A Documentation close-out after writing-plans, before the plan-review hard stop / execution; whenever a Superpowers plan for a functionality must make execution follow our workspace conventions."
 metadata:
   kind: enricher
-  version: '1.11.1'
+  version: '1.12.0'
 ---
 
 # SP Plan Enricher
@@ -21,15 +21,15 @@ It **edits documents only** — it builds nothing, scaffolds nothing, and writes
 - At Path A **Documentation close-out** after `writing-plans` (see `AGENTS.md` → Superpowers-First Workflow, Path A) — **before** the plan-review hard stop / Execution — **only for a functionality** whose docs are in scope this cycle.
 - Whenever a Superpowers plan for a functionality needs the workspace's PRD/TSD traceability + test/lib conventions folded in before the plan-review stop and later execution.
 
-**One functionality per run.** A plan may cover more than one functionality; this skill enriches for **one**, named at step 1. When a cycle documents several, the workflow runs it once per functionality — each run reads its own `docs/x/{name}/` and merges into the plan alongside what earlier runs added.
+**One functionality per run.** A plan may cover more than one functionality; this skill enriches for **one**, named at step 1. When a cycle documents several, the workflow runs it once per functionality — each run reads its own `docs/x/{domain}/{name}/` and merges into the plan alongside what earlier runs added.
 
-Do not use to build libs or write tests; do not use for the bug-fix path (that runs in-session, reads `AGENTS.md` directly — no plan carrier needed). Do **not** use when the plan's target is only a `util`, `api`, or `app` lib — those are never functionalities, and Path A's Functionality gate answers **No** for them, which skips the docs-in-scope set. Do **not** use when functionality docs are **out of scope** this cycle (no `docs/x/{name}/` PRD/TSD and none being written) — exit without asking for a PRD.
+Do not use to build libs or write tests; do not use for the bug-fix path (that runs in-session, reads `AGENTS.md` directly — no plan carrier needed). Do **not** use when the plan's target is only a `util`, `api`, or `app` lib — those are never functionalities, and Path A's Functionality gate answers **No** for them, which skips the docs-in-scope set. Do **not** use when functionality docs are **out of scope** this cycle (no `docs/x/{domain}/{name}/` PRD/TSD and none being written) — exit without asking for a PRD.
 
 ## Prerequisites
 
 **Prerequisite — functionality only.** Before anything else: if the plan's target is (or would be) only a `util`, `api`, or `app` lib — or a **grab-bag** `ui` / `feature` lib (`CONTEXT.md`) → **STOP. Do not enrich.** None of those ever have PRD/TSD (`docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag). Say so and exit — do **not** ask for a missing PRD.
 
-**Prerequisite — docs out of scope.** If there is no `docs/x/{name}/` PRD/TSD and this cycle is not producing them (the user chose not to document) → **STOP. Do not enrich.** Exit without asking for a PRD (same as util/api/app: no functionality-doc carrier this cycle).
+**Prerequisite — docs out of scope.** If there is no `docs/x/{domain}/{name}/` PRD/TSD and this cycle is not producing them (the user chose not to document) → **STOP. Do not enrich.** Exit without asking for a PRD (same as util/api/app: no functionality-doc carrier this cycle).
 
 These guard this skill's own contract; the decision about **whether** the workflow reaches this skill at all belongs to Path A's gates in `AGENTS.md`.
 
@@ -37,14 +37,14 @@ These guard this skill's own contract; the decision about **whether** the workfl
 
 - The **functionality name** this run is for (a plan may cover several; this skill enriches one per run).
 - The Superpowers **plan** just written (the file `writing-plans` produced).
-- The functionality's **PRD**: `docs/x/{name}/PRD/README.md`.
-- The functionality's **TSD folder**: `docs/x/{name}/TSD/` (its `README.md` ID Index + the per-lib files).
+- The functionality's **PRD**: `docs/x/{domain}/{name}/PRD/README.md`.
+- The functionality's **TSD folder**: `docs/x/{domain}/{name}/TSD/` (its `README.md` ID Index + the per-lib files).
 
 If the target is a functionality but the PRD/TSD don't exist **and** docs were supposed to be in scope, the earlier steps were skipped by mistake — stop and ask rather than enriching from nothing.
 
 ## Inputs & output
 
-- **Reads:** the plan; `docs/x/{name}/PRD/README.md`; `docs/x/{name}/TSD/` (README ID Index **and its Existing Dependencies & Reuse section** + per-lib files); **for each companion entry, that companion's own source of truth** — another functionality's `docs/x/{its-name}/` (including **its** reuse section, for the one-level chain check) or a `util`/`app`'s own `requirements/`; and `AGENTS.md` — its **Superpowers-First Workflow** section for the planning conventions, and its **Project-Specific Conventions** section for the code conventions an implementer needs (see Workflow step 2).
+- **Reads:** the plan; `docs/x/{domain}/{name}/PRD/README.md`; `docs/x/{domain}/{name}/TSD/` (README ID Index **and its Existing Dependencies & Reuse section** + per-lib files); **for each companion entry, that companion's own source of truth** — another functionality's `docs/x/*/{its-name}/` (including **its** reuse section, for the one-level chain check) or a `util`/`app`'s own `requirements/`; and `AGENTS.md` — its **Superpowers-First Workflow** section for the planning conventions, and its **Project-Specific Conventions** section for the code conventions an implementer needs (see Workflow step 2).
 - **Writes:** the enriched **plan** — its Global Constraints and task edits. Nothing else.
 
 ## Which channel carries what
@@ -67,7 +67,7 @@ This is not a style preference. **An implementer given FR/BR IDs but not their c
 Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger workflow, these stay grouped and the outer workflow's todos remain visible:
 
 ```
-- [ ] [enrich] 1. Locate — the one functionality this run is for, the plan, its docs/x/{name}/PRD/README.md and TSD/ folder
+- [ ] [enrich] 1. Locate — the one functionality this run is for, the plan, its docs/x/{domain}/{name}/PRD/README.md and TSD/ folder
 - [ ] [enrich] 2. Source the conventions — two sets, from AGENTS.md's Superpowers-First Workflow (planning) + Project-Specific Conventions (code) (re-read if not in context)
 - [ ] [enrich] 3. Global Constraints (CROSS-TASK only) — source-doc pointers, test-config, one-line restatements of the test/lib/divergence rules, commit + code-conventions pointers (merge, don't duplicate), plus the conditional ones: DEP JSON pair · companion scope guard · deferred chain
 - [ ] [enrich] 4. Task contracts — per test task, all five: exact IDs AS describe/it mapping · no untraced test · spec-example path · this task's lib-example path + data-cy · divergence duty for these IDs
@@ -78,12 +78,12 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 - [ ] [enrich] 8. Validate — run the Review Checklist until all items pass
 ```
 
-1. **Locate** — identify the **one** functionality name this run is for; open the plan, `docs/x/{name}/PRD/README.md`, and every file in `docs/x/{name}/TSD/` (the README ID Index is the map of every FR/BR → lib file → PRD AC).
+1. **Locate** — identify the **one** functionality name this run is for; open the plan, `docs/x/{domain}/{name}/PRD/README.md`, and every file in `docs/x/{domain}/{name}/TSD/` (the README ID Index is the map of every FR/BR → lib file → PRD AC).
 2. **Source the conventions — two sets, not one.** The **test/lib** conventions to inject are exactly the ones the workflow loads before planning. Their authoritative list lives in **`AGENTS.md` → Superpowers-First Workflow, Path A hook A1's `[gated]` band (Before `writing-plans`)** — read them from there if they are not already fresh in your context (e.g. after a compaction). Do **not** hardcode a list of source skills here; defer to that band.
 
    That band is what the **planner** reasons with, and it is not the same set the **implementer** builds with — treating them as one set is how a convention `AGENTS.md` marks as due before **any** code can be absent from every plan with nothing to notice it. For the second set, read **`AGENTS.md` → Project-Specific Conventions** and carry the pointers it marks as due before writing or changing code. Defer to that section the same way: do not hardcode its contents here.
 3. **Enrich Global Constraints** — the **cross-task** rules only (_Which channel carries what_, above), **merged** into the existing block, never duplicating one. **Keep each constraint to one line** — that is the format `writing-plans`' own Global Constraints template prescribes, and this block is re-sent in every dispatch, so length here is multiplied by the task count. Carry paths, not prose. Add, as concise text:
-   - **Source-of-truth pointers** — `docs/x/{name}/PRD/README.md` (ACs) and `docs/x/{name}/TSD/` (the README ID Index + the per-lib files); tell implementers to read the matching TSD lib file before coding, and to keep IDs exactly as written.
+   - **Source-of-truth pointers** — `docs/x/{domain}/{name}/PRD/README.md` (ACs) and `docs/x/{domain}/{name}/TSD/` (the README ID Index + the per-lib files); tell implementers to read the matching TSD lib file before coding, and to keep IDs exactly as written.
    - **Unit-test contract (one-line restatement only)** — `describe` ↔ TSD Functional-Requirement (FR) ID, `it` ↔ Business-Rule (BR) ID, exact IDs from the TSD, no untraced test. The **operative** form — this task's actual IDs and the path to the annotated spec example — goes in the task (step 4), because that is the channel a script delivers. This line exists for whoever reads the plan whole; it is not what an implementer relies on.
    - **Test-config pointer** — before writing any spec, read the workspace's root test-runner preset (`jest.preset.js` today) and the files it references under `tools/jest/`. Do **not** re-stub what the preset already handles (native modules, browser globals), and never declare a project-level `transformIgnorePatterns` or `moduleNameMapper` — the runner _replaces_ those arrays rather than merging, silently dropping the preset's. Point at the files; do not paste what they contain, since it changes over time.
    - **E2e contract + this functionality's determination** — the rule (e2e only for a `page` lib, or a `feature` lib that **composes another functionality's `feature`** and whose composition an app page hosts) **and** the explicit yes/no for this functionality (step 5). When e2e applies, add the **resolvable repo-relative paths** to the annotated e2e examples the task needs — spec layout, Page Object, shared commands, fixtures, and the user-story registry format.
@@ -112,7 +112,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
    **Also walk the TSD README's Existing Dependencies & Reuse section.** Each `[TO-CREATE]` / `[TO-UPDATE]` entry is companion work this cycle owes. For each entry, confirm all five:
    1. **A task exists** for it in the plan (missing → report and ask; never mint one).
    2. **It is ordered before** any task that depends on it (`AGENTS.md` → 📌 _Companion work_).
-   3. **It is annotated with its own source of truth** — the companion functionality's `docs/x/{its-name}/`, a `util`/`app`'s own `requirements/`, or, for an `api`, none — plus a note that **no ID of this functionality applies to it**. An implementer reads only the plan, so a companion task pointed at our TSD has no legitimate requirements source and will invent or mis-attribute the requirements.
+   3. **It is annotated with its own source of truth** — the companion functionality's `docs/x/*/{its-name}/`, a `util`/`app`'s own `requirements/`, or, for an `api`, none — plus a note that **no ID of this functionality applies to it**. An implementer reads only the plan, so a companion task pointed at our TSD has no legitimate requirements source and will invent or mis-attribute the requirements.
    4. **That source of truth actually carries the requirement** — and what to do when it does not depends on the companion's type:
       - **Another functionality** (`map` / `data-access` / **single-purpose** `ui` / `feature` / `page`): its PRD/TSD must already specify the surface. If they do not, the implementer has nothing to build against and no ID to test with — **report it and ask** whether that functionality's own docs must be written first (its own writers pass; `AGENTS.md` → 📌 _Companion work_ runs the writers once per functionality whose gates answer Yes, which normally covers exactly this). Never mint the requirement or its ID here. If the user chooses to leave that functionality's docs to a later cycle, **say the consequence plainly** in the report and on the task: the companion change will ship with **no FR/BR ID**, so its test cannot be traced to a requirement — the change is either untested or tested under a title that maps to nothing. Deferring is allowed; letting it pass unsaid is not.
       - **`util` / `app` / an item in a grab-bag `ui` / `feature` lib**: a **missing or incomplete `requirements/` is not a blocker and not a question for the user** — by convention that file is created or updated by the same work that writes the lib's unit tests, which mints its `UTIL-…` / `APP-…` IDs there. Annotate the companion task to that effect and give the **resolvable repo-relative paths** for its location rules and shape: `.agents/skills/x-ng-test-unit-helper/references/libs/util.md` (or `app.md`, or `grab-bag.md`) and `.agents/skills/x-ng-test-unit-helper/assets/examples/requirements/`. Do not stop, and do not put our functionality's IDs in it.
@@ -134,7 +134,7 @@ Copy this checklist and track it. Keep the `[enrich]` prefix so, inside a larger
 
 **Review Checklist** — before finalising, verify:
 
-- [ ] Global Constraints points to `docs/x/{name}/PRD/README.md` and the `TSD/` folder (README ID Index + per-lib files), merged into the existing block (no duplicate).
+- [ ] Global Constraints points to `docs/x/{domain}/{name}/PRD/README.md` and the `TSD/` folder (README ID Index + per-lib files), merged into the existing block (no duplicate).
 - [ ] **Every test task carries its full contract in the task text** — its exact IDs stated AS the mapping (`describe`↔FR, `it`↔BR), "no untraced test", the annotated spec-example path, this task's lib-example path (+ `data-cy` when it builds components), and the divergence duty for these IDs. A task listing IDs without the mapping fails this item: that is precisely what produced decorative IDs in the baseline.
 - [ ] The test-config pointer is present: read the runner preset + `tools/jest/`, don't re-stub what it covers, never declare a project-level `transformIgnorePatterns` / `moduleNameMapper`.
 - [ ] Every test task **for this functionality** names the exact FR/BR IDs its component(s) own; any e2e task of this functionality names its AC IDs. Read each task **as the task-brief script would extract it** — on its own, with no Global Constraints in view. If the task alone is not enough to write a traceable spec, it is not finished.

@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TSD/page-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `page` lib spec + its FR/BR.
+Template for `docs/x/{domain}/{name}/TSD/page-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `page` lib spec + its FR/BR.
 Include this file only when this functionality **owns** a `page` lib (`visual+` / `mixed+`). Lib name: `{domain}-page-{name}` (same `{name}` as the functionality — never a consumer page's name).
 Remove `>` helpers from the final draft. Register every FR/BR ID in the README's 🧭 ID Index.
 -->
@@ -7,9 +7,9 @@ Remove `>` helpers from the final draft. Register every FR/BR ID in the README's
 ### 📄 'page' Library Specification
 
 - **Last Updated** (YYYY-MM-DD): {date}
-- **Last Verified** (YYYY-MM-DD): {date}
+- **Last Verified** (YYYY-MM-DD): NOT YET
 
-> **`Last Verified` is per file, deliberately.** Whoever checks these specs against the shipped code walks only the lib files a change actually touched, and stamps only those — so a file still showing an older date is honestly reporting that nobody has re-checked it since. Never stamp a file you did not read, and never bulk-update these across the folder.
+> **`Last Verified` is per file, deliberately.** Whoever checks these specs against the shipped code walks only the lib files a change actually touched, and stamps only those — so a file still showing an older date is honestly reporting that nobody has re-checked it since. Never stamp a file you did not read, and never bulk-update these across the folder. On first create the value is `NOT YET`; a later verification step overwrites it with a date.
 
 > A `page` composes `feature` libs and owns routing. Inputs arrive as **URL query params**. For naming and folder structure, follow the workspace's canonical `page`-lib reference (parent + child route components, a `lib.routes.ts`, versioned selectors).
 

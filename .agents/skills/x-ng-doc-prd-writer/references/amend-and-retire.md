@@ -37,7 +37,7 @@ Where it does, every AC in this PRD was **explicitly approved** by the user when
 
 1. **Show the old text beside the new**, per ID — the actual before and after, not a summary.
 2. **Get explicit confirmation.** This is the same bar as the original AC approval, for the same reason: an AC drives e2e tests and the TSD's FR/BRs.
-3. **Name who else is affected.** If this functionality's libs are reused elsewhere, the consuming functionalities' docs may now be wrong too. Find them by searching every `docs/x/*/TSD/README.md` **Existing Dependencies & Reuse** section for this functionality's lib names, and list what you found.
+3. **Name who else is affected.** If this functionality's libs are reused elsewhere, the consuming functionalities' docs may now be wrong too. Find them by searching every `docs/x/*/*/TSD/README.md` **Existing Dependencies & Reuse** section for this functionality's lib names, and list what you found.
 4. **If confirmation does not come, change nothing** and leave the discrepancy reported. A known-wrong, flagged AC is safer than one silently rewritten.
 
 ## Common mistakes

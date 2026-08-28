@@ -36,11 +36,11 @@ One of the eight kinds a library can be — `api`, `util`, `map`, `data-access`,
 _Avoid_: Layer, Category, Library kind
 
 **Functionality**:
-One product feature, owned by one or more libs that all share its name, and documented by its own `docs/x/{name}/` specs. The unit our ACs, FRs and BRs belong to.
+One product feature, owned by one or more libs that all share its name, and documented by its own `docs/x/{domain}/{name}/` specs. The unit our ACs, FRs and BRs belong to.
 _Avoid_: Feature (when the documented unit is meant), Module, Domain
 
 **Functionality name**:
-The bare kebab string that names a functionality, its `docs/x/{name}/` folder, and every lib it owns — e.g. `ng-chart`. Templates write it as `{name}`.
+The kebab string that names a functionality, its `docs/x/{domain}/{name}/` folder, and every lib it owns — e.g. `ng-chart`. It carries the technology prefix of the stack the functionality belongs to. Templates write it as `{name}`.
 _Avoid_: Short name, Bare name, Feature name
 
 **Lib name**:
@@ -62,6 +62,10 @@ _Avoid_: Common lib, Global lib
 **App-domain lib**:
 A lib under `libs/{app-name}/`, belonging to one app, and therefore unversioned.
 _Avoid_: Local lib, App-specific lib, Private lib
+
+**Domain**:
+The horizontal ownership slice a lib or a functionality belongs to — `shared`, or exactly one app's name. The same string as the Nx `domain:` tag.
+_Avoid_: Scope (unqualified), Tenant
 
 **Sample lib**:
 A lib whose name carries the `x` marker (`ng-x-profile-info`, `ng-x-users`) — a complete reference functionality kept as inspiration. Consumers copy it to start their own work; modifying it in place is the **Workspace Specialist's** call.
@@ -104,11 +108,11 @@ _Avoid_: Full-stack functionality, Smart functionality
 ## Requirements & IDs
 
 **PRD — Product Requirements Document**:
-A functionality's product spec, living in `docs/x/{name}/PRD/`. Holds the Acceptance Criteria.
+A functionality's product spec, living in `docs/x/{domain}/{name}/PRD/`. Holds the Acceptance Criteria.
 _Avoid_: Product Requirement Document, product spec (as the document name)
 
 **TSD — Technical Specification Document**:
-A functionality's technical spec, living in `docs/x/{name}/TSD/`. Holds each owned lib's Functional Requirements and Business Rules.
+A functionality's technical spec, living in `docs/x/{domain}/{name}/TSD/`. Holds each owned lib's Functional Requirements and Business Rules.
 _Avoid_: TFS, Technical Feature Spec, tech spec (as the document name)
 
 **AC — Acceptance Criterion**:

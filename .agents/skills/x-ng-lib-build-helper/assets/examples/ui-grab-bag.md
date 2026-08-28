@@ -2,7 +2,7 @@
 
 Sample files from a **grab-bag** `ui` lib (`CONTEXT.md`) — here, presentational items such as pipes, directives and animations. Use them as inspiration when adding an item to a lib like `shared-ui-ng-pipes` or `shared-ui-ng-directives`.
 
-> **A grab-bag is not a functionality.** It gets **no** `docs/x/{name}/` PRD or TSD, no ACs, and never e2e. Each item carries its own `requirements/` registry for unit-test IDs (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Compare with [ui.md](ui.md), which is a **single-purpose** `ui` lib and _is_ a functionality.
+> **A grab-bag is not a functionality.** It gets **no** `docs/x/{domain}/{name}/` PRD or TSD, no ACs, and never e2e. Each item carries its own `requirements/` registry for unit-test IDs (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag. Compare with [ui.md](ui.md), which is a **single-purpose** `ui` lib and _is_ a functionality.
 
 Everything below is **per item**. The lib-level files (`project.json`, `jest.config.ts`, tsconfigs, outer `README.md`) already exist — adding an item never touches them except `src/index.ts`.
 
@@ -170,7 +170,7 @@ Run `nx test shared-ui-ng-pipes` to execute the unit tests.
 
 | Not here                                             | Why                                                                                    |
 | ---------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `docs/x/{name}/PRD/README.md` and `TSD/`             | a grab-bag is not a functionality                                                      |
+| `docs/x/{domain}/{name}/PRD/README.md` and `TSD/`             | a grab-bag is not a functionality                                                      |
 | PRD ACs, and any e2e spec                            | no PRD ⇒ no ACs to drive an `it`                                                       |
 | `data-cy` attributes                                 | a pipe or attribute directive renders no element of its own                            |
 | A base class                                         | pipes and directives extend nothing; only `ui` **components** take `V1BaseUiComponent` |

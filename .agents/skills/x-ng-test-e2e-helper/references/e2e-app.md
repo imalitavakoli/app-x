@@ -43,7 +43,7 @@ A registered US can also go stale. Four outcomes, the same set an AC resolves to
 
 ## What a US is
 
-A US groups the **Acceptance Criteria (ACs)** — defined in functionalities' PRDs (`docs/x/{name}/PRD/README.md`) — that a user pursues in one story. A US **may span functionalities**, which is why it lives in the e2e app registry, not in a single functionality's PRD.
+A US groups the **Acceptance Criteria (ACs)** — defined in functionalities' PRDs (`docs/x/{domain}/{name}/PRD/README.md`) — that a user pursues in one story. A US **may span functionalities**, which is why it lives in the e2e app registry, not in a single functionality's PRD.
 
 ## Spec mapping (reminder)
 

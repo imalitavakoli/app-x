@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TSD/data-access-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `data-access` lib spec + its FR/BR.
+Template for `docs/x/{domain}/{name}/TSD/data-access-v{n}.md` (a **shared** lib is versioned, so the version is in the filename; an **app-domain** lib is unversioned and keeps the plain name) — the `data-access` lib spec + its FR/BR.
 A `map` lib ALWAYS has a sister `data-access` lib, so include this whenever this functionality OWNS a map lib.
 Ownership decides the file set — never include this because a REUSED lib has a map/data-access pair.
 For an ABSTRACT functionality (no feature/ui), also add the short facade-consumer note at the end.
@@ -10,9 +10,9 @@ Register every FR/BR ID in the README's 🧭 ID Index.
 ### 🗄️ 'data-access' Library Specification
 
 - **Last Updated** (YYYY-MM-DD): {date}
-- **Last Verified** (YYYY-MM-DD): {date}
+- **Last Verified** (YYYY-MM-DD): NOT YET
 
-> **`Last Verified` is per file, deliberately.** Whoever checks these specs against the shipped code walks only the lib files a change actually touched, and stamps only those — so a file still showing an older date is honestly reporting that nobody has re-checked it since. Never stamp a file you did not read, and never bulk-update these across the folder.
+> **`Last Verified` is per file, deliberately.** Whoever checks these specs against the shipped code walks only the lib files a change actually touched, and stamps only those — so a file still showing an older date is honestly reporting that nobody has re-checked it since. Never stamp a file you did not read, and never bulk-update these across the folder. On first create the value is `NOT YET`; a later verification step overwrites it with a date.
 
 > `data-access` initializes `map` methods and holds the result.
 

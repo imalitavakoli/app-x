@@ -3,7 +3,7 @@ name: x-ng-test-e2e-helper
 description: "WHAT? The workspace conventions for a functionality's end-to-end (e2e) tests — which libs get e2e, the US/AC ID mapping, hermetic stubbing, fixture placement, and selector rules. WHEN? Before writing or updating e2e tests or their fixtures for a `page` lib (or a `feature` lib that composes another functionality's `feature`, once an app page hosts it); when deciding an e2e's target app, US/AC IDs, structure, stubbing, selectors, or where a fixture lives. Not for util, api, or app libs, nor for grab-bag ui/feature libs."
 metadata:
   kind: helper
-  version: '1.6.3'
+  version: '1.7.0'
 ---
 
 # Test E2E Helper
@@ -24,7 +24,7 @@ Only libs a user drives end-to-end in a real app:
 - **Not** `ui` / `map` / `data-access` libs, nor abstract functionalities.
 - **Never a grab-bag `ui` / `feature` lib** (`CONTEXT.md`) — it is not a functionality, so it has no PRD and therefore no ACs to drive an `it`. Its items are covered by unit tests against their own `requirements/`. The test for telling one from a single-purpose lib: `docs/getting-started/library-types-and-their-relationship.md` → Single-purpose vs grab-bag.
 - **Never** a standalone `util`, `api`, or `app` — those are not functionalities and have no PRD ACs to map (`docs/getting-started/library-types-and-their-relationship.md`).
-- **No PRD in scope:** if there is no `docs/x/{name}/PRD/README.md` for the functionality under test and this work is not producing one, **do not** require AC IDs and **do not** invent ACs or a PRD from here. Prefer not writing new e2e then; if tests are still in scope, use plain titles (no AC mapping).
+- **No PRD in scope:** if there is no `docs/x/{domain}/{name}/PRD/README.md` for the functionality under test (look for `docs/x/*/{name}/PRD/README.md` when `{domain}` is not yet known) and this work is not producing one, **do not** require AC IDs and **do not** invent ACs or a PRD from here. Prefer not writing new e2e then; if tests are still in scope, use plain titles (no AC mapping).
 
 ## Find the target e2e app
 
@@ -74,13 +74,13 @@ Just as a spec/Page Object is placed by _which lib it belongs to_, a **fixture i
 
 Skip AC mapping when there is no PRD in scope (see [When to use](#when-to-use--which-libs-get-e2e)).
 
-- **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/{name}/PRD/README.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
+- **`it` ↔ Acceptance Criterion (AC)** from the functionality's **PRD** (`docs/x/{domain}/{name}/PRD/README.md`). Title: `<AC-id> | Given <…>; When <…>; Then <…>`; AAA in the body.
 - **`describe` ↔ User Story (US)** from the e2e app's **`apps/{app}-e2e/user-stories/README.md`** registry (its `DECISIONS.md` sibling holds burned IDs). Title: `<US-id> | As a …`.
 - **Registry rules** (create/update, uniqueness, format, lifecycle) — read [references/e2e-app.md](references/e2e-app.md) before adding or reusing a US. See also [assets/examples/user-stories/](assets/examples/user-stories/).
 
 ## Keeping e2e titles true
 
-An AC can change under an e2e that already exists — its expectation gets corrected, or the behaviour is dropped. An AC is added, amended or retired in the functionality's PRD; **what belongs here is the test title and the assertion**. Read the AC's current text in `docs/x/{name}/PRD/README.md` and make the spec match it. Never edit an AC from here, and never invent one to justify a test that already exists.
+An AC can change under an e2e that already exists — its expectation gets corrected, or the behaviour is dropped. An AC is added, amended or retired in the functionality's PRD; **what belongs here is the test title and the assertion**. Read the AC's current text in `docs/x/{domain}/{name}/PRD/README.md` and make the spec match it. Never edit an AC from here, and never invent one to justify a test that already exists.
 
 Four outcomes, the same set a functionality's docs resolve to:
 
@@ -136,7 +136,7 @@ The examples show the conventions independent of the test runner. Confirm the **
 | CSS or visible-text selectors                                  | Use the stable `data-cy` test-ids.                                                                                                                                                  |
 | Order-dependent tests                                          | Each test sets up its own state; independent & deterministic.                                                                                                                       |
 | `describe` / `it` without US / AC IDs                          | `describe = <US-id>` (from the app's `user-stories/README.md`), `it = <AC-id>` (from the PRD).                                                                                      |
-| Requiring PRD AC IDs when no PRD is in scope                   | No `docs/x/{name}/PRD/README.md` and none being written — plain titles; do not invent ACs or a PRD from here.                                                                       |
+| Requiring PRD AC IDs when no PRD is in scope                   | No `docs/x/{domain}/{name}/PRD/README.md` (look for `docs/x/*/{name}/PRD/README.md` when `{domain}` is not yet known) and none being written — plain titles; do not invent ACs or a PRD from here. |
 | Duplicating selectors across specs                             | Put them in the lib's Page Object (`support/page/*.po.ts`).                                                                                                                         |
 | Dumping every fixture flat / copying for reuse                 | Place under the owning lib (`page/{page-name}/` or `feature/{feature-name}/`); flat root only when there's no owner. Other specs reference the path — never copy or move for reuse. |
 | Writing e2e for a `ui` / `data-access` / self-wiring `feature` | Only `page` libs, and a `feature` that composes another functionality's `feature` once an app page hosts that composition.                                                          |

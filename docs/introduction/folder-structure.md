@@ -41,7 +41,7 @@ x/
 │             └── server/                           // Holds the build-time generated files of an app which has app-shell. Can be deleted!
 ├── docs/                                           // Holds the workspace documentation — one folder per area (see this repo's README for the full index).
 │   ├── agents/                                     // Holds the AI-agent docs: the Superpowers workflow paths, their shared rules and notation, and how to edit `AGENTS.md` / `CONTEXT.md`.
-│   └── x/{functionality-name}/                     // Holds ONE functionality's specs — the source of truth its tests are written against.
+│   └── x/{domain}/{functionality-name}/            // Holds ONE functionality's specs, nested under its domain (`shared` or one app).
 │       ├── PRD/                                    // 🆔 Product spec: the Acceptance Criteria (AC) an e2e `it` cites.
 │       └── TSD/                                    // 🆔 Technical spec, per lib type per live version: the FRs (`describe`) and BRs (`it`) a unit test cites, plus the README's ID Index.
 ├── fin/apps/{app-name}/                            // Holds the final distribution files of an app (autmation tools may use them).
@@ -86,6 +86,6 @@ Two rules hold across all of them: a requirement that no longer exists is **move
 
 **One registry the tree above is too high-level to show:** a `util` lib's version folder — and each item folder of a grab-bag `ui` / `feature` lib — carries its own `requirements/` beside that folder's inner `README.md` (e.g. `libs/shared/util/ng-formatters/src/lib/date-format-v1/requirements/`). A new version folder starts by copying its predecessor's `DECISIONS.md`, because the ID key does not carry the version.
 
-**Which lib gets which registry** is decided by lib type, not by location — that belongs to [library-types-and-their-relationship.md](../getting-started/library-types-and-their-relationship.md), which is authoritative on it. In short: a **functionality** (`map` / `data-access` / single-purpose `ui` / `feature` / `page`) gets `docs/x/{name}/`; a `util`, product `app`, or grab-bag item gets a local `requirements/`; an `api` lib gets neither.
+**Which lib gets which registry** is decided by lib type, not by location — that belongs to [library-types-and-their-relationship.md](../getting-started/library-types-and-their-relationship.md), which is authoritative on it. In short: a **functionality** (`map` / `data-access` / single-purpose `ui` / `feature` / `page`) gets `docs/x/{domain}/{name}/`; a `util`, product `app`, or grab-bag item gets a local `requirements/`; an `api` lib gets neither.
 
 [🔙](../../README.md#introduction)

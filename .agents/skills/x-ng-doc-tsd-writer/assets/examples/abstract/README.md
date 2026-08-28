@@ -1,4 +1,4 @@
-<!-- Example TSD folder for an ABSTRACT functionality that uses map + data-access (map is optional in general — required here because it calls an API). Mirrors docs/x/ng-user-geo/TSD/. -->
+<!-- Example TSD folder for an ABSTRACT functionality that uses map + data-access (map is optional in general — required here because it calls an API). Mirrors docs/x/shared/ng-user-geo/TSD/. -->
 
 # TSD — ng-user-geo
 

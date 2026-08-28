@@ -6,8 +6,8 @@ Read this whenever this functionality reuses a lib it does not own — existing,
 
 | The thing whose behaviour the requirement describes                                          | Where that requirement lives                                     |
 | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| A lib **this** functionality owns                                                            | this `docs/x/{name}/TSD/{libtype}-v{n}.md` — as an FR/BR         |
-| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/{its-name}/TSD/`            |
+| A lib **this** functionality owns                                                            | this `docs/x/{domain}/{name}/TSD/{libtype}-v{n}.md` — as an FR/BR |
+| Another functionality's `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` | **that** functionality's own `docs/x/*/{its-name}/TSD/`   |
 | An item in a **grab-bag** `ui` / `feature` lib                                               | that item's own `requirements/`, beside its inner version README |
 | A `util` lib                                                                                 | that util's own `requirements/`                                  |
 | An `api` lib                                                                                 | nowhere — `api` libs have no requirements doc                    |
@@ -21,7 +21,7 @@ Recording the dependency correctly in the README does **not** also license a `{l
 
 | The reused lib belongs to…                                               | Where its spec goes                                                                                                                                                          | In **this** TSD folder                                                         |
 | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| a functionality **with** `docs/x/{its-name}/`                            | that functionality's own TSD, in a **separate writer run**                                                                                                                   | nothing but the reuse entry                                                    |
+| a functionality **with** `docs/x/*/{its-name}/`                   | that functionality's own TSD, in a **separate writer run**                                                                                                                   | nothing but the reuse entry                                                    |
 | a functionality **without** docs                                         | its docs must be written first — **a separate decision, and a separate run of the writers for that functionality**, not this one. **Report that they are missing and stop.** | nothing; do **not** write its docs from this run and do **not** park them here |
 | that gate answered **No** — or it is a `util` / `app` / grab-bag / `api` | the `[TO-UPDATE]` surface list is the whole record; the plan carries the work                                                                                                | nothing but the reuse entry                                                    |
 
@@ -54,7 +54,7 @@ Anyone can now open that lib, see whether those three exist, and know whether th
 
 ## Clear stale markers when updating a TSD
 
-**Whenever you update an existing `docs/x/{name}/TSD/`, re-verify every marker before writing anything else:**
+**Whenever you update an existing `docs/x/{domain}/{name}/TSD/`, re-verify every marker before writing anything else:**
 
 1. For each `[TO-CREATE]` entry — does the lib exist now? If yes, **remove the marker** and keep the entry as a plain used-as-is dependency.
 2. For each `[TO-UPDATE]` entry — does the lib now have the surface the marker lists? If all of it landed, **remove the marker and the surface list**, leaving the plain entry. If only part landed, keep `[TO-UPDATE]` and narrow the list to what is still missing.

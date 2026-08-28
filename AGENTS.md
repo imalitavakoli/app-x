@@ -96,7 +96,7 @@ Do not pull path files, shared rules, or hooked workspace skills into this list.
 
    **Yes** → read these **now** — at cycle start, before your first question to the user, and before any skill starts:
    - `/docs/getting-started/library-types-and-their-relationship.md` and `/docs/guidelines/naming-conventions.md`
-   - that functionality's existing `docs/x/{name}/`, if it has one
+   - that functionality's existing `docs/x/{domain}/{name}/`, if it has one
 
    **No** → skip this check. The types that answer No are `util`, `api`, `app`, and a **grab-bag** `ui` / `feature`.
 
@@ -162,7 +162,7 @@ Which of our skills the workflow invokes, and where. _For orientation_ — each 
 
 ### Where the workspace's docs live
 
-`/docs/introduction/folder-structure.md` maps every directory, including the 🆔 **ID registries** — `docs/x/{name}/PRD/` and `TSD/` for functionalities, `requirements/` for `util` / product `app` / grab-bag items, and `apps/{app}-e2e/user-stories/` — and the one shape they all share (`README.md` live · `DECISIONS.md` burned). Which lib type gets which: `/docs/getting-started/library-types-and-their-relationship.md`.
+`/docs/introduction/folder-structure.md` maps every directory, including the 🆔 **ID registries** — `docs/x/{domain}/{name}/PRD/` and `TSD/` for functionalities, `requirements/` for `util` / product `app` / grab-bag items, and `apps/{app}-e2e/user-stories/` — and the one shape they all share (`README.md` live · `DECISIONS.md` burned). Which lib type gets which: `/docs/getting-started/library-types-and-their-relationship.md`.
 
 &nbsp;
 

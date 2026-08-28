@@ -35,7 +35,7 @@ An FR/BR was approved when it was written, often by someone who is not in this s
 
 1. **Show the old text beside the new**, per ID. Not a summary — the actual before and after, so the reader can see exactly what is being reversed.
 2. **Get explicit confirmation.** Amending or retiring is not a mechanical edit; it reverses a prior decision.
-3. **Name who else is affected.** If the change is to a lib **other functionalities reuse**, their docs may now be wrong too. Find them by searching every `docs/x/*/TSD/README.md` **Existing Dependencies & Reuse** section for this lib's name, and list what you found. You are not fixing their docs — you are telling the user whose docs just became suspect.
+3. **Name who else is affected.** If the change is to a lib **other functionalities reuse**, their docs may now be wrong too. Find them by searching every `docs/x/*/*/TSD/README.md` **Existing Dependencies & Reuse** section for this lib's name, and list what you found. You are not fixing their docs — you are telling the user whose docs just became suspect.
 4. **If confirmation does not come, change nothing** and leave the discrepancy reported. A doc that is known-wrong and flagged is safer than one silently rewritten on an assumption.
 
 ## Common mistakes

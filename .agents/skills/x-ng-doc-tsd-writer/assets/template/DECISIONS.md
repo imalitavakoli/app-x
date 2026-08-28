@@ -1,5 +1,5 @@
 <!--
-Template for `docs/x/{name}/TSD/DECISIONS.md` — this functionality's **technical** decision history.
+Template for `docs/x/{domain}/{name}/TSD/DECISIONS.md` — this functionality's **technical** decision history.
 Its sibling `README.md` + `{libtype}-v{n}.md` files state what is true NOW; this file records what stopped being true and what was ruled out.
 Remove every `>` helper note from the final draft; keep every heading you use.
 -->

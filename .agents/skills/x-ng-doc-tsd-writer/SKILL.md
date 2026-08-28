@@ -1,9 +1,9 @@
 ---
 name: x-ng-doc-tsd-writer
-description: "WHAT? A functionality's TSD folder at docs/x/{name}/TSD/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TSD, TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
+description: "WHAT? A functionality's TSD folder at docs/x/{domain}/{name}/TSD/ — its per-library (map / data-access / ui / feature / page) technical spec, whose Functional Requirements (FRs) and Business Rules (BRs) map to unit tests. WHEN? A functionality's PRD is ready and needs its technical spec; asked to create or update a TSD, TFS, technical design, frontend architecture, library breakdown, or FR/BR test blueprint. Not for util, api, or app libs, nor for grab-bag ui/feature libs — those are not functionalities."
 metadata:
   kind: writer
-  version: '4.0.1'
+  version: '4.1.0'
 ---
 
 # TSD Writer
@@ -15,10 +15,10 @@ You are a senior Nx + Angular frontend developer who turns an approved **PRD** i
 - **FR → `describe`**, **BR → `it`** (the unit-test mapping).
 - Every FR/BR **back-links the PRD Acceptance Criterion (AC)** it decomposes, so PRD ↔ TSD ↔ tests stay in lockstep.
 
-Output: a **folder** `docs/x/{functionality-name}/TSD/` — a `README.md` for the functionality-level sections plus **one file per library type, per live version** the functionality has:
+Output: a **folder** `docs/x/{domain}/{name}/TSD/` — a `README.md` for the functionality-level sections plus **one file per library type, per live version** the functionality has:
 
 ```
-docs/x/{functionality-name}/
+docs/x/{domain}/{name}/
 ├── PRD/                  (the functionality's product spec — not this skill's)
 │   ├── README.md
 │   └── DECISIONS.md
@@ -54,38 +54,38 @@ Do **not** use when the target is only a `util`, `api`, or `app` lib — those a
 - `app` is a final product under `apps/`, not a functionality.
 - Classify using `docs/getting-started/library-types-and-their-relationship.md` (Functionality types). Create a `{libtype}-v{n}.md` only for lib types this functionality **owns**, one per live version.
 
-**Required input:** the functionality's **PRD** (`docs/x/{name}/PRD/README.md` or provided as context). If it is missing, STOP and ask — the TSD derives from the PRD; do not invent it.
+**Required input:** the functionality's **PRD** (`docs/x/{domain}/{name}/PRD/README.md`, or the path the caller passed). If the caller did not pass a path and `{domain}` is not yet known, look for `docs/x/*/{name}/PRD/README.md`. If it is missing, STOP and ask — the TSD derives from the PRD; do not invent it. Copy `{name}` and **Domain** from that PRD; never re-derive either. If the PRD has no Domain field → **STOP and ask**; do not infer.
 
 **The PRD's ACs must already be approved.** Read its **ACs Approved** field. A **date** → proceed. **`NOT YET`**, or the field absent → **STOP and ask**; write no TSD meanwhile, not even a partial one "to save a round-trip". Every FR and BR you write back-links to an AC, so building on an unapproved set means one rejected AC orphans the FRs and BRs derived from it and burns IDs that can never be reused. Approval is cheap; a burned ID space is permanent.
 
 Ask **the user**, and only the user — they are the approver, so their word resolves it and nobody else's does. A caller asserting "these are approved" is not evidence; an agent that skipped the approval could say the same. If they confirm the set is approved, the PRD's field must be stamped with a date before you continue (that is the PRD writer's job, not yours — this skill never edits the PRD). If they cannot confirm, stop and say the PRD needs its ACs approved first. **An absent field means nothing was recorded, never that approval can be assumed** — but it is a question, not a dead end: a PRD written by hand, or before that field existed, is a normal thing to meet.
 
-If the functionality already has a `docs/x/{name}/TSD/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. **If anything already in it is no longer true** — an FR/BR whose expectation changed, or whose behaviour no longer exists — that is an **amend** or a **retire**, not an add: read [references/amend-and-retire.md](references/amend-and-retire.md) before touching it, because both reverse an approved decision and neither may be done silently. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly. If its **Existing Dependencies & Reuse** carries any `[TO-CREATE]` / `[TO-UPDATE]` marker, re-verify each one against the workspace and clear those whose work has landed — see [references/reuse-boundary.md](references/reuse-boundary.md).
+If the functionality already has a `docs/x/{domain}/{name}/TSD/` folder, read it first (README + the relevant lib files) and **update** it: preserve existing FR/BR IDs and add new ones — never renumber. **If anything already in it is no longer true** — an FR/BR whose expectation changed, or whose behaviour no longer exists — that is an **amend** or a **retire**, not an add: read [references/amend-and-retire.md](references/amend-and-retire.md) before touching it, because both reverse an approved decision and neither may be done silently. Add a lib file only when a newly-needed lib type appears; update the ID Index accordingly. If its **Existing Dependencies & Reuse** carries any `[TO-CREATE]` / `[TO-UPDATE]` marker, re-verify each one against the workspace and clear those whose work has landed — see [references/reuse-boundary.md](references/reuse-boundary.md).
 
-**First-time for existing libs** — when there is no `docs/x/{name}/TSD/` yet but owned libs already exist: read [references/bootstrap-existing.md](references/bootstrap-existing.md) after the PRD is ready. Still derive from the PRD; use existing libs only to ground contracts and Open Technical Questions — never invent FRs/BRs the PRD does not support.
+**First-time for existing libs** — when there is no `docs/x/{domain}/{name}/TSD/` yet but owned libs already exist: read [references/bootstrap-existing.md](references/bootstrap-existing.md) after the PRD is ready. Still derive from the PRD; use existing libs only to ground contracts and Open Technical Questions — never invent FRs/BRs the PRD does not support.
 
 ## Inputs & output
 
 - **Reads:** the PRD; `docs/getting-started/library-types-and-their-relationship.md` (classify the functionality); `docs/guidelines/naming-conventions.md` (lib/CSS naming, esp. `#styling`); `docs/guidelines/best-practices.md` (Organizing / Mindset — file structure); `docs/runbooks/dep-update-config-for-a-lib.md` (DEP config) and `docs/runbooks/dep-update-assets-for-a-lib.md` (DEP assets — a `ui` lib's custom icon/image whose path the `feature` reads from DEP config); and the existing TSD if any.
-- **Writes:** the `docs/x/{functionality-name}/TSD/` folder — `README.md`, one `{libtype}-v{n}.md` per **owned** lib type per live version, and `DECISIONS.md` **always**, with `NONE.` under any heading that has no entries yet. An empty heading records that the category was considered; a missing file is indistinguishable from an oversight.
+- **Writes:** the `docs/x/{domain}/{name}/TSD/` folder — `README.md`, one `{libtype}-v{n}.md` per **owned** lib type per live version, and `DECISIONS.md` **always**, with `NONE.` under any heading that has no entries yet. An empty heading records that the category was considered; a missing file is indistinguishable from an oversight.
 
 ## Workflow
 
 Copy this checklist and track it. Keep the `[tsd]` prefix so, if this runs inside a larger workflow, these stay grouped and the outer workflow's todos remain visible:
 
 ```
-- [ ] [tsd] 1. Gate & analyse — confirm it is a functionality; confirm the PRD's ACs Approved field carries a date (STOP and ask if NOT YET or absent); read templates, PRD, library-types & naming-conventions docs, any existing TSD
-- [ ] [tsd] 2. Name & classify — confirm the functionality name; classify; read the matching example; sort the reuse and mark it (clear any stale markers when updating)
-- [ ] [tsd] 3. Library breakdown — write one docs/x/{name}/TSD/{libtype}-v{n}.md per owned lib type per live version (spec + FR/BR)
+- [ ] [tsd] 1. Gate & analyse — confirm it is a functionality; confirm the PRD's ACs Approved field carries a date (STOP and ask if NOT YET or absent); copy Domain and `{name}` from the PRD (STOP and ask if no Domain field; do not re-derive); read templates, PRD, library-types & naming-conventions docs, any existing TSD
+- [ ] [tsd] 2. Name & classify — copy `{name}` and Domain from the PRD (do not re-derive, do not ask Domain); classify; read the matching example; sort the reuse and mark it (clear any stale markers when updating)
+- [ ] [tsd] 3. Library breakdown — write one docs/x/{domain}/{name}/TSD/{libtype}-v{n}.md per owned lib type per live version (spec + FR/BR); Last Verified: NOT YET on first create
 - [ ] [tsd] 4. Feature journey — in feature-v{n}.md (only if owned), add the technical journey
-- [ ] [tsd] 5. README — write docs/x/{name}/TSD/README.md (Overview, Existing Deps & Reuse, ID Index, Open Technical Questions); write DECISIONS.md always (NONE. under empty headings)
+- [ ] [tsd] 5. README — write docs/x/{domain}/{name}/TSD/README.md (Overview Domain copied from the PRD, Existing Deps & Reuse, ID Index, Open Technical Questions); Last Verified: NOT YET on first create; write DECISIONS.md always (NONE. under empty headings)
 - [ ] [tsd] 6. Validate — run the Review Checklist until all items pass
 - [ ] [tsd] 7. Confirm — put the Open Technical Questions to the user and fold in the answers
 - [ ] [tsd] 8. Summary — report the folder path, the FR/BR IDs, and anything still open
 ```
 
-1. **Gate & analyse** — apply the Prerequisites gate. If it passes, read the templates in [assets/template/](assets/template/) (the `README.md` template + the per-lib templates), the PRD, `docs/getting-started/library-types-and-their-relationship.md`, `docs/guidelines/naming-conventions.md`, and (for `feature` DEP config) `docs/runbooks/dep-update-config-for-a-lib.md`.
-2. **Name & classify** — the technical name **is** the functionality name from the PRD / `docs/x/{name}/` (kebab-case; prefix `ng-` when it has logic, e.g. `ng-balance-card`). Confirm with the user if unclear. **Every owned lib inherits that same `{name}`** — e.g. `ng-chart` → `{domain}-map-ng-chart`, `{domain}-data-access-ng-chart`, `{domain}-feature-ng-chart`. Never name an owned lib after a consumer (`ng-dashboard`, `ng-insights`, …).
+1. **Gate & analyse** — apply the Prerequisites gate. If it passes, read the templates in [assets/template/](assets/template/) (the `README.md` template + the per-lib templates), the PRD, `docs/getting-started/library-types-and-their-relationship.md`, `docs/guidelines/naming-conventions.md`, and (for `feature` DEP config) `docs/runbooks/dep-update-config-for-a-lib.md`. Copy `{name}` and **Domain** from the PRD; if the PRD has no Domain field → STOP and ask.
+2. **Name & classify** — `{name}` **is** the PRD / folder name. Copy it from the PRD; the PRD already applied the stack's technology prefix — do not apply a second guess. **Domain** **is** the PRD header field (`CONTEXT.md`). Copy it verbatim and write this TSD in that same parent folder (`docs/x/{domain}/{name}/TSD/`). Do not ask Domain again. If the PRD has no Domain field → **STOP and ask**; do not infer. **Every owned lib inherits that same `{name}`** — e.g. `ng-chart` → `{domain}-map-ng-chart`, `{domain}-data-access-ng-chart`, `{domain}-feature-ng-chart`. Never name an owned lib after a consumer (`ng-dashboard`, `ng-insights`, …).
 
    Classify per the library-types doc (authoritative) and read the matching example:
    - **abstract** — `data-access` required; `map` only for API/external assets → [assets/examples/abstract/](assets/examples/abstract/)
@@ -94,13 +94,13 @@ Copy this checklist and track it. Keep the `[tsd]` prefix so, if this runs insid
 
    **Consumed-by ≠ owns page:** listed as used on `ng-dashboard` / `ng-insights` → those pages go under **Existing Dependencies & Reuse** as consumers (or stay out of this TSD entirely). Do **not** add `page-v{n}.md` or rename libs after them unless **this** functionality owns a `page` under its own name.
 
-   Examples show **content and granularity**; they may include optional libs. Emit only the `{libtype}-v{n}.md` files this classification **owns**. Create `docs/x/{name}/TSD/` (and `docs/x/{name}/` if absent).
+   Examples show **content and granularity**; they may include optional libs. Emit only the `{libtype}-v{n}.md` files this classification **owns**. Create `docs/x/{domain}/{name}/TSD/` (and `docs/x/{domain}/{name}/` if absent).
 
    **Sort the reuse now, before writing any lib spec** — list every lib this functionality reuses and mark each by its state for this cycle: unmarked (exists, used as-is), `[TO-CREATE]` (does not exist yet), `[TO-UPDATE]` (exists but must gain something for us). Doing this before step 3 keeps a reused lib from drifting into an owned lib's spec. **When updating an existing TSD, re-verify the markers already there and clear the ones whose work has landed.** The entries land in the README's **Existing Dependencies & Reuse** at step 5. Read [references/reuse-boundary.md](references/reuse-boundary.md) now if this functionality reuses anything or the existing TSD carries markers.
 
-3. **Library breakdown** — write **one `docs/x/{name}/TSD/{libtype}-v{n}.md` per owned lib type, per live version** (`map` / `data-access` / `ui` / `feature` / `page` — create only those). Never create `util` / `api` / `app` specs, and never a spec for a **grab-bag** `ui` / `feature` lib. Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly.
+3. **Library breakdown** — write **one `docs/x/{domain}/{name}/TSD/{libtype}-v{n}.md` per owned lib type, per live version** (`map` / `data-access` / `ui` / `feature` / `page` — create only those). Never create `util` / `api` / `app` specs, and never a spec for a **grab-bag** `ui` / `feature` lib. Each file holds that lib's spec sections **and its FR/BR**, following the template's subsections exactly. On first create, write **Last Verified** as `NOT YET` on every lib file.
 4. **Feature journey** — when the functionality owns a `feature`, add the technical journey in `feature-v{n}.md` (per exported `feature` component). If there is no `feature-v{n}.md` (**abstract**, or **ui-only** / **page-only** shapes): skip this step; for **abstract**, put the short facade-consumer note in `data-access-v{n}.md` instead (see the template).
-5. **README** — write `docs/x/{name}/TSD/README.md` with the functionality-level sections (Overview, Existing Dependencies & Reuse, Open Technical Questions) **and the ID Index** — a table of every FR/BR ID → the lib file it lives in → the PRD AC it maps to. State the classification, the **natural entry lib**, and list only **owned** libs as this functionality's own. This is the single place that keeps IDs unique across the folder.
+5. **README** — write `docs/x/{domain}/{name}/TSD/README.md` with the functionality-level sections (Overview, Existing Dependencies & Reuse, Open Technical Questions) **and the ID Index** — a table of every FR/BR ID → the lib file it lives in → the PRD AC it maps to. Copy Overview **Domain** from the PRD header. On first create, write **Last Verified** as `NOT YET`. State the classification, the **natural entry lib**, and list only **owned** libs as this functionality's own. This is the single place that keeps IDs unique across the folder.
 6. **Validate** — run the Review Checklist below; loop until all pass.
 7. **Confirm with the user** — see below. Any Open Technical Questions go to the user before finishing.
 8. **Summary** — see below.
@@ -109,7 +109,7 @@ Copy this checklist and track it. Keep the `[tsd]` prefix so, if this runs insid
 
 The template is a **folder** — [assets/template/](assets/template/) — mirroring the output: one template file per output file. Use the matching template for each file you write, exactly (same sections, same order); remove the `>` quote-helper notes and the top `<!-- … -->` comment from the final draft; keep every heading you use; omit whole lib-type files the functionality does not use.
 
-**Output layout** — `docs/x/{name}/TSD/` (template → output):
+**Output layout** — `docs/x/{domain}/{name}/TSD/` (template → output):
 
 | Template file             | Output file           | Holds                                                                                                                                |
 | ------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -127,11 +127,15 @@ IDs are unique **across all files**; register every one in the README's 🧭 ID 
 
 **`DECISIONS.md`** is demonstrated once, in [assets/examples/visual/DECISIONS.md](assets/examples/visual/DECISIONS.md) — its shape does not vary by classification, so the `abstract/` and `mixed-plus/` folders omit it (they would each have one — `mixed-plus/` retired its `data-access` v1 — but the file's shape is the same, so it is shown once). Read it whenever this run retires an FR/BR or records a rejected option: it shows retirements paired with the PRD AC that drove them, and a rejected option stated with the reason it lost.
 
-Read the example matching the functionality's classification before filling the specs and the journey — they show the expected granularity, the FR/BR test-ready syntax, and the journey structure. **Each example is a real folder** (`assets/examples/{type}/`), laid out exactly like a generated `docs/x/{name}/TSD/` — a `README.md` with a populated 🧭 ID Index plus one file per lib type per live version (the `visual` example ships `ui-v1.md` **and** `ui-v2.md` for one lib — two live versions) — so it doubles as a layout reference. Read the files in the matching example folder. The three examples cover the five types: `abstract` → `abstract/`; `visual` / `visual+` → `visual/`; `mixed` / `mixed+` → `mixed-plus/`. `page-v1.md` is demonstrated in `mixed-plus/`, so a `visual+` functionality borrows it from there; a plain `mixed` uses `mixed-plus/` and omits `page-v1.md`. Omit optional lib files the example has but this functionality does not own.
+Read the example matching the functionality's classification before filling the specs and the journey — they show the expected granularity, the FR/BR test-ready syntax, and the journey structure. **Each example is a real folder** (`assets/examples/{type}/`), laid out exactly like a generated `docs/x/{domain}/{name}/TSD/` — a `README.md` with a populated 🧭 ID Index plus one file per lib type per live version (the `visual` example ships `ui-v1.md` **and** `ui-v2.md` for one lib — two live versions) — so it doubles as a layout reference. Read the files in the matching example folder. The three examples cover the five types: `abstract` → `abstract/`; `visual` / `visual+` → `visual/`; `mixed` / `mixed+` → `mixed-plus/`. `page-v1.md` is demonstrated in `mixed-plus/`, so a `visual+` functionality borrows it from there; a plain `mixed` uses `mixed-plus/` and omits `page-v1.md`. Omit optional lib files the example has but this functionality does not own.
 
 ## Rules
 
 **Functionality gate.** Never write a TSD for a bare `util` / `api` / `app` lib, nor for a **grab-bag** `ui` / `feature` lib.
+
+**Copy Domain and `{name}` from the PRD; never re-derive.** `{name}` is the PRD / folder name. Do not apply a second technology-prefix guess — the PRD already applied the stack's. **Domain** (`CONTEXT.md`) is the PRD header field. Copy it verbatim and write the TSD at `docs/x/{domain}/{name}/TSD/` beside that PRD. If the PRD has no Domain field → stop and ask; do not infer.
+
+**Last Verified at create.** Write `NOT YET` on `TSD/README.md` and every `{libtype}-v{n}.md` / `{libtype}.md`. A writer cannot stamp a date. Do not copy example dates. `Last Updated` is today.
 
 **Emit a `{libtype}-v{n}.md` only for a lib this functionality OWNS — and a disclaimer never licenses one.** The file set is decided by **ownership**, not by which libs the cycle touches. Never create a spec file for a reused lib, and **adding a note such as "this file documents a lib this functionality does not own" does not make it acceptable** — that note is the proof the file should not exist. Watch for the pair symptom: a stray `map-v1.md` dragging a `data-access-v1.md` in behind it.
 
@@ -169,7 +173,7 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 - **Back-link the PRD:** annotate each FR/BR that implements a PRD scenario with the AC it decomposes, e.g. `(maps to PRD BALANCE-AC-01)`.
 - **IDs:** scope IDs to the exported component (or helper service) that owns them, same format for both — `{NAME}_{OWNER}_FR-01` / `{NAME}_{OWNER}_BR-01`, where `{OWNER}` is the component (e.g. `XPROFILE_CARDV1_BR-01`) or the helper service (e.g. `XWALLET_POLLV1_FR-01`). IDs are unique **across the whole TSD folder** — all lib files share one ID space (never reset per file, never renumber). Record every ID in the README **ID Index** (ID → lib file → PRD AC). New technical scenarios (loading/error/interaction) get **new** unique IDs.
 
-- **`{NAME}` is the PRD's feature key, copied verbatim** — take it from the **Feature key** field of `docs/x/{name}/PRD/README.md`. Never re-derive it from the functionality name: `ng-alert-badge` yields `ALERTBADGE` or `ALERT` depending on who derives it, and two derivations split one functionality's ID space in half.
+- **`{NAME}` is the PRD's feature key, copied verbatim** — take it from the **Feature key** field of `docs/x/{domain}/{name}/PRD/README.md`. Never re-derive it from the functionality name: `ng-alert-badge` yields `ALERTBADGE` or `ALERT` depending on who derives it, and two derivations split one functionality's ID space in half.
 
 - **`{OWNER}` is the owner's short role word — never its full class name.** Derive it the same way every time: take the exported class name, drop the `V{n}` prefix, the functionality's own name, and the `Component` / `Service` / `Facade` suffix; uppercase what remains; append the lib's version. **Two owners take no version:** an **unversioned app-domain** lib (there is none to append) and an **existing bare owner**, which is never renamed — both per _The version goes in `{OWNER}`_ above.
 
@@ -221,7 +225,9 @@ Details, worked boundary examples and the full clearing procedure: [references/r
 **Review Checklist** — before finalising, verify:
 
 - [ ] Target is a functionality — not a bare `util` / `api` / `app` lib, and not a **grab-bag** `ui` / `feature` lib.
-- [ ] Folder layout correct: `docs/x/{name}/TSD/README.md` + one `{libtype}-v{n}.md` per **owned** lib type per live version only; no lib spec placed in the README, nothing functionality-level placed in a lib file.
+- [ ] Folder layout correct: `docs/x/{domain}/{name}/TSD/README.md` + one `{libtype}-v{n}.md` per **owned** lib type per live version only; no lib spec placed in the README, nothing functionality-level placed in a lib file.
+- [ ] Overview **Domain** matches the PRD header Domain field verbatim.
+- [ ] **On a first create:** **Last Verified** is `NOT YET` on `README.md` and every `{libtype}-v{n}.md` / `{libtype}.md`. A date was not copied from an example and today's date was not stamped.
 - [ ] **No `{libtype}-v{n}.md` exists for a reused lib** — with or without a disclaimer note. Cross-check the file list — with its `-v{n}` suffixes stripped — against the owned lib types, not against the libs the cycle touches; a correct `[TO-UPDATE]` entry in the README does not license a file.
 - [ ] Every owned lib name uses the same functionality `{name}`; no consumer page absorbed as an owned `page`.
 - [ ] README has an **ID Index** listing every FR/BR ID → its lib file → its PRD AC; every ID in the lib files appears there and vice-versa.
@@ -254,10 +260,10 @@ Then re-run the Review Checklist over whatever changed.
 
 ## Summary
 
-1. Report the saved folder (`docs/x/{name}/TSD/`) and list the files written (`README.md` + each `{libtype}-v{n}.md`).
+1. Report the saved folder (`docs/x/{domain}/{name}/TSD/`) and list the files written (`README.md` + each `{libtype}-v{n}.md`).
 2. List the FR/BR IDs created/added (ID + one-line description) and note which PRD ACs they cover.
 3. **Report the companion work.** List every `[TO-CREATE]` and `[TO-UPDATE]` entry. For each that is a **functionality**, remind the user it needs its own PRD & TSD — a separate writer run, not part of this one. For each `util` / `api` / `app`, or **grab-bag** `ui` / `feature`, remind that those never get `docs/x/` (a `util` / `app` / grab-bag item records requirements in its own `requirements/`; an `api` has none) — they are created/updated via the plan. Flag any PRD AC of this functionality that a companion entry blocks.
-4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{name}/PRD/README.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
+4. **Promote product-observable gaps to the PRD.** For each FR/BR marked `(new — suggest a PRD AC)` in the ID Index — a **product-observable** scenario the PRD's ACs don't cover (NOT a purely technical loading/error/visibility state, which legitimately stays AC-less as `—`) — ask the user whether it should become a PRD Acceptance Criterion. If they approve, the functionality's PRD (`docs/x/{domain}/{name}/PRD/README.md`) must gain that AC as a **separate step** (this skill never edits the PRD itself), after which back-link the FR/BR to the new AC and update the ID Index.
 5. List any Open Technical Questions still unanswered after the confirmation step.
 
 ## Common mistakes
@@ -305,3 +311,6 @@ Then re-run the Review Checklist over whatever changed.
 | Provisional FR/BR for an undecided gap                        | Open Technical Question only; the FR/BR waits for the answer.                                                                                                                             |
 | DECISIONS.md skipped because nothing qualified                | Always create it; NONE. under every empty heading.                                                                                                                                        |
 | Per-lib file with no Last Verified field                      | Add both date fields; verification stamps per file, not per folder.                                                                                                                       |
+| Re-deriving Domain or `{name}`                                | Copy both from the PRD                                                                                                                                                                    |
+| Asking Domain in Overview                                     | Copy the PRD Domain field                                                                                                                                                                 |
+| Dating Last Verified at create                                | Write `NOT YET` on every new TSD file                                                                                                                                                     |

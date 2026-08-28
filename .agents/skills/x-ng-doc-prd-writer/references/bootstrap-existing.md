@@ -1,6 +1,6 @@
 # First-time PRD when libs already exist
 
-Use this only when `docs/x/{name}/PRD/README.md` does **not** exist yet, but one or more `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` libs that share the functionality `{name}` already exist in the workspace. A **grab-bag** `ui` / `feature` lib has no functionality name and never gets a PRD — do not bootstrap one for it.
+Use this only when `docs/x/{domain}/{name}/PRD/README.md` does **not** exist yet (look for `docs/x/*/{name}/PRD/README.md` when `{domain}` is not yet known), but one or more `map` / `data-access` / **single-purpose** `ui` / `feature` / `page` libs that share the functionality `{name}` already exist in the workspace. A **grab-bag** `ui` / `feature` lib has no functionality name and never gets a PRD — do not bootstrap one for it.
 
 The **document now / skip** choice is control flow outside this skill. You are here only after the user chose to document.
 
@@ -19,7 +19,8 @@ The **document now / skip** choice is control flow outside this skill. You are h
 
 ## How to proceed
 
-1. Confirm the functionality `{name}` (from the lib names + user).
+1. Confirm the functionality `{name}` (from the lib names + user), with the stack's technology prefix (`docs/guidelines/naming-conventions.md` → Folders).
 2. List candidate owned libs that share that `{name}`; classify with the library-types doc.
-3. Draft from the template using the description + observable facts; mark unknowns as Open Questions.
-4. Validate, then Confirm with the user as in the main skill.
+3. Derive **Domain** (`CONTEXT.md`) from those libs' `domain:` tags; all must agree; if they disagree, stop and ask. Write under `docs/x/{domain}/{name}/PRD/`.
+4. Draft from the template using the description + observable facts; mark unknowns as Open Questions. Write **Last Verified** as `NOT YET`.
+5. Validate, then Confirm with the user as in the main skill.

@@ -4,7 +4,7 @@
 # put more specific paths below. A `*` line is optional; missing it is fine.
 #
 # When to add or hand off a line, how to resolve the owner, and layout:
-# see .agents/skills/x-codeowners-helper/SKILL.md
+# see .agents/skills/x-codeowners-editor/SKILL.md
 #
 # Notes (for anyone editing this file by hand):
 # - Prefer a stable team over an individual when a group owns an area.

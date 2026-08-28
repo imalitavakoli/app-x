@@ -2,7 +2,7 @@
 
 Sample files from a `util` lib — non-UI, framework-free helpers that any lib or app may import. Use them as inspiration when creating or extending one, e.g. `shared-util-formatters`.
 
-> **A `util` is never a functionality.** No `docs/x/{name}/` PRD or TSD, no ACs, no e2e — ever, whatever shape it takes. Its unit-test FR/BR IDs come from a local `requirements/` registry (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → 'util' type.
+> **A `util` is never a functionality.** No `docs/x/{domain}/{name}/` PRD or TSD, no ACs, no e2e — ever, whatever shape it takes. Its unit-test FR/BR IDs come from a local `requirements/` registry (`README.md` live + `DECISIONS.md` burned). See `docs/getting-started/library-types-and-their-relationship.md` → 'util' type.
 
 ## Two shapes — and why it changes nothing here
 

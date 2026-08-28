@@ -98,7 +98,7 @@ Those are not functionalities. Without a gate, a util-only cycle still invoked A
 
 An existing undocumented functionality-type lib should not force a first-time PRD interview. Path A asks (it is already a design conversation). Path B auto-skips: B1 has nothing to verify without docs, and a bug fix is the wrong moment to start one.
 
-**Revisit if** Path B grows a first-time-document step, or every functionality-type lib must have `docs/x/{name}/`.
+**Revisit if** Path B grows a first-time-document step, or every functionality-type lib must have `docs/x/{domain}/{name}/`.
 
 &nbsp;
 
