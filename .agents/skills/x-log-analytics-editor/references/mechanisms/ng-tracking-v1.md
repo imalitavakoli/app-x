@@ -2,12 +2,13 @@
 applicability: an Angular inject context, in a workspace that has the tracking-facade util, that can import that package without a cycle or module-boundary violation
 priority: 10
 companion: yes
+reachesAppStream: yes
 inapplicable: ask
 ---
 
 ## Companion
 
-Look at the target. `.ts` → `{stem}.log-analytics.ts` and an **injectable class**. Same folder as the target. Mechanism calls (the facade, the context parameters, the private `log` hop) live only in class methods. The named file injects the class and calls one-liner methods.
+Look at the target. **`{stem}` is its filename with only the final extension removed — every other segment kept**: `x-users.component.ts` → `x-users.component`, never `x-users`. So `.ts` → `{stem}.log-analytics.ts` and an **injectable class**. Same folder as the target. Mechanism calls (the facade, the context parameters, the private `log` hop) live only in class methods. The named file injects the class and calls one-liner methods.
 
 **Method name is the developer's word; the event name is the vendor's.** `clickedAdvice()` may send `select_content`. They are deliberately different, and the companion is the only place both appear together — that is what makes it the file's tracking plan.
 
@@ -52,8 +53,8 @@ Do not expose the facade on the companion. Public methods stay action-named; onl
 
 | Parameter  | Source                                                                                                                                                    |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `class`    | the target's `nameThis` field when it has one (the workspace convention on components), otherwise the class's own name. Hold it on the companion as a constructor argument or a settable field — the companion cannot read its host's identity by itself. |
-| `route`    | inject `Router` in the **companion** and take `url.split('?')[0]` with the leading slash removed. Never the full URL. |
+| `class`    | the target's `nameThis` field when it has one (the workspace convention on components), otherwise the class's own name — written on the companion as a **literal constant**. The companion belongs to exactly one named file, so its value is known when the file is written. Do not take it as a constructor argument or a settable field: this companion is `providedIn: 'root'`, so Angular constructs it, not the host, and a settable field would be shared mutable state across every host. |
+| `route`    | inject `Router` in the **companion** and strip the query and fragment and the leading slash. Never the full URL. |
 | `lib_name` | the Nx project name of the target's project, read from its `project.json`. Off by default.                                                                |
 
 **Do not re-derive `route` at each call site.** The companion reads it at emit time inside `log`, so the value is the route at the moment of the event rather than at construction.
@@ -62,9 +63,9 @@ Do not expose the facade on the companion. Public methods stay action-named; onl
 
 ## Reserved names in this workspace
 
-Beyond the vendor's `firebase_*`, `google_*`, `ga_*` prefixes:
+Beyond the vendor's reserved prefixes, which `SKILL.md` → _The record shape_ lists in full:
 
-- **`user_id`** is the vendor's user-scoped identifier and the facade already sets it app-wide for the signed-in user. An event parameter naming some *other* user must not be called `user_id`, or the two are conflated in every report. Use a qualified name — `selected_user_id`, `viewed_author_id`.
+- **`user_id`** is the vendor's user-scoped **setting**, not an event parameter — it is set once for the signed-in user, which the facade already does app-wide. Never send it in an event's parameters at all. Any *other* user an event refers to takes a qualified name — `selected_user_id`, `viewed_author_id` — or the two are conflated in every report.
 - **`buildId`** is already set as a user property by the facade. Do not send it as an event parameter.
 
 ## Where the data goes
@@ -73,9 +74,23 @@ The facade fans out to **every** initialized sink: the native analytics plugin o
 
 Screen views are already emitted by the facade's automatic screen tracking. Do not hand-log them.
 
+## The event-name cap on the native path
+
+**This mechanism can reach a native data stream**, so treat the cap as applying to everything it writes — including a shared lib whose consuming apps you cannot enumerate from here, and which commonly include both a web app and a native one.
+
+On a native platform this routes to the native SDK. The documented limit is **500 distinct event names per app user**, for **app data streams only** — the web path has no such cap. Automatically collected and enhanced-measurement events do not count toward it, and the allowance cannot be archived to make room.
+
+Past the cap, events with further new names are **dropped**: the SDK reports error code `8` and logs an `error` event carrying a `firebase_error` parameter, which is how it is detected, and debug builds surface it in the device console.
+
+**Do not expect a release to clear it.** The documentation states the unit as "per app user" and notes you may see more than 500 across a property because different app instances trigger different events — so the count belongs to an installed app, not to a build. It does not say whether that count persists across app updates. What is documented separately is that an app's installation identity survives an update and is rotated only by uninstall/reinstall, clearing app data, moving to a new device, or long inactivity. Inferring from that to "the counter survives updates too" is reasonable but **is an inference, not a documented fact** — so plan as though a release does not reset it, and do not tell anyone it definitely does or does not.
+
+**Nothing here is observable from the repo.** The cap counts what one device actually emitted; the event registry counts only what this skill recorded. So the registry is a **floor** on this repo's vocabulary and never a reading of any instance's counter — it can understate in both directions at once, since it misses names added by hand and counts names no single device ever sends. Do not report it as a cap reading. The cap is observed in the vendor's console, from the `error` events above.
+
+**A curated set of action names does not approach 500.** What exhausts this cap is a name carrying a variable — one per item, plan or lib — which `SKILL.md` → _The record shape_ forbids for reasons that hold on web too. Being near the cap means the vocabulary is wrong, not that the ceiling is too low; the fix is moving the variable into a parameter, never requesting a higher limit.
+
 ## Verify the value types actually arrive
 
-The facade passes `data` through to each sink unchanged, so what a sink accepts is the sink's business, and the native and web paths are not the same code. Send real booleans and numbers per `SKILL.md`; then **confirm in the vendor's debug view** that each parameter arrived with the type you sent, on the platform the target actually runs on. Record any encoding a sink turns out to require in this section rather than working around it at a call site — a per-call-site workaround is how one lib's booleans stop matching another's.
+The facade passes `data` through to each sink unchanged, so what a sink accepts is the sink's business, and the native and web paths are not the same code. Send only **strings and numbers** per `SKILL.md` — those are the supported parameter types, and a flag goes as `1`/`0`. Then **confirm in the vendor's debug view** that each parameter arrived as the type you sent, on the platform the target actually runs on. Record any further encoding a sink turns out to require in this section rather than working around it at a call site — a per-call-site workaround is how one lib's flags stop matching another's.
 
 ## Contexts this mechanism cannot serve
 
@@ -113,7 +128,7 @@ export class V1AdvisoryCardFeaComponent extends V2BaseFeatureExtComponent {
   private readonly _ana = inject(V1AdvisoryCardFeaComponentLogAnalytics);
 
   onAdviceClicked(advice: V1Advisory_MapAdvice) {
-    this._ana.clickedAdvice({ advice_id: advice.id, position: advice.rank });
+    this._ana.clickedAdvice({ item_id: advice.id, position: advice.rank });
     this.adviceSelected.emit(advice);
   }
 }
@@ -133,7 +148,7 @@ export class V1AdvisoryCardFeaComponentLogAnalytics {
   private readonly _class = 'V1AdvisoryCardFeaComponent';
 
   /** `select_content` — the end-user opened an advice from the card. */
-  clickedAdvice(attrs: { advice_id: string; position: number }): void {
+  clickedAdvice(attrs: { item_id: string; position: number }): void {
     this.log('select_content', { content_type: 'advisory_card', ...attrs });
   }
 
@@ -141,7 +156,7 @@ export class V1AdvisoryCardFeaComponentLogAnalytics {
     this._tracking.logEvent(name, {
       ...params,
       class: this._class,
-      route: this._router.url.split('?')[0].replace(/^\//, ''),
+      route: this._router.url.split('?')[0].split('#')[0].replace(/^\//, ''),
     });
   }
 }

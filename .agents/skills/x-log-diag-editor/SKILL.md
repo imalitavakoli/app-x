@@ -3,7 +3,7 @@ name: x-log-diag-editor
 description: 'WHAT? The rule for which call sites deserve a diagnostic log, and the edit that adds, prunes or downgrades them in named files. WHEN? Asked to add, audit, prune or level-correct logging in components, services, utils or plain TS/JS; deciding whether a call site deserves a log, which severity it takes, or which logging mechanism to use. Not for diagnosing a defect, and not for analytics or product-event logging.'
 metadata:
   kind: editor
-  version: '1.9.0'
+  version: '1.10.0'
 ---
 
 # Log Diag Editor
@@ -118,12 +118,14 @@ Nothing here blocks: an explicit instruction to log anyway wins.
 | ------- | ----------------------- | -------------------------------------------- |
 | Lives   | committed, indefinitely | one debugging session                        |
 | Density | sparse, boundaries only | dense, including arguments and return values |
-| Levels  | the full ladder         | `DEBUG`                                      |
+| Levels  | the full ladder         | `DEBUG` for the trace; an error edge still takes its own level |
 | Removal | pruned only when wrong  | **removed when the investigation ends**      |
 
 Investigation logs are what "record what this function received and returned" asks for — trace spam when standing, legitimate when temporary and scoped.
 
 **Which mode this run asked for** is a fact about the request, not a judgement this file makes; **whether — and how — the chosen mechanism serves that mode** is the reference's job (`modes` in its frontmatter, plus the mark and the removal pass). A reference that does not list the requested mode cannot apply.
+
+**The mark follows the mode, not the level.** Every record added for the investigation carries it, whatever level that record takes — an error edge logged at `ERROR` during an investigation is still an investigation record, and leaving it unmarked because it is not `DEBUG` is how one survives the removal pass and becomes permanent by accident. If a genuinely **standing** record is added in the same run, it stays unmarked — but say so explicitly in the report, so it reads as a decision rather than a leftover.
 
 **Investigation records must be identifiable as a set**, so removal is one mechanical complete pass rather than a hunt; unmarked temporary logs are how a codebase accumulates unclassifiable calls. This file requires identifiability; **the chosen reference defines the mark**. If the chosen reference cannot mark them, it cannot serve investigation. The skill refuses to add investigation logs that the chosen reference has not marked, and removes all records carrying that mark on request. With a companion, removal touches **both** files: marked operations in the companion and matching one-liners in the named file; an emptied companion is deleted with the named file's construct/import.
 
@@ -192,6 +194,8 @@ Copy these into todos so they stay grouped. Load `references/methodology.md` on 
 | A whole response or value passed as the attribute                                 | Name the two or three fields that matter.                                                            |
 | `ERROR` used for a handled condition                                              | Match the level to the ladder. A handled failure is not an error.                                    |
 | Investigation logs added without the marker                                       | Refuse. The chosen reference must mark them. Unmarked temporary logs cannot be removed completely.   |
+| An investigation record left unmarked because it logs at `WARN`/`ERROR`           | Mark it. The mark follows the mode, not the level; unmarked, it survives removal and becomes permanent. |
+| A companion named from the first filename segment (`x-users.log-diag.ts`)         | Keep every segment before the final extension: `x-users.component.ts` → `x-users.component.log-diag.ts`. |
 | Investigation logs left behind after the session                                  | Remove all marked records in the companion and the matching one-liners; delete an emptied companion. |
 | A second record added beside an existing one for the same event                   | Match on source + event key and update in place.                                                     |
 | A test written because a pure function was uncovered                              | Report it and hand it back. This skill does not write tests.                                         |

@@ -7,8 +7,6 @@ The mechanism choice is two questions, not one.
 | Which references _can_ apply to this file? | a **fact** about the file and its project | derived, every time, silently |
 | Among those, which do we prefer?           | a **policy**, constant across files       | once, then remembered         |
 
-There is no mode filter here. Analytics has one mode — see `SKILL.md` → _One mode only_ — so a reference has nothing to declare.
-
 ## Algorithm
 
 1. Derive the applicable set by matching the file's context against each reference's `applicability`.
@@ -17,7 +15,7 @@ There is no mode filter here. Analytics has one mode — see `SKILL.md` → _One
 4. If no stop fired: **apply the winner** — that reference's file is what writes the records (companion + one-liners when `companion: yes`; inline when it cannot) — **and say in one line which and why**, plus which prefs layer supplied each key that is not the announced default. Do not stop. Do not write a call from `SKILL.md`.
 5. Afterwards, if the set had more than one candidate and no preference is recorded, **offer** to remember it — after the edit, so the user judges a real diff rather than a hypothetical. This skill's keys are team keys: write `.agents/_team/skills/x-log-analytics-editor/` after an explicit yes, never `.agents/_local/`.
 
-`companion`, `inapplicable` and both prerequisite lists are declared in each reference's frontmatter and body. Read them there; this file does not restate a reference's values.
+`companion`, `inapplicable`, `reachesAppStream` and both prerequisite lists are declared in each reference's frontmatter and body. Read them there; this file does not restate a reference's values — which is why none of them appears as a column in the index below, and why a rule here cites the field rather than copying what it says.
 
 ## Prerequisites gate the winner, and they are not all the same
 
@@ -78,7 +76,7 @@ Skill-wide keys live at the top level; each mechanism's own keys live under `mec
 
 | Key                | Where                        | Announced default                                                                            |
 | ------------------ | ---------------------------- | ---------------------------------------------------------------------------------------------- |
-| `version`          | top-level integer            | current shape is `1` — compare against the example below, not the skill's `1.0.0`             |
+| `version`          | top-level integer            | current shape is `1` — compare against the example below, not the skill's `1.1.0`             |
 | `mechanism`        | top-level string             | derived by the algorithm — set it **only** to override the `priority` order among mechanisms that _can_ apply, which is why the example below omits it |
 | `contextClass`     | top-level boolean            | `true` — attach the emitting class as `class`                                                |
 | `contextRoute`     | top-level boolean            | `true` — attach the active route path as `route`                                             |
@@ -110,22 +108,36 @@ Both files are optional; the skill works fully with both absent. A stored value 
 
 ## Event registry
 
-`.agents/_team/skills/x-log-analytics-editor/events.jsonl` — an append-only record of the event names this skill has added, so a later run can see the property's name budget and its existing vocabulary instead of guessing.
+`.agents/_team/skills/x-log-analytics-editor/events.jsonl` — an append-only record of the event names this skill has added, so a later run can see the vocabulary this repo already sends instead of guessing at it.
 
 **Optional.** The skill works fully without it. When it is absent, say so in the same line that announces the mechanism, and proceed.
 
-Identity is the **event name**. Same identity in both homes → team wins. Identity only in local → local stands until promoted. Missing team file → treat as empty team; local entries still apply.
+Identity is the **(event name, lib)** pair — one row per lib that uses a name, so a name three libs send has three rows. Same identity in both homes → team wins. Identity only in local → local stands until promoted. Missing team file → treat as empty team; local entries still apply.
 
-Consult it before writing a name, for two things no other source answers:
+**A name's current state is the union of its rows.** Look a name up by the name alone: its parameters are every `params` value across its rows, its libs every `lib`. Append a row when a name is first added, when another lib starts sending it, and when a lib extends what it sends — never rewrite or delete one, which is the whole point of append-only. **Several rows for one name are normal, not a duplicate.**
+
+Consult it before writing a name, for three things no other source answers:
 
 - **A near-duplicate.** An existing `select_content` makes a new `content_selected` a metric split in two.
-- **The budget.** 500 names is a property-wide ceiling; the registry is the only local view of how much of it is spent.
+- **The vocabulary in use.** The only local view of what this repo already sends, which is what keeps naming consistent across libs.
+- **The count, when the chosen mechanism _can_ reach a native data stream** — its frontmatter says so as `reachesAppStream`. Do not work it out from which apps consume the lib, which is not knowable here and is several apps at once for a shared one. **Count only the rows whose `mechanism` declares `reachesAppStream: yes`** — a name written through a web-only mechanism never touches an app stream, and including it inflates the very number the cap is judged against. Report it in the same line that announces the mechanism. If it is at or past that stream's event-name cap, **say so and name the consolidation candidates** — then carry on if the events are still wanted. **Do not refuse on this signal.** The count is repo-wide while the cap is per property and per device, so a repo of 900 names may be nowhere near any real limit; only someone who knows which apps report to which property can judge that. Blocking instrumentation the product needs, on a proxy that cannot see the actual counter, is the worse error.
+
+**Read that count as a floor, not a measurement.** Even filtered, the registry holds only what this skill recorded, so the real vocabulary reaching that stream is at least that large and may be larger. No device's own counter is visible from here at all — that is observed in the vendor's console. Never report the registry count as how full a cap is.
+
+**A long file is not a problem; a wide vocabulary is.** In a monorepo this grows a row per lib per name, so it gets long — and that is the healthy direction: many rows sharing **one** name is reuse working exactly as intended. The number to watch is **distinct names**, not rows. Do not prune old rows, compact the file, or split it to keep it small: every one of those destroys the repo-wide view that is the registry's only job, and none of them reduces the thing that actually costs anything.
+
+**One registry for the repo, including a monorepo of several apps.** Naming consistency has to hold repo-wide, because a shared lib's event reaches every app that consumes it and the same name must mean the same thing in all of them. So do not split the file per app, and **do not ask which app an event belongs to** — `lib` already answers it: a shared lib serves all its consumers, and an app-specific lib carries its app in its project name wherever the repo names them that way. Where apps report to different analytics properties, the count — even filtered by mechanism — still spans all of them, so it over-estimates any single property's usage; that errs toward caution, which is the direction to err.
 
 One JSON object per line. `version` sits on each entry, so a format change is visible per row rather than invalidating the file:
 
 ```json
-{ "version": 1, "event": "select_content", "params": ["content_type", "item_id"], "lib": "shared-feature-ng-x-users", "source": "PRD AC-03" }
+{ "version": 1, "event": "select_content", "params": ["content_type", "item_id"], "lib": "shared-feature-ng-x-users", "mechanism": "ng-tracking-v1", "source": "PRD AC-03" }
+{ "version": 1, "event": "select_content", "params": ["content_type", "item_id"], "lib": "shared-feature-ng-advisory-card", "mechanism": "ng-tracking-v1", "source": "confirmed in-session" }
 ```
+
+Two rows, one name: a second lib adopted `select_content` and — correctly — sends the **same field names** with different values. So one pair of custom-dimension registrations serves both libs and a report can group across them, where four differently-named fields would have cost four registrations to say the same two things twice.
+
+`mechanism` records which one wrote the row, so a later run can count only the names that can reach the stream it cares about. One name can appear under two mechanisms if two libs send it differently; the union rule already covers that, and the cap count simply filters.
 
 `source` records what authorized the event — the event-source ladder's rule 1, 2 or 3. An entry whose `source` is a confirmation rather than a document says so, which is what lets a later reviewer tell a planned event from an improvised one.
 

@@ -8,7 +8,7 @@ inapplicable: ask
 
 ## Companion
 
-Look at the target. `.ts` → `{stem}.log-diag.ts` and an **injectable class**. Same folder as the target. Mechanism calls (`logDebug`, the private `log` hop, markers) live only in class methods. The named file injects the class and calls one-liner methods. Method name = event key; method argument = attributes object.
+Look at the target. **`{stem}` is its filename with only the final extension removed — every other segment kept**: `x-users.component.ts` → `x-users.component`, never `x-users`. So `.ts` → `{stem}.log-diag.ts` and an **injectable class**. Same folder as the target. Mechanism calls (`logDebug`, the private `log` hop, markers) live only in class methods. The named file injects the class and calls one-liner methods. Method name = event key; method argument = attributes object.
 
 ## Import and injection
 
@@ -52,7 +52,7 @@ Console echo is a session toggle on the service (`consoleLoggingEnabled`) and us
 
 ## Investigation marker
 
-`// log-diag:investigation` on the companion method. Removal is a pass over that string in the companion, then the matching one-liners in the named file. If the companion has no methods left, delete it and the named file's inject/import.
+`// log-diag:investigation` on the companion method — on **every** method added for the investigation, whatever level it logs at, so the removal pass finds all of them. Removal is a pass over that string in the companion, then the matching one-liners in the named file. If the companion has no methods left, delete it and the named file's inject/import.
 
 ## Where the data goes
 

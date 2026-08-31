@@ -64,7 +64,7 @@ Skill-wide keys live at the top level; each mechanism's own keys live under `mec
 
 | Key          | Where                        | Announced default (file or key absent)                                            |
 | ------------ | ---------------------------- | --------------------------------------------------------------------------------- |
-| `version`    | top-level integer            | current shape is `1` — compare against the example below, not the skill's `1.9.0` |
+| `version`    | top-level integer            | current shape is `1` — compare against the example below, not the skill's `1.10.0` |
 | `mechanism`  | top-level string             | derived by the algorithm — set it **only** to override the `priority` order among mechanisms that _can_ apply, which is why the example below omits it |
 | `mechanisms` | map of per-mechanism objects | `{}` — each reference's own announced defaults apply                              |
 

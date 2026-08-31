@@ -2,11 +2,12 @@
 applicability: any TS/JS context with the `firebase` package installed and an initialized Firebase app the target can reach
 priority: 100
 companion: yes
+reachesAppStream: no
 ---
 
 ## Companion
 
-Look at the target. `.ts` → `{stem}.log-analytics.ts` and a **class**. `.js` → `{stem}.log-analytics.js` and a **class**. Same folder as the target. SDK calls, the analytics handle and the context parameters live only in class methods. The named file constructs the class and calls one-liner methods.
+Look at the target. **`{stem}` is its filename with only the final extension removed — every other segment kept**: `x-users.component.ts` → `x-users.component`, never `x-users`. So `.ts` → `{stem}.log-analytics.ts` and a **class**; `.js` → `{stem}.log-analytics.js` and a **class**. Same folder as the target. SDK calls, the analytics handle and the context parameters live only in class methods. The named file constructs the class and calls one-liner methods.
 
 **Method name is the developer's word; the event name is the vendor's.** They are deliberately different, and the companion is the only place both appear together.
 
@@ -29,7 +30,7 @@ The companion imports from `firebase/analytics` — the modular entry point, not
 
 ## Consent cannot be retrofitted here — read this before wiring anything
 
-Obtaining the analytics handle **is** the start of collection. Initialization injects the vendor's tag script and sends an automatic page view immediately; the SDK's own collection-disable call awaits that same initialization promise, so it **cannot retroactively prevent** what already went out.
+Obtaining the analytics handle **is** the start of collection. Initialization injects the vendor's tag script and sends an automatic `page_view` immediately; the SDK's own collection-disable call awaits that same initialization promise, so it **cannot retroactively prevent** what already went out.
 
 The consequence is a real constraint, not a caution: "initialize it, then disable until consent" does not work. Consent must gate the *acquisition of the handle*. If the target's app obtains the handle at startup regardless of consent, say so plainly in the report — the events this edit adds are not the problem, but the surrounding wiring has a consent defect this edit does not fix.
 
@@ -62,11 +63,13 @@ Read `route` inside `log`, not at construction, so the value is the route at the
 
 ## Screen views
 
-Initialization emits one automatic page view. **Single-page route changes do not emit further ones** — this mechanism has no automatic screen tracking, unlike the facade. Adding route-change tracking is app wiring and is out of scope for this edit; if the target's product needs per-route screen views, report that gap rather than hand-logging screen views at call sites, which is forbidden by `SKILL.md` → _Where not to log_ for the usual double-counting reason.
+Initialization emits one automatic `page_view`. **Single-page route changes do not emit further ones** — this mechanism has no automatic screen tracking, unlike the facade. Adding route-change tracking is app wiring and is out of scope for this edit; if the target's product needs per-route screen views, report that gap rather than hand-logging screen views at call sites, which is forbidden by `SKILL.md` → _Where not to log_ for the usual double-counting reason.
 
 ## Where the data goes
 
 The Firebase/GA4 property for the initialized app, and nowhere else. No feedback-tool fan-out, and no native SDK: inside a native shell this still runs in the webview and behaves as the web SDK, so native-only automatic events are absent.
+
+**This mechanism cannot reach a native data stream**, even in a native shell — so the app-stream event-name cap never applies to what it writes, and there is no name budget to report. It is the web SDK wherever it runs.
 
 ## Contexts this mechanism cannot serve
 
@@ -74,14 +77,14 @@ A file that is not TypeScript or JavaScript. A project without the `firebase` pa
 
 ## Worked before/after
 
-Invented target: `checkout-summary.ts`, a plain class in a project with `firebase` installed and an app exported from a local module. Companion: `checkout-summary.log-analytics.ts`. Context: `class` and `route` on, `lib_name` off. Event source: a tracking plan naming "user completed checkout".
+Invented target: `article-actions.ts`, a plain class in a project with `firebase` installed and an app exported from a local module. Companion: `article-actions.log-analytics.ts`. Context: `class` and `route` on, `lib_name` off. Event source: a tracking plan naming "user shared an article".
 
 **Named file, before**
 
 ```ts
-export class CheckoutSummary {
-  confirm(order: Order): void {
-    this._orders.submit(order);
+export class ArticleActions {
+  share(article: Article, via: string): void {
+    this._sharing.open(article, via);
   }
 }
 ```
@@ -89,32 +92,32 @@ export class CheckoutSummary {
 **Named file, after** — construct plus one-liners only; no SDK import, no parameter map.
 
 ```ts
-import { CheckoutSummaryLogAnalytics } from './checkout-summary.log-analytics';
+import { ArticleActionsLogAnalytics } from './article-actions.log-analytics';
 
-export class CheckoutSummary {
-  private readonly _ana = new CheckoutSummaryLogAnalytics('CheckoutSummary');
+export class ArticleActions {
+  private readonly _ana = new ArticleActionsLogAnalytics('ArticleActions');
 
-  confirm(order: Order): void {
-    this._ana.confirmedOrder({ value: order.total, currency: order.currency, items_count: order.lines.length });
-    this._orders.submit(order);
+  share(article: Article, via: string): void {
+    this._ana.sharedArticle({ method: via, item_id: article.id });
+    this._sharing.open(article, via);
   }
 }
 ```
 
-**Companion, after** — the tracking plan for this file. `purchase` is the vendor's recommended name and is type-checked by the SDK.
+**Companion, after** — the tracking plan for this file. `share` is the vendor's recommended name, and **all three parameters are the ones it prescribes** (`method`, `content_type`, `item_id`) rather than invented ones — which is what makes the SDK type-check them and the built-in reports populate.
 
 ```ts
 import { getAnalytics, logEvent, type Analytics } from 'firebase/analytics';
 import { firebaseApp } from './firebase-app';
 
-export class CheckoutSummaryLogAnalytics {
+export class ArticleActionsLogAnalytics {
   private readonly _analytics: Analytics = getAnalytics(firebaseApp);
 
   constructor(private readonly _class: string) {}
 
-  /** `purchase` — the end-user confirmed the order. */
-  confirmedOrder(attrs: { value: number; currency: string; items_count: number }): void {
-    this.log('purchase', attrs);
+  /** `share` — the end-user shared an article. */
+  sharedArticle(attrs: { method: string; item_id: string }): void {
+    this.log('share', { content_type: 'article', ...attrs });
   }
 
   private log(name: string, params: Record<string, unknown>): void {
@@ -133,6 +136,8 @@ export class CheckoutSummaryLogAnalytics {
 ```
 
 Note what is **not** here: no lib prefix on the event name, no sentinel for an absent value, and no hand-logged screen view.
+
+**One thing the example does not solve:** the handle is acquired in a field initializer, so constructing `ArticleActions` starts collection — see _Consent cannot be retrofitted here_. Where consent gates analytics, the app must not construct this path before consent is given, and that is app wiring rather than something a call site can fix.
 
 ## Already done?
 

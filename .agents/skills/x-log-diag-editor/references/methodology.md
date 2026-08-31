@@ -1,6 +1,6 @@
 # Logging methodology — the reasoning behind the rules
 
-**Explains:** `x-log-diag-editor` v1.9.0
+**Explains:** `x-log-diag-editor` v1.10.0
 **Load this when:** someone questions a rule, wants to change one, or is adding a new one.
 
 This file changes no decision. It exists so the rules are not relitigated from scratch, and so a

@@ -7,7 +7,7 @@ companion: yes
 
 ## Companion
 
-Look at the target. `.ts` → `{stem}.log-diag.ts` and a **class**. `.js` → `{stem}.log-diag.js` and a **class**. Same folder as the target. Mechanism calls (`console.*`, guards, markers) live only in class methods. The named file constructs the class and calls one-liner methods. Method name = event key; method argument = attributes object.
+Look at the target. **`{stem}` is its filename with only the final extension removed — every other segment kept**: `x-users.component.ts` → `x-users.component`, never `x-users`. So `.ts` → `{stem}.log-diag.ts` and a **class**; `.js` → `{stem}.log-diag.js` and a **class**. Same folder as the target. Mechanism calls (`console.*`, guards, markers) live only in class methods. The named file constructs the class and calls one-liner methods. Method name = event key; method argument = attributes object.
 
 ## Import and injection
 
@@ -69,7 +69,7 @@ A runtime check leaves the strings in the built output; removing them entirely i
 
 ## Investigation marker
 
-`// log-diag:investigation` on the companion method. Removal is a pass over that string in the companion, then the matching one-liners in the named file. If the companion has no methods left, delete it and the named file's construct/import.
+`// log-diag:investigation` on the companion method — on **every** method added for the investigation, whatever level it logs at, so the removal pass finds all of them. Removal is a pass over that string in the companion, then the matching one-liners in the named file. If the companion has no methods left, delete it and the named file's construct/import.
 
 ## Where the data goes
 

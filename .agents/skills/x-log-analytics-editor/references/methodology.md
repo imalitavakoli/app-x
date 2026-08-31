@@ -1,6 +1,6 @@
 # Analytics methodology — the reasoning behind the rules
 
-**Explains:** `x-log-analytics-editor` v1.0.0
+**Explains:** `x-log-analytics-editor` v1.1.0
 **Load this when:** someone questions a rule, wants to change one, or is adding a new one.
 
 This file changes no decision. It exists so the rules are not relitigated from scratch, and so a
@@ -10,19 +10,27 @@ lives in the chosen mechanism reference.
 ## Why permanence is the organising idea
 
 Every distinctive rule here descends from one asymmetry with diagnostic logging: a log is written to
-be deleted, and an event cannot be. A property holds a fixed ceiling of distinct event names, they
-are not released when you stop sending one, history cannot be rewritten, and individual events
-cannot be deleted after the fact.
+be deleted, and an event cannot be. History cannot be rewritten, individual events cannot be deleted
+after the fact, and a name cannot be corrected retroactively — renaming splits one metric into a
+before and an after rather than fixing anything.
 
 So the cost of a diagnostic log is noise a developer can prune, while the cost of an event is a
-permanent entry in a shared, budgeted, externally-governed namespace. Rules that would be pedantic
-for logs — confirm the name before writing it, never mint a name that carries a variable, refuse a
-throwaway — are proportionate here for that reason alone.
+permanent entry in a shared, externally-governed dataset that outlives the code that wrote it. Rules
+that would be pedantic for logs — confirm the name before writing it, never mint a name that carries
+a variable, refuse a throwaway — are proportionate here for that reason alone.
 
-## Why there is no investigation mode
+**Be careful which scarcity you invoke.** The genuinely fixed budget is **custom dimensions**: 50
+event-scoped per property, registered by hand, never retroactive. Distinct **event names** are a
+weaker constraint than they first appear — capped at 500 per app *user* on a native data stream,
+uncapped on a web one — so an argument resting on "we will run out of names" is wrong on web and
+overstated elsewhere. The durable arguments are permanence and reporting integrity; reach for the
+name cap only where a native stream actually applies.
 
-The sibling discipline for diagnostic logs has two modes, one of them temporary and marked for
-complete removal. Analytics has one mode, and a request for a temporary event is refused.
+## Why temporary events are refused
+
+The sibling discipline for diagnostic logs offers a temporary kind of record, marked so it can be
+removed completely when the investigation ends. Analytics offers no equivalent, and a request for
+a temporary event is refused outright.
 
 A marker can remove a call site. It cannot remove the rows already sent, free the name, or repair
 the reports. So the removal pass that makes a temporary diagnostic log safe has no analogue: the
@@ -30,16 +38,18 @@ thing that would need removing is not in the repository.
 
 Baseline testing is what settled this. Given an urgent request for throwaway instrumentation, an
 agent with no guidance added nine temporary events, wrapped them in `// TEMP INSTRUMENTATION`
-markers, and cited the name ceiling in the same response — while spending nine names against it. It
-had the constraint and did not connect it to the request. That is why the rule is a prohibition with
-its reason attached, rather than a note about permanence that a deadline can outweigh.
+markers, and cited the name ceiling in the same response without once connecting it to the nine
+names it was minting. It had a constraint in hand and did not apply it. That is why the rule is a
+prohibition with its reason attached, rather than a note about permanence that a deadline can
+outweigh.
 
 ## Why the name carries no variable
 
-Encoding the lib, component or item in the event name mints one permanent name per value. Two costs
-follow, and the second is the one people miss: the budget drains in proportion to the codebase, and
-the action becomes uncountable — "how many cards were opened" requires pattern-matching over event
-names rather than grouping by a dimension.
+Encoding the lib, component or item in the event name mints one name per value. The cost people
+reach for first is exhausting a quota, and on web there is no quota to exhaust — so that is the
+weaker half of the argument. The half that always holds: the action becomes **uncountable**. "How
+many cards were opened" turns into pattern-matching across event names instead of grouping by a
+dimension, and no report does that for you.
 
 The workspace's previous convention did exactly this, and it is why the corrected rule puts the lib
 in a parameter. The vendor's own guidance says the same, and its SDK reinforces it by type-checking
@@ -48,8 +58,9 @@ the parameters of recommended names and nothing else.
 ## Why recommended events are preferred over accurate custom ones
 
 A custom name is often the more precise description. It is still usually the wrong choice, because
-a recommended name populates standard reports with no further work while a custom one appears only
-in explorations somebody has to build and maintain. Precision that nobody can see loses to a
+a recommended name sent with its prescribed parameters populates built-in reports with no further
+work, while a custom one is counted in the events list and nothing more — every breakdown of it has
+to be built by hand from dimensions somebody registered. Precision that nobody can see loses to a
 slightly looser name that lands in a report the team already reads.
 
 ## Why placement is a convention and not a lint rule
@@ -84,6 +95,11 @@ Three unguided runs of the same task produced three different answers for parame
 different boolean encodings, and two different treatments of an absent value. None was unreasonable
 in isolation. The variance is the defect: consistency is the only property that makes an event
 worth anything, and it is the one property no individual call site can achieve on its own.
+
+The boolean case turned out to be more than consistency, and is worth recording because it was got
+wrong twice here. Only **string and number** are supported parameter types; a real boolean is
+coerced. So `1`/`0` is not one arbitrary convention chosen over another — the alternative is simply
+unsupported, and one of those three unguided runs had it right before the rule did.
 
 Absent values get a rule of their own because a sentinel — `-1`, `'unknown'` — is a value the
 dashboard cannot distinguish from data, whereas an omitted parameter is already unambiguous.
@@ -142,6 +158,12 @@ platform's own documentation: [logging events](https://firebase.google.com/docs/
 [about events](https://support.google.com/firebase/answer/6317522),
 [automatically collected events](https://support.google.com/firebase/answer/7061705), and the
 [GA4 events reference](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference/events).
+
+**Every numeric limit quoted in this skill comes from
+[event collection limits](https://support.google.com/analytics/answer/9267744)** — read it before
+citing one. Second-hand summaries of these numbers are routinely wrong in the direction of "stricter
+than reality", and a rule justified by a limit that does not apply is a rule a reader can dismiss
+once they check.
 
 Naming and taxonomy practice, including why a variable in an event name rots a dataset:
 [event naming considerations](https://www.bounteous.com/insights/2021/01/28/event-naming-considerations-google-analytics-4-properties/),
