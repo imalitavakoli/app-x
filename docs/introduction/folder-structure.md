@@ -18,6 +18,7 @@ x/
 ├── _OBS/                                           // Unused/legacy personal files. 🚫 AI agents MUST ignore this dir entirely (even SKILL.md/AGENTS.md inside it).
 │   └── {developer-name}/                           // Holds the individuals or teams' OBS files.
 ├── .agents/                                        // Holds AI Agents related files (holds e.g., Skills, Hooks).
+│   ├── _team/                                      // Committed state (prefs, registries), mirroring this dir: `_team/{kind}/{name}/`, e.g. `_team/skills/x-…/`. Gitignored counterpart: `_local/`.
 │   ├── hooks/                                      // Holds our hook scripts — canonical for every agent; each agent's own settings file registers them.
 │   └── skills/                                     // Holds our skills — canonical; some agents need a pointer stub in their own dir.
 ├── .claude/                                        // Holds Claude Code's own files (its settings, and the skill pointer stubs it needs).

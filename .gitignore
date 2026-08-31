@@ -23,7 +23,7 @@ node_modules
 .claude/settings.local.json
 .claude/worktrees
 AGENTS.local.md
-/.agents/local/
+/.agents/_local/
 /.superpowers/
 
 # IDE - VSCode

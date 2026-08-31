@@ -3,7 +3,7 @@ name: x-log-diag-editor
 description: 'WHAT? The rule for which call sites deserve a diagnostic log, and the edit that adds, prunes or downgrades them in named files. WHEN? Asked to add, audit, prune or level-correct logging in components, services, utils or plain TS/JS; deciding whether a call site deserves a log, which severity it takes, or which logging mechanism to use. Not for diagnosing a defect, and not for analytics or product-event logging.'
 metadata:
   kind: editor
-  version: '1.8.0'
+  version: '1.9.0'
 ---
 
 # Log Diag Editor
@@ -197,7 +197,7 @@ Copy these into todos so they stay grouped. Load `references/methodology.md` on 
 | A test written because a pure function was uncovered                              | Report it and hand it back. This skill does not write tests.                                         |
 | A mechanism chosen by asking when the file already settled it                     | Derive, apply, announce in one line. Ask only on the stop conditions in the index.                   |
 | Silent leftover when an `inapplicable: ask` mechanism cannot apply                | Stop. The index recommends skip (no new logs). Do not add a lib to make that mechanism apply.        |
-| This skill's prefs written to `.agents/local/`                                    | Write `.agents/team/x-log-diag-editor/` after an explicit yes. These keys change the artifact.       |
+| This skill's prefs written to `.agents/_local/`                                    | Write `.agents/_team/skills/x-log-diag-editor/` after an explicit yes. These keys change the artifact.       |
 | A non-default pref used without saying which file supplied it                     | Name the layer (`team`, `local`, or this run) in the same line as the mechanism pick.                |
 | An existing log at a site step 1 now rejects, deleted while adding logs elsewhere | Report that existing log; whether to remove it is the user's call.                                   |
 | Mechanism written into the named file when the reference can isolate              | Follow the companion. The named file holds construct + one-liners only.                              |

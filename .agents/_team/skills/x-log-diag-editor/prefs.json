@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "mechanisms": {
+    "ng-shake-debugger-v1": {},
+    "js-console": {
+      "guard": "dev-mode",
+      "sourcePrefix": "@",
+      "eventSuffix": ":"
+    }
+  }
+}

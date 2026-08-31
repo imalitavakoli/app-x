@@ -3,7 +3,7 @@ name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, where its templates and examples live, or where its team/local state (prefs, registries) lives."
 metadata:
   kind: helper
-  version: '2.3.1'
+  version: '2.4.0'
 ---
 
 # Skill Build Helper
@@ -291,6 +291,12 @@ The line is not "no explanation" — some rules are only obeyed when the reader 
 
 The same applies to a skill's own past shape. "This section used to cover X" tells a reader nothing they can act on, and invites them to look for X.
 
+**And the mirror image: do not scope a rule to what happens to exist right now.** History dates a skill backwards; an inventory dates it forwards, and that failure is quieter because the text is true when written. "Only `skills/` exists today", "we have hooks and skills, so…", "a hook gets this for free" — each states a general rule in terms of a snapshot, so a reader meeting a third case cannot tell whether the rule covers it or simply had not met it yet. The rule stops being one rule.
+
+**The test: if the inventory changed tomorrow, would the sentence be _wrong_, or merely _incomplete_?** Wrong means the scope was the snapshot — rewrite it over the general case. Incomplete is fine; an example was never the boundary.
+
+So: state the rule for any `{kind}`, any `{type}`, any member of the set, and let the current members be examples. **Naming a current instance is not the problem — presenting it as the extent is.** A skill that deliberately names one instance as a *marker* for something durable is doing something different and legitimate, provided it says that is what the name is.
+
 Where history genuinely matters it already has homes: a `docs/` page for a subsystem's reasoning, an ID registry's `DECISIONS.md` for a burned entry, and the repository's own history for the rest. **A skill points; it does not narrate.**
 
 ## A skill's own content
@@ -331,14 +337,18 @@ State is optional memory. The skill must work with both homes empty; a registry 
 
 Two homes, same inner shape. The grain is **per item**, not per file: a preference key, a registry entry, or a verbatim sibling.
 
+**The two homes mirror `.agents/` itself.** State belonging to anything at `.agents/{kind}/{name}/` lives at `.agents/_team/{kind}/{name}/`, or `.agents/_local/{kind}/{name}/` for the ignored half. The mirror holds for every kind `.agents/` contains, whatever those are in a given repo — a skill's store sits under `skills/` because that is where the skill itself sits, not because skills are a special case. Whatever kind is added next needs no new convention, and the path is derivable without reading this section.
+
 ```
-.agents/team/{skill-name}/prefs.json       # committed — the team's lock
-.agents/team/{skill-name}/{other}          # committed siblings (registries, verbatim fragments, …)
-.agents/local/{skill-name}/prefs.json      # gitignored — one checkout
-.agents/local/{skill-name}/{other}         # gitignored siblings
+.agents/_team/skills/{skill-name}/prefs.json       # committed — the team's lock
+.agents/_team/skills/{skill-name}/{other}          # committed siblings (registries, verbatim fragments, …)
+.agents/_local/skills/{skill-name}/prefs.json      # gitignored — one checkout
+.agents/_local/skills/{skill-name}/{other}         # gitignored siblings
 ```
 
-Same relative path under both homes is the same store (`answered-questions.jsonl` next to `prefs.json`, in each home). One ignore rule, on the local parent only: `/.agents/local/`. Written once; adding a skill never changes it. **Do not ignore `.agents/team/`.** That path is how every clone sees the same lock, and how a change to it is reviewed.
+Create a kind's folder when something first writes to it, never in advance. And keep every store under a `{kind}/{name}/` pair: a slot at the `_team/` root, belonging to no kind, is what turns the mirror from one rule into two.
+
+Same relative path under both homes is the same store (`answered-questions.jsonl` next to `prefs.json`, in each home). One ignore rule, on the local parent only: `/.agents/_local/`. Written once; adding a skill never changes it. **Do not ignore `.agents/_team/`.** That path is how every clone sees the same lock, and how a change to it is reviewed.
 
 **Every state file carries a `version` integer** so a later format change is recognised rather than misread — not only `prefs.json`. That file puts it at the top level. A registry or any other sibling puts it where that skill documents (a header line, a field on each entry, …). Check each file on its own: a version mismatch (older, missing, or newer than the shape the skill documents) means treat **that file** as absent for this run — announced defaults for its items, and offer to rewrite it to match. No per-user path segment — local isolation is the gitignore; team isolation is the folder-per-skill split below.
 
@@ -372,12 +382,12 @@ Reading team-over-local does not stop drift if "remember this?" still writes loc
 
 | The item…                                                                 | Write                              |
 | ------------------------------------------------------------------------- | ---------------------------------- |
-| changes how everyone should act, or would help the next clone / agent     | `.agents/team/{skill-name}/`       |
-| only skips a question for this user; the artifact is the same either way  | `.agents/local/{skill-name}/`      |
+| changes how everyone should act, or would help the next clone / agent     | `.agents/_team/skills/{skill-name}/`       |
+| only skips a question for this user; the artifact is the same either way  | `.agents/_local/skills/{skill-name}/`      |
 
 Never write a team item to local. If the team store already has that item, do not offer at all unless they explicitly ask to change the team record. Create the file and its parent when writing; a team write is a git change — say so. A local write is personal state that should not be committed.
 
-**New item, not in team yet.** After they have seen this run use it: if it would help the team, **offer to add it under `.agents/team/`** (create the registry file if it does not exist) rather than leaving it only in local. Explicit yes, once. Decline → keep the write-target table (local for skip-only; do not silently copy). The same offer applies the first time a team registry file would be created.
+**New item, not in team yet.** After they have seen this run use it: if it would help the team, **offer to add it under `.agents/_team/`** (create the registry file if it does not exist) rather than leaving it only in local. Explicit yes, once. Decline → keep the write-target table (local for skip-only; do not silently copy). The same offer applies the first time a team registry file would be created.
 
 The skill names which of **its** items are team vs local. Unnamed items: apply the table (helps the next clone → team).
 
@@ -404,7 +414,9 @@ It is prose loaded at session start, so every skill's state would enter every se
 
 ### Why a folder per skill, not a shared file
 
-Execution runs several agents at once. A single shared file means two skills writing in the same window clobber each other. A skill only ever writes its own folder — under `team/` or `local/` as the write target says.
+Execution runs several agents at once. A single shared file means two skills writing in the same window clobber each other. A skill only ever writes its own folder — under `_team/` or `_local/` as the write target says.
+
+The isolation is really **per owner**, not per skill, which is why the mirror above extends to any kind: whatever owns the state writes only its own `{kind}/{name}/` folder and never a sibling's.
 
 ### The six rules
 
@@ -414,7 +426,7 @@ Each names the failure it prevents:
 2. **A stored value is a default, not a law.** This run's explicit instruction wins, and the skill says which it used.
 3. **Declarative, not procedural.** Free text is stored and replayed verbatim, never re-interpreted.
 4. **Offer, don't assume.** Write only after an explicit yes, once, and only after the user has seen the result it would make default. Write to the home the write-target table names. A new item that is not in team yet, and would help the team, is offered to team — not written to local by default and forgotten.
-5. **Ignore local only; never ignore team.** Must work in a repo with no such convention, including creating the file and its parent. If `.agents/local/` is not ignored, add `/.agents/local/` and tell the user it is personal state that should not be committed. If `.agents/team/` is ignored, remove that ignore — a locked team value nobody else can see is local wearing a different path.
+5. **Ignore local only; never ignore team.** Must work in a repo with no such convention, including creating the file and its parent. If `.agents/_local/` is not ignored, add `/.agents/_local/` and tell the user it is personal state that should not be committed. If `.agents/_team/` is ignored, remove that ignore — a locked team value nobody else can see is local wearing a different path.
 6. **Never secrets.** Git-ignored is not encrypted; committed is not encrypted either.
 
 ## Human-only references, and how they do not rot
@@ -493,6 +505,7 @@ Write every skill so it stands on its own and triggers from its own `description
 | A boundary case counted as a second verb                 | Create-then-update is one deliverable. Only a genuinely separate deliverable adds a kind — or a skill.                                  |
 | Split into several skills to keep each one "pure"        | Three reasons justify a split: an independent lifecycle, an auditable judgement, two deliverables with no wrong guard. Otherwise, sections. |
 | Citing something that has been retired or renamed        | A reader cannot tell it from a live one and will act on it. Name only what currently exists.                                            |
+| A rule scoped to what the repo happens to contain now    | State it over the general case (any `{kind}`, any member of the set). Name a current instance as an example, never as the boundary.     |
 | A scriptable edit left as prose                          | Ship the transform. The kind is unchanged either way, so there is nothing to gain by leaving a deterministic edit to drift.              |
 | Reviewer minted for a skill validating its own rules      | That is a helper with a proof in `scripts/`. `reviewer` is for judging input the **caller** supplies.                                    |
 | A reviewer that fixes what it finds                      | Two skills, two runs. Findings stop being auditable once the same run makes them true.                                                  |
@@ -511,9 +524,9 @@ Write every skill so it stands on its own and triggers from its own `description
 | Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                                                     |
 | Relocating content so an agent can reach it              | Leave it where it is and give the path.                                                                                                  |
 | Skill-relative path handed to an execution agent         | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.                                      |
-| A team key written to `.agents/local/`                   | Artifact-shaping keys go under `.agents/team/{skill-name}/`. Local is skip-memory only.                                                  |
-| `.agents/team/` added to gitignore                       | Remove it. A lock nobody else can clone is local at a different path.                                                                    |
-| A team registry dumped into `.agents/local/`             | If the next clone should know it, offer team (create the file if needed). Explicit yes.                                                 |
+| A team key written to `.agents/_local/`                   | Artifact-shaping keys go under `.agents/_team/skills/{skill-name}/`. Local is skip-memory only.                                                  |
+| `.agents/_team/` added to gitignore                       | Remove it. A lock nobody else can clone is local at a different path.                                                                    |
+| A team registry dumped into `.agents/_local/`             | If the next clone should know it, offer team (create the file if needed). Explicit yes.                                                 |
 | Overlaying a whole `.jsonl` as one file                  | Overlay per entry identity the skill declares. Team wins on a clash; local-only ids stay until promoted.                                |
 | Treating the team file as all-or-nothing                 | Overlay is per item. An item the team store omits can still come from local.                                                            |
 | Local winning over team on the same item                 | Team wins per item, even when the team value equals the announced default.                                                              |

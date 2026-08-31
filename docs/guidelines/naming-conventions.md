@@ -76,7 +76,7 @@ We recommend some naming conventions for different types of interfaces/component
 &nbsp;
 
 - **E2E testing selectors (`data-cy` or `data-testid` attributes)**: Use `{lib-name}-v{x}_{short-component-name}_{selector-name}` schema. For example, `profile-image-v1_profile-image_loading`.
-- **Analytics logs**: Should follow 'GA4' naming rules.
+- **Analytics logs**: Should follow 'GA4' naming rules — a GA4 recommended event name where one fits (`login`, `select_content`, `purchase`, …), otherwise a custom `snake_case` name. Event parameters are `snake_case`.
 
 &nbsp;
 

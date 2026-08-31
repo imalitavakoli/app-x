@@ -144,11 +144,15 @@ export class V1TrackingService {
    *
    * NOTE: It will be called from the 'feature' libs most of the times.
    *
-   * NOTE: Event name should follow 'GA4' naming rules. schema is: `verb_name`.
-   * e.g., `init`, `clicked_readMore`.
+   * NOTE: Event name should follow 'GA4' naming rules. A GA4 recommended event
+   * name where one fits (`login`, `select_content`, `purchase`, ...), otherwise
+   * a custom `snake_case` name. Event parameters are `snake_case`.
+   *
+   * NOTE: This fans out to every initialized sink, so one call is one analytics
+   * event and one Apptentive engagement event.
    *
    * @example
-   * this._trackingService.logEvent('handled_loadedAdvice', { com: 'V1Name1FeaComponent' });
+   * this._trackingService.logEvent('select_content', { content_type: 'advisory_card', advice_id: 'a-42' });
    *
    * @param {string} name
    * @param {*} [data=undefined]

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "contextClass": true,
+  "contextRoute": true,
+  "contextLibName": false,
+  "mechanisms": {
+    "ng-tracking-v1": {},
+    "js-firebase-analytics": {}
+  }
+}

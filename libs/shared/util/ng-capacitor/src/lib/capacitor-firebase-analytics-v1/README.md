@@ -22,12 +22,10 @@ this._capacitorFirebaseAnalyticsService.autoScreenTracking();
 //
 // NOTE: 'feature' libs initialize this service and send events.
 //
-// NOTE: Event name should follow 'GA4' naming rules. schema is: `libName_eventName`.
-// e.g., `advisoryCard_init`, `advisoryCard_clickedAdvice`.
-//
-// TIP: For page (screen) navigaion events, schema is: `navTo_pageName`.
-// e.g., `navTo_dashboard`.
-this._capacitorFirebaseAnalyticsService.logEvent('libName_init', {data: 'something'});
+// NOTE: Event name should follow 'GA4' naming rules. A GA4 recommended event
+// name where one fits (`login`, `select_content`, `purchase`, ...), otherwise a
+// custom `snake_case` name. Event parameters are `snake_case`.
+this._capacitorFirebaseAnalyticsService.logEvent('select_content', { content_type: 'advisory_card' });
 
 // After that user logs in, set the user ID.
 //
