@@ -1,6 +1,6 @@
 Copy this file into `references/mechanisms/`, fill it, and add a row to `references/README.md`.
 
-`inapplicable: ask` — when this mechanism does not apply and a worse-priority (higher number) mechanism would win, the index stops and asks; recommended answer is skip (no new logs). Omit the field to let remaining mechanisms apply silently. The index owns the stop; this file only declares the field.
+`inapplicable: ask` — when this mechanism does not apply and a worse-priority (higher number) mechanism would win, the index stops and asks; recommended answer is skip (no new logs). Omit the field to let remaining mechanisms apply silently. The index owns the stop; this file only declares the field. Declare it for any mechanism whose absence would materially change what is recorded — a different sink, records that stop being retained or exportable, a lost level.
 
 ---
 
@@ -14,7 +14,7 @@ inapplicable: <omit this field | ask>
 
 ## Companion
 
-If `yes`: naming (beside the target, `.log-diag` before the extension), construct, how the named file initializes it, how one-liners map to operations. If `no`: the ceiling in one line, and that this reference writes records the way it can (inline).
+If `yes`: naming, construct, how the named file initializes it, how one-liners map to operations. **Define `{stem}` explicitly** — filename with only the final extension removed, every other segment kept, with the counter-example (`x-users.component.ts` → `x-users.component`, never `x-users`). A bare `{stem}` reads two ways and has been read the wrong one. If `no`: the ceiling in one line, and that this reference writes records the way it can (inline).
 
 ## Import and injection
 
@@ -38,7 +38,7 @@ Which levels run only in development, which also run in production, how (a guard
 
 ## Investigation marker
 
-The source-level mark (or equivalent) that makes removal one complete pass; required if `modes` lists `investigation`; with a companion, state that removal touches both files.
+The source-level mark (or equivalent) that makes removal one complete pass; required if `modes` lists `investigation`; with a companion, state that removal touches both files. Say that the mark goes on **every** record added for the investigation, whatever level it logs at — an `ERROR` left unmarked because it is not `DEBUG` survives the removal pass and becomes permanent by accident.
 
 ## Where the data goes
 
