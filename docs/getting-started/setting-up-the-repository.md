@@ -68,7 +68,7 @@ If you use Antigravity as your AI code assistant, then you should install it on 
 
 &nbsp;
 
-### NX AI Agents
+### NX AI Agents (Optional)
 
 You can automatically configure our NX monorepo to work best with AI agents and assistants. In order to do that, do the following. [Click here](https://nx.dev/docs/getting-started/ai-setup) to read more.
 
@@ -78,11 +78,17 @@ You can automatically configure our NX monorepo to work best with AI agents and 
 
 #### The Nx plugin
 
-Separately from the above, Claude Code gets an **Nx plugin**, which is also what provides the `nx-mcp` server that `AGENTS.md` treats as the first place to look for anything about this workspace. The repo enables it; you install it:
+Separately from the above, Claude Code gets an **Nx plugin**, which is also what provides the `nx-mcp` server that `AGENTS.md` treats as the first place to look for anything about this workspace. The repo enables it; you register its catalog and install it:
+
+```bash
+claude plugin marketplace add nrwl/nx-ai-agents-config
+```
 
 ```bash
 claude plugin install nx@nx-claude-plugins --scope user
 ```
+
+**Why two commands?** `nx configure-ai-agents` only writes the marketplace into this repo's `.claude/settings.json`, and a marketplace that only the repo's settings declare isn't registered on your machine — so the install can't resolve `@nx-claude-plugins` without the first command. Two ways to skip it: you've already installed the Nx plugin in another workspace (the catalog is then registered user-wide), or Claude Code offered to install this repo's plugins when you first trusted the folder and you accepted — that registers **both** marketplaces, this one and our own catalog below, so every `claude plugin marketplace add` in this document is already done.
 
 `--scope user` for the same reason as Superpowers below — a user-scoped install carries no path, so the Windows drive-letter casing can't strand it.
 
@@ -114,7 +120,7 @@ Then restart Claude Code, or run `/reload-plugins`.
 
 **Why `--scope user`?** A project-scoped install is recorded against the exact path string of your clone — and on Windows the CLI and the VS Code extension disagree on the drive-letter case (`C:\…` vs `c:\…`), so an install made by one can read as "enabled but not installed" in the other. A user-scoped install records no path at all, so it cannot mismatch. Enablement still comes from the repo, which is what pins the version for everyone.
 
-**Why two commands?** The first registers our catalog; the second installs the pinned commit from it. A marketplace that only the repo's settings declare isn't registered on its own, so the install fails without the first command. If Claude Code offers to install this repo's plugins when you first trust the folder, accepting does the same job and you can skip both.
+**Why two commands?** The first registers our catalog; the second installs the pinned commit from it. A marketplace that only the repo's settings declare isn't registered on its own, so the install fails without the first command — the same reason the Nx plugin above needs two, where the trust-prompt shortcut that covers both marketplaces is spelled out.
 
 **Note!** You do **not** need to uninstall your own copy of Superpowers. Project settings outrank user settings, so this repo switches your copy off **here only** — it keeps working normally in all your other projects.
 

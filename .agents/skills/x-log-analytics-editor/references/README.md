@@ -116,6 +116,14 @@ Identity is the **(event name, lib)** pair — one row per lib that uses a name,
 
 **A name's current state is the union of its rows.** Look a name up by the name alone: its parameters are every `params` value across its rows, its libs every `lib`. Append a row when a name is first added, when another lib starts sending it, and when a lib extends what it sends — never rewrite or delete one, which is the whole point of append-only. **Several rows for one name are normal, not a duplicate.**
 
+**Consult it by running the renderer**, which computes all three of the things below in one pass:
+
+```
+node .agents/skills/x-log-analytics-editor/scripts/render-registry.mjs
+```
+
+Read the raw rows instead only if that cannot run. Scanning an append-only file by eye is exactly the job its write order makes hardest, and the near-duplicate check below is not one a person or an agent reliably does unaided.
+
 Consult it before writing a name, for three things no other source answers:
 
 - **A near-duplicate.** An existing `select_content` makes a new `content_selected` a metric split in two.
@@ -124,7 +132,7 @@ Consult it before writing a name, for three things no other source answers:
 
 **Read that count as a floor, not a measurement.** Even filtered, the registry holds only what this skill recorded, so the real vocabulary reaching that stream is at least that large and may be larger. No device's own counter is visible from here at all — that is observed in the vendor's console. Never report the registry count as how full a cap is.
 
-**Reading it as a person: `scripts/render-registry.mjs`.** Append-only storage scatters a name's rows by write order, so the raw file is right for writing and awkward for reading. That script groups by event name, unions the parameters, counts the libs, and reports how many names can reach a native stream. It reads and never writes, so it cannot disturb the append-only guarantee. Rows it cannot parse are listed rather than skipped — a dropped row reads as "we do not send that", which is the one wrong answer the file can give.
+**What the renderer reports.** One row per distinct event name: the union of its parameters, its constant discriminators, how many libs send it, and its mechanisms — then the distinct-name count and how many of those can reach a native stream. It reads and never writes. Rows it cannot parse are listed rather than skipped, because a dropped row reads as "we do not send that", which is the one wrong answer this file can give. Why it exists rather than a friendlier storage format: `methodology.md` → _Why there is a registry at all_.
 
 It also flags **near-duplicate discriminators**: one `content_type` sent as both `x_user` and `x_users` splits a breakdown in two, where `advisory_card` beside `x_user` is the same field doing its job. It compares on a normalised form rather than on how many values a key has, because several values for a discriminator is the normal case. It exits `1` when either that or an unreadable row turns up.
 
