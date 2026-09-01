@@ -58,7 +58,7 @@ Whether this mechanism emits them automatically, and what it does not cover. Nev
 
 ## Contexts this mechanism cannot serve
 
-The contexts this mechanism cannot serve. Distinguish a context it *cannot* serve from one the placement rules forbid — the second is not an applicability fact. If `inapplicable: ask`, do not restate the index stop here beyond one pointer.
+The contexts this mechanism cannot serve. Distinguish a context it _cannot_ serve from one the placement rules forbid — the second is not an applicability fact. If `inapplicable: ask`, do not restate the index stop here beyond one pointer.
 
 ## Worked before/after
 

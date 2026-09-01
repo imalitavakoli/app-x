@@ -32,7 +32,7 @@ The companion imports from `firebase/analytics` — the modular entry point, not
 
 Obtaining the analytics handle **is** the start of collection. Initialization injects the vendor's tag script and sends an automatic `page_view` immediately; the SDK's own collection-disable call awaits that same initialization promise, so it **cannot retroactively prevent** what already went out.
 
-The consequence is a real constraint, not a caution: "initialize it, then disable until consent" does not work. Consent must gate the *acquisition of the handle*. If the target's app obtains the handle at startup regardless of consent, say so plainly in the report — the events this edit adds are not the problem, but the surrounding wiring has a consent defect this edit does not fix.
+The consequence is a real constraint, not a caution: "initialize it, then disable until consent" does not work. Consent must gate the _acquisition of the handle_. If the target's app obtains the handle at startup regardless of consent, say so plainly in the report — the events this edit adds are not the problem, but the surrounding wiring has a consent defect this edit does not fix.
 
 This is the sharpest difference from the facade mechanism, which keeps every sink behind an init flag the app controls.
 
@@ -53,11 +53,11 @@ The modular SDK's log call takes `(analyticsHandle, name, params?)`. Inside the 
 
 **Obtaining each context parameter:**
 
-| Parameter  | Source                                                                                                                                                        |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `class`    | the named file's class name, or its file stem for a module of functions. Pass it to the companion's constructor; the companion cannot read its host's identity by itself. |
+| Parameter  | Source                                                                                                                                                                                                            |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `class`    | the named file's class name, or its file stem for a module of functions. Pass it to the companion's constructor; the companion cannot read its host's identity by itself.                                         |
 | `route`    | normalized from `location` at emit time. Hash routing → the hash's path portion; history routing → `pathname`. **Strip the query string and any fragment parameters, and the leading slash.** Never the full URL. |
-| `lib_name` | the project name of the target's project. Off by default.                                                                                                     |
+| `lib_name` | the project name of the target's project. Off by default.                                                                                                                                                         |
 
 Read `route` inside `log`, not at construction, so the value is the route at the moment of the event.
 

@@ -51,11 +51,11 @@ Do not expose the facade on the companion. Public methods stay action-named; onl
 
 **Obtaining each context parameter:**
 
-| Parameter  | Source                                                                                                                                                    |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Parameter  | Source                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `class`    | the target's `nameThis` field when it has one (the workspace convention on components), otherwise the class's own name — written on the companion as a **literal constant**. The companion belongs to exactly one named file, so its value is known when the file is written. Do not take it as a constructor argument or a settable field: this companion is `providedIn: 'root'`, so Angular constructs it, not the host, and a settable field would be shared mutable state across every host. |
-| `route`    | inject `Router` in the **companion** and strip the query and fragment and the leading slash. Never the full URL. |
-| `lib_name` | the Nx project name of the target's project, read from its `project.json`. Off by default.                                                                |
+| `route`    | inject `Router` in the **companion** and strip the query and fragment and the leading slash. Never the full URL.                                                                                                                                                                                                                                                                                                                                                                                  |
+| `lib_name` | the Nx project name of the target's project, read from its `project.json`. Off by default.                                                                                                                                                                                                                                                                                                                                                                                                        |
 
 **Do not re-derive `route` at each call site.** The companion reads it at emit time inside `log`, so the value is the route at the moment of the event rather than at construction.
 
@@ -65,7 +65,7 @@ Do not expose the facade on the companion. Public methods stay action-named; onl
 
 Beyond the vendor's reserved prefixes, which `SKILL.md` → _The record shape_ lists in full:
 
-- **`user_id`** is the vendor's user-scoped **setting**, not an event parameter — it is set once for the signed-in user, which the facade already does app-wide. Never send it in an event's parameters at all. Any *other* user an event refers to takes a qualified name — `selected_user_id`, `viewed_author_id` — or the two are conflated in every report.
+- **`user_id`** is the vendor's user-scoped **setting**, not an event parameter — it is set once for the signed-in user, which the facade already does app-wide. Never send it in an event's parameters at all. Any _other_ user an event refers to takes a qualified name — `selected_user_id`, `viewed_author_id` — or the two are conflated in every report.
 - **`buildId`** is already set as a user property by the facade. Do not send it as an event parameter.
 
 ## Where the data goes
@@ -96,7 +96,7 @@ The facade passes `data` through to each sink unchanged, so what a sink accepts 
 
 The tracking-facade util is not in this workspace (no path mapping, no project). No Angular inject context. A file that cannot import that package without a cycle or a module-boundary violation. A file that is not TypeScript or JavaScript.
 
-Note that a `ui` lib is usually *able* to import this facade — the module boundaries permit it. `SKILL.md` → _Where to log_ forbids it anyway. That is a placement rule, not an applicability one.
+Note that a `ui` lib is usually _able_ to import this facade — the module boundaries permit it. `SKILL.md` → _Where to log_ forbids it anyway. That is a placement rule, not an applicability one.
 
 When this mechanism is in the catalog and does not apply, the index's `inapplicable: ask` stop fires before any remaining mechanism is used. This file does not restate that stop.
 
@@ -107,7 +107,10 @@ Invented target: `advisory-card.component.ts` in a `feature` project, class `V1A
 **Named file, before**
 
 ```ts
-@Component({ selector: 'x-advisory-card-fea-v1', templateUrl: './advisory-card.component.html' })
+@Component({
+  selector: 'x-advisory-card-fea-v1',
+  templateUrl: './advisory-card.component.html',
+})
 export class V1AdvisoryCardFeaComponent extends V2BaseFeatureExtComponent {
   readonly nameThis = 'V1AdvisoryCardFeaComponent';
 
@@ -122,7 +125,10 @@ export class V1AdvisoryCardFeaComponent extends V2BaseFeatureExtComponent {
 ```ts
 import { V1AdvisoryCardFeaComponentLogAnalytics } from './advisory-card.component.log-analytics';
 
-@Component({ selector: 'x-advisory-card-fea-v1', templateUrl: './advisory-card.component.html' })
+@Component({
+  selector: 'x-advisory-card-fea-v1',
+  templateUrl: './advisory-card.component.html',
+})
 export class V1AdvisoryCardFeaComponent extends V2BaseFeatureExtComponent {
   readonly nameThis = 'V1AdvisoryCardFeaComponent';
   private readonly _ana = inject(V1AdvisoryCardFeaComponentLogAnalytics);

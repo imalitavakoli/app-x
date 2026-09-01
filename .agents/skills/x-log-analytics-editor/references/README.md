@@ -2,7 +2,7 @@
 
 The mechanism choice is two questions, not one.
 
-| Question                                   | Kind                                    | Answered by                   |
+| Question                                   | Kind                                      | Answered by                   |
 | ------------------------------------------ | ----------------------------------------- | ----------------------------- |
 | Which references _can_ apply to this file? | a **fact** about the file and its project | derived, every time, silently |
 | Among those, which do we prefer?           | a **policy**, constant across files       | once, then remembered         |
@@ -19,12 +19,12 @@ The mechanism choice is two questions, not one.
 
 ## Prerequisites gate the winner, and they are not all the same
 
-Each reference declares two lists. They behave differently, and collapsing them is how a run either stops when it should not or writes code that silently records nothing.
+Each reference declares two lists. They behave differently, and collapsing them is how a run either stops when it should not or writes code that silently records nothing. The question that separates them: does it stop the code **existing**, or stop the data **arriving**?
 
-| Kind             | Is                                                          | Unmet →                                                                                       |
-| ---------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| **Compile-time** | a package or lib that must be present and importable         | **the mechanism does not apply.** Drop it from the set and re-run step 2. Never add the dependency. |
-| **Runtime**      | initialization, consent, or vendor-console configuration     | **apply anyway, and report it.** The call sites are correct; say plainly they record nothing until it is done. |
+| Kind             | Is                                                                              | Unmet →                                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Compile-time** | something the code needs to build at all — a package or lib it must import      | **the mechanism does not apply.** Drop it from the set and re-run step 2. Never add the dependency.            |
+| **Runtime**      | something that must be true while the app runs — init called, consent given, the vendor console configured | **apply anyway, and report it.** The code builds either way; say plainly it records nothing until this is done. |
 
 A compile-time prerequisite is part of `applicability`, which is why an unmet one removes the mechanism rather than stopping the run — the remaining candidates and the `inapplicable: ask` stop then decide what happens, exactly as if the mechanism had never fit the file.
 
@@ -52,10 +52,10 @@ Stopping to confirm what was already derived correctly trains the reader to stop
 
 ## Index
 
-| Mechanism              | Reference file                                                     | Use when                                                                                                              | Cannot be used when                                                                                                                                    | Priority |
-| ---------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `ng-tracking-v1`       | [mechanisms/ng-tracking-v1.md](mechanisms/ng-tracking-v1.md)       | an Angular inject context, in a workspace that has the tracking-facade util, that can import that package               | the facade is not in this workspace; no inject context; importing it would be a cycle or a module-boundary violation; a file that is not TypeScript or JavaScript | 10       |
-| `js-firebase-analytics` | [mechanisms/js-firebase-analytics.md](mechanisms/js-firebase-analytics.md) | any TS/JS context with the `firebase` package installed and an initialized Firebase app available to the target | `firebase` is not installed; no initialized app the target can reach; a file that is not TypeScript or JavaScript                                       | 100      |
+| Mechanism               | Reference file                                                             | Use when                                                                                                        | Cannot be used when                                                                                                                                               | Priority |
+| ----------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `ng-tracking-v1`        | [mechanisms/ng-tracking-v1.md](mechanisms/ng-tracking-v1.md)               | an Angular inject context, in a workspace that has the tracking-facade util, that can import that package       | the facade is not in this workspace; no inject context; importing it would be a cycle or a module-boundary violation; a file that is not TypeScript or JavaScript | 10       |
+| `js-firebase-analytics` | [mechanisms/js-firebase-analytics.md](mechanisms/js-firebase-analytics.md) | any TS/JS context with the `firebase` package installed and an initialized Firebase app available to the target | `firebase` is not installed; no initialized app the target can reach; a file that is not TypeScript or JavaScript                                                 | 100      |
 
 ## Preference
 
@@ -74,14 +74,14 @@ Skill-wide keys live at the top level; each mechanism's own keys live under `mec
 
 **The standard context parameters are skill-wide, not per-mechanism.** _Whether_ an event carries `class`, `route` or `lib_name` is a property of the record shape, which every mechanism sends identically. _How_ each value is obtained differs per mechanism, and that belongs in the reference.
 
-| Key                | Where                        | Announced default                                                                            |
-| ------------------ | ---------------------------- | ---------------------------------------------------------------------------------------------- |
-| `version`          | top-level integer            | current shape is `1` — compare against the example below, not the skill's `1.1.0`             |
-| `mechanism`        | top-level string             | derived by the algorithm — set it **only** to override the `priority` order among mechanisms that _can_ apply, which is why the example below omits it |
-| `contextClass`     | top-level boolean            | `true` — attach the emitting class as `class`                                                |
-| `contextRoute`     | top-level boolean            | `true` — attach the active route path as `route`                                             |
-| `contextLibName`   | top-level boolean            | `false` — attach the Nx project name as `lib_name`                                           |
-| `mechanisms`       | map of per-mechanism objects | `{}` — each reference's own announced defaults apply                                         |
+| Key              | Where                        | Announced default                                                                                                                                      |
+| ---------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `version`        | top-level integer            | current shape is `1` — compare against the example below, not the skill's `1.2.0`                                                                      |
+| `mechanism`      | top-level string             | derived by the algorithm — set it **only** to override the `priority` order among mechanisms that _can_ apply, which is why the example below omits it |
+| `contextClass`   | top-level boolean            | `true` — attach the emitting class as `class`                                                                                                          |
+| `contextRoute`   | top-level boolean            | `true` — attach the active route path as `route`                                                                                                       |
+| `contextLibName` | top-level boolean            | `false` — attach the Nx project name as `lib_name`                                                                                                     |
+| `mechanisms`     | map of per-mechanism objects | `{}` — each reference's own announced defaults apply                                                                                                   |
 
 **Each context parameter turned on costs a permanent custom-dimension slot**, of which a standard property has 50, allocated non-retroactively. That is why two are on and one is off, and why turning one on is a decision rather than a convenience.
 
@@ -124,6 +124,10 @@ Consult it before writing a name, for three things no other source answers:
 
 **Read that count as a floor, not a measurement.** Even filtered, the registry holds only what this skill recorded, so the real vocabulary reaching that stream is at least that large and may be larger. No device's own counter is visible from here at all — that is observed in the vendor's console. Never report the registry count as how full a cap is.
 
+**Reading it as a person: `scripts/render-registry.mjs`.** Append-only storage scatters a name's rows by write order, so the raw file is right for writing and awkward for reading. That script groups by event name, unions the parameters, counts the libs, and reports how many names can reach a native stream. It reads and never writes, so it cannot disturb the append-only guarantee. Rows it cannot parse are listed rather than skipped — a dropped row reads as "we do not send that", which is the one wrong answer the file can give.
+
+It also flags **near-duplicate discriminators**: one `content_type` sent as both `x_user` and `x_users` splits a breakdown in two, where `advisory_card` beside `x_user` is the same field doing its job. It compares on a normalised form rather than on how many values a key has, because several values for a discriminator is the normal case. It exits `1` when either that or an unreadable row turns up.
+
 **A long file is not a problem; a wide vocabulary is.** In a monorepo this grows a row per lib per name, so it gets long — and that is the healthy direction: many rows sharing **one** name is reuse working exactly as intended. The number to watch is **distinct names**, not rows. Do not prune old rows, compact the file, or split it to keep it small: every one of those destroys the repo-wide view that is the registry's only job, and none of them reduces the thing that actually costs anything.
 
 **One registry for the repo, including a monorepo of several apps.** Naming consistency has to hold repo-wide, because a shared lib's event reaches every app that consumes it and the same name must mean the same thing in all of them. So do not split the file per app, and **do not ask which app an event belongs to** — `lib` already answers it: a shared lib serves all its consumers, and an app-specific lib carries its app in its project name wherever the repo names them that way. Where apps report to different analytics properties, the count — even filtered by mechanism — still spans all of them, so it over-estimates any single property's usage; that errs toward caution, which is the direction to err.
@@ -131,14 +135,18 @@ Consult it before writing a name, for three things no other source answers:
 One JSON object per line. `version` sits on each entry, so a format change is visible per row rather than invalidating the file:
 
 ```json
-{ "version": 1, "event": "select_content", "params": ["content_type", "item_id"], "lib": "shared-feature-ng-x-users", "mechanism": "ng-tracking-v1", "source": "PRD AC-03" }
-{ "version": 1, "event": "select_content", "params": ["content_type", "item_id"], "lib": "shared-feature-ng-advisory-card", "mechanism": "ng-tracking-v1", "source": "confirmed in-session" }
+{ "version": 1, "event": "select_content", "params": ["content_type", "item_id"], "constants": { "content_type": "x_user" }, "lib": "shared-feature-ng-x-users", "mechanism": "ng-tracking-v1", "source": "PRD AC-03" }
+{ "version": 1, "event": "select_content", "params": ["content_type", "item_id"], "constants": { "content_type": "advisory_card" }, "lib": "shared-feature-ng-advisory-card", "mechanism": "ng-tracking-v1", "source": "confirmed in-session" }
 ```
 
 Two rows, one name: a second lib adopted `select_content` and — correctly — sends the **same field names** with different values. So one pair of custom-dimension registrations serves both libs and a report can group across them, where four differently-named fields would have cost four registrations to say the same two things twice.
+
+`params` records the event's **own** parameters, not the standard context ones — those are attached identically to every event by every mechanism, so repeating them on each row would add a constant to every entry and tell a later run nothing it can act on. A row that lists two fields is not an incomplete row.
 
 `mechanism` records which one wrote the row, so a later run can count only the names that can reach the stream it cares about. One name can appear under two mechanisms if two libs send it differently; the union rule already covers that, and the cap count simply filters.
 
 `source` records what authorized the event — the event-source ladder's rule 1, 2 or 3. An entry whose `source` is a confirmation rather than a document says so, which is what lets a later reviewer tell a planned event from an improvised one.
 
-Writing an entry is a team change and follows the same explicit-yes rule as `prefs.json`. Never record a parameter's **values** here — only its name.
+`constants` records the **fixed discriminator values** this row sends — the literals set in the companion that separate one use of a shared name from another. They are vocabulary, so recording them is what lets a later run notice that `select_content` already goes out as `content_type: 'x_user'` before it invents `'x_users'` and splits the breakdown.
+
+Writing an entry is a team change and follows the same explicit-yes rule as `prefs.json`. **Record a parameter's value only when it is a constant discriminator**, never when it comes from run time — an id, a count, a name, anything a user supplied. The test is whether the literal is in the companion's source: if it varies per call, it does not belong here.

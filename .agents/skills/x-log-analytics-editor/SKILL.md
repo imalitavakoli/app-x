@@ -3,7 +3,7 @@ name: x-log-analytics-editor
 description: 'WHAT? The rule for which call sites deserve an analytics event, and the edit that adds or corrects them in named files. WHEN? Asked to add, audit or correct analytics, tracking, product-event or Firebase/GA4 event logging in components, services or plain TS/JS; deciding whether an interaction deserves an event, what to name it, what to send as parameters, or which analytics mechanism to use. Not for diagnostic logging a developer reads while debugging.'
 metadata:
   kind: editor
-  version: '1.1.0'
+  version: '1.2.0'
 ---
 
 # Log Analytics Editor
@@ -14,7 +14,7 @@ This skill specifies terms, context and methodology for analytics events in file
 
 This file supplies the recommendations: whether an interaction deserves an event, what the event is named, what it carries, and that records live in a companion beside the target. The chosen mechanism reference supplies the edit — how those recommendations are realized from that mechanism's capabilities.
 
-No `scripts/` transform ships, because the right call site is a judgement. That is why the _Already done?_ rule below is written out rather than delegated to a transform.
+**No script writes records**, because the right call site is a judgement — which is why the _Already done?_ rule below is written out rather than delegated to a transform. One script does ship and it only reads: `scripts/render-registry.mjs` prints the event registry grouped by event name, for a person to audit.
 
 **"analytics"** names the audience — a product owner reading a dashboard weeks later — not one vendor. Firebase and GA4 supply the constraints because they are what this workspace sends to; the methodology is not specific to them.
 
@@ -110,9 +110,21 @@ Recommended names are preferred because sending one **with its prescribed parame
 | A reserved name                                       | `selected_user_id`                          | `user_id` — a user-scoped **setting**, never an event parameter |
 | A reserved prefix                                     | any other name                              | `firebase_*`, `google_*`, `ga_*`, `gtag.*`, `_*` |
 
+**Each parameter earns its place, or it does not go.** Run decision-order step 1 again, per field: *would someone outside the codebase ask a question this field answers?* A field nobody asks for is not free — it permanently occupies one of the 50 custom-dimension registrations, and it is in history from the first send.
+
+Three that routinely fail the test and are added anyway:
+
+- **A label that duplicates an id.** If `item_list_id` already identifies the list, `item_list_name` answers nothing else. Send the id.
+- **A field prescribed by the recommended event that this action has no use for.** Prescribed means "this is what to call it *if* you send it", never "send it".
+- **A field derived from what the code happens to have to hand** — a count, a flag, a position — rather than from a question someone asked.
+
+**When unsure, leave it out.** A parameter can be added later and will populate from that day forward; a parameter already sent cannot be un-sent, and the slot it took is not quickly returned. The asymmetry runs one way, so default to fewer.
+
 **One name, one shape.** Every occurrence of an event carries the same **core** parameters: the ones that say which variant it is (`content_type` on a `select_content`) and any a report of it would group by. Optional extras may vary between occurrences; the core may not. A name whose payload changes run to run cannot be filtered or compared, so reusing a name is only safe when its shape comes with it. Where two call sites genuinely need different core fields, they are two actions and want two names.
 
 **Vary values, not field names.** Reusing a name stays useful only when each site sends the *same* fields with different values — `select_content` carrying `content_type` and `item_id` everywhere, whatever the feature. Naming one idea differently per feature (`advice_id` here, `selected_user_id` there) splits what should have been one groupable dimension, and costs a second custom-dimension registration to report the same thing twice. A recommended name already prescribes its fields: use those. Before adding a field to a name that exists, read what that name already sends and match it.
+
+**A constant discriminator is vocabulary, not data.** The literal that separates one use of a shared name from another — `content_type: 'advisory_card'` on a `select_content` — is fixed in the companion and never varies at run time. Treat it exactly as you treat a field name: check what the event already sends before inventing a variant, because `'x_user'` and `'x_users'` split one breakdown in two just as surely as two spellings of a field would. A **run-time** value is the opposite — an id, a count, anything a user supplied — and none of this applies to it.
 
 **Standard context parameters** are attached to every event by the companion, so no call site can forget them and none of them appear at a call site. Which are attached is a preference (see the mechanism index); the announced defaults are:
 
@@ -201,10 +213,10 @@ The named file must exist and be identifiable; more than one candidate → STOP 
 
 The event source must be resolved per _What decides an event exists_ before any name is written.
 
-**Each mechanism declares its own prerequisites, of two kinds:**
+**Each mechanism declares its own prerequisites, of two kinds.** The question that separates them: does it stop the code **existing**, or stop the data **arriving**?
 
-- **Compile-time** — a package or lib that must be present and importable. Unmet → **that mechanism does not apply** and drops out of the candidate set; the remaining candidates and the index's stop conditions decide what happens next. Report it; never add the dependency to make a mechanism apply.
-- **Runtime** — initialization, consent, or console configuration the app owns. Unmet → **report it and continue**; the call sites are still correct, but say plainly that they will record nothing until it is done.
+- **Compile-time** — something the code needs to build at all: a package or lib it must import. Unmet → **that mechanism does not apply** and drops out of the candidate set; the remaining candidates and the index's stop conditions decide what happens next. Report it; never add the dependency to make a mechanism apply.
+- **Runtime** — something that must be true while the app runs: initialization called, consent given, the vendor console configured. The code builds and ships either way. Unmet → **report it and continue**; the call sites are correct, they simply record nothing until someone does it.
 
 ## The edit
 
@@ -221,6 +233,8 @@ This only applies inside a file you are already editing. An existing event at a 
 Lint and test the touched project after editing; on failure fix or revert, never leave the workspace unable to build.
 
 Then report, in one place: every event name added, its parameters, and **which parameters need registering as custom dimensions** before anyone can see them. Data sent before registration is unreadable, so this is the difference between the change working and appearing to work.
+
+Where a recommended event went out **without one of its prescribed parameters**, say which, and which built-in report therefore stays empty. That is the whole reason the recommended name was chosen, so a reader who is told the name is "recommended" and nothing else will expect a report that never fills.
 
 ## Changing or adding a rule
 
@@ -242,7 +256,10 @@ Copy these into todos so they stay grouped. Load `references/methodology.md` on 
 | The lib or component encoded in the event name                             | The name is the action alone. Those are the `lib_name` and `class` parameters.                 |
 | A custom name minted where a recommended event fits                        | Use the recommended name with its prescribed parameters; it populates built-in reports a custom name does not. |
 | A new event added to answer what a parameter would answer                  | Add the parameter to the event you already send. Step 2 of the decision order.                 |
+| Parameters added because the code had the values to hand                   | Run step 1 per field. A field nobody asks a question about costs a permanent registration slot. |
+| A recommended event's prescribed field sent though the action has no use for it | Prescribed names what to call it if you send it, not that you must. Send the ones that carry meaning. |
 | Parameters written in camelCase                                            | `snake_case`, always. Mixed casing splits one metric into two.                                 |
+| A discriminator value invented without checking what the event already sends | Match the existing spelling. `x_user` and `x_users` split one breakdown; the registry records these so they can be compared. |
 | `-1` or `'unknown'` sent for a value that is absent                        | Omit the parameter. Absence is already representable.                                          |
 | A flag sent as a real boolean                                              | Send `1` or `0`. Only string and number are supported parameter types.                         |
 | A raw error string or whole response sent as a parameter                   | Name the two or three fields that matter. Both are unbounded and routinely carry user content. |

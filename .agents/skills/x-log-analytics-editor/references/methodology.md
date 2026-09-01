@@ -1,6 +1,6 @@
 # Analytics methodology — the reasoning behind the rules
 
-**Explains:** `x-log-analytics-editor` v1.1.0
+**Explains:** `x-log-analytics-editor` v1.2.0
 **Load this when:** someone questions a rule, wants to change one, or is adding a new one.
 
 This file changes no decision. It exists so the rules are not relitigated from scratch, and so a
@@ -21,7 +21,7 @@ a variable, refuse a throwaway — are proportionate here for that reason alone.
 
 **Be careful which scarcity you invoke.** The genuinely fixed budget is **custom dimensions**: 50
 event-scoped per property, registered by hand, never retroactive. Distinct **event names** are a
-weaker constraint than they first appear — capped at 500 per app *user* on a native data stream,
+weaker constraint than they first appear — capped at 500 per app _user_ on a native data stream,
 uncapped on a web one — so an argument resting on "we will run out of names" is wrong on web and
 overstated elsewhere. The durable arguments are permanence and reporting integrity; reach for the
 name cap only where a native stream actually applies.
@@ -82,7 +82,7 @@ Baseline testing produced this one. An agent correctly refused to log inside a p
 and then added a new output to that lib's public API so the layer above could log it. The rule was
 honoured and its purpose defeated: a shared contract changed to serve an instrumentation need.
 
-The general form is the editor boundary. Deciding *what the product exposes* is design work; this
+The general form is the editor boundary. Deciding _what the product exposes_ is design work; this
 skill owns the shape of the change once the requirement exists. If the signal is not already
 exposed, the edit stops.
 
@@ -117,6 +117,43 @@ call site cannot omit them and cannot spell them differently.
 Two unguided runs independently invented a fragment of this — a private helper returning the shared
 context parameters — which suggests the pull toward centralising is real and the companion simply
 does it completely.
+
+## Why there is a registry at all
+
+Consistency is the only property that makes an event worth anything, and it is the one property no
+call site can achieve alone: the agent editing one lib cannot see what the other eighteen already
+send. A name is chosen once and lives forever, so the question "does this repo already have a word
+for this?" has to be answerable at the moment of writing, from the repo. The registry is the only
+thing that answers it.
+
+That is also its limit. It holds what this skill recorded and nothing else, so it is a **floor** on
+the vocabulary, never a census — and never a reading of any device's event-name counter, which lives
+in the vendor's console and is not visible from a repository at all. Every rule about it is written
+so that a wrong answer is impossible rather than merely unlikely: it is optional, it never blocks,
+and a count taken from it is reported as a floor.
+
+**Append-only, because the alternative loses data.** Execution runs several agents at once, and a
+file that is rewritten rather than appended to is a file two of them can clobber in the same window.
+The same choice pays a second time in review: a new event arrives in a pull request as added lines
+and nothing else moves, so a reviewer sees exactly what was added. A grouped or sorted format would
+read better at rest and produce churn on every write.
+
+**The cost of that is scatter**, since rows for one name land wherever write order put them. That is
+a reading problem, not a storage problem, so it is solved by a reader — `scripts/render-registry.mjs`
+groups on demand — rather than by changing how the file is written. Storing and reading are
+different jobs and the same file need not be good at both.
+
+**One file for the whole repo, even a monorepo.** A shared lib's event reaches every app that
+consumes it, so a per-app registry would have to duplicate that lib's rows into each app or lose
+them. Splitting also destroys the only question the file exists to answer, which is repo-wide by
+nature. The file gets long; length was never the cost.
+
+**Constant discriminators are recorded, run-time values never are.** The literal that separates one
+use of a shared name from another is vocabulary, and vocabulary is exactly what this file is for —
+recording it is what lets a later run notice `x_user` before it writes `x_users`. A value that
+varies per call is data: it carries no naming decision, it may carry user content, and it belongs
+in an analytics property rather than in a repository. The test is whether the literal is in the
+companion's source.
 
 ## Why the standard context set is small
 
