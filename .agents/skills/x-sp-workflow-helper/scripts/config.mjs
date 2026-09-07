@@ -45,6 +45,58 @@ export const OUR_SKILL_PREFIX = 'x-';
 export const STUB_SKILL_DIRS = ['.claude/skills'];
 
 /**
+ * A TOOL's entry stub — not a skill's. Both are pointers, and confusing them is
+ * easy, so: `STUB_SKILL_DIRS` above is where one SKILL gets a per-tool copy of
+ * its `description`; this is the single file a TOOL reads first, whose only job
+ * is to send that tool to `AGENTS.md`.
+ *
+ * They are governed because a tool loads its own stub on EVERY turn while
+ * `AGENTS.md` is reached by an explicit read — so anything that accumulates
+ * here is paid for unconditionally, and a rule copied here drifts from the one
+ * `AGENTS.md` owns. Both have happened: the nx block sat byte-identical in
+ * `CLAUDE.md` and `AGENTS.md`, and a stub still named the workflow by a title
+ * `AGENTS.md` had already stopped using.
+ *
+ * Add a row when a tool needs its own entry file. Tools that read `AGENTS.md`
+ * directly need none — an entry here would be a second always-loaded surface
+ * for no gain.
+ */
+export const TOOL_ENTRY_STUBS = [
+  'CLAUDE.md',
+  '.github/copilot-instructions.md',
+  '.agent/rules/instructions.md',
+];
+
+/** What every tool entry stub must send its tool to. */
+export const TOOL_STUB_TARGET = 'AGENTS.md';
+
+/**
+ * A generator's marker block, which must never live in a tool entry stub.
+ *
+ * A REGEX rather than a string on purpose, and not only for tidiness: the
+ * `dead-messages` scan flags any string literal in a sibling script that reads
+ * as a sentence (two lowercase words with a space), and this marker's text
+ * would qualify. Regex literals are skipped by that scanner.
+ *
+ * Today's only entry is Nx's, which `nx configure-ai-agents` writes into the
+ * entry file of every agent it is asked to configure. Its own generator appends
+ * a fresh block when the markers are absent, so removing one is not permanent —
+ * this rule is what makes the reappearance loud instead of silent.
+ */
+export const GENERATOR_MARKERS = [/<!--\s*nx configuration start\s*-->/];
+
+/**
+ * Headings allowed in a tool entry stub: exactly one, its own title.
+ *
+ * A second heading means the file has grown SECTIONS, which is the observable
+ * shape of a stub that has started teaching instead of pointing. Deliberately
+ * not a line or byte budget: a cap invites trimming wording to pass, while the
+ * failure being caught is a whole rule taking up residence. One heading is also
+ * checkable without judgement, which a "too long" threshold never is.
+ */
+export const STUB_MAX_HEADINGS = 1;
+
+/**
  * The skill kinds. A workspace skill's LAST name segment is its kind, and the
  * kind names its template — both are `x-skill-build-helper`'s rules, and
  * `skill-kinds` is what stops either drifting.

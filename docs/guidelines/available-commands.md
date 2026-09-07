@@ -28,6 +28,8 @@ To keep the workspace dependencies up to date and take advantage of the latest s
 
 - _Optional!_ Run `pnpm exec nx migrate --run-migrations --create-commits` to update the workspace and create commits for each step! Depending on the update size and workspace, the migration process may generate numerous changes requiring review. With the `--create-commits` flag, NX will automatically create a separate commit for each successfully completed migration (with a default commit prefix of `chore: [nx migration]`). This not only distinguishes NX migration commits from manual file edits, but also ensures each step of the migration has passed tests successfully.
 
+- _Optional!_ Run `npx nx configure-ai-agents` to take NX's newer AI agent configuration. It rewrites `AGENTS.md`, `CLAUDE.md` and the other per-tool agent files, which every teammate's agents read on every request — so it's a specialist's call, and a new machine never needs it (those files are committed). Afterwards, run `pnpm run check:workflow`: it reports anything that needs reconciling and says what to do. [Click here](https://nx.dev/docs/getting-started/ai-setup) to read more.
+
 ### Workspace Specialist: What should be considered
 
 When migrating the workspace, not all dependencies in the `package.json` file may be updated to their latest major versions. So before running `pnpm install` command, you may need to write their latest version in `package.json` file manually.

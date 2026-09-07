@@ -334,4 +334,22 @@ So the three mechanisms partition the failure space rather than overlapping: **t
 
 **Revisit if** a checker rule ever becomes able to test intent rather than resolution — a rule that could tell a stale-but-valid sentence from a current one would absorb the sweep — or if scenario runs stop discriminating, which would mean the wording is not what governs behaviour and the effort belongs somewhere else.
 
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why a generator's block in a tool stub is detected, not prevented
+
+`CLAUDE.md` held Nx's rules block byte-identical to the copy in `AGENTS.md` — one paid for on every turn, since a tool loads its own entry file unasked. The obvious fix is to make its removal permanent, and that turns out not to be available.
+
+Nx decides whether an agent needs reconfiguring by **dry-running its own generator** and asking whether the tree would change. A stub with the block removed therefore reports as out of date **because** it was cleaned, and `nx configure-ai-agents` re-appends a fresh block, its markers being what it looks for and they are gone. There is no persistent opt-out: the agent list is an argument, not a setting. Two near-misses are worth naming, because both look like solutions: leaving the marker comments in place with the block emptied makes the generator **replace** them instead of appending, and deleting `CLAUDE.md` entirely makes Nx **recreate** it the moment the detected agent is Claude.
+
+The remaining lever is the agent list — and **narrowing it is the wrong answer, which is the part worth recording.** Nx's per-agent work is not just rules: for Claude it also registers the plugin marketplace and enables the plugin in that harness's settings, and it has already shipped a later migration retiring a superseded MCP entry. Those run only for agents in scope. So dropping an agent to stop one duplicate opts it out of everything Nx adds for it afterwards — and that branch grows, so the cost is unbounded and arrives as **silence**. The duplicate costs a fixed amount and the `tool-stubs` rule reports it on every run.
+
+**That asymmetry is the whole decision: prefer the failure that announces itself.** Run the generator fully, then delete the block and keep its other changes. Detection was not chosen because prevention was unavailable — it is chosen because prevention here means going deaf to future updates, and a loud recurring chore beats a silent permanent gap.
+
+The stub keeps **one line** of instruction, which is deliberately a duplicate of what a SessionStart hook already injects. Hooks are optional infrastructure and only some harnesses have one wired; the line is what remains when none ran, and it is one line precisely so that the hook's better version — which carries a live line count — is the one that normally speaks.
+
+**Revisit if** Nx gains a persistent per-agent opt-out that suppresses only the rules block while leaving the rest of that agent's setup running — that would remove the asymmetry, and the rule becomes a cheap assertion rather than the mechanism. Also revisit if its detection stops dry-running the generator, or if a stub ever needs to carry a rule no other surface can reach, which would mean the invariant, not the stub, is wrong.
+
 [🔙](../../README.md#agents)

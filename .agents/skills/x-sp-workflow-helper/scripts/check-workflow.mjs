@@ -1396,6 +1396,73 @@ rule('hook-refs', (r) => {
   r.note(MSG.notes.hookRefFilesScanned(scanned));
 });
 
+/* --- 13b. tool entry stubs stay pointers --------------------------------- */
+// A tool entry stub is the only workflow surface a tool loads WITHOUT being
+// asked. That makes it the one place where an extra paragraph is paid for on
+// every turn, and where a duplicated rule is invisible: the copy reads
+// correctly, and nothing compares it against the AGENTS.md original. Both
+// failures have shipped in this repo — a generator block byte-identical in two
+// always-loaded files, and a stub naming the workflow by a title AGENTS.md had
+// already stopped using.
+//
+// An ABSENT stub is not a finding. A tool nobody uses in this checkout needs no
+// entry file, and demanding one would invent work — so the rule reports which
+// files it actually checked, and an empty list cannot be mistaken for a pass.
+rule('tool-stubs', (r) => {
+  const checked = [];
+
+  for (const p of CFG.TOOL_ENTRY_STUBS) {
+    if (!exists(p)) continue;
+    checked.push(p);
+    const all = [...lines(p)];
+
+    for (const { n, text } of all) {
+      for (const marker of CFG.GENERATOR_MARKERS) {
+        if (!marker.test(text)) continue;
+        if (suppressed('tool-stubs', p, text)) continue;
+        emitMsg(r, MSG.locators.stubHasGeneratorBlock({ file: p, line: n }));
+      }
+    }
+
+    // Frontmatter is metadata, not a section, and a fenced `#` is an example of
+    // a heading rather than one — count neither, or the rule fires on a stub
+    // that is doing exactly what it should.
+    let inFrontmatter = all[0]?.text.trim() === '---';
+    let fenced = false;
+    let headings = 0;
+
+    for (const { n, text } of all.slice(inFrontmatter ? 1 : 0)) {
+      if (inFrontmatter) {
+        if (text.trim() === '---') inFrontmatter = false;
+        continue;
+      }
+      if (/^\s*(?:```|~~~)/.test(text)) {
+        fenced = !fenced;
+        continue;
+      }
+      if (fenced || !/^#{1,6}\s+\S/.test(text)) continue;
+      if (++headings <= CFG.STUB_MAX_HEADINGS) continue;
+      if (suppressed('tool-stubs', p, text)) continue;
+      emitMsg(
+        r,
+        MSG.locators.stubHasSections({
+          file: p,
+          line: n,
+          heading: text.replace(/^#+\s+/, ''),
+          max: CFG.STUB_MAX_HEADINGS,
+        }),
+      );
+    }
+
+    const target = CFG.TOOL_STUB_TARGET;
+    if (read(p).includes(target)) continue;
+    if (suppressed('tool-stubs', p, target)) continue;
+    emitMsg(r, MSG.locators.stubMissingTarget({ file: p, target }));
+  }
+
+  r.note(MSG.notes.toolStubsChecked(checked));
+});
+
 /* --- 14. dead message exports ------------------------------------------- */
 rule('dead-messages', (r) => {
   // Two directions, both of which have actually failed here.

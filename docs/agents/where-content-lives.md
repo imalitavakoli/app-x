@@ -14,6 +14,7 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 | ------------------------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------- |
 | what a term **means**                                         | `CONTEXT.md` (repo root)                  | you meet an unfamiliar term                                             |
 | a rule **every** request needs                                | `AGENTS.md`                               | every turn (SessionStart)                                               |
+| what one **tool** needs in order to find `AGENTS.md`          | that tool's entry stub                    | that tool loads it, every turn                                          |
 | a rule only **one path** needs                                | `docs/agents/sp-workflow-path-{a,b,c}.md` | on that path                                                            |
 | a **procedure** more than one path performs                   | `docs/agents/sp-workflow-procedures.md`   | when a hook cites it                                                    |
 | how to resolve / persist any `pref.*`                         | `docs/agents/sp-workflow-prefs.md`        | cycle start (entering **or rejoining** a path), before the first question put to the user; or resolving a key |
@@ -52,6 +53,19 @@ A skill or doc that needs the consequence writes **one line of consequence plus 
 ## What qualifies for `AGENTS.md`
 
 `AGENTS.md` is read in full on **every** request, so its budget is the scarcest in the workspace and its row above is the hardest to earn. The bar, and how to write a pointer that costs less than the content it replaces, live with the file they govern: [agents-md-format.md](agents-md-format.md).
+
+&nbsp;
+
+## A tool entry stub points; it never teaches
+
+Some tools read a file of their own before anything else — `CLAUDE.md`, `.github/copilot-instructions.md`, `.agent/rules/instructions.md`. Each exists for **one** reason: to send that tool to `AGENTS.md`. A tool that reads `AGENTS.md` directly needs no stub, and giving it one only adds a second always-loaded surface.
+
+**So a stub holds its own title and a pointer, and nothing else** — no rule, no restated mandate, no generator's block. The reason it is the strictest surface in this table is that it is the only one a tool loads **without being asked**: everything in it is paid for on every turn, whether or not the request had any use for it, and a rule copied here is compared against nothing. Both failures have already happened in this repo — a generator's rules block sat byte-identical in `CLAUDE.md` and `AGENTS.md`, and a stub went on naming the workflow by a title `AGENTS.md` had stopped using, reading perfectly the whole time.
+
+Two consequences that are easy to get backwards:
+
+- **A hook is not a licence to duplicate.** Where one is wired, a SessionStart hook already tells the tool to read `AGENTS.md` — better than a stub can, since it can count the file's lines. That is a reason for the stub to stay **one line**, not a reason to restate the rule at length beside it. Keep the line: hooks are optional infrastructure and a stub is what remains when none ran.
+- **A generator that writes a stub is a recurring event, not a one-off.** Removing its block does not stop it; the tool re-adds it the next time it configures that agent. **Do not answer that by narrowing the generator to other agents.** It does more per agent than write rules, and an agent left out of its scope silently stops receiving the rest — a loss nothing reports, traded against a duplicate the `tool-stubs` rule reports every time. Run the generator fully, then delete the block again and keep its other changes.
 
 &nbsp;
 

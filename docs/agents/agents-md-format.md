@@ -78,6 +78,14 @@ Do not use the path files' notation here. Do not add a second pointer from Pre-f
 
 &nbsp;
 
+## What a harness enforces is not a reason to trim
+
+A rule in this file may also be enforced by a tool — a permission deny, a hook, a generator's own config. That is a **floor under** the prose, never a replacement for it: it covers the one tool that implements it, and it can be reconfigured without any document noticing. So "the harness already blocks this" does not qualify a rule for removal, and neither does "a hook already says it".
+
+What that argument **does** license is cutting the rule's **rationale** — the paragraph explaining why the rule exists or why humans want the thing it governs. That is not what an agent needs in order to obey, and it has homes: a subsystem page in `docs/`, or [sp-workflow-rationale.md](sp-workflow-rationale.md) for a workflow decision. Keep the mandate whole; move the reasoning and cite it with a skip-condition.
+
+&nbsp;
+
 ## Before calling an edit done
 
 `AGENTS.md` is one of the places a rule commonly has a second copy — a rule moved out of here often leaves one behind, and a rule moved _in_ often duplicates one already in a path file or a skill. Run the sweep in [where-content-lives.md](where-content-lives.md) → _When a rule already exists in more than one place_ before calling the edit done.

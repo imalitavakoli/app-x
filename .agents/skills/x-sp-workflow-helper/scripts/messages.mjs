@@ -582,6 +582,8 @@ export const titles = {
     'Skills do not name workflow landmarks (control flow stays in the docs)',
   'hook-paths': 'Every repo path a hook names resolves',
   'hook-refs': 'Docs and skills name hook EVENTS, never hook filenames',
+  'tool-stubs':
+    'Every tool entry stub points at AGENTS.md and carries no rules of its own',
   'dead-messages': 'Every exported message is actually used',
   'allowlist-hygiene': 'No stale allowlist entries',
 };
@@ -770,6 +772,64 @@ export const locators = {
       `${file}:${line} — \`${label}:\` names no hook ID; it must address hooks by ` +
       '`{ID}`, never in prose',
   }),
+
+  /**
+   * A generator's marker block has taken up residence in a tool entry stub.
+   *
+   * - **Why** a stub is loaded on every turn, so a block here is paid for
+   *   unconditionally — and the same block already sits in `AGENTS.md`, where
+   *   every tool can reach it. Nx's generator APPENDS a fresh block whenever it
+   *   is asked to configure that agent and finds no markers, so this is a
+   *   finding that returns on its own rather than a one-time cleanup.
+   * - **Seen when** `nx configure-ai-agents` ran with that agent selected —
+   *   including the bare command, which auto-configures any agent it judges out
+   *   of date, with no prompt.
+   */
+  stubHasGeneratorBlock: ({ file, line }) => ({
+    fail: `${file}:${line} carries a generator's marker block`,
+    details: [
+      '  A tool entry stub points; it does not carry rules. This block already lives in ' +
+        'AGENTS.md, which every tool reads — here it is a second always-loaded copy that ' +
+        'can drift from that one.',
+      '  Delete the block and keep every other change that generator made. Do NOT narrow ' +
+        'its agent list to stop this: it does more per agent than write rules, and an ' +
+        'agent out of scope silently stops receiving the rest — while this finding is ' +
+        'reported every time. Expect it after a deliberate reconfigure.',
+      '  If the block carried genuinely new guidance, move that into AGENTS.md rather than ' +
+        'leaving it here.',
+    ],
+  }),
+
+  /**
+   * A stub has grown sections — it is teaching rather than pointing.
+   *
+   * - **Why** every rule stated here is a rule `AGENTS.md` already owns, and
+   *   the copy drifts: one stub went on naming the workflow by a title
+   *   `AGENTS.md` had stopped using, and read perfectly while doing it.
+   * - **Seen when** a rule felt small enough to restate where it would be read
+   *   first, rather than pointed at.
+   */
+  stubHasSections: ({ file, line, heading, max }) => ({
+    fail:
+      `${file}:${line} has more than ${max} heading — "${heading}". A stub carries its ` +
+      'own title and a pointer, nothing else',
+    details: [
+      '  Move the rule to the surface that owns it (docs/agents/where-content-lives.md ' +
+        'decides which) and leave a pointer here.',
+    ],
+  }),
+
+  /**
+   * A stub that names no destination.
+   *
+   * - **Why** the file's whole purpose is to send its tool onward. One that does
+   *   not is an always-loaded file doing nothing, and the tool reading it never
+   *   learns the workspace has conventions at all.
+   * - **Seen when** a stub is trimmed too far, or a generator overwrites it.
+   */
+  stubMissingTarget: ({ file, target }) => ({
+    fail: `${file} never names ${target} — a stub whose only job is to point at it`,
+  }),
 };
 
 /**
@@ -845,6 +905,8 @@ export const notes = {
     `${skills} skills across ${kinds} kinds; ${fields} metadata field(s) and ${declared} AGENTS.md row(s) cross-checked against the name`,
   hookPathsChecked: (n) => `${n} repo paths named by hooks checked`,
   hookRefFilesScanned: (n) => `${n} files scanned for hook-filename references`,
+  toolStubsChecked: (files) =>
+    `${files.length} tool entry stub(s) checked: ${files.join(' · ')}`,
   messageAudit: ({ total, dead, inline, scanned }) =>
     `${total} message exports, ${dead} unused; ${scanned} sibling script(s) scanned, ${inline} string(s) left in the code`,
   allowlistEmpty: 'allowlist is empty',

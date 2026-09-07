@@ -1,32 +1,13 @@
-<!-- nx configuration start-->
-<!-- Leave the start & end comments to automatically receive updates. -->
+<!-- No Nx rules block here, on purpose: it duplicates AGENTS.md, which every agent
+     reads, while this file is loaded on every turn. `nx configure-ai-agents` re-adds
+     it — that is expected, and `pnpm run check:workflow` reports it and says what to
+     do. Why it works this way: /docs/agents/sp-workflow-rationale.md -->
 
-# General Guidelines for working with Nx
+# Claude Code — start here
 
-- For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
-- When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
-- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `npm exec nx test`) - avoids using globally installed CLI
-- You have access to the Nx MCP server and its tools, use them to help the user
-- For Nx plugin best practices, check `node_modules/@nx/<plugin>/PLUGIN.md`. Not all plugins have this file - proceed without it if unavailable.
-- NEVER guess CLI flags - always check nx_docs or `--help` first when unsure
+Read `AGENTS.md` in full before acting on any request, then `AGENTS.local.md` if it
+exists (a personal overlay — where the two conflict, it wins). Every convention this
+workspace has lives there or behind a pointer in it; this file only sends you to it.
 
-## Scaffolding & Generators
-
-- For scaffolding tasks (creating apps, libs, project structure, setup), ALWAYS invoke the `nx-generate` skill FIRST before exploring or calling MCP tools
-
-## When to use nx_docs
-
-- USE for: advanced config options, unfamiliar flags, migration guides, plugin configuration, edge cases
-- DON'T USE for: basic generator syntax (`nx g @nx/react:app`), standard commands, things you already know
-- The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
-
-<!-- nx configuration end-->
-
-## Agent Convention Files — MANDATORY
-
-Before acting on ANY user request, you MUST read these files in order:
-
-1. `AGENTS.md` — base agent guidelines
-2. `AGENTS.local.md` — personal overlay (if it exists); add its instructions on top of `AGENTS.md`; where they conflict, it wins
-
-**IMPORTANT:** Read both files in **full** — do NOT use a line limit. Critical rules (e.g., Superpowers-First Workflow, MCP priority) appear after the first section and will be missed if truncated.
+A SessionStart hook normally gives you that instruction with a live line count. This
+line is the fallback for when it has not run.

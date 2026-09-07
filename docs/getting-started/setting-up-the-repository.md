@@ -68,17 +68,9 @@ If you use Antigravity as your AI code assistant, then you should install it on 
 
 &nbsp;
 
-### NX AI Agents (Optional)
+### Nx plugin
 
-You can automatically configure our NX monorepo to work best with AI agents and assistants. In order to do that, do the following. [Click here](https://nx.dev/docs/getting-started/ai-setup) to read more.
-
-- Run `npx nx configure-ai-agents`.
-
-**Tip!** We've already configured Claude on this monorepo by default.
-
-#### The Nx plugin
-
-Separately from the above, Claude Code gets an **Nx plugin**, which is also what provides the `nx-mcp` server that `AGENTS.md` treats as the first place to look for anything about this workspace. The repo enables it; you register its catalog and install it:
+Claude Code gets an **Nx plugin**, which provides the `nx-mcp` server that `AGENTS.md` treats as the first place to look for anything about this workspace. The repo enables it; you register its catalog and install it:
 
 ```bash
 claude plugin marketplace add nrwl/nx-ai-agents-config
@@ -88,7 +80,7 @@ claude plugin marketplace add nrwl/nx-ai-agents-config
 claude plugin install nx@nx-claude-plugins --scope user
 ```
 
-**Why two commands?** `nx configure-ai-agents` only writes the marketplace into this repo's `.claude/settings.json`, and a marketplace that only the repo's settings declare isn't registered on your machine — so the install can't resolve `@nx-claude-plugins` without the first command. Two ways to skip it: you've already installed the Nx plugin in another workspace (the catalog is then registered user-wide), or Claude Code offered to install this repo's plugins when you first trusted the folder and you accepted — that registers **both** marketplaces, this one and our own catalog below, so every `claude plugin marketplace add` in this document is already done.
+**Why two commands?** This repo's `.claude/settings.json` only _declares_ the marketplace, and a marketplace that only the repo declares isn't registered on your machine — so the install can't resolve `@nx-claude-plugins` without the first command. Two ways to skip it: you've already installed the Nx plugin in another workspace (the catalog is then registered user-wide), or Claude Code offered to install this repo's plugins when you first trusted the folder and you accepted — that registers **both** marketplaces, this one and our own catalog below, so every `claude plugin marketplace add` in this document is already done.
 
 `--scope user` for the same reason as Superpowers below — a user-scoped install carries no path, so the Windows drive-letter casing can't strand it.
 
