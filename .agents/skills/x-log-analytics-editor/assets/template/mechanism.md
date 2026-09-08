@@ -42,6 +42,10 @@ How the event name and parameters map onto this mechanism's actual API, and how 
 
 Then a table: for each of `class`, `route` and `lib_name`, where this mechanism gets the value. `route` must state how the query string and fragment are stripped — an unstripped route is the standard way user content leaks into an analytics property.
 
+## Always-attached fields
+
+Fields this mechanism (or the library it wraps) merges onto every event **after** the companion hands over the payload — always, with no preference key. Table each one: name, where the value comes from, and that the companion must not re-send it. State that they count toward the 25-parameter cap and stay out of the event registry. If this mechanism attaches none, say **none** in one line — do not omit the section. Companion context (`class` / `route` / `lib_name`) does not belong here.
+
 ## Reserved names
 
 Any name this mechanism or its surrounding wiring already occupies, beyond the vendor's reserved prefixes — an identifier set app-wide, a user property already populated. An event parameter colliding with one of these is conflated with it in every report.

@@ -61,6 +61,10 @@ The modular SDK's log call takes `(analyticsHandle, name, params?)`. Inside the 
 
 Read `route` inside `log`, not at construction, so the value is the route at the moment of the event.
 
+## Always-attached fields
+
+**None.** The modular SDK does not enrich the params object; only what the companion's `log` hop merges (event-own fields plus companion context) reaches the sink. The 25-parameter count for this mechanism is companion context + event-own parameters only.
+
 ## Screen views
 
 Initialization emits one automatic `page_view`. **Single-page route changes do not emit further ones** — this mechanism has no automatic screen tracking, unlike the facade. Adding route-change tracking is app wiring and is out of scope for this edit; if the target's product needs per-route screen views, report that gap rather than hand-logging screen views at call sites, which is forbidden by `SKILL.md` → _Where not to log_ for the usual double-counting reason.

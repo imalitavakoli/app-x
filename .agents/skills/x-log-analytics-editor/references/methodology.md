@@ -1,6 +1,6 @@
 # Analytics methodology — the reasoning behind the rules
 
-**Explains:** `x-log-analytics-editor` v1.2.0
+**Explains:** `x-log-analytics-editor` v1.3.0
 **Load this when:** someone questions a rule, wants to change one, or is adding a new one.
 
 This file changes no decision. It exists so the rules are not relitigated from scratch, and so a
@@ -166,6 +166,14 @@ The emitting class is preferred over the owning lib by default because one lib r
 several components, so the class is the finer of the two axes. The trade is that class names are
 refactor-volatile and old values strand in history, which is why the owning lib remains available as
 a preference rather than being removed.
+
+**Companion context is not the same as mechanism enrichment.** The skill-wide set (`class`, `route`,
+`lib_name`) is pref-driven and merged in the companion so every mechanism sends it identically. A
+mechanism may also attach fields of its own — always, with no preference key — after the companion
+hands over the payload. Those belong only in that mechanism's reference: they are not skill-wide
+context, they must not be re-sent by the companion, and they still occupy slots in the 25-parameter
+cap. Counting companion context alone under-states the budget whenever the chosen mechanism declares
+always-attached fields.
 
 ## Why a preferred mechanism that cannot apply is not a silent fallback
 

@@ -51,6 +51,7 @@ export class V1TrackingService {
   private _buildId?: string;
 
   private _appVersion = '0.0.0';
+  private _osVersion = 'unknown';
 
   /* //////////////////////////////////////////////////////////////////////// */
   /* Methods                                                                  */
@@ -80,6 +81,16 @@ export class V1TrackingService {
 
     // Save required data.
     this._appVersion = appVersion;
+
+    // Collect OS version from the device (async, best-effort).
+    this._capacitorCoreService
+      .deviceGetInfo()
+      .then((info) => {
+        this._osVersion = info?.osVersion || 'unknown';
+      })
+      .catch(() => {
+        // Keep default 'unknown' on web or if Device plugin is unavailable.
+      });
 
     // Get required data from DEP and Auth.
     this._configFacade.configState$
@@ -162,11 +173,18 @@ export class V1TrackingService {
       this.apptentiveService.engage(name, data);
     }
 
+    const enrichedData = {
+      ...data,
+      platform: this._platform,
+      app_version: this._appVersion,
+      os_version: this._osVersion,
+    };
+
     if (this.isInitCapacitorFirebaseAnalytics) {
-      this.capacitorFirebaseAnalyticsService.logEvent(name, data);
+      this.capacitorFirebaseAnalyticsService.logEvent(name, enrichedData);
     }
     if (this.isInitFirebaseAnalytics) {
-      this.firebaseService.analyticsLogEvent(name, data);
+      this.firebaseService.analyticsLogEvent(name, enrichedData);
     }
   }
 

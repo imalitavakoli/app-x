@@ -61,12 +61,25 @@ Do not expose the facade on the companion. Public methods stay action-named; onl
 
 **Do not reach for a base class's route helper, even where one exists.** This workspace's feature base class carries a route-resolution helper written for analytics, and it is `protected` — reachable from a subclass, and therefore **not** from a separate companion class. The companion injects `Router` itself. If that helper is ever widened to be reachable, this row changes; until then, preferring it produces an instruction that cannot be followed.
 
+## Always attached by the facade
+
+After the companion's `data` is handed to `logEvent`, the facade merges these onto every event before any sink sees it. They are **not** companion context and **not** preference keys — there is nothing to toggle.
+
+| Parameter     | Source                                                                 |
+| ------------- | ---------------------------------------------------------------------- |
+| `platform`    | `'ios'` \| `'android'` \| `'desktop'` from the Capacitor platform probe |
+| `app_version` | the `appVersion` string passed to `prepare`                            |
+| `os_version`  | device OS version when available, else `'unknown'`                     |
+
+**Do not re-send them** in the companion's `log` hop or at a call site — the facade already adds them; re-sending duplicates or overrides. **Do count them** toward the 25-parameter cap (with companion context). **Do not** list them in the event registry — same reason as companion context: they are attached identically to every event this mechanism writes. In the Verify report, name them among parameters that need custom-dimension registration if the property has not registered them yet.
+
 ## Reserved names in this workspace
 
 Beyond the vendor's reserved prefixes, which `SKILL.md` → _The record shape_ lists in full:
 
 - **`user_id`** is the vendor's user-scoped **setting**, not an event parameter — it is set once for the signed-in user, which the facade already does app-wide. Never send it in an event's parameters at all. Any _other_ user an event refers to takes a qualified name — `selected_user_id`, `viewed_author_id` — or the two are conflated in every report.
 - **`buildId`** is already set as a user property by the facade. Do not send it as an event parameter.
+- **`platform`**, **`app_version`**, **`os_version`** are always-attached event parameters (see above). Do not re-send them; they are already on every event this mechanism writes.
 
 ## Where the data goes
 

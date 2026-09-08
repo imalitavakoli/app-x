@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { Platform } from '@ionic/angular/standalone';
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app';
-import { Device } from '@capacitor/device';
+import { Device, DeviceInfo } from '@capacitor/device';
 import {
   V1CapacitorCore_AppInfo,
   V1CapacitorCore_DeviceId,
@@ -312,6 +312,24 @@ export class V1CapacitorCoreService {
         return Promise.resolve(id);
       } catch (error) {
         // console.error('@V1CapacitorCoreService/deviceGetId:', error);
+        return Promise.resolve(null);
+      }
+    }
+  }
+
+  /**
+   * Get native device info.
+   *
+   * @returns {Promise<DeviceInfo | null>}
+   */
+  async deviceGetInfo(): Promise<DeviceInfo | null> {
+    if (this._getPlatform() === 'desktop') {
+      return Promise.resolve(null);
+    } else {
+      try {
+        const info = await Device.getInfo();
+        return Promise.resolve(info);
+      } catch (error) {
         return Promise.resolve(null);
       }
     }

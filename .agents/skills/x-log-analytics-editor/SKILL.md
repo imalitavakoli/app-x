@@ -3,7 +3,7 @@ name: x-log-analytics-editor
 description: 'WHAT? The rule for which call sites deserve an analytics event, and the edit that adds or corrects them in named files. WHEN? Asked to add, audit or correct analytics, tracking, product-event or Firebase/GA4 event logging in components, services or plain TS/JS; deciding whether an interaction deserves an event, what to name it, what to send as parameters, or which analytics mechanism to use. Not for diagnostic logging a developer reads while debugging.'
 metadata:
   kind: editor
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # Log Analytics Editor
@@ -142,7 +142,7 @@ Every one of these limits fails the same way: the platform **discards the offend
 
 | If the edit would…                                                          | Then…                                                                                                                        |
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| put **more than 25 parameters** on one event, context parameters included     | **do not write it.** Report which fields overflow and ask which to drop — left alone, the platform drops them for you and the event still looks successful |
+| put **more than 25 parameters** on one event, companion context **and** any always-attached fields the chosen mechanism declares included | **do not write it.** Report which fields overflow and ask which to drop — left alone, the platform drops them for you and the event still looks successful. Companion context alone is not the full count: read the mechanism's always-attached list before arithmetic |
 | use an **event or parameter name over 40 characters**                         | shorten it before writing, and say what was changed and why                                                                  |
 | send a **string value that can exceed 100 characters**                        | do not send that field. Send an identifier or a short code, and say what was substituted                                      |
 | use a **reserved name or prefix**                                             | refuse that name and write a qualified one instead                                                                           |
@@ -271,7 +271,8 @@ Copy these into todos so they stay grouped. Load `references/methodology.md` on 
 | Initialization or consent wiring added so the events would fire            | Report the unmet runtime prerequisite. App wiring is not this edit.                            |
 | An existing event deleted while adding others                              | Report it as a pruning candidate. A live event has dashboards behind it.                       |
 | Custom dimension registration left unmentioned                             | Name the parameters needing registration in the final report, or the data is unreadable.       |
-| An event written with more than 25 parameters                              | Do not write it. Report the overflow and ask which fields to cut — the platform drops them silently and the event still succeeds. |
+| An event written with more than 25 parameters                              | Do not write it. Report the overflow and ask which fields to cut — the platform drops them silently and the event still succeeds. Count companion context **and** the chosen mechanism's always-attached fields, not companion context alone. |
+| Facade always-attached fields re-sent in the companion or at a call site (`platform`, `app_version`, `os_version` on `ng-tracking-v1`) | Omit them. The mechanism attaches them; re-sending duplicates or overrides. They still count toward the 25. |
 | A name or value written past its length limit                              | Shorten the name, or substitute an identifier for the value, and say what changed.             |
 | A companion named from the first filename segment (`x-users.log-analytics.ts`) | Keep every segment before the final extension: `x-users.component.ts` → `x-users.component.log-analytics.ts`. |
 | Mechanism written into the named file when the reference can isolate       | Follow the companion. The named file holds construct + one-liners only.                        |
