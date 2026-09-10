@@ -43,13 +43,13 @@ Details and valid shapes: [Functionality types](#functionality-types).
 
 Two shapes of the same library type. Only the first can be a functionality.
 
-|                                     | **Single-purpose**                                                             | **Grab-bag**                                                                                        |
-| ----------------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| **What it holds**                   | one product concern — everything in the lib serves it                          | several unrelated items sharing only a technical kind (directives, pipes, animations)               |
-| **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`                             | each item versions on its own — `src/lib/toggle-me-v1/`                                             |
-| **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info`                       | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                                     |
-| **A functionality?**                | **yes** — PRD + TSD under `docs/x/{domain}/{name}/`                            | **no** — it is shared infrastructure                                                                |
-| **Requirements live in**            | `docs/x/{domain}/{name}/PRD/README.md` + `docs/x/{domain}/{name}/TSD/`         | a `requirements/` folder (`README.md` + `DECISIONS.md`) beside **each item’s** inner version README |
+|                                     | **Single-purpose**                                                     | **Grab-bag**                                                                                        |
+| ----------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **What it holds**                   | one product concern — everything in the lib serves it                  | several unrelated items sharing only a technical kind (directives, pipes, animations)               |
+| **Version folders** (shared domain) | the whole lib versions as one unit — `src/lib/v1/`                     | each item versions on its own — `src/lib/toggle-me-v1/`                                             |
+| **Examples**                        | `shared-ui-ng-popup`, `shared-feature-ng-x-profile-info`               | `shared-ui-ng-directives`, `shared-ui-ng-pipes`                                                     |
+| **A functionality?**                | **yes** — PRD + TSD under `docs/x/{domain}/{name}/`                    | **no** — it is shared infrastructure                                                                |
+| **Requirements live in**            | `docs/x/{domain}/{name}/PRD/README.md` + `docs/x/{domain}/{name}/TSD/` | a `requirements/` folder (`README.md` + `DECISIONS.md`) beside **each item’s** inner version README |
 
 **The test:** does the lib have **one** product concern, or is it a bucket of unrelated items that merely share a mechanism? For a **shared** lib the folder shape is the tell — independently versioned items _are_ independent concerns. **App-domain** libs have no version folders ([Versioning shared libs](#versioning-shared-libs)), so apply the concern test directly.
 
@@ -68,6 +68,7 @@ Two shapes of the same library type. Only the first can be a functionality.
 ## Quick decision cheat-sheet
 
 - Outside world (HTTP, JSON assets, etc.) → `map` fetches → `data-access` stores. Never put that in `util` or a random service.
+- Polling, chaining or scheduling calls → **never inside a `map`**. Screen-scoped repetition → `feature`; data-freshness repetition → `data-access` ([who owns it](#request-orchestration)).
 - Need data another functionality owns → import that family's `data-access` (not its `map` to call methods).
 - `util` needs `data-access` or `feature` → prefer input/arg; if it must import, go through an `api` re-export lib.
 - URL query params and route navigation → `page` only; pass values down via inputs.
@@ -122,9 +123,36 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 
 **Who may call a `map`** — Only that map's related family `data-access` initializes the `map` and calls its methods. Every other type that imports `map` (including another `map`, `util`, `ui`, `feature`, `page`, `app`, `api`) does so for **types/interfaces only**. Need the data elsewhere → import the owning `data-access`, not the `map` for runtime calls. (Same idea across functionality families — see [Reuse](#reuse-across-functionalities).)
 
+**Request orchestration** — Deciding _when_ and how often a call happens is a concern of its own, separate from making the call. It never lives in a `map`; it belongs to `feature` or `data-access` depending on what the repetition is for. Rules and the choice between them: [Request orchestration](#request-orchestration).
+
 **`page` exclusive ownership** — Only `page` libs may (1) navigate to app routes and (2) read URL Query Params. NEVER read query params in `feature` or `ui` — read them in the `page` and pass values down through inputs. `feature` libs may emit outputs; the page listens and navigates.
 
 **`api` proxy** — An `api` lib has almost no implementation: its `src/index.ts` imports a small set of symbols from another lib and re-exports them. Naming often mirrors the proxied lib (e.g. `shared-api-data-access-ng-auth` → `@x/shared-data-access-ng-auth`, or `shared-api-feature-ng-x-users` → `@x/shared-feature-ng-x-users`). See `libs/shared/api/`.
+
+&nbsp;
+
+### Request orchestration
+
+Making a call and deciding **when** to make it are two different concerns. **Request orchestration** is the second one: repeating a call on a timer (polling), chaining one call after another, sequencing several, scheduling them, and pausing or resuming any of that.
+
+It is a frequent source of misplaced logic, because the lib that _makes_ the call looks like the obvious place to decide when to make it. It is not.
+
+**Never in a `map` — one call = one request.** A `map` method wraps a **single** endpoint or asset. It MUST NOT compose or chain requests, repeat them on a timer, or in any other way decide when a call happens. Per-request resilience (a retry or backoff on the one call the method is already making) is transport-level and may stay in the `map`.
+
+**Why the `map` is the wrong home.** A poll started inside a `map` is **invisible traffic**: `data-access` asked for one fetch and the network did many, so the store's action log stops describing the real data flow. And that behaviour belongs to no PRD Acceptance Criterion and no TSD Functional Requirement anywhere above it, so it is never unit- or e2e-tested at the level where it is actually product behaviour. Both problems are about **hiding** the repetition, not about repetition itself — which is why the same loop is perfectly fine one layer up.
+
+**Who owns it** — `feature` or `data-access`, decided by what the repetition is _for_. Both are legal because both keep every tick visible: each tick still travels `data-access` → `map`, so the store records it as its own fetch, and the owning lib's TSD can state it as a Functional Requirement.
+
+| The repetition exists because…                                                                                     | Owner                                | Scope                              |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------ | ---------------------------------- |
+| **a screen is open** and the user is watching a value change — a processing status, a progress bar, a live balance | `feature` — a service inside the lib | that component instance's lifetime |
+| **the data must stay fresh** whether or not anyone is watching — session heartbeat, unread counts, background sync | `data-access` — an effect            | the store's lifetime               |
+
+Tie-breakers: the outcome is visual (a popup, a spinner, a timeout dialog) → `feature`. A second, unrelated consumer of the same data would want the same repetition → `data-access`. Rendering the feature twice is the tell for scope — a per-instance poll should follow each instance, a store-level one must not run twice.
+
+**A `feature`-owned poll still goes through `data-access`.** Every tick dispatches to the family `data-access`, which calls the `map`. A `feature` never calls a `map` at runtime ([import matrix](#import-matrix), note ³) — owning _when_ a call happens is not permission to own _how_ it is made.
+
+**Stopping is not only "component destroyed."** An orchestration may need to stop on a data or state condition, and often to **pause and resume** rather than end — on mobile above all, where a poll must pause when the app goes to the background and resume in the foreground. Those signals come from the shared `util` lib that wraps the native runtime and exposes app pause / resume events; whichever lib owns the orchestration subscribes to them. A `map` can reach none of this — one more reason the logic cannot live there.
 
 &nbsp;
 
@@ -146,31 +174,34 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 
 ### 'map' type
 
-|                 |                                                                                                                                                                                    |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Role**        | Interact with back-end or external resources; optionally map fetched shapes for consumers.                                                                                         |
-| **May import**  | `util`, `map` (types only from other maps)                                                                                                                                         |
-| **Owns / does** | Load external resources (e.g. JSON); map object structures (sometimes with `util` help) so they satisfy `ui` inputs; hold Map interfaces (`lib-name.interfaces.ts`) for consumers. |
-| **Must not**    | Store app/feature state (that is `data-access`); call another `map`'s methods / endpoints (import other maps for shared types only).                                               |
+|                 |                                                                                                                                                                                                                                                                   |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Role**        | Interact with back-end or external resources; optionally map fetched shapes for consumers.                                                                                                                                                                        |
+| **May import**  | `util`, `map` (types only from other maps)                                                                                                                                                                                                                        |
+| **Owns / does** | Load external resources (e.g. JSON); map object structures (sometimes with `util` help) so they satisfy `ui` inputs; hold Map interfaces (`lib-name.interfaces.ts`) for consumers.                                                                                |
+| **Must not**    | Store app/feature state (that is `data-access`); call another `map`'s methods / endpoints (import other maps for shared types only); orchestrate requests — compose, chain, repeat, schedule or poll calls (see [Request orchestration](#request-orchestration)). |
 
 **Notes**
 
 - Maps prepare structures for presentation; the related family `data-access` is the only lib that initializes this `map` to fetch and then stores the result.
+- **One public method = at most one outbound request.** Calling your own private helpers is fine — mapping, error parsing, URL building, logging, anything inherited from the shared map base class. What is banned is a method that fires a **second** request, or that decides **when** a request happens.
+- The tell that a rule is being broken: the `map` starts holding a timer, a subscription, a "keep going" flag, or a lifecycle to cancel. That is state, and state is `data-access`.
 
 &nbsp;
 
 ### 'data-access' type
 
-|                 |                                                                                                                                                   |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Role**        | State management and data-access services for an app, `page`, or `feature`.                                                                       |
-| **May import**  | `util`, `map` (runtime — call methods), `data-access`                                                                                             |
-| **Owns / does** | NgRx-related state; initializes its related `map` libs to fetch; may hold guards, interceptors, and similar (beside `+state`).                    |
-| **Must not**    | Skip `map` when talking to the outside world (use the fetch funnel); initialize another family's `map` (use that family's `data-access` instead). |
+|                 |                                                                                                                                                                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Role**        | State management and data-access services for an app, `page`, or `feature`.                                                                                                                                                                                 |
+| **May import**  | `util`, `map` (runtime — call methods), `data-access`                                                                                                                                                                                                       |
+| **Owns / does** | NgRx-related state; initializes its related `map` libs to fetch; owns **data-freshness** orchestration (repeat / sequence / schedule calls that must happen whether or not a screen is open); may hold guards, interceptors, and similar (beside `+state`). |
+| **Must not**    | Skip `map` when talking to the outside world (use the fetch funnel); initialize another family's `map` (use that family's `data-access` instead).                                                                                                           |
 
 **Notes**
 
-- Generate guards/interceptors inside `data-access` libs — they often need heavy data access.
+- Generate guards/interceptors inside `data-access` libs — they often need heavy data access. A guard that protects **one page's own routes only** may instead be generated in that `page` lib ([`page` type](#page-type)); interceptors are always ours.
+- **Screen-scoped repetition is not ours** — a poll that exists because a component is on screen belongs to that `feature`; it dispatches here each tick. Which side owns a given case: [Request orchestration](#request-orchestration). Either way the owning lib's TSD states it as a Functional Requirement, so it is unit-tested where it lives.
 - Local/device async (Local Storage, SQLite, etc.) can live here without a `map`; HTTP/assets still go `map` → `data-access`.
 - This is the **only** lib type that imports `map` to call API/asset methods — not merely for types.
 
@@ -189,32 +220,34 @@ No type may import `app` via these tags (`app` lives under `apps/` and consumes 
 
 ### 'feature' type
 
-|                 |                                                                                                     |
-| --------------- | --------------------------------------------------------------------------------------------------- |
-| **Role**        | Smart components for an independent functionality — access data via `data-access`, render via `ui`. |
-| **May import**  | `util`, `map` (types only), `data-access`, `ui`, `feature`                                          |
-| **Owns / does** | Initialize `ui` in templates and `data-access` in TS; pass real data into `ui` inputs.              |
-| **Must not**    | Import `page` or `api`; read URL Query Params; navigate routes (page owns that).                    |
+|                 |                                                                                                                                                                                                                |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Role**        | Smart components for an independent functionality — access data via `data-access`, render via `ui`.                                                                                                            |
+| **May import**  | `util`, `map` (types only), `data-access`, `ui`, `feature`                                                                                                                                                     |
+| **Owns / does** | Initialize `ui` in templates and `data-access` in TS; pass real data into `ui` inputs; may own **screen-scoped** request orchestration — a poll or refresh that exists only while this component is on screen. |
+| **Must not**    | Import `page` or `api`; read URL Query Params; navigate routes (page owns that); call a `map` at runtime — every tick of a poll dispatches to `data-access`.                                                   |
 
 **Notes**
 
 - May use `data-access` libs whose state is already provided as the app Root Store or a page Feature Store.
+- **Screen-scoped orchestration** — keep it in its own service under the lib (one concern: start / tick / stop / pause / resume), not spread through the component. It must pause and resume with the app going to background and foreground, so it subscribes to the shared `util` lib that wraps the native runtime. Data-freshness repetition belongs to `data-access` instead: [Request orchestration](#request-orchestration).
 
 &nbsp;
 
 ### 'page' type
 
-|                 |                                                                                                                                                                                            |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Role**        | App pages — compose multiple `feature` libs into a larger surface.                                                                                                                         |
-| **May import**  | `util`, `map` (types only), `data-access`, `ui`, `feature`, `page`                                                                                                                         |
-| **Owns / does** | May use `data-access`; read URL Query Params and pass them down as inputs; navigate routes in response to `feature` outputs. Usually app-specific (e.g. `libs/ng-boilerplate/page/home/`). |
-| **Must not**    | Import `api`; be imported by other libs as “the page” — only the app route file wires a page in (see below).                                                                               |
+|                 |                                                                                                                                                                                                                                          |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Role**        | App pages — compose multiple `feature` libs into a larger surface.                                                                                                                                                                       |
+| **May import**  | `util`, `map` (types only), `data-access`, `ui`, `feature`, `page`                                                                                                                                                                       |
+| **Owns / does** | May use `data-access`; read URL Query Params and pass them down as inputs; navigate routes in response to `feature` outputs; may hold **route guards** for its own routes. Usually app-specific (e.g. `libs/ng-boilerplate/page/home/`). |
+| **Must not**    | Import `api`; be imported by other libs as “the page” — only the app route file wires a page in (see below); hold interceptors (those are `data-access`).                                                                                |
 
 **Notes**
 
 - Wired into an app **only** from that app's route file — e.g. `apps/{app-name}/src/app/app.routes.ts` (`loadChildren` / exported routes). Nested/child routes may live inside the page lib; the app route file remains the sole outside entry.
 - Usually no need to import other `page` libs; keep child pages inside the same lib when possible.
+- **Guards may be generated here too**, the same way they may in `data-access`. Which of the two: a guard that protects **only this page's own routes** belongs here, beside the routes it guards — and failing one usually means a redirect, which is the page's own responsibility anyway ([`page` exclusive ownership](#cross-cutting-contracts)). A guard reused across pages or apps, or one that leans on store state (auth, permissions), belongs in `data-access` instead — see [`data-access` type](#data-access-type). Interceptors are never a page's; they are HTTP-wide and always `data-access`.
 
 &nbsp;
 
