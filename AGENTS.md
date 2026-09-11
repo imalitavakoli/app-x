@@ -152,6 +152,8 @@ Which of our skills the workflow invokes, and where. _For orientation_ — each 
 | `x-ng-test-unit-helper` | helper   | A1 · A3 · B1                 |
 | `x-ng-test-e2e-helper`  | helper   | A1 (if e2e) · A3             |
 | `x-ng-sp-plan-enricher` | enricher | A2                           |
+| `x-log-diag-editor`     | editor   | A3 · B1                      |
+| `x-log-analytics-editor` | editor  | A3 · B1                      |
 | `x-code-diff-reviewer`  | reviewer | A3 · B1                      |
 | `x-skill-build-helper`  | helper   | C1                           |
 

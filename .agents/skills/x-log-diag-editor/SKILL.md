@@ -3,7 +3,7 @@ name: x-log-diag-editor
 description: 'WHAT? The rule for which call sites deserve a diagnostic log, and the edit that adds, prunes or downgrades them in named files. WHEN? Asked to add, audit, prune or level-correct logging in components, services, utils or plain TS/JS; deciding whether a call site deserves a log, which severity it takes, or which logging mechanism to use. Not for diagnosing a defect, and not for analytics or product-event logging.'
 metadata:
   kind: editor
-  version: '1.10.0'
+  version: '1.11.0'
 ---
 
 # Log Diag Editor
@@ -124,6 +124,8 @@ Nothing here blocks: an explicit instruction to log anyway wins.
 Investigation logs are what "record what this function received and returned" asks for — trace spam when standing, legitimate when temporary and scoped.
 
 **Which mode this run asked for** is a fact about the request, not a judgement this file makes; **whether — and how — the chosen mechanism serves that mode** is the reference's job (`modes` in its frontmatter, plus the mark and the removal pass). A reference that does not list the requested mode cannot apply.
+
+**When the request names no mode, it is `standing`.** The dense form is what a request asks for in its own words — "record what this function received and returned" — so an unqualified request for logs is a request for the committed, sparse kind. **Never infer `investigation` from the surrounding work being debugging-shaped**: that is a fact about the caller, not about the request, and reading it as one produces dense marked records nobody asked for and a removal pass nobody is waiting to run. Mode is an input to the mechanism filter (`references/README.md`), so leaving it unset does not defer the choice — it makes the filter compare against nothing.
 
 **The mark follows the mode, not the level.** Every record added for the investigation carries it, whatever level that record takes — an error edge logged at `ERROR` during an investigation is still an investigation record, and leaving it unmarked because it is not `DEBUG` is how one survives the removal pass and becomes permanent by accident. If a genuinely **standing** record is added in the same run, it stays unmarked — but say so explicitly in the report, so it reads as a decision rather than a leftover.
 

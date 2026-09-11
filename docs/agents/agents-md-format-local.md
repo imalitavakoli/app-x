@@ -32,6 +32,8 @@ Which step reads a key is the consuming step's job, not this catalog's. How to r
 | `pref.audience`    | `developer` \| `product`                                             |
 | `pref.app-serve`   | `not-needed` \| an Nx project name (e.g. `ng-x-boilerplate-desktop`) |
 | `pref.diff-review` | `on` \| `off`                                                        |
+| `pref.log-diag`    | `on` \| `off`                                                        |
+| `pref.log-analytics` | `on` \| `off`                                                      |
 
 Discovery of a missing key is the prefs doc / consuming step, not this file's.
 

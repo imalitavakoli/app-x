@@ -366,4 +366,20 @@ The stub keeps **one line** of instruction, which is deliberately a duplicate of
 
 **Revisit if** Nx gains a persistent per-agent opt-out that suppresses only the rules block while leaving the rest of that agent's setup running — that would remove the asymmetry, and the rule becomes a cheap assertion rather than the mechanism. Also revisit if its detection stops dry-running the generator, or if a stub ever needs to carry a rule no other surface can reach, which would mean the invariant, not the stub, is wrong.
 
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why the log hand-off dispatches standing mode only
+
+The diagnostic-log editor has two modes, so a later reader meets an obvious question the path files do not answer: if a defect path produces investigation records, who sweeps them? The workflow does not, and does not need to.
+
+Investigation's mark-and-sweep machinery exists because unmarked temporary logs accumulate when **the adder walks away**. An agent on a defect path does not: it adds instrumentation, reads it, fixes, and finishes inside one cycle and one diff, so the mark buys nothing at a removal it is still present for. Superpowers' own defect skill does instruct adding ad-hoc instrumentation at component boundaries before proposing a fix, and the backstop for that already exists and is already wired — the outstanding-changes review judges any diagnostic-log call appearing in the diff, against the mechanism rules those skills own. A sweep step of ours would duplicate a check that runs anyway.
+
+So dispatching `standing` only is not a narrowing of the skill; it is what makes the hand-off owe nothing afterwards. The two design consequences are both recorded where they bind: the mode is named explicitly at the dispatch, and the skill itself now defaults an unstated mode to `standing` rather than inferring one from the surrounding work — that inference, not the absence of a sweep, was the actual failure this entry came from.
+
+**Revisit if** Superpowers' defect skill stops adding instrumentation (the backstop becomes unnecessary), the outstanding-changes review stops judging log calls (it becomes absent), or the workflow ever dispatches investigation mode — then removal becomes ours, and it needs a step rather than an entry.
+
+&nbsp;
+
 [🔙](../../README.md#agents)

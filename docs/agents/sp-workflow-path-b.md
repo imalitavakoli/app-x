@@ -55,7 +55,19 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 
 2. **Verify the local `requirements/` registry** of any `util`, product `app`, or grab-bag `ui`/`feature` lib the fix touched — the same shared procedure's closing rule, report-don't-block carve-out included. Changed set as above.
 
-3. **Review the fix's changes, last.** Runs after step 2, so it judges the tree as it will stand.
+3. **Hand the fix's changed set to the log editors.** The changed set is the files the fix touched, which 📌 _Change-set paths_ already reported. Runs before the review below, because these editors **write code** and the review must judge the tree as it will stand.
+
+   Resolve `pref.log-diag` and `pref.log-analytics` per [sp-workflow-prefs.md](sp-workflow-prefs.md) — both in one ask when both are unset. Match/write: [agents-md-format-local.md](agents-md-format-local.md). Unset → ask once here (`on` recommended; weigh the analytics one more carefully — its records cannot be retracted).
+   - **`on`** — **dispatch a subagent** per key that resolved `on`, pointed at `.agents/skills/x-log-diag-editor/SKILL.md` **in `standing` mode** (the committed, sparse kind — never `investigation`) and at `.agents/skills/x-log-analytics-editor/SKILL.md`. Each carries its own methodology and mechanism references, which this session never emits (_Operating rule 5_). Take back the files touched and anything it refused.
+   - **`off`** — do not dispatch. Say in one line that the pass was skipped because `pref.log-diag: off` / `pref.log-analytics: off` (or this-cycle override). Not a Pass.
+
+   **Hand over the whole changed set; do not pre-filter by lib type.** Each skill already refuses what its own rules exclude. Filtering here would copy tables those skills own and can change without us.
+
+   Direct invoke of either skill, or the user asking for logs in a named file, still runs it — these keys govern only the unasked-for pass over a whole changed set.
+
+   **`standing` is the only mode this step ever dispatches**, so this step never leaves investigation records behind and owes no removal pass. Ad-hoc instrumentation added while diagnosing is a different thing, and the review below is what judges whatever of it reached the tree.
+
+4. **Review the fix's changes, last.** Runs after steps 2–3, so it judges the tree as it will stand.
 
    Resolve `pref.diff-review` per [sp-workflow-prefs.md](sp-workflow-prefs.md). Match/write: [agents-md-format-local.md](agents-md-format-local.md). Unset → ask once here (`on` recommended).
    - **`on`** — **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the human-report verdict line (status marker included), the counts, and the report path — the skill's reference loading is heavy and this hook runs deep (_Operating rule 5_). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.

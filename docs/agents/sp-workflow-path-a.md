@@ -169,7 +169,19 @@ Always runs on Path A before finishing. **This hook verifies; only its actions a
 
 3. **Verify CODEOWNERS when this cycle created or handed off an owned path.** If it did not, skip. If it did, confirm root `CODEOWNERS` has a line for each new or handed-off path. If a line is missing, load `x-codeowners-editor` and add it, and say it is a late fix (the same-commit step was missed). Do not change ownership for ordinary edits under an existing path.
 
-4. **Review this cycle's changes, last.** Runs after steps 1–3 because those change files, and it must judge the tree that will actually be proposed.
+4. **Hand this cycle's changed set to the log editors.** The changed set is the libs this cycle's feature branch touched. Runs before the review below, because these editors **write code** and the review must judge the tree that will actually be proposed.
+
+   Resolve `pref.log-diag` and `pref.log-analytics` per [sp-workflow-prefs.md](sp-workflow-prefs.md) — both in one ask when both are unset. Match/write: [agents-md-format-local.md](agents-md-format-local.md). Unset → ask once here (`on` recommended; weigh the analytics one more carefully — its records cannot be retracted).
+   - **`on`** — **dispatch a subagent** per key that resolved `on`, pointed at `.agents/skills/x-log-diag-editor/SKILL.md` **in `standing` mode** (the committed, sparse kind — never `investigation`) and at `.agents/skills/x-log-analytics-editor/SKILL.md`. Each carries its own methodology and mechanism references, which this session never emits (_Operating rule 5_). Take back the files touched and anything it refused.
+   - **`off`** — do not dispatch. Say in one line that the pass was skipped because `pref.log-diag: off` / `pref.log-analytics: off` (or this-cycle override). Not a Pass.
+
+   **Hand over the whole changed set; do not pre-filter by lib type.** Each skill already refuses what its own rules exclude — the analytics editor logs only at `feature` / `page`, the diag editor only at boundaries and error edges. Filtering here would copy tables those skills own and can change without us.
+
+   Direct invoke of either skill, or the user asking for logs in a named file, still runs it — these keys govern only the unasked-for pass over a whole changed set.
+
+   In **auto** mode these are edits to an already-reviewed tree, so route them through a fix dispatch like any other post-review change — **never edit them from the controller session**.
+
+5. **Review this cycle's changes, last.** Runs after steps 1–4 because those change files, and it must judge the tree that will actually be proposed.
 
    Resolve `pref.diff-review` per [sp-workflow-prefs.md](sp-workflow-prefs.md). Match/write: [agents-md-format-local.md](agents-md-format-local.md). Unset → ask once here (`on` recommended).
    - **`on`** — **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the human-report verdict line (status marker included), the counts, and the report path. The skill loads a lot — its own maps, the `docs/` pages they name, and the whole diff — and this hook sits at the cycle's deepest point, where controller context is scarcest (_Operating rule 5_, the same reason the doc writers are dispatched). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.

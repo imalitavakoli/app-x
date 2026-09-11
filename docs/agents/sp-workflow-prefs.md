@@ -105,6 +105,30 @@ To `product`: speak naturally, not in workflow jargon — and still use the **re
 
 &nbsp;
 
+### `pref.log-diag`
+
+- **Scope:** one-path
+- **In the plan:** none
+- **Casual default:** none
+- **Does:** whether the changed set is handed to the diagnostic-log editor before finishing.
+
+**Rules.** Resolve on the paths that dispatch that editor, immediately before the dispatch — not at cycle start. Unset → ask once (`on` recommended). `off` skips the dispatch; say so in one line naming `pref.log-diag: off` (or this-cycle override). Not a Pass. The user asking for logs in a named file still runs the skill — this key governs only the unasked-for pass over a whole changed set. A this-cycle override wins; do not rewrite the stored default unless they ask.
+
+&nbsp;
+
+### `pref.log-analytics`
+
+- **Scope:** one-path
+- **In the plan:** none
+- **Casual default:** none
+- **Does:** whether the changed set is handed to the analytics-event editor before finishing.
+
+**Rules.** Same resolution and override rules as `pref.log-diag`, and the same carve-out: an explicit request still runs the skill. Recommend `on` with more care than the diag key — events cannot be retracted once sent and native event names are capped per app user, so a record added here is not undone by deleting the call. That asymmetry is the reason these are two keys and not one.
+
+**Mechanism shape is not this key.** Guard style, prefixes, and which context fields ride along are the editors' own committed team state, under `.agents/_team/skills/{skill}/`. This key decides only whether the workflow raises the subject at all; a value belonging to the other family goes in the other file.
+
+&nbsp;
+
 ## Adding or removing a key
 
 1. Catalog row first ([agents-md-format-local.md](agents-md-format-local.md)).
