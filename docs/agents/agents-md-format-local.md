@@ -26,11 +26,12 @@ Family prefix `pref.`. Short kebab-case name. Value after a colon. One line.
 
 Which step reads a key is the consuming step's job, not this catalog's. How to resolve and persist: [sp-workflow-prefs.md](sp-workflow-prefs.md).
 
-| Key              | Values                                                               |
-| ---------------- | -------------------------------------------------------------------- |
-| `pref.mode`      | `auto` \| `interactive`                                              |
-| `pref.audience`  | `developer` \| `product`                                             |
-| `pref.app-serve` | `not-needed` \| an Nx project name (e.g. `ng-x-boilerplate-desktop`) |
+| Key                | Values                                                               |
+| ------------------ | -------------------------------------------------------------------- |
+| `pref.mode`        | `auto` \| `interactive`                                              |
+| `pref.audience`    | `developer` \| `product`                                             |
+| `pref.app-serve`   | `not-needed` \| an Nx project name (e.g. `ng-x-boilerplate-desktop`) |
+| `pref.diff-review` | `on` \| `off`                                                        |
 
 Discovery of a missing key is the prefs doc / consuming step, not this file's.
 

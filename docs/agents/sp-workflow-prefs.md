@@ -22,7 +22,7 @@ First match wins:
 2. Else `AGENTS.local.md` has a valid `pref.{key}` (match rules: the catalog) → use it. Announce in one sentence; do not block.
 3. Else the key is **unset — ASK the user, once, now.** A missing `AGENTS.local.md` is the **normal** state of this workspace, not a signal that there is nothing to resolve: being unset is what makes the ask **due**, not what excuses it. A consuming step may name a narrower fallback — deriving the value without asking, as Path A's app-serve does — and where it names none, the fallback **is** the ask.
 
-**Run this ladder once per key, not once per cycle.** A key resolved at rule 1 says nothing about any other key. A key whose **In the plan** is `none` can never match rule 1 at all — no plan line will ever carry it — so for that key the ladder always runs on to rule 2, and with no `AGENTS.local.md`, to rule 3's ask. Today `pref.audience` is that key: a plan carrying `Execution mode:` and `App serve:` resolves those two and leaves `audience` exactly as unresolved as it was. Finish the ladder for **every** key in _Keys_ below before the first question, and put whatever is still unset into **one** ask rather than returning to the user twice.
+**Run this ladder once per key, not once per cycle.** A key resolved at rule 1 says nothing about any other key. A key whose **In the plan** is `none` can never match rule 1 at all — no plan line will ever carry it — so for that key the ladder always runs on to rule 2, and with no `AGENTS.local.md`, to rule 3's ask. Today `pref.audience` is that key: a plan carrying `Execution mode:` and `App serve:` resolves those two and leaves `audience` exactly as unresolved as it was. Finish the ladder, before the first question, for every key **due at that moment** — every-path keys, and any one-path key whose consumer is the ask about to fire — and put whatever is still unset of those into **one** ask rather than returning to the user twice. A one-path key whose consumer is later stays unresolved until that consumer.
 
 A user override **this cycle / this conversation** always wins. Do not rewrite `pref.{key}` unless they ask to change the default. If **In the plan** is not `none`, still write that line into the plan.
 
@@ -91,6 +91,17 @@ To `product`: speak naturally, not in workflow jargon — and still use the **re
 - **Does:** names the Nx app to serve during execution, or `not-needed`.
 
 **Rules.** The consuming path owns when to derive vs ask, and the serve-check. A stored value is a usual app, not a law.
+
+&nbsp;
+
+### `pref.diff-review`
+
+- **Scope:** one-path
+- **In the plan:** none
+- **Casual default:** none
+- **Does:** whether the outstanding-changes review runs before finishing.
+
+**Rules.** Resolve on the paths that dispatch that review, immediately before the dispatch — not at cycle start. Unset → ask once (`on` recommended). `off` skips the dispatch; say so in one line naming `pref.diff-review: off` (or this-cycle override). Not a Pass. Loading the skill, or the user asking for a review, still runs it. A this-cycle override wins; do not rewrite the stored default unless they ask.
 
 &nbsp;
 

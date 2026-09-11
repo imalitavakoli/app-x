@@ -171,9 +171,13 @@ Always runs on Path A before finishing. **This hook verifies; only its actions a
 
 4. **Review this cycle's changes, last.** Runs after steps 1–3 because those change files, and it must judge the tree that will actually be proposed.
 
-   **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the human-report verdict line (status marker included), the counts, and the report path. The skill loads a lot — its own maps, the `docs/` pages they name, and the whole diff — and this hook sits at the cycle's deepest point, where controller context is scarcest (_Operating rule 5_, the same reason the doc writers are dispatched). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did; the review must happen either way.
+   Resolve `pref.diff-review` per [sp-workflow-prefs.md](sp-workflow-prefs.md). Match/write: [agents-md-format-local.md](agents-md-format-local.md). Unset → ask once here (`on` recommended).
+   - **`on`** — **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the human-report verdict line (status marker included), the counts, and the report path. The skill loads a lot — its own maps, the `docs/` pages they name, and the whole diff — and this hook sits at the cycle's deepest point, where controller context is scarcest (_Operating rule 5_, the same reason the doc writers are dispatched). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.
+   - **`off`** — do not dispatch. Say in one line that the review was skipped because `pref.diff-review: off` (or this-cycle override). Not a Pass.
 
-   It reports and never edits, so its findings do **not** enter the fix dispatch below. A report asking for changes **ends this cycle**; the user opens a new one to make them, then returns here. It judges the whole branch against workspace conventions, which is a different question from `requesting-code-review`'s (one task's diff against the plan) — run both, neither replaces the other.
+   Direct invoke of that skill, or the user asking for a review, still runs it.
+
+   When it ran: it reports and never edits, so its findings do **not** enter the fix dispatch below. A report asking for changes **ends this cycle**; the user opens a new one to make them, then returns here. It judges the whole branch against workspace conventions, which is a different question from `requesting-code-review`'s (one task's diff against the plan) — run both, neither replaces the other.
 
 In **auto** mode the tree has already been reviewed, so route every resulting test-file change through a fix dispatch + scoped re-review like any other post-review change — never edit it from the controller session. Follow `x-ng-test-unit-helper` and `x-ng-test-e2e-helper` — **re-read their `SKILL.md` here rather than checking whether A1's copy survived** (_Operating rule 5_). This hook runs after a whole execution phase, so treat them as gone by default: a half-remembered convention does not announce itself, and a re-read costs one file.
 

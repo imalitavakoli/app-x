@@ -57,9 +57,13 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 
 3. **Review the fix's changes, last.** Runs after step 2, so it judges the tree as it will stand.
 
-   **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the human-report verdict line (status marker included), the counts, and the report path — the skill's reference loading is heavy and this hook runs deep (_Operating rule 5_). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.
+   Resolve `pref.diff-review` per [sp-workflow-prefs.md](sp-workflow-prefs.md). Match/write: [agents-md-format-local.md](agents-md-format-local.md). Unset → ask once here (`on` recommended).
+   - **`on`** — **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the human-report verdict line (status marker included), the counts, and the report path — the skill's reference loading is heavy and this hook runs deep (_Operating rule 5_). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.
+   - **`off`** — do not dispatch. Say in one line that the review was skipped because `pref.diff-review: off` (or this-cycle override). Not a Pass.
 
-   It reports and never edits. This path often has no branch and no commits (_Git contract_), so the review covers whatever the fix actually touched, committed or not — the skill resolves that itself. A report asking for changes **ends this cycle**; the user opens a new one to make them.
+   Direct invoke of that skill, or the user asking for a review, still runs it.
+
+   When it ran: it reports and never edits. This path often has no branch and no commits (_Git contract_), so the review covers whatever the fix actually touched, committed or not — the skill resolves that itself. A report asking for changes **ends this cycle**; the user opens a new one to make them.
 
 Docs come **after** the fix is proven, never before, so nothing documents behaviour that verification might still reject. The cycle is not done until this hook has run — make the final completion report after it, not before.
 
