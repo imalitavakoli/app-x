@@ -1,9 +1,9 @@
 ---
 name: x-code-diff-reviewer
-description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; auditing changes for correctness, security, reuse or workspace conventions — lib boundaries, naming, DEP configs, styles, tests or docs. Not for making the changes, fixing findings, or opening the PR."
+description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; or to put the human report on an existing merge request's description. Auditing correctness, security, reuse, lib boundaries, naming, DEP, styles, tests, docs. Not for making the changes, fixing findings, or opening the PR."
 metadata:
   kind: reviewer
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # Code Diff Reviewer
@@ -15,9 +15,20 @@ repository, and the shape of the two reports that judgement is delivered in.
 
 It reviews. It does not repair. The findings are the whole product.
 
+The **main job** is self-review **before** a merge request: print the human report in the
+session. That job is complete even when no request exists.
+
+**Prepend** is optional follow-on: copy that same report onto a merge request that already
+exists, or that appears later in this run, so the next reader sees it. Skipping prepend is
+not a failed review.
+
 `scripts/collect-diff-facts.mjs` gathers the git facts (base branch, ranges, changed files,
 buckets) and writes nothing outside the report directory. **Every judgement in the report is
-yours** — the script never decides whether something is a finding.
+yours** — the script never decides whether something is a finding. It stays git-only: it does
+not look up merge requests.
+
+`scripts/publish-pr-description.mjs` is the only thing that talks to a host, and only to the
+description. Procedure: `references/publish-pr-description.md`.
 
 ## Optional prefs
 
@@ -41,7 +52,7 @@ Announce in one line which layer supplied each key that is not the announced def
 
 | Key                | Type                             | Announced default (file or key absent)                                                          | Does                                                      |
 | ------------------ | -------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `version`          | integer                          | current shape is `1` — compare against the example, not this skill's `1.2.0`                    | format of this file                                       |
+| `version`          | integer                          | current shape is `1` — compare against the example, not this skill's `1.3.0`                    | format of this file                                       |
 | `boilerplate_apps` | string array of Nx project names | absent — then the DEP mirroring check falls through to the workspace docs, then to a `question` | which apps the DEP check treats as the copyable reference |
 
 `version` is the shape of this JSON. It is not the skill's `metadata.version`.
@@ -75,6 +86,9 @@ You may write to exactly one place:
 ```
 .agents/_local/skills/x-code-diff-reviewer/
 ```
+
+Updating a host description via the publish script is not editing evidence. Do not write the
+description into a tracked file.
 
 Everything else in the repository is read-only for the whole run — the working tree, the index,
 HEAD, branches, stashes, and untracked files alike.
@@ -359,7 +373,8 @@ Both are produced every run. Write them to
 The human report follows `assets/template/human-report.md` — its section order is fixed, and the
 verdict comes first. Every section marked REQUIRED appears even when empty. Pick a worked example
 from `assets/examples/` that matches your verdict; if none matches, follow the template and say
-which sections you left empty.
+which sections you left empty. Optional caller examples live under
+`.agents/skills/x-code-diff-reviewer/assets/examples/callers/` — copy, do not require.
 
 **End the human report by pointing at the JSON.** A person who wants these fixed starts a new
 cycle, and the agent doing that work should read `latest.json`, not this report — the JSON
@@ -378,6 +393,11 @@ A marker on every finding makes severity harder to scan, which is the opposite o
 | ❌     | verdict line           | fail                   |
 | 🛑     | the `Blocking` heading | these stop the merge   |
 | 🔧     | the closing line       | how to get these fixed |
+
+The same marker belongs on the **session** announcement of the verdict — a closing summary, or a
+short return to a parent agent. Use the human-report verdict line (`✅ **Pass**`,
+`⚠️ **Pass with warnings**`, `❌ **Fail**`), not only the JSON `state` names (`pass` /
+`pass_with_warnings` / `fail`). Those names stay in `latest.json`.
 
 Do not add a sixth. Do not put one in a finding title, a table cell, or `body_markdown` — the
 JSON's consumers post that text to a pull request, where a stray glyph is noise.
@@ -407,8 +427,11 @@ not the evidence.
 
 ## Out of scope
 
-- **Do not open, update, or comment on a pull request.** Emit `suggested_reviewers` and
-  `suggested_labels` in the JSON and stop. Whoever creates the PR reads the report from disk.
+- Do not **create** a merge request, comment on it, request-changes, approve, or assign anyone.
+  Emit `suggested_reviewers` and `suggested_labels` in the JSON; do not apply them.
+- **Do** update the **description** after `latest.md` exists, by running
+  `scripts/publish-pr-description.mjs` (procedure: `references/publish-pr-description.md`).
+  If that script skips, print its `reason` using the when/when-not table in that reference.
 - **Do not resolve a CODEOWNERS handle to a host account.** Report the handle as written. A
   display name is not a login, and guessing one assigns the wrong person.
 - **Do not add a rule to `docs/`.** If you find a rule with no doc home, report it as a `chore`
@@ -435,8 +458,20 @@ Copy into todos, prefixed `[review]`:
       cannot confirm, and record `verdict` on each
 - [ ] `[review]` Fill every REQUIRED section, including _What I did not check_
 - [ ] `[review]` Confirm no claim asserts an unrun check's outcome
-- [ ] `[review]` Write the `.md` and `.json` reports plus both `latest.*`; print the `.md`
+- [ ] `[review]` Write the `.md` and `.json` reports plus both `latest.*`; print the `.md`. In
+      the session, announce the verdict as that report's verdict line (status marker included),
+      not only the JSON `state`.
+- [ ] `[review]` Run `scripts/publish-pr-description.mjs`; if skipped, print the matching
+      when/when-not reason. If a merge-request URL appears later in this run, run the script
+      again — do not re-review.
 - [ ] `[review]` Verify `git status` matches the state you started in
+
+## Changing this skill
+
+Not a review-run step. Copy into todos when this skill's `metadata.version` changes (minor or
+major; a patch leaves `Explains:` alone):
+
+- [ ] `[review]` Set `Explains:` on each human-only reference to the new version
 
 ## Common mistakes
 
@@ -467,6 +502,8 @@ Copy into todos, prefixed `[review]`:
 | Invoked a sibling skill named in the asset map                              | Read the file at that path. Do not run the producer skill.                                                                        |
 | Allowed a default Tailwind palette class because it is "real Tailwind"      | The app config and the preset it extends are the closed set.                                                                      |
 | Skipped Ionic shell or navigation because capacitor.md did not load         | Ionic UI is the doc map. capacitor.md is native plugins only.                                                                     |
-| Opened the PR, or assigned reviewers                                        | Out of scope. Emit suggestions; stop.                                                                                             |
+| Created a merge request, or assigned reviewers                              | Out of scope. Emit suggestions in the JSON; do not apply them.                                                                    |
 | Resolved `@Name` to a host username                                         | Report the handle verbatim.                                                                                                       |
-| Treated the projection examples as the only hosts                           | `unknown` is valid. Add a detector and a projection section for a new host; do not bend an existing mapping.                      |
+| Treated the projection or publish examples as the only hosts                | `unknown` is valid. Add a detector and a find/update pair; do not bend an existing mapping.                                       |
+| Treated a skipped prepend as a failed review                                | The session report is the review. Prepend is optional.                                                                            |
+| Announced only `pass` / `fail` / `pass_with_warnings` in the session        | Use the human-report verdict line, including ✅ / ⚠️ / ❌. The enum is the JSON `state`.                                           |

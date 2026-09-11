@@ -50,6 +50,14 @@ file only when the example doesn't cover it, and only the one the user names.>
 <Name the tool as "X today (re-check; it can change)" and tell the reader to read the
 actual config rather than trusting this file. Keeps the skill alive across tool changes.>
 
+## Optional prefs — DROP this heading and everything under it if the skill stores nothing, or if the four live in a file SKILL.md already points at
+
+<If it stores state: include all four from _Document the store_ — Resolve
+**per key**, a key table, the `version` mismatch rule (`version` is the file shape, not
+`metadata.version`), and one example of the file. Default home is this section. If
+resolving already requires another of the skill's files, put the four there and replace
+this section with a pointer.>
+
 ## Common mistakes
 
 | Mistake       | Fix              |

@@ -1,6 +1,6 @@
 ---
 name: x-code-diff-reviewer
-description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; auditing changes for correctness, security, reuse or workspace conventions — lib boundaries, naming, DEP configs, styles, tests or docs. Not for making the changes, fixing findings, or opening the PR."
+description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; or to put the human report on an existing merge request's description. Auditing correctness, security, reuse, lib boundaries, naming, DEP, styles, tests, docs. Not for making the changes, fixing findings, or opening the PR."
 ---
 
 # x-code-diff-reviewer (pointer)

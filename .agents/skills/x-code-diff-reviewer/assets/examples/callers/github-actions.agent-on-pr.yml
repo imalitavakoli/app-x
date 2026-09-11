@@ -1,0 +1,24 @@
+# EXAMPLE — copy-and-adapt. Not a live pipeline; copy elsewhere if you wire one.
+# The skill works with none of these files. A pipeline must start an
+# agent that loads `.agents/skills/x-code-diff-reviewer/SKILL.md`.
+# Node alone cannot write the human report. Do not put secrets here.
+
+name: Example — agent review on PR open
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  agent-code-diff-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Invoke your agent here with the skill path:
+      #   .agents/skills/x-code-diff-reviewer/SKILL.md
+      # Replace this placeholder with your agent runner / orchestration step.
+      - name: Invoke agent (placeholder)
+        run: |
+          echo "EXAMPLE ONLY — invoke your agent here with the skill path"
+          echo "Skill: .agents/skills/x-code-diff-reviewer/SKILL.md"

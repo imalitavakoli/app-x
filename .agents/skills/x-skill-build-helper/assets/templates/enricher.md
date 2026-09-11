@@ -75,6 +75,14 @@ the whole list; only when all pass, report.
 2. List each item annotated and the values added to it.
 3. Note any prerequisite gaps you had to stop for.
 
+## Optional prefs — DROP this heading and everything under it if the skill stores nothing, or if the four live in a file SKILL.md already points at
+
+<If it stores state: include all four from _Document the store_ — Resolve
+**per key**, a key table, the `version` mismatch rule (`version` is the file shape, not
+`metadata.version`), and one example of the file. Default home is this section. If
+resolving already requires another of the skill's files, put the four there and replace
+this section with a pointer.>
+
 ## Common mistakes
 
 | Mistake       | Fix              |

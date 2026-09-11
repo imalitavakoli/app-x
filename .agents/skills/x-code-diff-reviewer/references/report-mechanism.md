@@ -32,10 +32,11 @@ not bend an existing mapping to fit.
 
 `position` is deprecated on GitHub in favour of the line/side fields. Do not emit it.
 
-## This skill never calls an API
+## This file does not call a host API
 
-It writes files. It does not open, update, approve, or comment on a pull request, and it does not
-assign anyone. Whoever does that reads these files.
+This file is the JSON and **comment** projection. Description publish is
+`references/publish-pr-description.md`. The skill still never comments, requests changes,
+approves, assigns, or creates a request — whoever does that reads these files.
 
 ## Schema
 

@@ -78,8 +78,16 @@ once — the point is that two runs rank the same thing the same way.>
 
 - [ ] Every finding names a resolvable location.
 - [ ] Every finding is falsifiable — it says what would make it wrong.
-- [ ] Nothing was edited, and no file was written.
+- [ ] The subject under review was not edited. Report files and a host-description copy are allowed.
 - [ ] Dimensions that could not be checked are named as such.
+
+## Optional prefs — DROP this heading and everything under it if the skill stores nothing, or if the four live in a file SKILL.md already points at
+
+<If it stores state: include all four from _Document the store_ — Resolve
+**per key**, a key table, the `version` mismatch rule (`version` is the file shape, not
+`metadata.version`), and one example of the file. Default home is this section. If
+resolving already requires another of the skill's files, put the four there and replace
+this section with a pointer.>
 
 ## Common mistakes
 
@@ -90,7 +98,7 @@ once — the point is that two runs rank the same thing the same way.>
 
 ## Notes
 
-- **Reviewing and fixing are two skills.** The moment a reviewer starts editing, its findings stop being auditable — nobody can tell which were real and which were made true by the same run. Keep the fix in a separate skill and a separate invocation.
+- **Reviewing and fixing are two skills.** The moment a reviewer starts editing, its findings stop being auditable — nobody can tell which were real and which were made true by the same run. Keep the fix in a separate skill and a separate invocation. **"edits nothing" means the subject under review** (the diff / working tree). Copying a report onto a host merge-request description is not a fix and does not change the kind.
 - **The "could not check" line is what makes a report trustworthy.** A review that only reports what it found is indistinguishable from one that ran half its dimensions.
 - **Rank, do not pad.** A reviewer that reports something on every run to look thorough trains its reader to skim. An empty finding list is a valid result and should be stated plainly.
 - **Do not let the reference drift into the skill.** Review against `docs/` by exact path rather than restating the conventions here — a copy of the rules inside the reviewer is a second source of truth that will disagree with the first.

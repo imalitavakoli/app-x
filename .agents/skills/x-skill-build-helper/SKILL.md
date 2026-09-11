@@ -3,7 +3,7 @@ name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, where its templates and examples live, or where its team/local state (prefs, registries) lives."
 metadata:
   kind: helper
-  version: '2.5.0'
+  version: '2.6.0'
 ---
 
 # Skill Build Helper
@@ -61,7 +61,7 @@ Once the verbs have collapsed, the number of **deliverables** is the number of c
 
 A closed set. If none applies, it is one skill with sections:
 
-1. **A second subject with its own lifecycle.** Documentation that evolves independently of the thing it describes is its own skill. A `README` emitted *as part of* what gets created is not — same lifecycle, so it is a file in the output.
+1. **A second subject with its own lifecycle.** Documentation that evolves independently of the thing it describes is its own skill. A `README` emitted _as part of_ what gets created is not — same lifecycle, so it is a file in the output.
 2. **A judgement that must stay auditable.** Judging instances the same run may have changed leaves nobody able to separate "this was wrong" from "this was made true". Note the narrowness: a skill checking **its own** output against **its own** rules is a Validate section, not a reviewer.
 3. **Two distinct deliverables where neither guard is wrong.** Genuinely rare. Hitting it twice means the taxonomy needs review, not the skill.
 
@@ -185,7 +185,7 @@ The list is neither a target nor a ceiling. A new kind earns its place only if *
 - **A kind that is really another kind with a different implementation.** If what separates it from an existing kind is whether it ships a script, runs a tool, or has a longer procedure, that is not a kind — it is one kind's variation. The test is whether the **work** differs, not the mechanics.
 - **A kind whose contract nobody has had to complete.** An unused row keeps whatever gaps it was written with, and they surface only when someone finally tries to build one.
 
-> **Standing debt — three kinds, no instances.** `reviewer`, `scaffolder` and `runner` clear criteria 1 and 2 but **not 3**: each has a template and a Prerequisites/Validate shape the others cannot produce by deletion, and each was admitted on an intended skill rather than a built one. Written down because unrecorded exceptions become precedent.
+> **Standing debt — two kinds, no instances.** `scaffolder` and `runner` clear criteria 1 and 2 but **not 3**: each has a template and a Prerequisites/Validate shape the others cannot produce by deletion, and each was admitted on an intended skill rather than a built one. Written down because unrecorded exceptions become precedent.
 >
 > **Retire any of them** if no skill carries its suffix by the time the next kind is proposed — that is the checkpoint, and _Retiring a kind_ below is the procedure. `editor` cleared criterion 3 outright.
 
@@ -219,7 +219,7 @@ One bump covers everything since the last committed version — don't stack a bu
 
 ## Pick the matching kind template
 
-Start from the template for the kind, then **drop what the skill doesn't need** — these are starting points, not mandates. A tiny helper should not carry a Validate or Summary section it would leave empty.
+Start from the template for the kind, then **drop what the skill doesn't need** — these are starting points, not mandates. A tiny helper should not carry a Validate or Summary section it would leave empty. **Do not drop the store section when the skill stores state** — fill it from _Document the store_ below (resolve per key, key table, version-mismatch rule, example), in the file that section names. Drop the `SKILL.md` heading only when the skill stores nothing, **or** when the four live in an on-demand file `SKILL.md` already points at.
 
 | Kind           | Template                                                         |
 | -------------- | ---------------------------------------------------------------- |
@@ -281,11 +281,11 @@ A skill is loaded **in full, every time it fires**, and everything in it is read
 
 The line is not "no explanation" — some rules are only obeyed when the reader knows what they prevent. The cut is **failure mode, not chronology**:
 
-| Keep                                                                             | Drop                                                       |
-| -------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| the failure a rule prevents, where knowing it changes whether the rule is obeyed | when it happened, how many times, or who did it            |
-| "an unnamed obligation gets skipped, so name it in the checklist"                | "this was reworded twice before it stuck"                  |
-| a **Revisit if** — the condition that would change the rule                      | a record of conditions that used to hold                   |
+| Keep                                                                             | Drop                                            |
+| -------------------------------------------------------------------------------- | ----------------------------------------------- |
+| the failure a rule prevents, where knowing it changes whether the rule is obeyed | when it happened, how many times, or who did it |
+| "an unnamed obligation gets skipped, so name it in the checklist"                | "this was reworded twice before it stuck"       |
+| a **Revisit if** — the condition that would change the rule                      | a record of conditions that used to hold        |
 
 **Anything naming something that no longer exists is the worst case**, not merely dead weight. A reader cannot tell a retired thing from a live one, so they reason about it as though it were current — a retired kind, an old field name, a superseded path. Cite none of them; when a rule replaces another, state only the rule that now applies.
 
@@ -295,7 +295,7 @@ The same applies to a skill's own past shape. "This section used to cover X" tel
 
 **The test: if the inventory changed tomorrow, would the sentence be _wrong_, or merely _incomplete_?** Wrong means the scope was the snapshot — rewrite it over the general case. Incomplete is fine; an example was never the boundary.
 
-So: state the rule for any `{kind}`, any `{type}`, any member of the set, and let the current members be examples. **Naming a current instance is not the problem — presenting it as the extent is.** A skill that deliberately names one instance as a *marker* for something durable is doing something different and legitimate, provided it says that is what the name is.
+So: state the rule for any `{kind}`, any `{type}`, any member of the set, and let the current members be examples. **Naming a current instance is not the problem — presenting it as the extent is.** A skill that deliberately names one instance as a _marker_ for something durable is doing something different and legitimate, provided it says that is what the name is.
 
 Where history genuinely matters it already has homes: a `docs/` page for a subsystem's reasoning, an ID registry's `DECISIONS.md` for a burned entry, and the repository's own history for the rest. **A skill points; it does not narrate.**
 
@@ -352,9 +352,33 @@ Same relative path under both homes is the same store (`answered-questions.jsonl
 
 **Every state file carries a `version` integer** so a later format change is recognised rather than misread — not only `prefs.json`. That file puts it at the top level. A registry or any other sibling puts it where that skill documents (a header line, a field on each entry, …). Check each file on its own: a version mismatch (older, missing, or newer than the shape the skill documents) means treat **that file** as absent for this run — announced defaults for its items, and offer to rewrite it to match. No per-user path segment — local isolation is the gitignore; team isolation is the folder-per-skill split below.
 
+### Document the store
+
+Homes, overlay, and write target live in this helper so they stay one rule. The **shape of this skill's file** cannot: only that skill knows its keys. An agent that later loads the skill will not load this helper, so a store path with no shape is a file they have to guess.
+
+**If the skill stores nothing, omit the section.** An empty Optional prefs heading with no keys is inventing a store.
+
+**If it stores state, include all four surfaces below in the file this skill's run will load when it resolves prefs.** A path with no shape in that file is still a guess.
+
+**Where that file is:**
+
+- **`SKILL.md` by default** — prefs are resolved from the always-loaded skill.
+- **Another of the skill's files** when resolving already requires opening that file (a mechanism index, a variant table, any `references/` page the run reads before it uses a key). Put the four next to that procedure. `SKILL.md` points at the file; it does not restate the four.
+- **Not both.** Two homes is two copies that drift.
+- **Per-variant keys** stay in that variant's own reference (announced defaults). The skill-wide table does not restate them.
+
+The four:
+
+1. **Resolve per key** (or per registry entry). First match wins: this run's explicit instruction, then team, then local, then the announced default in the skill. Do not overlay the whole file as one unit.
+2. A **key table**: name, type, announced default when the file or key is absent, what the key does. `version` is a row — the file's shape integer, not `metadata.version`.
+3. The **version-mismatch rule**: compare `version` to the example next to these four, not to `metadata.version`. Older, missing, or newer than that example → treat **that file** as absent this run; announced defaults for its items; offer to rewrite it to match the example.
+4. **One example** of the file (a JSON fence for `prefs.json`; the equivalent for a registry or sibling).
+
+Overlay mechanics (team-over-local, write target) stay here. Do not copy this whole helper section into the skill. Copy the four surfaces above, filled with **this skill's** keys.
+
 ### Overlay
 
-First match wins, **per item**. This run's explicit instruction always wins.
+First match wins, **per item**. This run's explicit instruction always wins. A skill that stores prefs says **Resolve per key** (that is this ladder, named in the skill).
 
 For a **preference key** in `prefs.json` (and a verbatim sibling named by that object):
 
@@ -380,10 +404,10 @@ Announce in one line which layer supplied each item that is not the announced de
 
 Reading team-over-local does not stop drift if "remember this?" still writes local. The write home follows what the **item** does:
 
-| The item…                                                                 | Write                              |
-| ------------------------------------------------------------------------- | ---------------------------------- |
-| changes how everyone should act, or would help the next clone / agent     | `.agents/_team/skills/{skill-name}/`       |
-| only skips a question for this user; the artifact is the same either way  | `.agents/_local/skills/{skill-name}/`      |
+| The item…                                                                | Write                                 |
+| ------------------------------------------------------------------------ | ------------------------------------- |
+| changes how everyone should act, or would help the next clone / agent    | `.agents/_team/skills/{skill-name}/`  |
+| only skips a question for this user; the artifact is the same either way | `.agents/_local/skills/{skill-name}/` |
 
 Never write a team item to local. If the team store already has that item, do not offer at all unless they explicitly ask to change the team record. Create the file and its parent when writing; a team write is a git change — say so. A local write is personal state that should not be committed.
 
@@ -395,12 +419,12 @@ The skill names which of **its** items are team vs local. Unnamed items: apply t
 
 Same shape in both homes.
 
-| State kind               | Shape                                          | Why                                                     |
-| ------------------------ | ---------------------------------------------- | ------------------------------------------------------- |
-| preferences (skill-wide) | `prefs.json` top-level scalars (`version`, which variant we prefer) | read whole, written rarely, small |
-| preferences (per variant) | one object of scalars per name, under a map in the same file | a flat file makes the next variant's keys collide with the first |
-| a verbatim fragment      | its own plain-text file, named by `prefs.json` | escaping into JSON is how verbatim stops being verbatim |
-| an accumulating record   | append-only `.jsonl`, with `version` as that skill specifies | appending cannot corrupt what is already there; a format bump is visible |
+| State kind                | Shape                                                               | Why                                                                      |
+| ------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| preferences (skill-wide)  | `prefs.json` top-level scalars (`version`, which variant we prefer) | read whole, written rarely, small                                        |
+| preferences (per variant) | one object of scalars per name, under a map in the same file        | a flat file makes the next variant's keys collide with the first         |
+| a verbatim fragment       | its own plain-text file, named by `prefs.json`                      | escaping into JSON is how verbatim stops being verbatim                  |
+| an accumulating record    | append-only `.jsonl`, with `version` as that skill specifies        | appending cannot corrupt what is already there; a format bump is visible |
 
 When the skill has a named index of variants (mechanisms, targets, kinds), each variant's prefs are an object under that name in the map. Adding a variant is a new object, not a rename of the first one's keys. Nest only that map — values inside each object stay scalars. A verbatim fragment is still its own sibling file, named from the object that owns it, in the **same home** as the `prefs.json` that points at it. A registry uses the same relative filename in both homes; overlay is per entry identity, not per file.
 
@@ -435,7 +459,7 @@ A skill may hold long-form reasoning aimed at a human rather than an agent, in `
 
 ### The split test
 
-**Would an agent produce different output without this?** — never "is it a rationale?". Reasoning that *is* the decision procedure stays inline in `SKILL.md`; reasoning that only explains, defends or records why a choice was made goes to `references/`.
+**Would an agent produce different output without this?** — never "is it a rationale?". Reasoning that _is_ the decision procedure stays inline in `SKILL.md`; reasoning that only explains, defends or records why a choice was made goes to `references/`.
 
 ### Why the test and not length
 
@@ -485,51 +509,52 @@ Write every skill so it stands on its own and triggers from its own `description
 
 ## Common mistakes
 
-| Mistake                                                  | Fix                                                                                                                                      |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Canonical skill updated, stub left behind                | Same commit, every stub — the `description` is the one duplicated field.                                                                 |
-| Rule changed in one file, its copies left stale          | Grep a distinctive phrase from the replaced text across `.agents/skills/`, `.claude/skills/` and `AGENTS.md` before calling it done.     |
-| Mistakes row restating a rule instead of naming the fix  | The row carries the fix action; the body owns the rule. A restatement is a second copy that will drift.                                  |
-| Step gains an obligation the todo checklist doesn't name | Update the checklist too — agents follow todos under context pressure, so an unnamed obligation is skipped.                              |
-| Copying the skill's content into the stub                | The stub is a pointer: frontmatter + one line. Content stays single-sourced.                                                             |
-| Adding `metadata`/`version` to a stub                    | Stubs carry `name` + `description` only.                                                                                                 |
-| Inline `metadata: { version: '1.0.0' }`                  | Use block form under `metadata:`.                                                                                                        |
-| Tech segment on a tech-agnostic skill                    | Omit it — `ng` only when the skill is genuinely Angular-tied.                                                                            |
-| Inventing a kind suffix                                  | Take it through _When a new kind is allowed_ — all three criteria, criterion 3 included. Do not coin one alone.                          |
-| A kind minted for a skill nobody is building yet          | Criterion 3 is "a real skill needs it now". A kind with no instance has never had to work — that is how `injector` went years unusable.  |
-| A kind picked from whether `scripts/` exists              | Machinery never decides a kind. It decides who owns idempotency — the script, or a recognition rule the skill writes down.               |
-| A rule narrated with its history                         | State the rule that applies now. Keep the failure it prevents only where that changes whether it is obeyed; drop the chronology.        |
-| One skill spanning unrelated subjects                    | Broad in verbs is fine; broad in subjects is a workflow. Split it and let control flow order the pieces.                                |
-| A kind picked by which verb is the most work             | Count deliverables, never effort or frequency. Weight drifts, differs per reader, and has no wrong answer to catch.                     |
-| `scaffolder` chosen because the target might not exist   | Creating the artifact is the empty case of maintaining a part within it. Ask whether the skill owns the whole thing or a part.           |
-| A boundary case counted as a second verb                 | Create-then-update is one deliverable. Only a genuinely separate deliverable adds a kind — or a skill.                                  |
-| Split into several skills to keep each one "pure"        | Three reasons justify a split: an independent lifecycle, an auditable judgement, two deliverables with no wrong guard. Otherwise, sections. |
-| Citing something that has been retired or renamed        | A reader cannot tell it from a live one and will act on it. Name only what currently exists.                                            |
-| A rule scoped to what the repo happens to contain now    | State it over the general case (any `{kind}`, any member of the set). Name a current instance as an example, never as the boundary.     |
-| A scriptable edit left as prose                          | Ship the transform. The kind is unchanged either way, so there is nothing to gain by leaving a deterministic edit to drift.              |
-| Reviewer minted for a skill validating its own rules      | That is a helper with a proof in `scripts/`. `reviewer` is for judging input the **caller** supplies.                                    |
-| A reviewer that fixes what it finds                      | Two skills, two runs. Findings stop being auditable once the same run makes them true.                                                  |
-| "Produces nothing" in a skill that ships a writing script | Say what the script writes. The flat claim reads as false to anyone who opens `scripts/`.                                                |
-| An editor that never says who applies it                 | Declare `document` or `in-session`. Undeclared, it names no moment it could fire at.                                                     |
-| `kind:` and the name's suffix disagreeing                | They are two statements of one fact — fix whichever is wrong. A checker holds them to it.                                               |
-| Description that summarises the skill's workflow         | WHAT names the output in one clause; the mechanics stay in the body.                                                                     |
-| Changing a description without bumping the version       | Trigger changes are minor bumps.                                                                                                         |
-| Naming another skill                                     | Name the artifact it produces. Reading another skill's internals (the path to a template or example that must stay single-sourced there) is the only exception — and even then, read the file; do not invoke the producer. |
-| Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                                                          |
-| Naming a gate, hook ID, constraint or path letter        | State the substance the skill owns. Only two kinds may not: the `x-{tech}-{tool}-*` family, and a skill whose subject _is_ the workflow. |
-| Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                                                 |
-| Wiring the new skill into a path's hook or skills table  | Don't — skills stand alone unless the user explicitly asks for wiring.                                                                   |
-| Creating a skill that duplicates one that already exists | Extend the existing skill and bump it; overlapping skills cannot coordinate.                                                             |
-| Widening a description without reading the neighbours'   | A new trigger phrase can capture a sibling's requests. Check, then bind it narrowly or extend the sibling.                               |
-| Pointing an execution agent at "the canonical examples"  | It reads files, not skills — give it the literal repo-relative path.                                                                     |
-| Relocating content so an agent can reach it              | Leave it where it is and give the path.                                                                                                  |
-| Skill-relative path handed to an execution agent         | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.                                      |
-| A team key written to `.agents/_local/`                   | Artifact-shaping keys go under `.agents/_team/skills/{skill-name}/`. Local is skip-memory only.                                                  |
-| `.agents/_team/` added to gitignore                       | Remove it. A lock nobody else can clone is local at a different path.                                                                    |
-| A team registry dumped into `.agents/_local/`             | If the next clone should know it, offer team (create the file if needed). Explicit yes.                                                 |
-| Overlaying a whole `.jsonl` as one file                  | Overlay per entry identity the skill declares. Team wins on a clash; local-only ids stay until promoted.                                |
-| Treating the team file as all-or-nothing                 | Overlay is per item. An item the team store omits can still come from local.                                                            |
-| Local winning over team on the same item                 | Team wins per item, even when the team value equals the announced default.                                                              |
-| A registry required for the skill to function            | Both homes empty must still work. A registry improves later runs; it does not enable the skill.                                         |
-| `version` only on `prefs.json`                           | Every state file the skill stores carries one. The skill names where it lives on a registry or sibling.                                 |
-| Workspace rules stuffed into a skill registry            | Terms go to `CONTEXT.md`; subsystem rules to `docs/`. The registry is that skill's memory.                                              |
+| Mistake                                                   | Fix                                                                                                                                                                                                                        |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Canonical skill updated, stub left behind                 | Same commit, every stub — the `description` is the one duplicated field.                                                                                                                                                   |
+| Rule changed in one file, its copies left stale           | Grep a distinctive phrase from the replaced text across `.agents/skills/`, `.claude/skills/` and `AGENTS.md` before calling it done.                                                                                       |
+| Mistakes row restating a rule instead of naming the fix   | The row carries the fix action; the body owns the rule. A restatement is a second copy that will drift.                                                                                                                    |
+| Step gains an obligation the todo checklist doesn't name  | Update the checklist too — agents follow todos under context pressure, so an unnamed obligation is skipped.                                                                                                                |
+| Copying the skill's content into the stub                 | The stub is a pointer: frontmatter + one line. Content stays single-sourced.                                                                                                                                               |
+| Adding `metadata`/`version` to a stub                     | Stubs carry `name` + `description` only.                                                                                                                                                                                   |
+| Inline `metadata: { version: '1.0.0' }`                   | Use block form under `metadata:`.                                                                                                                                                                                          |
+| Tech segment on a tech-agnostic skill                     | Omit it — `ng` only when the skill is genuinely Angular-tied.                                                                                                                                                              |
+| Inventing a kind suffix                                   | Take it through _When a new kind is allowed_ — all three criteria, criterion 3 included. Do not coin one alone.                                                                                                            |
+| A kind minted for a skill nobody is building yet          | Criterion 3 is "a real skill needs it now". A kind with no instance has never had to work — that is how `injector` went years unusable.                                                                                    |
+| A kind picked from whether `scripts/` exists              | Machinery never decides a kind. It decides who owns idempotency — the script, or a recognition rule the skill writes down.                                                                                                 |
+| A rule narrated with its history                          | State the rule that applies now. Keep the failure it prevents only where that changes whether it is obeyed; drop the chronology.                                                                                           |
+| One skill spanning unrelated subjects                     | Broad in verbs is fine; broad in subjects is a workflow. Split it and let control flow order the pieces.                                                                                                                   |
+| A kind picked by which verb is the most work              | Count deliverables, never effort or frequency. Weight drifts, differs per reader, and has no wrong answer to catch.                                                                                                        |
+| `scaffolder` chosen because the target might not exist    | Creating the artifact is the empty case of maintaining a part within it. Ask whether the skill owns the whole thing or a part.                                                                                             |
+| A boundary case counted as a second verb                  | Create-then-update is one deliverable. Only a genuinely separate deliverable adds a kind — or a skill.                                                                                                                     |
+| Split into several skills to keep each one "pure"         | Three reasons justify a split: an independent lifecycle, an auditable judgement, two deliverables with no wrong guard. Otherwise, sections.                                                                                |
+| Citing something that has been retired or renamed         | A reader cannot tell it from a live one and will act on it. Name only what currently exists.                                                                                                                               |
+| A rule scoped to what the repo happens to contain now     | State it over the general case (any `{kind}`, any member of the set). Name a current instance as an example, never as the boundary.                                                                                        |
+| A scriptable edit left as prose                           | Ship the transform. The kind is unchanged either way, so there is nothing to gain by leaving a deterministic edit to drift.                                                                                                |
+| Reviewer minted for a skill validating its own rules      | That is a helper with a proof in `scripts/`. `reviewer` is for judging input the **caller** supplies.                                                                                                                      |
+| A reviewer that fixes what it finds                       | Two skills, two runs. Findings stop being auditable once the same run makes them true. **"edits nothing" means the subject under review** (the diff / working tree). Copying a report onto a host merge-request description is not a fix and does not change the kind. |
+| "Produces nothing" in a skill that ships a writing script | Say what the script writes. The flat claim reads as false to anyone who opens `scripts/`.                                                                                                                                  |
+| An editor that never says who applies it                  | Declare `document` or `in-session`. Undeclared, it names no moment it could fire at.                                                                                                                                       |
+| `kind:` and the name's suffix disagreeing                 | They are two statements of one fact — fix whichever is wrong. A checker holds them to it.                                                                                                                                  |
+| Description that summarises the skill's workflow          | WHAT names the output in one clause; the mechanics stay in the body.                                                                                                                                                       |
+| Changing a description without bumping the version        | Trigger changes are minor bumps.                                                                                                                                                                                           |
+| Naming another skill                                      | Name the artifact it produces. Reading another skill's internals (the path to a template or example that must stay single-sourced there) is the only exception — and even then, read the file; do not invoke the producer. |
+| Hardcoding a `libs/` or `apps/` path                      | Describe it conceptually; only `docs/` paths are cited exactly.                                                                                                                                                            |
+| Naming a gate, hook ID, constraint or path letter         | State the substance the skill owns. Only two kinds may not: the `x-{tech}-{tool}-*` family, and a skill whose subject _is_ the workflow.                                                                                   |
+| Putting the skill's own templates or examples in `docs/`  | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                                                                                                                                   |
+| Wiring the new skill into a path's hook or skills table   | Don't — skills stand alone unless the user explicitly asks for wiring.                                                                                                                                                     |
+| Creating a skill that duplicates one that already exists  | Extend the existing skill and bump it; overlapping skills cannot coordinate.                                                                                                                                               |
+| Widening a description without reading the neighbours'    | A new trigger phrase can capture a sibling's requests. Check, then bind it narrowly or extend the sibling.                                                                                                                 |
+| Pointing an execution agent at "the canonical examples"   | It reads files, not skills — give it the literal repo-relative path.                                                                                                                                                       |
+| Relocating content so an agent can reach it               | Leave it where it is and give the path.                                                                                                                                                                                    |
+| Skill-relative path handed to an execution agent          | It resolves against the repo root. State the skill's repo-relative path once, beside the file list.                                                                                                                        |
+| A team key written to `.agents/_local/`                   | Artifact-shaping keys go under `.agents/_team/skills/{skill-name}/`. Local is skip-memory only.                                                                                                                            |
+| `.agents/_team/` added to gitignore                       | Remove it. A lock nobody else can clone is local at a different path.                                                                                                                                                      |
+| A team registry dumped into `.agents/_local/`             | If the next clone should know it, offer team (create the file if needed). Explicit yes.                                                                                                                                    |
+| Overlaying a whole `.jsonl` as one file                   | Overlay per entry identity the skill declares. Team wins on a clash; local-only ids stay until promoted.                                                                                                                   |
+| Named a store path (`prefs.json`, a registry) with no shape | Add all four: Resolve per key, key table, version-mismatch rule (`version` is the file shape, not `metadata.version`), one example. Home is the file the run loads when it resolves prefs (`SKILL.md` by default; an on-demand reference when that file is already required). Omit only when the skill stores nothing. Do not duplicate `SKILL.md` and the reference. |
+| Treating the team file as all-or-nothing                  | Overlay is per item. An item the team store omits can still come from local.                                                                                                                                               |
+| Local winning over team on the same item                  | Team wins per item, even when the team value equals the announced default.                                                                                                                                                 |
+| A registry required for the skill to function             | Both homes empty must still work. A registry improves later runs; it does not enable the skill.                                                                                                                            |
+| `version` only on `prefs.json`                            | Every state file the skill stores carries one. The skill names where it lives on a registry or sibling.                                                                                                                    |
+| Workspace rules stuffed into a skill registry             | Terms go to `CONTEXT.md`; subsystem rules to `docs/`. The registry is that skill's memory.                                                                                                                                 |
