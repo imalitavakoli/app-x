@@ -55,6 +55,12 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 
 2. **Verify the local `requirements/` registry** of any `util`, product `app`, or grab-bag `ui`/`feature` lib the fix touched — the same shared procedure's closing rule, report-don't-block carve-out included. Changed set as above.
 
+3. **Review the fix's changes, last.** Runs after step 2, so it judges the tree as it will stand.
+
+   **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the verdict, the counts, and the report path — the skill's reference loading is heavy and this hook runs deep (_Operating rule 5_). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.
+
+   It reports and never edits. This path often has no branch and no commits (_Git contract_), so the review covers whatever the fix actually touched, committed or not — the skill resolves that itself. A report asking for changes **ends this cycle**; the user opens a new one to make them.
+
 Docs come **after** the fix is proven, never before, so nothing documents behaviour that verification might still reject. The cycle is not done until this hook has run — make the final completion report after it, not before.
 
 ⚪ **Hooks with no workspace step yet** — `systematic-debugging` · `test-driven-development` · `finishing-a-development-branch` (only if the user put the fix on its own branch and asks to wrap it up)

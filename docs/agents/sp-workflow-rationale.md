@@ -246,6 +246,20 @@ But the plan has **two** channels into them, and they differ in reliability. A *
 
 [🔝](#superpowers-first-workflow--rationale-)
 
+## Why the code review ends the cycle instead of feeding the fix dispatch
+
+A3's surrounding text is all about routing post-review changes through a fix dispatch, so the obvious reading is that the reviewer's findings should go the same way — the agent found the problem, let it fix it. They deliberately do not.
+
+The reviewer is read-only by contract, and the value of that contract is that the diff handed to a human is the one its author wrote. A run that reviews and then fixes destroys it twice over: nobody downstream can separate author from reviewer, and a finding stops being auditable the moment the same run makes it true. Dispatching fixes from the finding preserves the letter (the reviewer's own hands stay clean) while losing the point (the branch under review changes because of the review, inside the same cycle, with the report already written against the old tree). So a report asking for changes ends the cycle, and the user opens a new one.
+
+It runs **last** in its hook for the same reason: the steps before it amend docs and add CODEOWNERS lines, and a review of a tree that is about to change is a review of nothing. Those earlier steps also mean its own PRD/TSD observations should come back clean — that is the two mechanisms agreeing, not redundancy, and de-duplicating them would remove the only independent confirmation the path has.
+
+**Revisit if** a paired fixer skill is built (then the question becomes which cycle applies it, not whether), or if ending the cycle proves so costly in practice that users start skipping the review to avoid it — that would mean the cost landed on the wrong party.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
 ## Why Path B needs no plan step — and when to revisit that
 
 The bug-fix path still runs in-session, so that agent reads `AGENTS.md`. Superpowers' bug path has no git workflow, so the user decides commits (this is not a workspace-wide "never commit").

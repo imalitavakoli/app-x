@@ -3,7 +3,7 @@ name: x-skill-build-helper
 description: "WHAT? The workspace conventions for building or updating a skill under `.agents/skills/` — where it lives, how it is named and versioned, the pointer stub each AI tool needs, and a starting template per skill kind. WHEN? Before creating, renaming, or editing any workspace skill or its description; when deciding a skill's name, kind, folder layout, frontmatter, where its templates and examples live, or where its team/local state (prefs, registries) lives."
 metadata:
   kind: helper
-  version: '2.4.0'
+  version: '2.5.0'
 ---
 
 # Skill Build Helper
@@ -242,7 +242,7 @@ If the skill's checklist is meant to be copied into todos, **prefix each todo wi
 
 A skill holds everything it needs and **does not name another skill**. When it depends on another skill's **output**, it names the produced _artifact_ (the file), not the producer — and if that file is missing it stops and asks (a prerequisite guard).
 
-**The one exception — reading another skill's internals.** Name another skill only when you must read something _inside_ it (its template, examples, assets), not merely consume its output. Even then, prefer to **inline** the piece you need; name the skill only if that content must stay single-sourced there. Expected mainly in enrichers (`x-{tech}-{tool}-*`).
+**The one exception — reading another skill's internals.** Name another skill only when you must read something _inside_ it (its template, examples, assets), not merely consume its output. Even then, prefer to **inline** the piece you need; name the skill only if that content must stay single-sourced there. Name the **repo-relative path to that file**, and do not invoke the producer skill. That is how an enricher reads another tool's artifact shape, and how a reviewer compares a change against a sibling skill's canonical examples. It is not how two skills divide work — that remains forbidden.
 
 ## Don't depend on the workflow's landmarks
 
@@ -514,7 +514,7 @@ Write every skill so it stands on its own and triggers from its own `description
 | `kind:` and the name's suffix disagreeing                | They are two statements of one fact — fix whichever is wrong. A checker holds them to it.                                               |
 | Description that summarises the skill's workflow         | WHAT names the output in one clause; the mechanics stay in the body.                                                                     |
 | Changing a description without bumping the version       | Trigger changes are minor bumps.                                                                                                         |
-| Naming another skill                                     | Name the artifact it produces. Reading another skill's internals is the only exception.                                                  |
+| Naming another skill                                     | Name the artifact it produces. Reading another skill's internals (the path to a template or example that must stay single-sourced there) is the only exception — and even then, read the file; do not invoke the producer. |
 | Hardcoding a `libs/` or `apps/` path                     | Describe it conceptually; only `docs/` paths are cited exactly.                                                                          |
 | Naming a gate, hook ID, constraint or path letter        | State the substance the skill owns. Only two kinds may not: the `x-{tech}-{tool}-*` family, and a skill whose subject _is_ the workflow. |
 | Putting the skill's own templates or examples in `docs/` | They live under the skill's `assets/`. `docs/` is for content the whole workspace needs.                                                 |

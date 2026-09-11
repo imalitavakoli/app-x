@@ -169,6 +169,12 @@ Always runs on Path A before finishing. **This hook verifies; only its actions a
 
 3. **Verify CODEOWNERS when this cycle created or handed off an owned path.** If it did not, skip. If it did, confirm root `CODEOWNERS` has a line for each new or handed-off path. If a line is missing, load `x-codeowners-editor` and add it, and say it is a late fix (the same-commit step was missed). Do not change ownership for ordinary edits under an existing path.
 
+4. **Review this cycle's changes, last.** Runs after steps 1–3 because those change files, and it must judge the tree that will actually be proposed.
+
+   **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back only the verdict, the counts, and the report path. The skill loads a lot — its own maps, the `docs/` pages they name, and the whole diff — and this hook sits at the cycle's deepest point, where controller context is scarcest (_Operating rule 5_, the same reason the doc writers are dispatched). **If this agent cannot dispatch subagents, load the skill here instead** and say that you did; the review must happen either way.
+
+   It reports and never edits, so its findings do **not** enter the fix dispatch below. A report asking for changes **ends this cycle**; the user opens a new one to make them, then returns here. It judges the whole branch against workspace conventions, which is a different question from `requesting-code-review`'s (one task's diff against the plan) — run both, neither replaces the other.
+
 In **auto** mode the tree has already been reviewed, so route every resulting test-file change through a fix dispatch + scoped re-review like any other post-review change — never edit it from the controller session. Follow `x-ng-test-unit-helper` and `x-ng-test-e2e-helper` — **re-read their `SKILL.md` here rather than checking whether A1's copy survived** (_Operating rule 5_). This hook runs after a whole execution phase, so treat them as gone by default: a half-remembered convention does not announce itself, and a re-read costs one file.
 
 > **Note:** a stale doc does not stay a local problem. 📌 _PRD/TSD over cycle spec_ makes the PRD/TSD the **primary** source for the next cycle, so an uncorrected doc outranks a correct fresh brainstorm — and the next cycle to meet it, a bug fix included, sees a documented functionality and carries the error forward again. Verifying here is what stops drift compounding.
