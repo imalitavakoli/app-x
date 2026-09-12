@@ -20,9 +20,9 @@ The overlay one-liner (local layers on `AGENTS.md`; on conflict, local wins) liv
 
 Family prefix `pref.`. Short kebab-case name. Value after a colon. One line.
 
-**Write** (when the agent appends a key): exactly `pref.{key}: {value}`. Create the file if it does not exist; append one line; leave the rest of the file alone.
+**Write** (when the agent appends a **personal** key): exactly `pref.{key}: {value}` into `AGENTS.local.md`. Create the file if it does not exist; append one line; leave the rest of the file alone. A team standing value is the same one-liner under `AGENTS.md` → Team preferences — that is a git edit; only if they ask.
 
-**Match** (when the workflow reads a key): the `pref.{key}` token and an allowed value on the same line. Extra spaces, a bullet, bold, or letter-case differences are fine. **Absent** — the key is unset; the consuming step's fallback runs — when the key is missing, both allowed values appear, or the line is a negation. **Never infer** a value from other sentences.
+**Match** (when the workflow reads a key): the `pref.{key}` token and an allowed value on the same line, in the overlaid `AGENTS.md` / `AGENTS.local.md` pair. Extra spaces, a bullet, bold, or letter-case differences are fine. **Absent** — the key is unset; the consuming step's fallback runs — when the key is missing from the overlaid pair, both allowed values appear, or the line is a negation. **Never infer** a value from other sentences.
 
 Which step reads a key is the consuming step's job, not this catalog's. How to resolve and persist: [sp-workflow-prefs.md](sp-workflow-prefs.md).
 

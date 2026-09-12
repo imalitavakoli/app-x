@@ -23,7 +23,8 @@ This doc is the single authority on that decision. `AGENTS.md` and `x-skill-buil
 | how to **change** the workflow safely                         | the `x-sp-workflow-helper` skill          | before editing `AGENTS.md`'s workflow section or any `sp-workflow-*.md` |
 | how to edit **`AGENTS.md`** itself                            | `docs/agents/agents-md-format.md`         | editing `AGENTS.md`                                                     |
 | how to edit **`AGENTS.local.md`** / which `pref.*` keys exist | `docs/agents/agents-md-format-local.md`   | writing or resolving a `pref.*` key                                     |
-| a developer's standing preference **value**                   | `AGENTS.local.md` (gitignored)            | when the consuming step resolves that key                               |
+| a **team** standing `pref.*` value                            | `AGENTS.md` → Team preferences            | when the consuming step resolves that key                               |
+| a **personal** overlay `pref.*` value                         | `AGENTS.local.md` (gitignored)            | when the consuming step resolves that key                               |
 | a Superpowers cycle **spec** or **plan**                      | `docs/superpowers/specs/` · `docs/superpowers/plans/` | when writing or executing that cycle                          |
 | how to edit **`CONTEXT.md`** itself                           | `docs/agents/context-md-format.md`        | adding or changing a term                                               |
 | **how to perform** a step                                     | the skill that owns it                    | that skill is invoked                                                   |

@@ -91,7 +91,7 @@ Standing preferences the Superpowers skills read from our instructions. This is 
 
 ## Personal preferences (`pref.*`)
 
-Personal defaults in `AGENTS.local.md`. **Not** the Workspace preferences above — those are committed team constraints Superpowers honours without asking.
+Standing values live in `AGENTS.md` → Team preferences; a personal overlay may restate a key in `AGENTS.local.md`. **Not** the Workspace preferences above — those are Superpowers skill overrides (today: no worktree), a different family.
 
 Read [sp-workflow-prefs.md](sp-workflow-prefs.md) **in full** at **cycle start**, **before the first question put to the user** (_Required reads and when they are due_). That file owns how to resolve and persist any `pref.*` key. An `every-path` key is resolved from that file at cycle start; a `one-path` key is resolved on the path that consumes it.
 

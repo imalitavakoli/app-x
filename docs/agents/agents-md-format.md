@@ -32,6 +32,8 @@ This is a rule about **what qualifies**, not about length. A line budget would o
 
 It does **not** hold the paths themselves, the rules they share, their notation, or the reasoning behind them. Those are `docs/agents/sp-workflow-*.md`, each loaded only when it is actually needed — including [sp-workflow-shared.md](sp-workflow-shared.md), which holds the Operating rules, the Workspace preferences declared to Superpowers, the Git contract, and the pointer at personal preferences.
 
+Standing `pref.*` values for the team live in this file (`## Team preferences`) — the overlay target is the only home a clone or Cloud VM without `AGENTS.local.md` can see. Keep that section to catalog one-liners plus a pointer at [sp-workflow-prefs.md](sp-workflow-prefs.md). Do not explain the overlay or the resolve there.
+
 The gitignored companion is `AGENTS.local.md` — no forced shape, and the `pref.*` catalog: [agents-md-format-local.md](agents-md-format-local.md). How the workflow resolves those keys: [sp-workflow-prefs.md](sp-workflow-prefs.md). Load either when writing or resolving a `pref.*` key, not when editing this file.
 
 &nbsp;

@@ -65,6 +65,15 @@
 
 **MANDATORY:** Before responding to any request, after reading this file, you MUST also read `AGENTS.local.md` if it exists. It is a **personal overlay**: add its instructions on top of this file; where they conflict, it wins.
 
+## Team preferences
+
+Standing `pref.*` values. When and how to resolve: `/docs/agents/sp-workflow-prefs.md`.
+
+pref.mode: auto
+pref.diff-review: on
+pref.log-diag: on
+pref.log-analytics: off
+
 - **Always use Nx CLI** (`nx run`, `nx build`, `nx test`, etc.) for builds, tests, linting, and generation.
 - Use `pnpm` as the package manager.
 - Before editing codes, **remember that this workspace follows the [Superpowers-First Workflow](#-superpowers-first-workflow)**.

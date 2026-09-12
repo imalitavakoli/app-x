@@ -186,9 +186,9 @@ Superpowers already has the two modes. We resolve mode before `writing-plans` so
 
 ## Why personal preferences live in `AGENTS.local.md`, not Workspace preferences
 
-Workspace preferences are committed team constraints Superpowers skills honour without asking (today: no worktree). A `pref.*` key is a personal habit. Putting those values in the shared rules would force every developer onto the same default. A cycle artifact (today a plan line) stays that cycle's binding answer; the local key is only the default for a new cycle. How to resolve any key lives in `sp-workflow-prefs.md`, not next to Workspace preferences and not in the `AGENTS.local.md` format catalog.
+Workspace preferences are Superpowers skill overrides (today: no worktree). A `pref.*` value is not that family. Team standing lines live in `AGENTS.md` so the overlay can beat them; personal restatements live in `AGENTS.local.md`. Putting the values in the shared rules would bypass the overlay and force every clone onto one default with no local escape. A cycle artifact (today a plan line) stays that cycle's binding answer. How to resolve any key lives in `sp-workflow-prefs.md`.
 
-**Revisit if** the team wants committed defaults, or Superpowers grows a first-class prefs file.
+**Revisit if** Superpowers grows a first-class prefs file, or the overlay is dropped.
 
 &nbsp;
 
@@ -203,6 +203,16 @@ Skill prefs are the other way around on purpose. `.agents/_team/` locks consiste
 Do not invent `AGENTS.team.md` as a third file that local cannot overlay. A team default that must travel with the clone belongs **in `AGENTS.md`** — the file the overlay already wins against. A Cloud VM with no `AGENTS.local.md` then sees the team text; a local checkout that rewrites it, wins. That is the opposite of skill team-over-local, and mixing the two ladders is the confusion this entry exists to stop.
 
 **Revisit if** the overlay is dropped, or `pref.*` values are given a store that is not part of `AGENTS.md` / `AGENTS.local.md`.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why pref.log-analytics is team-off (and pref.log-diag is not)
+
+Locking both close-out log keys to `on` looks consistent and is wrong. Diagnostic logs are cheap, local, and an engineering habit — the team line is `on` so Cloud and a bare clone skip the interview. Analytics events cannot be retracted once sent, native event names are capped per app user, and adding them is a **product** decision. PMs decide that, not every agent cycle. So the team line is `off`: the unasked-for pass does not run. A personal overlay, a this-cycle override, or the user asking for analytics in a named file still runs the skill.
+
+**Revisit if** analytics becomes a required engineering convention like diag, or events become retractable.
 
 &nbsp;
 
