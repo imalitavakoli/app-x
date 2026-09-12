@@ -1,6 +1,6 @@
 {
   "name": "x-local-marketplace",
-  "description": "This workspace's own plugin catalog: pins the exact third-party plugin versions X runs, and is where any repo-authored plugin gets listed.",
+  "description": "This workspace's own plugin catalog: pins the exact third-party plugin versions X runs, and is where any repo-authored plugin gets listed. Materializes .agents/_pins/plugins/catalog.json for Claude Code — do not edit the Superpowers SHA here without updating the shared catalog.",
   "owner": {
     "name": "x"
   },

@@ -3,7 +3,7 @@ name: x-sp-workflow-helper
 description: 'WHAT? The procedure and integrity checker for changing the Superpowers-First Workflow surfaces — `AGENTS.md`, `docs/agents/sp-workflow-*.md` and the `x-*` skills they name. WHEN? Before adding, renaming, renumbering or deleting a hook, gate, constraint, entry, path or landmark; before moving a rule between those files; after any such edit, to prove nothing dangled; and whenever the installed Superpowers version changes.'
 metadata:
   kind: helper
-  version: '1.13.0'
+  version: '1.14.0'
 ---
 
 # SP Workflow Helper
@@ -34,7 +34,9 @@ Before **any** edit to `AGENTS.md`'s workflow section, to any `docs/agents/sp-wo
 
 Not for **following** a path — that needs the path file, not this. Not for authoring a skill's own content — that is `x-skill-build-helper`.
 
-**Superpowers is not Claude-only.** Upstream ships it for ten agents, and it can also be copied into a workspace with no plugin manager. So "is it installed, and at which version" has several possible answers: `sp-version` inspects the two layouts it knows (the Claude plugin cache, a workspace copy), names the source it found, and when it finds nothing says **what it could not check** rather than declaring absence. Teaching it another agent's layout is a probe in `findSuperpowersSkills` — never a guessed path, which would turn a gap into a false alarm.
+**Superpowers is not Claude-only.** Upstream ships it for ten agents, and it can also be copied into a workspace with no plugin manager. So "is it installed, and at which version" has several possible answers: `sp-version` inspects the layouts it knows (the Claude plugin cache, a workspace copy, and the Cursor Cloud pin install under `~/.cursor/skills` when that marker is present), names the source it found, and when it finds nothing says **what it could not check** rather than declaring absence. Teaching it another agent's layout is a probe in `findSuperpowersSkills` — never a guessed path, which would turn a gap into a false alarm.
+
+SHA pins for Superpowers (and any future frozen plugins) live in `.agents/_pins/plugins/catalog.json`. Harness adapters must materialize that commit; `sp-pin` checks the catalog against the baseline and against each listed harness adapter (see `scripts/config.mjs` → `SP_PIN_HARNESS_ADAPTERS`).
 
 ## What each piece catches — read this first
 

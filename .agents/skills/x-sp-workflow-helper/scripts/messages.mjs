@@ -217,6 +217,53 @@ export const pinHasNoSha = ({ catalog, plugin }) => ({
 });
 
 /**
+ * Shared pin catalog is missing or unreadable.
+ *
+ * - **Used by** `sp-pin` when `.agents/_pins/plugins/catalog.json` cannot be read.
+ * - **Why** that file is the SoT every harness adapter must mirror.
+ */
+export const pinSharedCatalogUnreadable = ({ catalog, error }) => ({
+  fail:
+    `Shared pin catalog \`${catalog}\` cannot be read (${error}). ` +
+    'Harness adapters (Claude marketplace, Cursor Cloud installer, …) have nothing authoritative to agree with.',
+});
+
+/**
+ * A harness listed on the Superpowers pin has no known adapter in this skill.
+ *
+ * - **Used by** `sp-pin` for unknown `harnesses[]` ids.
+ * - **Why** inventing an install path would turn a gap into a false "ok".
+ */
+export const pinUnknownHarness = ({ harness, catalog }) => ({
+  fail:
+    `\`${catalog}\` lists harness \`${harness}\` for Superpowers, but this checker has no adapter for it. ` +
+    'Add a verified row to `SP_PIN_HARNESS_ADAPTERS` in `scripts/config.mjs`, or remove the harness id from the catalog.',
+});
+
+/**
+ * Cursor Cloud installer path missing while the catalog claims that harness.
+ */
+export const pinCursorCloudInstallerMissing = ({ installer, catalog }) => ({
+  fail:
+    `\`${catalog}\` lists harness \`cursor-cloud\`, but installer \`${installer}\` is missing. ` +
+    'Cloud Agents cannot materialize the pin without it.',
+});
+
+/**
+ * A harness adapter's Superpowers SHA/version disagrees with the shared catalog.
+ */
+export const pinAdapterDisagreesWithCatalog = ({
+  adapter,
+  catalog,
+  adapterPin,
+  catalogPin,
+}) => ({
+  fail:
+    `Adapter \`${adapter}\` has ${adapterPin}, but shared catalog \`${catalog}\` has ${catalogPin}. ` +
+    'Update the catalog first, then every harness adapter in the same change.',
+});
+
+/**
  * The pinned commit and the reviewed commit are not the same commit.
  *
  * - **Used by** the `sp-pin` rule, the whole reason it exists.
@@ -990,5 +1037,7 @@ export const labels = {
 
   sourceClaudePlugin: 'Claude Code plugin',
   sourceWorkspaceCopy: 'workspace copy',
+  sourceCursorCloud: 'Cursor Cloud pin install',
+  installerPathMissing: '(missing installer path in config)',
   dateUnrecorded: 'an unrecorded date',
 };

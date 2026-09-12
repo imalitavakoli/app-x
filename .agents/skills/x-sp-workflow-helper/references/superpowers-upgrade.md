@@ -154,7 +154,16 @@ Read `RELEASE-NOTES.md` in the new version — it is large, so search it for the
 
 **Update `scripts/superpowers-baseline.json`**: set `version` to the version you just reviewed, `gitSha` to the ref from Step 1, `reviewed` to today, and `reviewedBy` to who or what did it. That is what turns `sp-version` green again — and it is a claim that Steps 3–4 actually happened, so do not write it otherwise.
 
-**If this workspace PINS the version, move the pin in the same commit.** A repo-local catalog names an exact commit, and that commit — not the baseline — is what teammates actually install. Leave it behind and the two records disagree in the worst direction: the baseline claims a version was reviewed while every machine keeps installing the old one, and `sp-version` reports green because the installed copy still matches the pin. Update the pinned entry's `sha` and `version` to the same ref you just recorded; the checker's **`sp-pin`** rule fails while they disagree, so this one is enforced rather than remembered. Which file holds the catalog is a lookup, not a fact this playbook should duplicate — `.claude/settings.json` → `extraKnownMarketplaces` names its path.
+**If this workspace PINS the version, move the pin in the same commit.** The shared catalog at `.agents/_pins/plugins/catalog.json` names the exact Superpowers commit — that commit, not the baseline, is what every harness installs. Leave it behind and the two records disagree in the worst direction: the baseline claims a version was reviewed while every machine keeps installing the old one, and `sp-version` reports green because the installed copy still matches the pin.
+
+Update, in **one** change:
+
+1. `.agents/_pins/plugins/catalog.json` — `version` + `source.sha` (and keep the `harnesses` list accurate).
+2. **Every harness adapter** listed for that plugin — today:
+   - Claude Code: `.claude/plugins/.claude-plugin/marketplace.json` (must mirror the catalog).
+   - Cursor Cloud: no second SHA file — `.cursor/cloud/install-pinned-plugins.mjs` reads the catalog; still confirm it is listed under `harnesses` and the installer path in `SP_PIN_HARNESS_ADAPTERS` exists.
+
+The checker's **`sp-pin`** rule fails while catalog, baseline, and adapters disagree, so this is enforced rather than remembered. Adding a future harness means a new adapter row in `scripts/config.mjs` → `SP_PIN_HARNESS_ADAPTERS` plus a catalog `harnesses` entry — never a guessed install path.
 
 Then record the rest where the change is:
 

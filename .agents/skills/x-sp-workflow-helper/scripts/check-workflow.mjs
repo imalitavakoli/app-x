@@ -383,6 +383,29 @@ function findSuperpowersSkills() {
     });
   }
 
+  // PROBE 3 — Cursor Cloud env install. Verified layout only: marker written by
+  // `.cursor/cloud/install-pinned-plugins.mjs` plus the marker skill under
+  // `~/.cursor/skills/`. Desktop Cursor marketplace stays in SP_PROBES_UNVERIFIED.
+  if (home) {
+    const marker = join(home, ...CFG.SP_CURSOR_CLOUD_PIN_MARKER_SEGMENTS);
+    const skillsDir = join(home, ...CFG.SP_CURSOR_CLOUD_SKILLS_SEGMENTS);
+    const markerSkill = join(skillsDir, CFG.SP_MARKER_SKILL, 'SKILL.md');
+    if (existsSync(marker) && existsSync(markerSkill)) {
+      let version = null;
+      try {
+        version = JSON.parse(readFileSync(marker, 'utf8')).version ?? null;
+      } catch {
+        /* marker without version is still a find; sp-version handles unknown */
+      }
+      found.push({
+        version,
+        dir: skillsDir,
+        source: MSG.labels.sourceCursorCloud,
+        where: 'cursor-cloud',
+      });
+    }
+  }
+
   if (!found.length) return null;
 
   // Prefer a finding whose version is knowable, then the highest version.
@@ -839,13 +862,14 @@ rule('sp-version', (r) => {
     return;
   }
 
-  // CAN THE READER HAVE PREVENTED THIS? The pin is delivered by a Claude Code
-  // marketplace, so it reaches only copies installed that way. For any other
-  // copy a version difference is the ordinary state, not an incident, and no
-  // action available here would change it — that is a NOTICE. Failing it would
-  // hand every non-Claude teammate a permanent red, and a red nobody can clear
-  // is one everybody learns to skip past, taking the real failures with it.
-  if (sp.source !== MSG.labels.sourceClaudePlugin) {
+  // CAN THE READER HAVE PREVENTED THIS? Only installs this workspace pins are
+  // governed (Claude Code marketplace adapter, Cursor Cloud env install). For
+  // any other copy a version difference is ordinary, not an incident — NOTICE.
+  // Failing those would hand teammates a permanent red they cannot clear.
+  const governed =
+    sp.source === MSG.labels.sourceClaudePlugin ||
+    sp.source === MSG.labels.sourceCursorCloud;
+  if (!governed) {
     emitMsg(r, MSG.driftUngoverned({ drift, source: sp.source }), {
       as: 'notice',
     });
@@ -865,34 +889,42 @@ rule('sp-version', (r) => {
 
 /* --- 6. pinned commit vs reviewed commit --------------------------------- */
 rule('sp-pin', (r) => {
-  // ONE fact, TWO files. The baseline records the commit that was REVIEWED; a
-  // repo-local catalog records the commit everyone INSTALLS. Nothing else can
-  // notice them parting: `sp-version` compares installed against baseline, and
-  // installs faithfully match the pin, so the run stays green precisely while
-  // the reviewed-version guarantee has stopped describing what anyone runs.
+  // ONE fact, several surfaces. `.agents/_pins/plugins/catalog.json` is the
+  // source of truth for the Superpowers SHA. The baseline records what was
+  // REVIEWED; each harness adapter materializes the same commit. `sp-version`
+  // only compares installed vs baseline, so adapter drift stays invisible
+  // unless this rule checks the shared catalog and every listed harness.
   //
-  // Pinning is optional, so absence SKIPS. A skip is not a pass — it says this
-  // workspace has no second record, which is different from having one that
-  // agrees.
-  const settingsFile = CFG.SP_ENABLEMENT_SETTINGS_FILE;
-  if (!exists(settingsFile)) return r.skip(MSG.skips.noPinnedCatalog);
-
-  let cfg;
+  // Pinning is optional: no shared catalog → SKIP (not a pass).
+  const sharedCatalog = CFG.SP_PINS_CATALOG;
+  let shared;
   try {
-    cfg = JSON.parse(read(settingsFile));
-  } catch {
-    return r.skip(MSG.skips.noPinnedCatalog); // sp-version owns settings health
+    shared = JSON.parse(read(sharedCatalog));
+  } catch (err) {
+    if (!exists(sharedCatalog)) return r.skip(MSG.skips.noPinnedCatalog);
+    emitMsg(
+      r,
+      MSG.pinSharedCatalogUnreadable({
+        catalog: sharedCatalog,
+        error: err.message,
+      }),
+    );
+    return;
   }
 
-  // The catalog's directory comes from the declaration teammates actually run
-  // `marketplace add` against — never a hardcoded path, which would go stale the
-  // day the catalog moves and report "not pinned" while the pin is fine.
-  const catalogDirs = Object.values(cfg?.extraKnownMarketplaces ?? {})
-    .map((m) => m?.source)
-    .filter((s) => s?.source === 'directory' && typeof s?.path === 'string')
-    .map((s) => s.path.replace(/^\.\//, '').replace(/\/+$/, ''));
+  const entry = (shared?.plugins ?? []).find(
+    (p) => p?.name === CFG.SP_PLUGIN_NAME,
+  );
+  if (!entry) return r.skip(MSG.skips.noPinnedCatalog);
 
-  if (!catalogDirs.length) return r.skip(MSG.skips.noPinnedCatalog);
+  const sha = entry.source?.sha;
+  if (!sha) {
+    emitMsg(
+      r,
+      MSG.pinHasNoSha({ catalog: sharedCatalog, plugin: CFG.SP_PLUGIN_NAME }),
+    );
+    return;
+  }
 
   const baselinePath = join(SKILL_DIR, 'scripts', CFG.SP_BASELINE_FILE);
   let baseline;
@@ -902,54 +934,130 @@ rule('sp-pin', (r) => {
     return r.skip(MSG.skips.noPinnedCatalog); // sp-version owns a bad baseline
   }
 
-  let pinsFound = 0;
-  for (const dir of catalogDirs) {
-    const catalog = `${dir}/${CFG.SP_CATALOG_MANIFEST}`;
-    let manifest;
-    try {
-      manifest = JSON.parse(read(catalog));
-    } catch (err) {
-      emitMsg(r, MSG.pinCatalogUnreadable({ catalog, error: err.message }));
-      continue;
-    }
-
-    const entry = (manifest?.plugins ?? []).find(
-      (p) => p?.name === CFG.SP_PLUGIN_NAME,
+  const versionOk = !entry.version || entry.version === baseline.version;
+  if (sha !== baseline.gitSha || !versionOk) {
+    emitMsg(
+      r,
+      MSG.pinDisagreesWithBaseline({
+        catalog: sharedCatalog,
+        baselineFile: CFG.SP_BASELINE_FILE,
+        pinned: `${entry.version ?? '?'} @ ${sha}`,
+        reviewed: `${baseline.version ?? '?'} @ ${baseline.gitSha ?? '?'}`,
+      }),
     );
-    if (!entry) continue; // a catalog may exist for other plugins entirely
-    pinsFound++;
-
-    const sha = entry.source?.sha;
-    if (!sha) {
-      emitMsg(
-        r,
-        MSG.pinHasNoSha({ catalog, plugin: CFG.SP_PLUGIN_NAME }),
-      );
-      continue;
-    }
-
-    // Version too, not just the sha: they are shown side by side wherever a
-    // person looks, so a stale version string misleads even when the pin is right.
-    const versionOk = !entry.version || entry.version === baseline.version;
-    if (sha !== baseline.gitSha || !versionOk) {
-      emitMsg(
-        r,
-        MSG.pinDisagreesWithBaseline({
-          catalog,
-          baselineFile: CFG.SP_BASELINE_FILE,
-          pinned: `${entry.version ?? '?'} @ ${sha}`,
-          reviewed: `${baseline.version ?? '?'} @ ${baseline.gitSha ?? '?'}`,
-        }),
-      );
-      continue;
-    }
-
-    r.note(
-      MSG.notes.spPinOk({ catalog, version: entry.version ?? baseline.version, sha }),
-    );
+    return;
   }
 
-  if (!pinsFound) return r.skip(MSG.skips.noPinnedCatalog);
+  r.note(
+    MSG.notes.spPinOk({
+      catalog: sharedCatalog,
+      version: entry.version ?? baseline.version,
+      sha,
+    }),
+  );
+
+  const harnesses = Array.isArray(entry.harnesses) ? entry.harnesses : [];
+  const adapters = CFG.SP_PIN_HARNESS_ADAPTERS ?? {};
+  const catalogPin = `${entry.version ?? '?'} @ ${sha}`;
+
+  const settingsFile = CFG.SP_ENABLEMENT_SETTINGS_FILE;
+  let settingsCfg = null;
+  if (exists(settingsFile)) {
+    try {
+      settingsCfg = JSON.parse(read(settingsFile));
+    } catch {
+      settingsCfg = null;
+    }
+  }
+
+  for (const harness of harnesses) {
+    const adapter = adapters[harness];
+    if (!adapter) {
+      emitMsg(
+        r,
+        MSG.pinUnknownHarness({ harness, catalog: sharedCatalog }),
+      );
+      continue;
+    }
+
+    if (adapter.kind === 'claude-marketplace') {
+      if (!settingsCfg) continue;
+      const catalogDirs = Object.values(
+        settingsCfg?.extraKnownMarketplaces ?? {},
+      )
+        .map((m) => m?.source)
+        .filter((s) => s?.source === 'directory' && typeof s?.path === 'string')
+        .map((s) => s.path.replace(/^\.\//, '').replace(/\/+$/, ''));
+
+      for (const dir of catalogDirs) {
+        const catalog = `${dir}/${CFG.SP_CATALOG_MANIFEST}`;
+        let manifest;
+        try {
+          manifest = JSON.parse(read(catalog));
+        } catch (err) {
+          emitMsg(
+            r,
+            MSG.pinCatalogUnreadable({ catalog, error: err.message }),
+          );
+          continue;
+        }
+        const mEntry = (manifest?.plugins ?? []).find(
+          (p) => p?.name === CFG.SP_PLUGIN_NAME,
+        );
+        if (!mEntry) continue;
+        const mSha = mEntry.source?.sha;
+        if (!mSha) {
+          emitMsg(
+            r,
+            MSG.pinHasNoSha({ catalog, plugin: CFG.SP_PLUGIN_NAME }),
+          );
+          continue;
+        }
+        const mVersionOk = !mEntry.version || mEntry.version === entry.version;
+        if (mSha !== sha || !mVersionOk) {
+          emitMsg(
+            r,
+            MSG.pinAdapterDisagreesWithCatalog({
+              adapter: catalog,
+              catalog: sharedCatalog,
+              adapterPin: `${mEntry.version ?? '?'} @ ${mSha}`,
+              catalogPin,
+            }),
+          );
+        } else {
+          r.note(
+            MSG.notes.spPinOk({
+              catalog,
+              version: mEntry.version ?? entry.version,
+              sha: mSha,
+            }),
+          );
+        }
+      }
+      continue;
+    }
+
+    if (adapter.kind === 'cursor-cloud-install') {
+      const installer = adapter.installer;
+      if (!installer || !exists(installer)) {
+        emitMsg(
+          r,
+          MSG.pinCursorCloudInstallerMissing({
+            installer: installer || MSG.labels.installerPathMissing,
+            catalog: sharedCatalog,
+          }),
+        );
+      } else {
+        r.note(
+          MSG.notes.spPinOk({
+            catalog: installer,
+            version: entry.version ?? baseline.version,
+            sha,
+          }),
+        );
+      }
+    }
+  }
 });
 
 /* --- 7. workspace skills + stubs ---------------------------------------- */
