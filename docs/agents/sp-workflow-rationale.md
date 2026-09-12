@@ -424,7 +424,7 @@ Path A and Path B dispatch `x-code-diff-reviewer` into a subagent so the control
 
 That truncation hid the finding **titles** from the human sitting in the session. The full report lived in `latest.md`, but the user had to ask for it. The score without the issue list is not enough to decide whether to open a follow-up cycle.
 
-So the take-back is now the skill's **Session handoff**: same verdict marker, counts, blocking titles, non-blocking titles, and path. The heavy load stays in the subagent; only that short block crosses back, and the controller must paste it into the user-visible reply.
+So the take-back is now the skill's **Session handoff**: same verdict marker, counts, blocking titles, non-blocking titles, a **🔧 Fix these?** offer (new cycle + `latest.json`, or `Nothing to fix.`), and path. The heavy load stays in the subagent; only that short block crosses back, and the controller must paste it into the user-visible reply. The offer keeps the reviewer read-only in this cycle while still telling the human that fixes are available on request — the same rule the human report's closing section already states, now visible without opening a file.
 
 **Revisit if** the Session handoff grows large enough to defeat the context reason for dispatching (then split titles from bodies more aggressively, or page them), or if a harness surfaces `latest.md` in the UI automatically so pasting titles becomes redundant.
 

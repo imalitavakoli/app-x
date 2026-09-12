@@ -70,12 +70,12 @@ Always runs on Path B once the fix is proven. **This hook verifies; only its act
 4. **Review the fix's changes, last.** Runs after steps 2–3, so it judges the tree as it will stand.
 
    Resolve `pref.diff-review` per [sp-workflow-prefs.md](sp-workflow-prefs.md). Match/write: [agents-md-format-local.md](agents-md-format-local.md). Unset → ask once here (`on` recommended).
-   - **`on`** — **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back its **Session handoff** block (verdict line with status marker, counts, 🛑 Blocking titles, Non-blocking titles, report path — see that skill). **Paste that block into the user-visible session reply** so the human sees the score and the issue list without opening a file. Do not shrink the take-back to verdict + counts + path alone. The skill still loads its maps and the diff in the subagent (_Operating rule 5_); only the handoff crosses back. **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.
+   - **`on`** — **Dispatch a subagent** pointed at `.agents/skills/x-code-diff-reviewer/SKILL.md`, and take back its **Session handoff** block (verdict line with status marker, counts, 🛑 Blocking titles, Non-blocking titles, 🔧 Fix these?, report path — see that skill). **Paste that block into the user-visible session reply** so the human sees the score, the issue list, and the fix offer without opening a file. Do not shrink the take-back to verdict + counts + path alone. The skill still loads its maps and the diff in the subagent (_Operating rule 5_); only the handoff crosses back. **If this agent cannot dispatch subagents, load the skill here instead** and say that you did.
    - **`off`** — do not dispatch. Say in one line that the review was skipped because `pref.diff-review: off` (or this-cycle override). Not a Pass.
 
    Direct invoke of that skill, or the user asking for a review, still runs it.
 
-   When it ran: it reports and never edits. This path often has no branch and no commits (_Git contract_), so the review covers whatever the fix actually touched, committed or not — the skill resolves that itself. A report asking for changes **ends this cycle**; the user opens a new one to make them.
+   When it ran: it reports and never edits. This path often has no branch and no commits (_Git contract_), so the review covers whatever the fix actually touched, committed or not — the skill resolves that itself. A report asking for changes **ends this cycle**; the Session handoff's **🔧 Fix these?** asks whether to open a **new** cycle with `latest.json` — wait for an explicit yes, then start that new cycle (do not patch in this one).
 
 Docs come **after** the fix is proven, never before, so nothing documents behaviour that verification might still reject. The cycle is not done until this hook has run — make the final completion report after it, not before.
 

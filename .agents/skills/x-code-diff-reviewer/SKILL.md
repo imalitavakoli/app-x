@@ -3,7 +3,7 @@ name: x-code-diff-reviewer
 description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; or to put the human report on an existing merge request's description. Auditing correctness, security, reuse, lib boundaries, naming, DEP, styles, tests, docs. Not for making the changes, fixing findings, or opening the PR."
 metadata:
   kind: reviewer
-  version: '1.5.0'
+  version: '1.6.0'
 ---
 
 # Code Diff Reviewer
@@ -437,16 +437,28 @@ None.
 1. <finding title> — <one-line why it matters>
 2. <finding title> — <one-line why it matters>
 
+### 🔧 Fix these?
+
+Want me to open a **new** cycle and apply these from
+`.agents/_local/skills/x-code-diff-reviewer/latest.json`?
+This review stays read-only — I will not change the tree in this cycle.
+
 Report: `.agents/_local/skills/x-code-diff-reviewer/latest.md`
 ```
 
-Rules for the lists:
+Rules for the lists and the fix offer:
 
 - **Blocking** and **Non-blocking** always appear, even when empty (`None.`).
 - Each listed item is the finding's **title** plus one short consequence clause — not the full
   finding body (that stays in `latest.md`).
 - Use the same status marker on the verdict line as the human report (✅ / ⚠️ / ❌).
 - Keep the report path so a reader can open the full write-up.
+- **🔧 Fix these?** always appears.
+  - When Blocking or Non-blocking has at least one item: use the offer text above (new cycle +
+    `latest.json`). Do **not** apply fixes in this run.
+  - When both lists are `None.`: write `Nothing to fix.` instead of the offer question.
+  - A finding that needs a human answer (not a code change) still appears in the list; say in
+    that item's one-liner that it needs a decision, not a patch.
 
 ### Plain language
 
@@ -506,8 +518,8 @@ Copy into todos, prefixed `[review]`:
 - [ ] `[review]` Confirm no claim asserts an unrun check's outcome
 - [ ] `[review]` Write the `.md` and `.json` reports plus both `latest.*`; print the `.md`. In
       the session, print the **Session handoff** block (verdict line with status marker,
-      counts, 🛑 Blocking list, Non-blocking list, report path) — not only the JSON `state`,
-      and not only a one-line verdict.
+      counts, 🛑 Blocking list, Non-blocking list, 🔧 Fix these?, report path) — not only the
+      JSON `state`, and not only a one-line verdict.
 - [ ] `[review]` Run `scripts/publish-pr-description.mjs`; if skipped, print the matching
       when/when-not reason. If a merge-request URL appears later in this run, run the script
       again — do not re-review.
@@ -554,5 +566,7 @@ major; a patch leaves `Explains:` alone):
 | Treated the projection or publish examples as the only hosts                | `unknown` is valid. Add a detector and a find/update pair; do not bend an existing mapping.                                       |
 | Treated a skipped prepend as a failed review                                | The session report is the review. Prepend is optional.                                                                            |
 | Announced only `pass` / `fail` / `pass_with_warnings` in the session        | Use the human-report verdict line, including ✅ / ⚠️ / ❌. The enum is the JSON `state`.                                           |
-| Returned only verdict + counts + path to a parent agent                     | Return the full **Session handoff** (blocking and non-blocking titles included) and paste it in chat.                             |
+| Returned only verdict + counts + path to a parent agent                     | Return the full **Session handoff** (lists + 🔧 Fix these? included) and paste it in chat.                                        |
 | Omitted empty Blocking / Non-blocking sections from the handoff             | Always print both headings; write `None.` when a list is empty.                                                                   |
+| Omitted 🔧 Fix these? from the handoff                                      | Always print it — offer a new cycle when there are findings; write `Nothing to fix.` when both lists are empty.                   |
+| Applied review findings in the same run as the review                       | Review stays read-only. Offer a **new** cycle; wait for an explicit yes.                                                          |
