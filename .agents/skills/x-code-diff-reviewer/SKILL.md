@@ -3,7 +3,7 @@ name: x-code-diff-reviewer
 description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; or to put the human report on an existing merge request's description. Auditing correctness, security, reuse, lib boundaries, naming, DEP, styles, tests, docs. Not for making the changes, fixing findings, or opening the PR."
 metadata:
   kind: reviewer
-  version: '1.3.0'
+  version: '1.4.0'
 ---
 
 # Code Diff Reviewer
@@ -15,20 +15,28 @@ repository, and the shape of the two reports that judgement is delivered in.
 
 It reviews. It does not repair. The findings are the whole product.
 
-The **main job** is self-review **before** a merge request: print the human report in the
-session. That job is complete even when no request exists.
+The **main job** is self-review **before** a merge request: write the human report under
+`.agents/_local/skills/x-code-diff-reviewer/` and print it in the session. That job is
+complete even when no request exists. **Do not assume the report is always on the PR.**
 
-**Prepend** is optional follow-on: copy that same report onto a merge request that already
-exists, or that appears later in this run, so the next reader sees it. Skipping prepend is
-not a failed review.
+**Prepend** is optional follow-on so a reader of the merge request sees the same report:
+
+- Run `scripts/publish-pr-description.mjs` when a request already exists, appears later in
+  this run, or the user asked to put the report on the description (procedure:
+  `references/publish-pr-description.md`).
+- Some harnesses (e.g. Cursor Cloud) create or update the request themselves. Their ops notes
+  may require the controller to prepend `latest.md` on `create_pr` / `update_pr` when that
+  file exists — including a late update when the PR was opened before the review finished.
+  That path does not replace this skill’s publish script; it is another way to land the same
+  artifact. Skipping prepend is not a failed review.
 
 `scripts/collect-diff-facts.mjs` gathers the git facts (base branch, ranges, changed files,
 buckets) and writes nothing outside the report directory. **Every judgement in the report is
 yours** — the script never decides whether something is a finding. It stays git-only: it does
 not look up merge requests.
 
-`scripts/publish-pr-description.mjs` is the only thing that talks to a host, and only to the
-description. Procedure: `references/publish-pr-description.md`.
+`scripts/publish-pr-description.mjs` is this skill’s host write for the description only.
+Procedure: `references/publish-pr-description.md`.
 
 ## Optional prefs
 
@@ -52,7 +60,7 @@ Announce in one line which layer supplied each key that is not the announced def
 
 | Key                | Type                             | Announced default (file or key absent)                                                          | Does                                                      |
 | ------------------ | -------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `version`          | integer                          | current shape is `1` — compare against the example, not this skill's `1.3.0`                    | format of this file                                       |
+| `version`          | integer                          | current shape is `1` — compare against the example, not this skill's `1.4.0`                    | format of this file                                       |
 | `boilerplate_apps` | string array of Nx project names | absent — then the DEP mirroring check falls through to the workspace docs, then to a `question` | which apps the DEP check treats as the copyable reference |
 
 `version` is the shape of this JSON. It is not the skill's `metadata.version`.

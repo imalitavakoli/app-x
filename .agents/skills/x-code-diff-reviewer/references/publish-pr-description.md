@@ -2,9 +2,9 @@
 
 **Load when:** `latest.md` has been written and you are publishing (a merge request exists, just appeared this run, or the user asked to put the report on the description).
 
-**Explains:** v1.3.0
+**Explains:** v1.4.0
 
-Not needed to *do* the review. The main job is the session report (see Overview in SKILL.md). This file is the optional follow-on.
+Not needed to *do* the review. The main job is the session report plus `_local` artifacts (see Overview in SKILL.md). This file is the optional follow-on. Landing the report on the description is **best-effort** — never required for a successful review.
 
 ## When the human report appears on the merge request
 
@@ -13,19 +13,19 @@ Verdict (`pass` / `fail`) does **not** by itself decide prepend.
 **You will see the report at the top of the description when all of these are true:**
 
 - this run wrote `latest.md`
-- a merge request for this branch **already existed**, or **appeared before the agent exited**
-- this host has a find + update-description mapping
-- the environment could authenticate to that host
+- a merge request for this branch **already existed**, or **appeared before the agent exited**, **or** the harness controller included `latest.md` when it created/updated the request (e.g. Cursor Cloud per `.cursor/cloud/CLOUD.md`)
+- this host has a find + update-description mapping **or** the harness used its own PR write path
+- the environment could authenticate to that host (for this script) / the harness write tool succeeded
 
 **You will not see it on the description when any of these are true:**
 
-- there was no merge request before the agent exited (the report is still in the session and in `_local`)
+- there was no merge request before the agent exited, and no harness create/update included the report (the report is still in the session and in `_local`)
 - an auto-PR opened the request **after** the agent had already stopped
-- the host is `unknown` or has no mapping yet
+- the host is `unknown` or has no mapping yet (and no harness write path ran)
 - there were no credentials to update the description
 - the review never ran, or `latest.md` was missing
 
-On skip, print the matching reason from that list and the script's `reason` code. Do not leave a missing block as a mystery.
+On skip, print the matching reason from that list and the script's `reason` code. Do not leave a missing block as a mystery. Do not treat a missing description block as a failed review.
 
 ## Detection ladder
 
@@ -67,6 +67,8 @@ Exit codes:
 Auth: use whatever this environment already uses to talk to that host (`gh`, a token). Do not add a product-specific API path. Missing auth is a skip (`no-auth`), not a failed review.
 
 The script writes only the description. It does not create a request, comment, request-changes, approve, or assign.
+
+Harnesses that open/update the request via their own tool (and that wrap the same `latest.md` in the `<!-- x-code-diff-reviewer:start -->` / `<!-- x-code-diff-reviewer:end -->` markers) may skip calling this script when that write already landed the report. If unsure whether the block is present, still run the script — it upserts the marked block.
 
 ## Example mappings (not the host set)
 
