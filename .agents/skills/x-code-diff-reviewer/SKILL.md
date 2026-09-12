@@ -3,7 +3,7 @@ name: x-code-diff-reviewer
 description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; or to put the human report on an existing merge request's description. Auditing correctness, security, reuse, lib boundaries, naming, DEP, styles, tests, docs. Not for making the changes, fixing findings, or opening the PR."
 metadata:
   kind: reviewer
-  version: '1.6.0'
+  version: '1.7.0'
 ---
 
 # Code Diff Reviewer
@@ -11,7 +11,8 @@ metadata:
 ## Overview
 
 This skill supplies the rules for judging **changes someone else has already made** in this
-repository, and the shape of the two reports that judgement is delivered in.
+repository, and the shape of the two reports that judgement is delivered in, plus the
+session handoff printed in chat.
 
 It reviews. It does not repair. The findings are the whole product.
 
@@ -380,9 +381,10 @@ Both are produced every run. Write them to
 
 The human report follows `assets/template/human-report.md` — its section order is fixed, and the
 verdict comes first. Every section marked REQUIRED appears even when empty. Pick a worked example
-from `assets/examples/` that matches your verdict; if none matches, follow the template and say
-which sections you left empty. Optional caller examples live under
-`.agents/skills/x-code-diff-reviewer/assets/examples/callers/` — copy, do not require.
+from `assets/examples/human-report/` that matches your verdict; if none matches, follow the
+template and say which sections you left empty. These examples live under
+`.agents/skills/x-code-diff-reviewer/assets/examples/human-report/`. Optional caller examples
+live under `.agents/skills/x-code-diff-reviewer/assets/examples/callers/` — copy, do not require.
 
 **End the human report by pointing at the JSON.** A person who wants these fixed starts a new
 cycle, and the agent doing that work should read `latest.json`, not this report — the JSON
@@ -412,53 +414,17 @@ JSON's consumers post that text to a pull request, where a stray glyph is noise.
 
 ### Session handoff (required)
 
-Every run ends with a **session handoff** block in the chat — not only the full `latest.md`
-dump, and not only a one-line verdict. The human reading this session must see the score and
-the issue titles without opening a file or asking a follow-up.
+Every run ends with a **session handoff** in the chat — not only the full `latest.md` dump,
+and not only a one-line verdict.
+
+The session handoff follows `assets/template/session-handoff.md` — headings and order fixed.
+Every heading marked REQUIRED appears even when empty. Pick a worked example from
+`assets/examples/session-handoff/` that matches your verdict; if none matches, follow the
+template and say which sections you left empty. These examples live under
+`.agents/skills/x-code-diff-reviewer/assets/examples/session-handoff/`.
 
 When you return to a **parent agent**, that parent pastes this same block into the user-visible
-session reply. Do not shrink it to "verdict + counts + path" alone.
-
-Print exactly this shape (headings and order fixed; empty lists say `None.`):
-
-```markdown
-## Review result
-
-⚠️ **Pass with warnings** — <one short clause>
-
-0 blocking · 2 non-blocking · 7 files reviewed
-
-### 🛑 Blocking
-
-None.
-
-### Non-blocking
-
-1. <finding title> — <one-line why it matters>
-2. <finding title> — <one-line why it matters>
-
-### 🔧 Fix these?
-
-Want me to open a **new** cycle and apply these from
-`.agents/_local/skills/x-code-diff-reviewer/latest.json`?
-This review stays read-only — I will not change the tree in this cycle.
-
-Report: `.agents/_local/skills/x-code-diff-reviewer/latest.md`
-```
-
-Rules for the lists and the fix offer:
-
-- **Blocking** and **Non-blocking** always appear, even when empty (`None.`).
-- Each listed item is the finding's **title** plus one short consequence clause — not the full
-  finding body (that stays in `latest.md`).
-- Use the same status marker on the verdict line as the human report (✅ / ⚠️ / ❌).
-- Keep the report path so a reader can open the full write-up.
-- **🔧 Fix these?** always appears.
-  - When Blocking or Non-blocking has at least one item: use the offer text above (new cycle +
-    `latest.json`). Do **not** apply fixes in this run.
-  - When both lists are `None.`: write `Nothing to fix.` instead of the offer question.
-  - A finding that needs a human answer (not a code change) still appears in the list; say in
-    that item's one-liner that it needs a decision, not a patch.
+session reply. Do not shrink it.
 
 ### Plain language
 
@@ -517,9 +483,8 @@ Copy into todos, prefixed `[review]`:
 - [ ] `[review]` Fill every REQUIRED section, including _What I did not check_
 - [ ] `[review]` Confirm no claim asserts an unrun check's outcome
 - [ ] `[review]` Write the `.md` and `.json` reports plus both `latest.*`; print the `.md`. In
-      the session, print the **Session handoff** block (verdict line with status marker,
-      counts, 🛑 Blocking list, Non-blocking list, 🔧 Fix these?, report path) — not only the
-      JSON `state`, and not only a one-line verdict.
+      the session, print the **Session handoff** from `assets/template/session-handoff.md` —
+      not only the JSON `state`, and not only a one-line verdict.
 - [ ] `[review]` Run `scripts/publish-pr-description.mjs`; if skipped, print the matching
       when/when-not reason. If a merge-request URL appears later in this run, run the script
       again — do not re-review.
@@ -566,7 +531,7 @@ major; a patch leaves `Explains:` alone):
 | Treated the projection or publish examples as the only hosts                | `unknown` is valid. Add a detector and a find/update pair; do not bend an existing mapping.                                       |
 | Treated a skipped prepend as a failed review                                | The session report is the review. Prepend is optional.                                                                            |
 | Announced only `pass` / `fail` / `pass_with_warnings` in the session        | Use the human-report verdict line, including ✅ / ⚠️ / ❌. The enum is the JSON `state`.                                           |
-| Returned only verdict + counts + path to a parent agent                     | Return the full **Session handoff** (lists + 🔧 Fix these? included) and paste it in chat.                                        |
-| Omitted empty Blocking / Non-blocking sections from the handoff             | Always print both headings; write `None.` when a list is empty.                                                                   |
-| Omitted 🔧 Fix these? from the handoff                                      | Always print it — offer a new cycle when there are findings; write `Nothing to fix.` when both lists are empty.                   |
+| Returned only verdict + counts + path to a parent agent                     | Return the full **Session handoff** from `assets/template/session-handoff.md` and paste it in chat.                                |
+| Omitted empty Blocking / Non-blocking sections from the handoff             | Follow the template — both headings always print; write `None.` when a list is empty.                                             |
+| Omitted 🔧 Fix these? from the handoff                                      | Follow the template — offer a new cycle when there are findings; write `Nothing to fix.` when both lists are empty.               |
 | Applied review findings in the same run as the review                       | Review stays read-only. Offer a **new** cycle; wait for an explicit yes.                                                          |

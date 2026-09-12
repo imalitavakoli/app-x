@@ -6,7 +6,11 @@ Why the workflow in [`AGENTS.md`](../../AGENTS.md) → _Superpowers-First Workfl
 
 > **Rationale only — no rules.** Every rule lives in `AGENTS.md` or `sp-workflow-path-*.md`. Do **not** read this to execute a cycle. Read it when **editing** the workflow or **questioning** a decision — and when Superpowers changes, to see what to revisit.
 >
-> **What earns an entry.** Compare the candidate to the other entries, especially on the same path. It earns a slot only if someone editing later would re-litigate the choice from the path file and the notation catalog alone — a surprising shape, a failed previous design, or a **Revisit if** that would change the workflow. Using a landmark as [sp-workflow-format.md](sp-workflow-format.md) already defines it does not earn one. Restating a path file's rule does not. A smaller case of something on the same path that has no entry does not.
+> **What earns an entry.** This file records **workflow-shape** choices — which landmark, which attach-point, who commits, what a gate may skip. Compare the candidate to the other entries, especially on the same path.
+>
+> **The delete test:** if you dropped the candidate, would a later editor pick a *different landmark or attach-point* from the path file and the notation catalog alone? Only then does it earn a slot — a surprising shape, a failed previous *workflow* design, or a **Revisit if** that would change the workflow. Default is skip.
+>
+> It does **not** earn one when the path file plus the named skill already say what to do; when the change is a skill's own output (a template, a chat block, a field list); when you are using a landmark as [sp-workflow-format.md](sp-workflow-format.md) already defines it; when you are restating a path file's rule; when it is a smaller case of something on the same path that has no entry; or because "a decision changed". Chronology is git.
 
 &nbsp;
 
@@ -413,20 +417,6 @@ Investigation's mark-and-sweep machinery exists because unmarked temporary logs 
 So dispatching `standing` only is not a narrowing of the skill; it is what makes the hand-off owe nothing afterwards. The two design consequences are both recorded where they bind: the mode is named explicitly at the dispatch, and the skill itself now defaults an unstated mode to `standing` rather than inferring one from the surrounding work — that inference, not the absence of a sweep, was the actual failure this entry came from.
 
 **Revisit if** Superpowers' defect skill stops adding instrumentation (the backstop becomes unnecessary), the outstanding-changes review stops judging log calls (it becomes absent), or the workflow ever dispatches investigation mode — then removal becomes ours, and it needs a step rather than an entry.
-
-&nbsp;
-
-[🔝](#superpowers-first-workflow--rationale-)
-
-## Why the diff-review take-back is a Session handoff, not verdict-only
-
-Path A and Path B dispatch `x-code-diff-reviewer` into a subagent so the controller does not load its maps and the whole diff (_Operating rule 5_). The first version of that hand-off took back only the verdict line, the counts, and the report path — enough for the controller to know the cycle's status, and cheap on context.
-
-That truncation hid the finding **titles** from the human sitting in the session. The full report lived in `latest.md`, but the user had to ask for it. The score without the issue list is not enough to decide whether to open a follow-up cycle.
-
-So the take-back is now the skill's **Session handoff**: same verdict marker, counts, blocking titles, non-blocking titles, a **🔧 Fix these?** offer (new cycle + `latest.json`, or `Nothing to fix.`), and path. The heavy load stays in the subagent; only that short block crosses back, and the controller must paste it into the user-visible reply. The offer keeps the reviewer read-only in this cycle while still telling the human that fixes are available on request — the same rule the human report's closing section already states, now visible without opening a file.
-
-**Revisit if** the Session handoff grows large enough to defeat the context reason for dispatching (then split titles from bodies more aggressively, or page them), or if a harness surfaces `latest.md` in the UI automatically so pasting titles becomes redundant.
 
 &nbsp;
 

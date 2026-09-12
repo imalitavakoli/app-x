@@ -3,7 +3,7 @@ name: x-sp-workflow-helper
 description: 'WHAT? The procedure and integrity checker for changing the Superpowers-First Workflow surfaces — `AGENTS.md`, `docs/agents/sp-workflow-*.md` and the `x-*` skills they name. WHEN? Before adding, renaming, renumbering or deleting a hook, gate, constraint, entry, path or landmark; before moving a rule between those files; after any such edit, to prove nothing dangled; and whenever the installed Superpowers version changes.'
 metadata:
   kind: helper
-  version: '1.14.0'
+  version: '1.15.0'
 ---
 
 # SP Workflow Helper
@@ -183,7 +183,7 @@ Reach for this when the change alters **what an agent decides** — a new gate, 
 1. **Run the checker.** Zero failures, or every remaining one pre-existing and named.
 2. **Sweep for the rule's other homes.** Take a distinctive phrase from the text you replaced and grep `AGENTS.md`, `CONTEXT.md`, `docs/`, `.agents/skills/` **and `.agents/hooks/`** — across **every** extension, never filtered to `*.md`. Hook prose is checked by nothing else (see _The governance boundary_ above), and where hooks are wired, a directive one injects is a copy of a rule exactly as much as a paragraph in a doc is (and where none are, the grep simply costs nothing): the narrow anchor that sent an agent past the personal-preference read lived in six markdown files **and** in a hook's injected text, and an `*.md`-filtered sweep found only the six. This is `x-skill-build-helper` → _Before calling a rule change done_, and it applies to workflow edits identically — the checker finds broken **references**, never a stale **copy** of a rule that still parses.
 3. **Confirm the fact is in exactly one home** — `docs/agents/where-content-lives.md`. Moving a rule means the old site becomes a pointer, not a second copy.
-4. **Record the reasoning only if it earns an entry** — the bar is the intro note on `docs/agents/sp-workflow-rationale.md` (_What earns an entry_). One entry with its **Revisit if**. Skip it when the path file plus the notation catalog already answer "why". An extra entry gets questioned; an undocumented decision that *does* earn one gets re-litigated.
+4. **Record the reasoning only if it earns an entry** — the bar is the intro note on `docs/agents/sp-workflow-rationale.md` (_What earns an entry_). Run that note's **delete test** before writing; default is skip. One entry with its **Revisit if**. Skip it when the path file plus the named skill already say what to do. An extra entry gets questioned; an undocumented *workflow-shape* decision that *does* earn one gets re-litigated.
 5. **Update the todo/step count** if you added or removed a step: a step that no path turns into a todo is a step that gets skipped.
 
 ## Common mistakes
@@ -202,7 +202,7 @@ Reach for this when the change alters **what an agent decides** — a new gate, 
 | Naming a hook script by filename in a doc          | Name the **event** and the job ("a SessionStart hook reports…"); point at the harness's own hook registry for what is wired. Run `hook-refs`.       |
 | Restating a rule in a tool's entry stub so it is "read first" | The stub points at `AGENTS.md`; that file is where every tool arrives. A stub is loaded every turn and compared against nothing, so a copy there is the one that drifts. Run `tool-stubs`. |
 | Narrowing a generator's agent list so it stops rewriting a stub | It does more per agent than write rules, and an agent out of scope silently stops receiving the rest. Run it fully and delete the block again — `tool-stubs` is what makes the return loud, so this is the failure to prefer. |
-| Adding a rationale entry because "a decision changed" | The bar is the intro note _What earns an entry_ on the rationale file. Using a 📌 as defined, or restating **Leaves alone**, does not earn one. |
+| Adding a rationale entry because "a decision changed", or because a skill's take-back / report shape changed | Run the delete test on the rationale intro note. A skill owns its output shape; the path file names the artifact to take back. Neither is a workflow-shape choice. Using a 📌 as defined, or restating **Leaves alone**, does not earn one. |
 
 ## Confirm the current tooling before relying on this
 
