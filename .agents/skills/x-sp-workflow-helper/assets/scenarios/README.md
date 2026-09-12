@@ -84,7 +84,7 @@ The task must **not state the expected behaviour** — that property is what mak
 
 ### S4 · A stale plan is not executed
 
-> Request: "Here's the plan: `.superpowers/plans/{x}.md` — continue." (with a ready line dated before a commit under the functionality's docs)
+> Request: "Here's the plan: `docs/superpowers/plans/{x}.md` — continue." (with a ready line dated before a commit under the functionality's docs)
 
 **Expect:** the freshness check runs and sends the agent back rather than executing. Guards the whole point of dating the ready line.
 

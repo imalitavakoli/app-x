@@ -42,6 +42,9 @@ x/
 │             └── server/                           // Holds the build-time generated files of an app which has app-shell. Can be deleted!
 ├── docs/                                           // Holds the workspace documentation — one folder per area (see this repo's README for the full index).
 │   ├── agents/                                     // Holds the AI-agent docs: the Superpowers workflow paths, their shared rules and notation, and how to edit `AGENTS.md` / `CONTEXT.md`.
+│   ├── superpowers/                                // Superpowers cycle artifacts (tracked defaults). Not the product PRD/TSD — those win on conflict.
+│   │   ├── specs/                                  // `brainstorming` design docs (`YYYY-MM-DD-<topic>-design.md`).
+│   │   └── plans/                                  // `writing-plans` implementation plans (`YYYY-MM-DD-<feature-name>.md`).
 │   └── x/{domain}/{functionality-name}/            // Holds ONE functionality's specs, nested under its domain (`shared` or one app).
 │       ├── PRD/                                    // 🆔 Product spec: the Acceptance Criteria (AC) an e2e `it` cites.
 │       └── TSD/                                    // 🆔 Technical spec, per lib type per live version: the FRs (`describe`) and BRs (`it`) a unit test cites, plus the README's ID Index.

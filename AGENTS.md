@@ -111,7 +111,7 @@ The path files ask check 1 again under a name you will meet there — you do not
 
 ### Shared rules — read before the path file
 
-Every path assumes the same rules, so they live in one place rather than in each path: **`/docs/agents/sp-workflow-shared.md`** — the **Required reads** (which docs are due, and at which moment — the only place those moments are stated), the **Operating rules** (control flow, todos, how rules reach execution subagents), the **Workspace preferences** declared to Superpowers (no worktree; spec/plan at ignored paths; never commit them), and the **Git contract** (who branches and commits, per path and mode).
+Every path assumes the same rules, so they live in one place rather than in each path: **`/docs/agents/sp-workflow-shared.md`** — the **Required reads** (which docs are due, and at which moment — the only place those moments are stated), the **Operating rules** (control flow, todos, how rules reach execution subagents), the **Workspace preferences** declared to Superpowers (no worktree; spec/plan at Superpowers' defaults, tracked), and the **Git contract** (who branches and commits, per path and mode).
 
 Read it together with the path file, once the path is identified and before you invoke that skill — and note that its **Required reads** falls due earlier still: it names what is owed at cycle start, including the personal preferences to resolve **before the first question put to the user**. The path files cite these by name and never repeat them.
 

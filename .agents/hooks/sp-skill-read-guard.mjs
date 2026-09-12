@@ -75,8 +75,8 @@ emit({
       'Everything else this workspace owes, and the moment each read falls due, is ONE table: ' +
       '`docs/agents/sp-workflow-shared.md` -> Required reads and when they are due. Read that ' +
       'file IN FULL — the table is in it, and so are the Operating rules, the Git contract, ' +
-      'and the Workspace preferences that OVERRIDE this skill on where a spec/plan is written ' +
-      'and whether it is committed.\n\n' +
+      'and the Workspace preferences that OVERRIDE this skill where they speak ' +
+      '(declared in that file — do not infer them from this reminder).\n\n' +
       'THEN, BEFORE this skill asks you anything: some of what you just read is an ACTION due ' +
       'at this moment, not a fact to carry. Find EVERY rule in those files that must happen at ' +
       'CYCLE START (entering OR REJOINING a path) or BEFORE THE FIRST QUESTION IS PUT TO THE ' +

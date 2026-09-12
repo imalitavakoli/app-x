@@ -46,9 +46,19 @@ Pre-flight once deferred these reads with "those wait for a skill to fire" — a
 
 ## Why work in place, with no worktree
 
-A feature branch already isolates the work. A worktree is a cold checkout: no `node_modules` or Nx cache, and none of our git-ignored local files (`AGENTS.local.md`, `.superpowers/`).
+A feature branch already isolates the work. A worktree is a cold checkout: no `node_modules` or Nx cache, and none of our git-ignored local files (`AGENTS.local.md`, `.superpowers/` scratch).
 
 **Revisit if** we need two feature cycles in parallel on one machine — drop the preference and house those ignored files outside the worktree.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why spec and plan use Superpowers defaults
+
+We used to redirect specs and plans to git-ignored `.superpowers/` so they never reached a branch. That made a Cloud (or any remote clone) unable to read the plan — the only carrier into execution. Superpowers already writes `docs/superpowers/specs/` and `docs/superpowers/plans/` and commits the spec. Keeping those defaults, tracked, is what lets a later session or a Cloud agent open the plan path. PRD/TSD stay the durable product docs and still win on conflict. `.superpowers/` remains ignored for Superpowers' own scratch (SDD briefs, brainstorm companion), which is a different artifact.
+
+**Revisit if** Superpowers changes those default paths, or we again need cycle scratch that must never reach a branch.
 
 &nbsp;
 
@@ -176,9 +186,23 @@ Superpowers already has the two modes. We resolve mode before `writing-plans` so
 
 ## Why personal preferences live in `AGENTS.local.md`, not Workspace preferences
 
-Workspace preferences are committed team constraints Superpowers skills honour without asking (worktree, spec path). A `pref.*` key is a personal habit. Putting those values in the shared rules would force every developer onto the same default. A cycle artifact (today a plan line) stays that cycle's binding answer; the local key is only the default for a new cycle. How to resolve any key lives in `sp-workflow-prefs.md`, not next to Workspace preferences and not in the `AGENTS.local.md` format catalog.
+Workspace preferences are committed team constraints Superpowers skills honour without asking (today: no worktree). A `pref.*` key is a personal habit. Putting those values in the shared rules would force every developer onto the same default. A cycle artifact (today a plan line) stays that cycle's binding answer; the local key is only the default for a new cycle. How to resolve any key lives in `sp-workflow-prefs.md`, not next to Workspace preferences and not in the `AGENTS.local.md` format catalog.
 
 **Revisit if** the team wants committed defaults, or Superpowers grows a first-class prefs file.
+
+&nbsp;
+
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why `AGENTS.local.md` wins the whole file — the inverse of skill prefs
+
+`AGENTS.local.md` is a **personal overlay of `AGENTS.md`**, not a prefs store that happens to live next to it. `AGENTS.md` and the SessionStart inject both say: layer local on top; on conflict, local wins. That is complete freedom for an advanced user to replace routing, hooks, even the Superpowers-First Workflow. `pref.*` keys in that file are one instance of the overlay, not an exception to it.
+
+Skill prefs are the other way around on purpose. `.agents/_team/` locks consistency of the *artifact* a skill produces; local may fill only what team omitted. Escape hatch: do not invoke the skill, or overlay `AGENTS.md` so the path never reaches it.
+
+Do not invent `AGENTS.team.md` as a third file that local cannot overlay. A team default that must travel with the clone belongs **in `AGENTS.md`** — the file the overlay already wins against. A Cloud VM with no `AGENTS.local.md` then sees the team text; a local checkout that rewrites it, wins. That is the opposite of skill team-over-local, and mixing the two ladders is the confusion this entry exists to stop.
+
+**Revisit if** the overlay is dropped, or `pref.*` values are given a store that is not part of `AGENTS.md` / `AGENTS.local.md`.
 
 &nbsp;
 
@@ -196,7 +220,7 @@ Workspace preferences are committed team constraints Superpowers skills honour w
 
 ## Why Path A stops after the plan is ready (close-out always)
 
-The stop is human plan review plus a handoff-ready artifact (mode and phase line in Global Constraints). Close-out cannot be gate-skipped. The ready line is dated because the plan is git-ignored.
+The stop is human plan review plus a handoff-ready artifact (mode and phase line in Global Constraints). Close-out cannot be gate-skipped. The ready line is dated so a later session (or a Cloud agent reading the committed plan) can tell a fresh plan from one whose docs or libs have moved since.
 
 **Revisit if** we no longer want a hard stop between Documentation and Execution.
 
