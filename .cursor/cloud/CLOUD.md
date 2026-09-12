@@ -38,7 +38,7 @@ Template headings for reuse: [`CLOUD.skeleton.md`](./CLOUD.skeleton.md).
 
 #### Diff review → PR description
 
-Path A3 / B1 may load `x-code-diff-reviewer` when `pref.diff-review` is on (see `AGENTS.md` / path files). That skill’s **main product** is the human report in the session and at:
+The Superpowers workflow may load `x-code-diff-reviewer` when `pref.diff-review` is on (which steps, and when: `AGENTS.md` + the active path file — do not hardcode step ids here). That skill’s **main product** is the human report in the session and at:
 
 `.agents/_local/skills/x-code-diff-reviewer/latest.md`
 
@@ -46,6 +46,6 @@ Path A3 / B1 may load `x-code-diff-reviewer` when `pref.diff-review` is on (see 
 
 `<!-- x-code-diff-reviewer:start -->` … `<!-- x-code-diff-reviewer:end -->`
 
-If a block with those markers already exists, replace that block only. If the report does not exist yet (Cloud often opens a PR early, before A3/B1), create/update without it; **when the report appears later in this run, `update_pr` and prepend then**. Missing prepend because the PR appeared only after this agent exited is expected for that turn — not a failed review; a later run that has the PR can add it.
+If a block with those markers already exists, replace that block only. If the report does not exist yet (Cloud often opens a PR before the review has finished), create/update without it; **when `latest.md` appears later in this run, `update_pr` and prepend then**. Missing prepend because the PR appeared only after this agent exited is expected for that turn — not a failed review; a later run that has the PR can add it.
 
 Prefer the Cloud PR write tool for this harness. The skill’s `publish-pr-description.mjs` remains valid on hosts/CI that use it; a skipped publish is not a failed review when the report is already on disk.

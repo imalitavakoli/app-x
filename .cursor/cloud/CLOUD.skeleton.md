@@ -38,4 +38,4 @@ Copy this file to `CLOUD.md` (or keep both: skeleton = template, `CLOUD.md` = th
 ### PR evidence / artifacts
 
 - How to attach screenshots/videos for this team’s PR convention.
-- Diff-review / human-report prepend rules when this harness creates or updates PRs.
+- Diff-review / human-report prepend rules when this harness creates or updates PRs (gate on the skill’s report artifact + workflow pref — not on named path/step ids that may change).
