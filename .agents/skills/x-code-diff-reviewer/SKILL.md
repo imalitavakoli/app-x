@@ -3,7 +3,7 @@ name: x-code-diff-reviewer
 description: "WHAT? A read-only review of this repo's outstanding code changes against its default branch, delivered as a plain-language report plus a host-neutral JSON findings file. WHEN? Asked to review a branch, a diff, outstanding or uncommitted changes, or to check work before a PR or push; or to put the human report on an existing merge request's description. Auditing correctness, security, reuse, lib boundaries, naming, DEP, styles, tests, docs. Not for making the changes, fixing findings, or opening the PR."
 metadata:
   kind: reviewer
-  version: '1.4.0'
+  version: '1.5.0'
 ---
 
 # Code Diff Reviewer
@@ -410,6 +410,44 @@ short return to a parent agent. Use the human-report verdict line (`✅ **Pass**
 Do not add a sixth. Do not put one in a finding title, a table cell, or `body_markdown` — the
 JSON's consumers post that text to a pull request, where a stray glyph is noise.
 
+### Session handoff (required)
+
+Every run ends with a **session handoff** block in the chat — not only the full `latest.md`
+dump, and not only a one-line verdict. The human reading this session must see the score and
+the issue titles without opening a file or asking a follow-up.
+
+When you return to a **parent agent**, that parent pastes this same block into the user-visible
+session reply. Do not shrink it to "verdict + counts + path" alone.
+
+Print exactly this shape (headings and order fixed; empty lists say `None.`):
+
+```markdown
+## Review result
+
+⚠️ **Pass with warnings** — <one short clause>
+
+0 blocking · 2 non-blocking · 7 files reviewed
+
+### 🛑 Blocking
+
+None.
+
+### Non-blocking
+
+1. <finding title> — <one-line why it matters>
+2. <finding title> — <one-line why it matters>
+
+Report: `.agents/_local/skills/x-code-diff-reviewer/latest.md`
+```
+
+Rules for the lists:
+
+- **Blocking** and **Non-blocking** always appear, even when empty (`None.`).
+- Each listed item is the finding's **title** plus one short consequence clause — not the full
+  finding body (that stays in `latest.md`).
+- Use the same status marker on the verdict line as the human report (✅ / ⚠️ / ❌).
+- Keep the report path so a reader can open the full write-up.
+
 ### Plain language
 
 A non-developer reads this report. Rules adapted from ASD-STE100 — the writing rules only, not
@@ -467,8 +505,9 @@ Copy into todos, prefixed `[review]`:
 - [ ] `[review]` Fill every REQUIRED section, including _What I did not check_
 - [ ] `[review]` Confirm no claim asserts an unrun check's outcome
 - [ ] `[review]` Write the `.md` and `.json` reports plus both `latest.*`; print the `.md`. In
-      the session, announce the verdict as that report's verdict line (status marker included),
-      not only the JSON `state`.
+      the session, print the **Session handoff** block (verdict line with status marker,
+      counts, 🛑 Blocking list, Non-blocking list, report path) — not only the JSON `state`,
+      and not only a one-line verdict.
 - [ ] `[review]` Run `scripts/publish-pr-description.mjs`; if skipped, print the matching
       when/when-not reason. If a merge-request URL appears later in this run, run the script
       again — do not re-review.
@@ -515,3 +554,5 @@ major; a patch leaves `Explains:` alone):
 | Treated the projection or publish examples as the only hosts                | `unknown` is valid. Add a detector and a find/update pair; do not bend an existing mapping.                                       |
 | Treated a skipped prepend as a failed review                                | The session report is the review. Prepend is optional.                                                                            |
 | Announced only `pass` / `fail` / `pass_with_warnings` in the session        | Use the human-report verdict line, including ✅ / ⚠️ / ❌. The enum is the JSON `state`.                                           |
+| Returned only verdict + counts + path to a parent agent                     | Return the full **Session handoff** (blocking and non-blocking titles included) and paste it in chat.                             |
+| Omitted empty Blocking / Non-blocking sections from the handoff             | Always print both headings; write `None.` when a list is empty.                                                                   |

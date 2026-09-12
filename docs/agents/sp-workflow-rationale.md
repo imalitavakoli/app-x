@@ -416,4 +416,18 @@ So dispatching `standing` only is not a narrowing of the skill; it is what makes
 
 &nbsp;
 
+[🔝](#superpowers-first-workflow--rationale-)
+
+## Why the diff-review take-back is a Session handoff, not verdict-only
+
+Path A and Path B dispatch `x-code-diff-reviewer` into a subagent so the controller does not load its maps and the whole diff (_Operating rule 5_). The first version of that hand-off took back only the verdict line, the counts, and the report path — enough for the controller to know the cycle's status, and cheap on context.
+
+That truncation hid the finding **titles** from the human sitting in the session. The full report lived in `latest.md`, but the user had to ask for it. The score without the issue list is not enough to decide whether to open a follow-up cycle.
+
+So the take-back is now the skill's **Session handoff**: same verdict marker, counts, blocking titles, non-blocking titles, and path. The heavy load stays in the subagent; only that short block crosses back, and the controller must paste it into the user-visible reply.
+
+**Revisit if** the Session handoff grows large enough to defeat the context reason for dispatching (then split titles from bodies more aggressively, or page them), or if a harness surfaces `latest.md` in the UI automatically so pasting titles becomes redundant.
+
+&nbsp;
+
 [🔙](../../README.md#agents)

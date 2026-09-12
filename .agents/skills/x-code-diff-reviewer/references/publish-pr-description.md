@@ -2,7 +2,7 @@
 
 **Load when:** `latest.md` has been written and you are publishing (a merge request exists, just appeared this run, or the user asked to put the report on the description).
 
-**Explains:** v1.4.0
+**Explains:** v1.5.0
 
 Not needed to *do* the review. The main job is the session report plus `_local` artifacts (see Overview in SKILL.md). This file is the optional follow-on. Landing the report on the description is **best-effort** — never required for a successful review.
 
