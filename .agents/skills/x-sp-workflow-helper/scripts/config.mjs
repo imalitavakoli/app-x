@@ -340,13 +340,47 @@ export const SP_CLAUDE_HOME_SEGMENTS = ['.claude'];
 export const SP_PROBES_UNVERIFIED = [
   'Antigravity',
   'Codex (app / CLI)',
-  'Cursor',
+  'Cursor (desktop IDE marketplace)',
   'Factory Droid',
   'GitHub Copilot CLI',
   'Kimi Code',
   'OpenCode',
   'Pi',
 ];
+
+/**
+ * Shared pin catalog (repo-relative). Source of truth for SHA-pinned plugins;
+ * harness adapters must materialize the same Superpowers commit. Harness ids in
+ * each entry's `harnesses` array are opaque strings this checker understands
+ * only when listed in `SP_PIN_HARNESS_ADAPTERS` — unknown ids are reported, not
+ * guessed.
+ */
+export const SP_PINS_CATALOG = '.agents/_pins/plugins/catalog.json';
+
+/**
+ * How each harness materializes the shared Superpowers pin. Add a row when a
+ * layout is verified — never from a guessed path (`SP_PROBES_UNVERIFIED`).
+ *
+ * - `claude-code`: directory marketplace declared in project settings (existing
+ *   `sp-pin` discovery via `extraKnownMarketplaces`).
+ * - `cursor-cloud`: Cloud env installer that copies skills to `~/.cursor/skills`
+ *   and writes `~/.cursor/x-pins/superpowers.json`.
+ */
+export const SP_PIN_HARNESS_ADAPTERS = {
+  'claude-code': { kind: 'claude-marketplace' },
+  'cursor-cloud': {
+    kind: 'cursor-cloud-install',
+    installer: '.cursor/cloud/install-pinned-plugins.mjs',
+  },
+};
+
+/** HOME-relative segments for the Cursor Cloud pin marker and skills root. */
+export const SP_CURSOR_CLOUD_PIN_MARKER_SEGMENTS = [
+  '.cursor',
+  'x-pins',
+  'superpowers.json',
+];
+export const SP_CURSOR_CLOUD_SKILLS_SEGMENTS = ['.cursor', 'skills'];
 
 /**
  * Workspace-local copies: Superpowers skills committed into the repo with no

@@ -6,6 +6,9 @@
         "command": "node .agents/hooks/agents-file-inject.mjs"
       },
       {
+        "command": "node .agents/hooks/cursor-cloud-doc-inject.mjs"
+      },
+      {
         "command": "node .agents/hooks/sp-version-check.mjs",
         "timeout": 30
       }

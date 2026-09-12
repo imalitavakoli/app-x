@@ -1,0 +1,15 @@
+{
+  "$comment": "Source of truth for SHA-pinned third-party agent plugins. Harness adapters (Claude Code marketplace, Cursor Cloud installer, …) materialize entries listed for that harness — they must not disagree with this file. Add a plugin here only when we intentionally freeze its commit; harness-native enables without a SHA (e.g. Nx from GitHub) stay out until we pin them.",
+  "plugins": [
+    {
+      "name": "superpowers",
+      "version": "6.1.1",
+      "description": "Core skills library: TDD, debugging, collaboration patterns, and proven techniques — pinned, because the Superpowers-First Workflow layers on behaviours Superpowers does not know it promises.",
+      "source": {
+        "url": "https://github.com/obra/superpowers.git",
+        "sha": "d884ae04edebef577e82ff7c4e143debd0bbec99"
+      },
+      "harnesses": ["claude-code", "cursor-cloud"]
+    }
+  ]
+}

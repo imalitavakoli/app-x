@@ -1,0 +1,3 @@
+{
+  "install": "node .cursor/cloud/install-pinned-plugins.mjs"
+}

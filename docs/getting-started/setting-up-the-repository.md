@@ -94,9 +94,11 @@ claude plugin install nx@nx-claude-plugins --scope user
 
 #### Installing it on a new machine
 
-**Use our catalog, not upstream's marketplace.** This repo runs a **pinned** commit of Superpowers, from our own catalog at `.claude/plugins/`, which `.claude/settings.json` declares.
+**Use our catalog, not upstream's marketplace.** This repo freezes Superpowers to an exact commit in `.agents/_pins/plugins/catalog.json`. Claude Code materializes that pin via `.claude/plugins/` (declared from `.claude/settings.json`). Cursor Cloud materializes the same pin via `.cursor/cloud/install-pinned-plugins.mjs` (from `.cursor/environment.json`).
 
-The pin is a **conservative choice, not a requirement.** Our workflow is built to survive new Superpowers versions — it routes on what a skill says it does rather than on its name, and attaches to lifecycle moments rather than titles. Pinning just means a new version arrives when we decide to take it, instead of turning up mid-cycle, so there's time to check the handful of behaviours we lean on. Everyone on Claude Code gets the same commit, which also makes "works on my machine" one less variable.
+The pin is a **conservative choice, not a requirement.** Our workflow is built to survive new Superpowers versions — it routes on what a skill says it does rather than on its name, and attaches to lifecycle moments rather than titles. Pinning just means a new version arrives when we decide to take it, instead of turning up mid-cycle, so there's time to check the handful of behaviours we lean on. Everyone on a harness we pin for gets the same commit, which also makes "works on my machine" one less variable.
+
+#### Claude Code — installing on a new machine
 
 After cloning, from the repo root:
 
@@ -118,9 +120,13 @@ Then restart Claude Code, or run `/reload-plugins`.
 
 **Note!** Until you run these, Superpowers is **off** in this repo — not merely unpinned, so no part of the workflow below applies. A check at session start tells you, and `pnpm run check:workflow` names the cause.
 
-**Tip!** To confirm it worked: `claude plugin list` shows `superpowers@x-local-marketplace` enabled, and `pnpm run check:workflow` passes both `sp-version` (the version we reviewed against) and `sp-pin` (the pinned commit is that same one).
+**Tip!** To confirm it worked: `claude plugin list` shows `superpowers@x-local-marketplace` enabled, and `pnpm run check:workflow` passes both `sp-version` (the version we reviewed against) and `sp-pin` (shared catalog + Claude adapter match the reviewed commit).
 
-**Using a different AI tool?** Upstream ships Superpowers for several agents — see its [installation instructions](https://github.com/obra/superpowers#installation). The pin above is Claude Code only, so other tools install their own copy at whatever version upstream currently publishes. That's expected, not a misconfiguration: `pnpm run check:workflow` reports it as an informational **notice** (it still passes), because nothing you can do on that machine would match the pinned version. The workflow itself is designed to keep working across versions.
+#### Cursor Cloud — pin install
+
+Cursor Cloud Agents do **not** use the Claude marketplace. On VM boot, `.cursor/environment.json` runs `node .cursor/cloud/install-pinned-plugins.mjs`, which installs every `catalog.json` entry whose `harnesses` includes `cursor-cloud` into `~/.cursor/skills/` (same Superpowers SHA as Claude). Ops notes for Cloud-only caveats live in `.cursor/cloud/CLOUD.md` (SessionStart injects a pointer when `CURSOR_AGENT=1`). Desktop Cursor is unchanged — use upstream's Cursor install if you need Superpowers there; it is not covered by this pin.
+
+**Using another AI tool without a pin adapter?** Upstream ships Superpowers for several agents — see its [installation instructions](https://github.com/obra/superpowers#installation). Until that harness has a verified adapter in `SP_PIN_HARNESS_ADAPTERS`, `pnpm run check:workflow` reports an informational **notice** for version visibility (it still passes). The workflow itself is designed to keep working across versions.
 
 #### How it works
 
